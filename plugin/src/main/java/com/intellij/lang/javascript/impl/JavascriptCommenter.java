@@ -24,8 +24,7 @@ import consulo.language.Language;
 import consulo.language.ast.IElementType;
 import consulo.language.psi.PsiComment;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author max
@@ -97,7 +96,6 @@ public class JavascriptCommenter implements CodeDocumentationAwareCommenter {
         return JSTokenTypes.DOC_COMMENT;
     }
 
-    @Nonnull
     @Override
     public Language getLanguage() {
         return JavaScriptLanguage.INSTANCE;

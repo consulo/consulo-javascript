@@ -32,8 +32,7 @@ import consulo.language.psi.PsiFile;
 import consulo.language.psi.ResolveResult;
 import consulo.language.psi.search.DefinitionsScopedSearch;
 import consulo.util.collection.ArrayUtil;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.*;
 
@@ -117,7 +116,7 @@ public class JSParameterInfoHandler implements ParameterInfoHandlerWithTabAction
     @Nullable
     private static JSArgumentList fillSignaturesForArgumentList(
         CreateParameterInfoContext context,
-        @Nonnull JSArgumentList argList
+        JSArgumentList argList
     ) {
         PsiElement psiElement = argList.getParent();
         if (!(psiElement instanceof JSCallExpression)) {
@@ -158,7 +157,7 @@ public class JSParameterInfoHandler implements ParameterInfoHandlerWithTabAction
     }
 
     @Override
-    public void showParameterInfo(@Nonnull JSArgumentList element, CreateParameterInfoContext context) {
+    public void showParameterInfo(JSArgumentList element, CreateParameterInfoContext context) {
         context.showHint(element, element.getTextOffset(), this);
     }
 
@@ -168,7 +167,7 @@ public class JSParameterInfoHandler implements ParameterInfoHandlerWithTabAction
     }
 
     @Override
-    public void updateParameterInfo(@Nonnull JSArgumentList o, UpdateParameterInfoContext context) {
+    public void updateParameterInfo(JSArgumentList o, UpdateParameterInfoContext context) {
         if (context.getParameterOwner() != o) {
             context.removeHint();
             return;
@@ -199,7 +198,6 @@ public class JSParameterInfoHandler implements ParameterInfoHandlerWithTabAction
     }
 
     private static
-    @Nonnull
     SignatureInfo buildSignature(JSParameter[] params, boolean skipType, int selectedParameterIndex) {
         SignatureInfo info = new SignatureInfo();
         if (params.length > 0) {
@@ -250,42 +248,35 @@ public class JSParameterInfoHandler implements ParameterInfoHandlerWithTabAction
     }
 
     @Override
-    @Nonnull
-    public JSExpression[] getActualParameters(@Nonnull JSArgumentList jsArgumentList) {
+    public JSExpression[] getActualParameters(JSArgumentList jsArgumentList) {
         return jsArgumentList.getArguments();
     }
 
     @Override
-    @Nonnull
     public IElementType getActualParameterDelimiterType() {
         return JSTokenTypes.COMMA;
     }
 
     @Override
-    @Nonnull
     public IElementType getActualParametersRBraceType() {
         return JSTokenTypes.RBRACE;
     }
 
     @Override
-    @Nonnull
     public Set<Class<?>> getArgumentListAllowedParentClasses() {
         return ourArgumentListAllowedParentClassesSet;
     }
 
-    @Nonnull
     @Override
     public Set<? extends Class<?>> getArgListStopSearchClasses() {
         return Collections.emptySet();
     }
 
     @Override
-    @Nonnull
     public Class<JSArgumentList> getArgumentListClass() {
         return JSArgumentList.class;
     }
 
-    @Nonnull
     @Override
     public Language getLanguage() {
         return JavaScriptLanguage.INSTANCE;

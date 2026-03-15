@@ -28,13 +28,11 @@ import consulo.language.codeStyle.*;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
 
-import jakarta.annotation.Nonnull;
 
 @ExtensionImpl
 public class JavascriptFormattingModelBuilder implements FormattingModelBuilder {
-    @Nonnull
     @Override
-    public FormattingModel createModel(@Nonnull FormattingContext formattingContext) {
+    public FormattingModel createModel(FormattingContext formattingContext) {
         PsiElement element = formattingContext.getPsiElement();
 
         CodeStyleSettings settings = formattingContext.getCodeStyleSettings();
@@ -56,7 +54,6 @@ public class JavascriptFormattingModelBuilder implements FormattingModelBuilder 
         );
     }
 
-    @Nonnull
     @Override
     public Language getLanguage() {
         return JavaScriptLanguage.INSTANCE;

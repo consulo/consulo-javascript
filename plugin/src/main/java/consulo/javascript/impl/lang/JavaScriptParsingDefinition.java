@@ -34,7 +34,6 @@ import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
 import consulo.language.util.LanguageUtil;
 import consulo.language.version.LanguageVersionableParserDefinition;
-import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
@@ -42,19 +41,16 @@ import jakarta.annotation.Nonnull;
  */
 @ExtensionImpl
 public class JavaScriptParsingDefinition extends LanguageVersionableParserDefinition {
-    @Nonnull
     @Override
     public Language getLanguage() {
         return JavaScriptLanguage.INSTANCE;
     }
 
-    @Nonnull
     @Override
     public IFileElementType getFileNodeType() {
         return JSElementTypes.FILE;
     }
 
-    @Nonnull
     @Override
     public PsiElement createElement(ASTNode node) {
         IElementType type = node.getElementType();
@@ -77,7 +73,6 @@ public class JavaScriptParsingDefinition extends LanguageVersionableParserDefini
         return new JSFileImpl(fileViewProvider);
     }
 
-    @Nonnull
     @Override
     public SpaceRequirements spaceExistanceTypeBetweenTokens(ASTNode left, ASTNode right) {
         PsiElement leftPsi = left.getPsi();

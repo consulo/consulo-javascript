@@ -8,7 +8,6 @@ import com.intellij.lang.javascript.psi.impl.JSElementImpl;
 import consulo.annotation.access.RequiredReadAction;
 import consulo.language.ast.ASTNode;
 
-import jakarta.annotation.Nonnull;
 
 import java.util.Arrays;
 
@@ -22,11 +21,10 @@ public class JavaSciptDestructuringObjectImpl extends JSElementImpl implements J
     }
 
     @Override
-    protected void accept(@Nonnull JSElementVisitor visitor) {
+    protected void accept(JSElementVisitor visitor) {
         visitor.visitJSElement(this);
     }
 
-    @Nonnull
     @Override
     @RequiredReadAction
     public JSVariable[] getVariables() {

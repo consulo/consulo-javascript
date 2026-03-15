@@ -1,7 +1,6 @@
 package com.sixrr.inspectjs.utils;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import consulo.javascript.language.psi.JavaScriptType;
 import com.intellij.lang.javascript.psi.*;
 import consulo.language.psi.PsiElement;
@@ -101,7 +100,7 @@ public class EquivalenceChecker {
         return statementsAreEquivalent(body1, body2);
     }
 
-    private static boolean varStatementsAreEquivalent(@Nonnull JSVarStatement statement1, @Nonnull JSVarStatement statement2) {
+    private static boolean varStatementsAreEquivalent(JSVarStatement statement1, JSVarStatement statement2) {
         JSVariable[] variables1 = statement1.getVariables();
         JSVariable[] variables2 = statement2.getVariables();
         if (variables1.length != variables2.length) {
@@ -115,7 +114,7 @@ public class EquivalenceChecker {
         return true;
     }
 
-    private static boolean variablesAreEquivalent(@Nonnull JSVariable var1, @Nonnull JSVariable var2) {
+    private static boolean variablesAreEquivalent(JSVariable var1, JSVariable var2) {
         JSExpression initializer1 = var1.getInitializer();
         JSExpression initializer2 = var2.getInitializer();
         if (!expressionsAreEquivalent(initializer1, initializer2)) {
@@ -134,7 +133,7 @@ public class EquivalenceChecker {
         return name1.equals(name2);
     }
 
-    private static boolean tryStatementsAreEquivalent(@Nonnull JSTryStatement statement1, @Nonnull JSTryStatement statement2) {
+    private static boolean tryStatementsAreEquivalent(JSTryStatement statement1, JSTryStatement statement2) {
         JSStatement tryBlock1 = statement1.getStatement();
         JSStatement tryBlock2 = statement2.getStatement();
         if (!statementsAreEquivalent(tryBlock1, tryBlock2)) {
@@ -163,7 +162,7 @@ public class EquivalenceChecker {
         return statementsAreEquivalent(catchStatement1, catchStatement2);
     }
 
-    private static boolean parametersAreEquivalent(@Nonnull JSParameter parameter1, @Nonnull JSParameter parameter2) {
+    private static boolean parametersAreEquivalent(JSParameter parameter1, JSParameter parameter2) {
         JavaScriptType type1 = parameter1.getType();
         JavaScriptType type2 = parameter2.getType();
         if (!typesAreEquivalent(type1, type2)) {
@@ -187,7 +186,7 @@ public class EquivalenceChecker {
         return type1.equals(type2);
     }
 
-    private static boolean whileStatementsAreEquivalent(@Nonnull JSWhileStatement statement1, @Nonnull JSWhileStatement statement2) {
+    private static boolean whileStatementsAreEquivalent(JSWhileStatement statement1, JSWhileStatement statement2) {
         JSExpression condition1 = statement1.getCondition();
         JSExpression condition2 = statement2.getCondition();
         JSStatement body1 = statement1.getBody();
@@ -195,7 +194,7 @@ public class EquivalenceChecker {
         return expressionsAreEquivalent(condition1, condition2) && statementsAreEquivalent(body1, body2);
     }
 
-    private static boolean forStatementsAreEquivalent(@Nonnull JSForStatement statement1, @Nonnull JSForStatement statement2) {
+    private static boolean forStatementsAreEquivalent(JSForStatement statement1, JSForStatement statement2) {
         JSExpression condition1 = statement1.getCondition();
         JSExpression condition2 = statement2.getCondition();
         if (!expressionsAreEquivalent(condition1, condition2)) {
@@ -216,7 +215,7 @@ public class EquivalenceChecker {
         return statementsAreEquivalent(body1, body2);
     }
 
-    private static boolean forInStatementsAreEquivalent(@Nonnull JSForInStatement statement1, @Nonnull JSForInStatement statement2) {
+    private static boolean forInStatementsAreEquivalent(JSForInStatement statement1, JSForInStatement statement2) {
         JSExpression value1 = statement1.getCollectionExpression();
         JSExpression value2 = statement2.getCollectionExpression();
         if (!expressionsAreEquivalent(value1, value2)) {
@@ -232,7 +231,7 @@ public class EquivalenceChecker {
         return statementsAreEquivalent(body1, body2);
     }
 
-    private static boolean switchStatementsAreEquivalent(@Nonnull JSSwitchStatement statement1, @Nonnull JSSwitchStatement statement2) {
+    private static boolean switchStatementsAreEquivalent(JSSwitchStatement statement1, JSSwitchStatement statement2) {
         JSExpression switchExpression1 = statement1.getSwitchExpression();
         JSExpression swithcExpression2 = statement2.getSwitchExpression();
         if (!expressionsAreEquivalent(switchExpression1, swithcExpression2)) {
@@ -275,7 +274,7 @@ public class EquivalenceChecker {
         return false;
     }
 
-    private static boolean doWhileStatementsAreEquivalent(@Nonnull JSDoWhileStatement statement1, @Nonnull JSDoWhileStatement statement2) {
+    private static boolean doWhileStatementsAreEquivalent(JSDoWhileStatement statement1, JSDoWhileStatement statement2) {
         JSExpression condition1 = statement1.getCondition();
         JSExpression condition2 = statement2.getCondition();
         JSStatement body1 = statement1.getBody();
@@ -283,7 +282,7 @@ public class EquivalenceChecker {
         return expressionsAreEquivalent(condition1, condition2) && statementsAreEquivalent(body1, body2);
     }
 
-    private static boolean blockStatementsAreEquivalent(@Nonnull JSBlockStatement statement1, @Nonnull JSBlockStatement statement2) {
+    private static boolean blockStatementsAreEquivalent(JSBlockStatement statement1, JSBlockStatement statement2) {
         JSStatement[] statements1 = statement1.getStatements();
         JSStatement[] statements2 = statement2.getStatements();
         if (statements1.length != statements2.length) {
@@ -297,7 +296,7 @@ public class EquivalenceChecker {
         return true;
     }
 
-    private static boolean breakStatementsAreEquivalent(@Nonnull JSBreakStatement statement1, @Nonnull JSBreakStatement statement2) {
+    private static boolean breakStatementsAreEquivalent(JSBreakStatement statement1, JSBreakStatement statement2) {
         String identifier1 = statement1.getLabel();
         String identifier2 = statement2.getLabel();
         if (identifier1 == null) {
@@ -310,8 +309,8 @@ public class EquivalenceChecker {
     }
 
     private static boolean continueStatementsAreEquivalent(
-        @Nonnull JSContinueStatement statement1,
-        @Nonnull JSContinueStatement statement2
+        JSContinueStatement statement1,
+        JSContinueStatement statement2
     ) {
         String identifier1 = statement1.getLabel();
         String identifier2 = statement2.getLabel();
@@ -324,7 +323,7 @@ public class EquivalenceChecker {
         return identifier1.equals(identifier2);
     }
 
-    private static boolean labeledStatementsAreEquivalent(@Nonnull JSLabeledStatement statement1, @Nonnull JSLabeledStatement statement2) {
+    private static boolean labeledStatementsAreEquivalent(JSLabeledStatement statement1, JSLabeledStatement statement2) {
         PsiElement identifier1 = statement1.getLabelIdentifier();
         PsiElement identifier2 = statement2.getLabelIdentifier();
         if (identifier1 == null) {
@@ -338,7 +337,7 @@ public class EquivalenceChecker {
         return text1.equals(text2);
     }
 
-    private static boolean ifStatementsAreEquivalent(@Nonnull JSIfStatement statement1, @Nonnull JSIfStatement statement2) {
+    private static boolean ifStatementsAreEquivalent(JSIfStatement statement1, JSIfStatement statement2) {
         JSExpression condition1 = statement1.getCondition();
         JSExpression condition2 = statement2.getCondition();
         JSStatement thenBranch1 = statement1.getThen();
@@ -351,21 +350,21 @@ public class EquivalenceChecker {
     }
 
     private static boolean expressionStatementsAreEquivalent(
-        @Nonnull JSExpressionStatement statement1,
-        @Nonnull JSExpressionStatement statement2
+        JSExpressionStatement statement1,
+        JSExpressionStatement statement2
     ) {
         JSExpression expression1 = statement1.getExpression();
         JSExpression expression2 = statement2.getExpression();
         return expressionsAreEquivalent(expression1, expression2);
     }
 
-    private static boolean returnStatementsAreEquivalent(@Nonnull JSReturnStatement statement1, @Nonnull JSReturnStatement statement2) {
+    private static boolean returnStatementsAreEquivalent(JSReturnStatement statement1, JSReturnStatement statement2) {
         JSExpression returnValue1 = statement1.getExpression();
         JSExpression returnValue2 = statement2.getExpression();
         return expressionsAreEquivalent(returnValue1, returnValue2);
     }
 
-    private static boolean throwStatementsAreEquivalent(@Nonnull JSThrowStatement statement1, @Nonnull JSThrowStatement statement2) {
+    private static boolean throwStatementsAreEquivalent(JSThrowStatement statement1, JSThrowStatement statement2) {
         JSExpression exception1 = statement1.getExpression();
         JSExpression exception2 = statement2.getExpression();
         return expressionsAreEquivalent(exception1, exception2);
@@ -474,8 +473,8 @@ public class EquivalenceChecker {
     }
 
     private static boolean methodCallExpressionsAreEquivalent(
-        @Nonnull JSCallExpression methodExp1,
-        @Nonnull JSCallExpression methodExp2
+        JSCallExpression methodExp1,
+        JSCallExpression methodExp2
     ) {
         JSExpression methodExpression1;
         JSExpression methodExpression2;
@@ -502,7 +501,7 @@ public class EquivalenceChecker {
         return expressionListsAreEquivalent(args1, args2);
     }
 
-    private static boolean newExpressionsAreEquivalent(@Nonnull JSNewExpression newExp1, @Nonnull JSNewExpression newExp2) {
+    private static boolean newExpressionsAreEquivalent(JSNewExpression newExp1, JSNewExpression newExp2) {
         JSExpression methodExpression1 = newExp1.getMethodExpression();
         JSExpression methodExpression2 = newExp2.getMethodExpression();
         if (!expressionsAreEquivalent(methodExpression1, methodExpression2)) {
@@ -522,8 +521,8 @@ public class EquivalenceChecker {
     }
 
     private static boolean arrayInitializerExpressionsAreEquivalent(
-        @Nonnull JSArrayLiteralExpression arrInitExp1,
-        @Nonnull JSArrayLiteralExpression arrInitExp2
+        JSArrayLiteralExpression arrInitExp1,
+        JSArrayLiteralExpression arrInitExp2
     ) {
         JSExpression[] initializers1 = arrInitExp1.getExpressions();
         JSExpression[] initializers2 = arrInitExp2.getExpressions();
@@ -531,8 +530,8 @@ public class EquivalenceChecker {
     }
 
     private static boolean prefixExpressionsAreEquivalent(
-        @Nonnull JSPrefixExpression prefixExp1,
-        @Nonnull JSPrefixExpression prefixExp2
+        JSPrefixExpression prefixExp1,
+        JSPrefixExpression prefixExp2
     ) {
         IElementType sign1 = prefixExp1.getOperationSign();
         IElementType sign2 = prefixExp2.getOperationSign();
@@ -548,8 +547,8 @@ public class EquivalenceChecker {
     }
 
     private static boolean postfixExpressionsAreEquivalent(
-        @Nonnull JSPostfixExpression postfixExp1,
-        @Nonnull JSPostfixExpression postfixExp2
+        JSPostfixExpression postfixExp1,
+        JSPostfixExpression postfixExp2
     ) {
         IElementType sign1 = postfixExp1.getOperationSign();
         IElementType sign2 = postfixExp2.getOperationSign();
@@ -561,7 +560,7 @@ public class EquivalenceChecker {
         return expressionsAreEquivalent(operand1, operand2);
     }
 
-    private static boolean binaryExpressionsAreEquivalent(@Nonnull JSBinaryExpression binaryExp1, @Nonnull JSBinaryExpression binaryExp2) {
+    private static boolean binaryExpressionsAreEquivalent(JSBinaryExpression binaryExp1, JSBinaryExpression binaryExp2) {
         IElementType sign1 = binaryExp1.getOperationSign();
         IElementType sign2 = binaryExp2.getOperationSign();
         if (!sign1.equals(sign2)) {
@@ -575,8 +574,8 @@ public class EquivalenceChecker {
     }
 
     private static boolean assignmentExpressionsAreEquivalent(
-        @Nonnull JSAssignmentExpression assignExp1,
-        @Nonnull JSAssignmentExpression assignExp2
+        JSAssignmentExpression assignExp1,
+        JSAssignmentExpression assignExp2
     ) {
         IElementType sign1 = assignExp1.getOperationSign();
         IElementType sign2 = assignExp2.getOperationSign();
@@ -592,8 +591,8 @@ public class EquivalenceChecker {
     }
 
     private static boolean conditionalExpressionsAreEquivalent(
-        @Nonnull JSConditionalExpression condExp1,
-        @Nonnull JSConditionalExpression condExp2
+        JSConditionalExpression condExp1,
+        JSConditionalExpression condExp2
     ) {
         JSExpression condition1 = condExp1.getCondition();
         JSExpression condition2 = condExp2.getCondition();

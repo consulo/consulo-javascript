@@ -19,7 +19,7 @@ package com.intellij.lang.javascript.psi;
 import com.intellij.lang.javascript.psi.stubs.JSVarStatementStub;
 import consulo.annotation.access.RequiredReadAction;
 import consulo.language.psi.StubBasedPsiElement;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author max

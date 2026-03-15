@@ -4,8 +4,7 @@ import com.intellij.lang.javascript.JSTokenTypes;
 import com.intellij.lang.javascript.psi.JSBinaryExpression;
 import com.intellij.lang.javascript.psi.JSExpression;
 import consulo.language.ast.IElementType;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.HashMap;
 import java.util.HashSet;
@@ -59,16 +58,16 @@ public class ComparisonUtils {
         return s_comparisonStrings.contains(sign);
     }
 
-    public static String getFlippedComparison(@Nonnull IElementType str) {
+    public static String getFlippedComparison(IElementType str) {
         return s_swappedComparisons.get(str);
     }
 
-    public static boolean isEqualityComparison(@Nonnull JSBinaryExpression operator) {
+    public static boolean isEqualityComparison(JSBinaryExpression operator) {
         IElementType sign = operator.getOperationSign();
         return JSTokenTypes.EQEQ.equals(sign) || JSTokenTypes.NE.equals(sign);
     }
 
-    public static String getNegatedComparison(@Nonnull IElementType str) {
+    public static String getNegatedComparison(IElementType str) {
         return s_invertedComparisons.get(str);
     }
 }

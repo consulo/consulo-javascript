@@ -28,7 +28,6 @@ import consulo.javascript.language.JavaScriptLanguage;
 import consulo.language.Language;
 import consulo.language.editor.structureView.PsiStructureViewFactory;
 import consulo.language.psi.PsiFile;
-import jakarta.annotation.Nonnull;
 
 @ExtensionImpl
 public class JSStructureViewBuilderFactory implements PsiStructureViewFactory {
@@ -36,7 +35,6 @@ public class JSStructureViewBuilderFactory implements PsiStructureViewFactory {
     public StructureViewBuilder getStructureViewBuilder(PsiFile psiFile) {
         return new TreeBasedStructureViewBuilder() {
             @Override
-            @Nonnull
             public StructureViewModel createStructureViewModel(Editor editor) {
                 return new JSStructureViewModel(psiFile, editor);
             }
@@ -48,7 +46,6 @@ public class JSStructureViewBuilderFactory implements PsiStructureViewFactory {
         };
     }
 
-    @Nonnull
     @Override
     public Language getLanguage() {
         return JavaScriptLanguage.INSTANCE;

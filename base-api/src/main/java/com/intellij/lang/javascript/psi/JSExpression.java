@@ -20,7 +20,6 @@ import consulo.util.collection.ArrayFactory;
 import consulo.annotation.access.RequiredReadAction;
 import consulo.javascript.language.psi.JavaScriptType;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * @author max
@@ -31,10 +30,8 @@ public interface JSExpression extends JSElement {
 
     ArrayFactory<JSExpression> ARRAY_FACTORY = count -> count == 0 ? EMPTY_ARRAY : new JSExpression[count];
 
-    @Nonnull
     JSExpression replace(JSExpression other);
 
-    @Nonnull
     @RequiredReadAction
     JavaScriptType getType();
 }

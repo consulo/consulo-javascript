@@ -11,19 +11,15 @@ import com.sixrr.inspectjs.localize.InspectionJSLocalize;
 import consulo.annotation.access.RequiredReadAction;
 import consulo.annotation.component.ExtensionImpl;
 import consulo.localize.LocalizeValue;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
-import org.jetbrains.annotations.NonNls;
+import org.jspecify.annotations.Nullable;
 
 @ExtensionImpl
 public class DynamicallyGeneratedCodeJSInspection extends JavaScriptInspection {
-    @Nonnull
     @Override
     public LocalizeValue getDisplayName() {
         return InspectionJSLocalize.dynamicallyGeneratedCodeDisplayName();
     }
 
-    @Nonnull
     @Override
     public LocalizeValue getGroupDisplayName() {
         return JSGroupNames.CONFUSING_GROUP_NAME;
@@ -58,7 +54,7 @@ public class DynamicallyGeneratedCodeJSInspection extends JavaScriptInspection {
             JSReferenceExpression referenceExpression = (JSReferenceExpression)methodExpression;
             JSExpression qualifier = referenceExpression.getQualifier();
 
-            @NonNls String methodName = referenceExpression.getReferencedName();
+            String methodName = referenceExpression.getReferencedName();
             if (!"eval".equals(methodName) && !"setTimeout".equals(methodName) && !"setInterval".equals(methodName)) {
                 return;
             }
@@ -84,7 +80,7 @@ public class DynamicallyGeneratedCodeJSInspection extends JavaScriptInspection {
             if (qualifier != null) {
                 return;
             }
-            @NonNls String methodName = referenceExpression.getReferencedName();
+            String methodName = referenceExpression.getReferencedName();
             if (!"Function".equals(methodName)) {
                 return;
             }

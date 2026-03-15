@@ -26,7 +26,6 @@ import consulo.language.ast.IElementTypeAsPsiFactory;
 import consulo.language.psi.stub.IStubElementType;
 import consulo.language.psi.stub.IndexSink;
 
-import jakarta.annotation.Nonnull;
 
 public abstract class JSStubElementType<StubT extends JSStubElement<PsiT>, PsiT extends JSElement> extends IStubElementType<StubT, PsiT>
     implements IElementTypeAsPsiFactory {
@@ -40,10 +39,9 @@ public abstract class JSStubElementType<StubT extends JSStubElement<PsiT>, PsiT 
     }
 
     @Override
-    public void indexStub(@Nonnull StubT stub, @Nonnull IndexSink sink) {
+    public void indexStub(StubT stub, IndexSink sink) {
     }
 
-    @Nonnull
     @Override
     public String getExternalId() {
         return toString();

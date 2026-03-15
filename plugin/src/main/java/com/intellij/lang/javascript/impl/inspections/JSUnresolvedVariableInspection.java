@@ -38,7 +38,6 @@ import consulo.language.psi.ResolveResult;
 import consulo.language.psi.util.PsiTreeUtil;
 import consulo.localize.LocalizeValue;
 import consulo.util.lang.StringUtil;
-import jakarta.annotation.Nonnull;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -51,19 +50,16 @@ import java.util.Set;
 public class JSUnresolvedVariableInspection extends JSInspection {
     private static final String SHORT_NAME = "JSUnresolvedVariable";
 
-    @Nonnull
     @Override
     public LocalizeValue getGroupDisplayName() {
         return LocalizeValue.localizeTODO("General");
     }
 
-    @Nonnull
     @Override
     public LocalizeValue getDisplayName() {
         return JavaScriptLocalize.jsUnresolvedVariableInspectionName();
     }
 
-    @Nonnull
     @Override
     public String getShortName() {
         return SHORT_NAME;
@@ -74,7 +70,7 @@ public class JSUnresolvedVariableInspection extends JSInspection {
         return new JSElementVisitor() {
             @Override
             @RequiredReadAction
-            public void visitJSReferenceExpression(@Nonnull JSReferenceExpression node) {
+            public void visitJSReferenceExpression(JSReferenceExpression node) {
                 PsiElement parentElement = node.getParent();
 
                 if (node.shouldCheckReferences() && !(parentElement instanceof JSCallExpression)) {
@@ -251,7 +247,6 @@ public class JSUnresolvedVariableInspection extends JSInspection {
             super(referencedName);
         }
 
-        @Nonnull
         @Override
         public LocalizeValue getName() {
             return JavaScriptLocalize.javascriptCreateNamespaceIntentionName(myReferencedName);
@@ -285,7 +280,6 @@ public class JSUnresolvedVariableInspection extends JSInspection {
             this.isConstant = isConstant;
         }
 
-        @Nonnull
         @Override
         public LocalizeValue getName() {
             return isField

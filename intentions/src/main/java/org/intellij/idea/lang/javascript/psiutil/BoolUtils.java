@@ -19,13 +19,10 @@ import com.intellij.lang.javascript.JSTokenTypes;
 import com.intellij.lang.javascript.psi.*;
 import com.intellij.lang.javascript.psi.impl.JSChangeUtil;
 import consulo.language.ast.IElementType;
-import jakarta.annotation.Nullable;
-import org.jetbrains.annotations.NonNls;
+import org.jspecify.annotations.Nullable;
 
 public class BoolUtils {
-    @NonNls
     public static final String TRUE = "true";
-    @NonNls
     public static final String FALSE = "false";
 
     private BoolUtils() {

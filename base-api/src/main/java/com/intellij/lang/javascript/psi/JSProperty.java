@@ -17,13 +17,12 @@
 
 package com.intellij.lang.javascript.psi;
 
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import consulo.annotation.access.RequiredReadAction;
 import consulo.javascript.language.psi.JavaScriptType;
 import consulo.javascript.psi.JSComputedName;
 import consulo.language.psi.PsiElement;
-import jakarta.annotation.Nonnull;
 
 /**
  * @author max
@@ -42,7 +41,6 @@ public interface JSProperty extends JSNamedElement {
     @RequiredReadAction
     JSComputedName getComputedName();
 
-    @Nonnull
     @RequiredReadAction
     JavaScriptType getType();
 }

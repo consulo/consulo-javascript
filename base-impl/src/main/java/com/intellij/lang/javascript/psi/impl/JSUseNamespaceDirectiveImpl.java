@@ -27,7 +27,6 @@ import consulo.language.psi.PsiElement;
 import consulo.language.psi.resolve.PsiScopeProcessor;
 import consulo.language.psi.resolve.ResolveState;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * @author Maxim.Mossienko
@@ -42,7 +41,7 @@ public class JSUseNamespaceDirectiveImpl extends JSStubbedStatementImpl<JSUseNam
     }
 
     @Override
-    protected void accept(@Nonnull JSElementVisitor visitor) {
+    protected void accept(JSElementVisitor visitor) {
         visitor.visitJSUseNamespaceDirective(this);
     }
 
@@ -59,10 +58,10 @@ public class JSUseNamespaceDirectiveImpl extends JSStubbedStatementImpl<JSUseNam
 
     @Override
     public boolean processDeclarations(
-        @Nonnull PsiScopeProcessor processor,
-        @Nonnull ResolveState state,
+        PsiScopeProcessor processor,
+        ResolveState state,
         PsiElement lastParent,
-        @Nonnull PsiElement place
+        PsiElement place
     ) {
         return !(processor instanceof ResolveProcessor resolveProcessor && resolveProcessor.lookingForUseNamespaces())
             || processor.execute(this, state);

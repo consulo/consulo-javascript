@@ -30,7 +30,6 @@ import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiReference;
 import consulo.language.util.IncorrectOperationException;
 import consulo.util.lang.StringUtil;
-import jakarta.annotation.Nonnull;
 
 /**
  * @author Maxim.Mossienko
@@ -48,7 +47,7 @@ public class JSAttributeNameValuePairImpl extends JSStubElementImpl<JSAttributeN
     }
 
     @Override
-    protected void accept(@Nonnull JSElementVisitor visitor) {
+    protected void accept(JSElementVisitor visitor) {
         visitor.visitJSAttributeNameValuePair(this);
     }
 
@@ -65,7 +64,7 @@ public class JSAttributeNameValuePairImpl extends JSStubElementImpl<JSAttributeN
 
     @Override
     @RequiredReadAction
-    public PsiElement setName(@Nonnull String name) throws IncorrectOperationException {
+    public PsiElement setName(String name) throws IncorrectOperationException {
         throw new IncorrectOperationException();
     }
 
@@ -93,7 +92,6 @@ public class JSAttributeNameValuePairImpl extends JSStubElementImpl<JSAttributeN
     }
 
     @Override
-    @Nonnull
     @RequiredReadAction
     public PsiReference[] getReferences() {
         String name = getName();

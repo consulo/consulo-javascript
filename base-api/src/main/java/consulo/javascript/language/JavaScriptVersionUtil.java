@@ -20,7 +20,6 @@ import consulo.annotation.access.RequiredReadAction;
 import consulo.language.psi.PsiElement;
 import consulo.language.version.LanguageVersion;
 
-import jakarta.annotation.Nonnull;
 
 import java.util.Collections;
 import java.util.Set;
@@ -31,12 +30,12 @@ import java.util.Set;
  */
 public class JavaScriptVersionUtil {
     @RequiredReadAction
-    public static boolean containsFeature(@Nonnull PsiElement element, @Nonnull JavaScriptFeature feature) {
+    public static boolean containsFeature(PsiElement element, JavaScriptFeature feature) {
         return getFeatures(element).contains(feature);
     }
 
     @RequiredReadAction
-    public static Set<JavaScriptFeature> getFeatures(@Nonnull PsiElement element) {
+    public static Set<JavaScriptFeature> getFeatures(PsiElement element) {
         LanguageVersion languageVersion = element.getLanguageVersion();
         return languageVersion instanceof JavaScriptLanguageVersion ? ((JavaScriptLanguageVersion)languageVersion).getFeatures() : Collections.<JavaScriptFeature>emptySet();
     }

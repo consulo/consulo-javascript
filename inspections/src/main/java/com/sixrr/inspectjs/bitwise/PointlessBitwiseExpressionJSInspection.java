@@ -19,7 +19,6 @@ import consulo.language.psi.PsiElement;
 import consulo.language.util.IncorrectOperationException;
 import consulo.localize.LocalizeValue;
 import consulo.project.Project;
-import jakarta.annotation.Nonnull;
 
 import java.util.Set;
 
@@ -34,19 +33,16 @@ public class PointlessBitwiseExpressionJSInspection extends JavaScriptInspection
         JSTokenTypes.GTGTGT
     );
 
-    @Nonnull
     @Override
     public LocalizeValue getDisplayName() {
         return InspectionJSLocalize.pointlessBitwiseExpressionDisplayName();
     }
 
-    @Nonnull
     @Override
     public LocalizeValue getGroupDisplayName() {
         return JSGroupNames.BITWISE_GROUP_NAME;
     }
 
-    @Nonnull
     @Override
     @RequiredReadAction
     public String buildErrorString(Object state, Object... args) {
@@ -60,7 +56,6 @@ public class PointlessBitwiseExpressionJSInspection extends JavaScriptInspection
         return true;
     }
 
-    @Nonnull
     @Override
     public InspectionToolState<?> createStateProvider() {
         return new PointlessBitwiseExpressionJSInspectionState();
@@ -130,7 +125,6 @@ public class PointlessBitwiseExpressionJSInspection extends JavaScriptInspection
             myState = (PointlessBitwiseExpressionJSInspectionState)state;
         }
 
-        @Nonnull
         @Override
         public LocalizeValue getName() {
             return InspectionJSLocalize.pointlessBitwiseExpressionSimplifyQuickfix();
@@ -148,7 +142,7 @@ public class PointlessBitwiseExpressionJSInspection extends JavaScriptInspection
     private class PointlessBitwiseVisitor extends BaseInspectionVisitor<PointlessBitwiseExpressionJSInspectionState> {
         @Override
         @RequiredReadAction
-        public void visitJSBinaryExpression(@Nonnull JSBinaryExpression expression) {
+        public void visitJSBinaryExpression(JSBinaryExpression expression) {
             super.visitJSBinaryExpression(expression);
             IElementType sign = expression.getOperationSign();
             if (!OUR_BITWISE_TOKENS.contains(sign)) {

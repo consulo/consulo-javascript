@@ -17,8 +17,6 @@ import consulo.language.psi.PsiElement;
 import consulo.language.util.IncorrectOperationException;
 import consulo.localize.LocalizeValue;
 import consulo.project.Project;
-import jakarta.annotation.Nonnull;
-import org.jetbrains.annotations.NonNls;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -28,13 +26,11 @@ public class PointlessArithmeticExpressionJSInspection extends JavaScriptInspect
     private final PointlessArithmeticFix fix = new PointlessArithmeticFix();
 
     @Override
-    @Nonnull
     public LocalizeValue getDisplayName() {
         return InspectionJSLocalize.pointlessArithmeticExpressionDisplayName();
     }
 
     @Override
-    @Nonnull
     public LocalizeValue getGroupDisplayName() {
         return JSGroupNames.CONFUSING_GROUP_NAME;
     }
@@ -90,7 +86,6 @@ public class PointlessArithmeticExpressionJSInspection extends JavaScriptInspect
     }
 
     private class PointlessArithmeticFix extends InspectionJSFix {
-        @Nonnull
         @Override
         public LocalizeValue getName() {
             return InspectionJSLocalize.simplifyFix();
@@ -115,7 +110,7 @@ public class PointlessArithmeticExpressionJSInspection extends JavaScriptInspect
         }
 
         @Override
-        public void visitJSBinaryExpression(@Nonnull JSBinaryExpression expression) {
+        public void visitJSBinaryExpression(JSBinaryExpression expression) {
             super.visitJSBinaryExpression(expression);
             if (!(expression.getROperand() != null)) {
                 return;
@@ -171,7 +166,7 @@ public class PointlessArithmeticExpressionJSInspection extends JavaScriptInspect
      * @noinspection FloatingPointEquality
      */
     private static boolean isZero(JSExpression expression) {
-        @NonNls String text = expression.getText();
+        String text = expression.getText();
         return text.equals("0")||
                 text.equals("0x0")||
                 text.equals("0X0")||
@@ -192,7 +187,7 @@ public class PointlessArithmeticExpressionJSInspection extends JavaScriptInspect
      * @noinspection FloatingPointEquality
      */
     private static boolean isOne(JSExpression expression) {
-        @NonNls String text = expression.getText();
+        String text = expression.getText();
         return text.equals("1") ||
                 text.equals("0x1") ||
                 text.equals("0X1") ||

@@ -32,8 +32,7 @@ import consulo.language.psi.PsiElementVisitor;
 import consulo.language.psi.PsiNamedElement;
 import consulo.language.psi.util.PsiTreeUtil;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author Maxim.Mossienko
@@ -44,9 +43,8 @@ public abstract class JSInspection extends LocalInspectionTool implements Custom
 
     protected abstract JSElementVisitor createVisitor(ProblemsHolder holder);
 
-    @Nonnull
     @Override
-    public PsiElementVisitor buildVisitor(@Nonnull ProblemsHolder holder, boolean isOnTheFly) {
+    public PsiElementVisitor buildVisitor(ProblemsHolder holder, boolean isOnTheFly) {
         myOnTheFly = isOnTheFly;
         return createVisitor(holder);
     }
@@ -62,7 +60,6 @@ public abstract class JSInspection extends LocalInspectionTool implements Custom
         return JavaScriptLanguage.INSTANCE;
     }
 
-    @Nonnull
     @Override
     public HighlightDisplayLevel getDefaultLevel() {
         return HighlightDisplayLevel.WEAK_WARNING;
@@ -73,7 +70,6 @@ public abstract class JSInspection extends LocalInspectionTool implements Custom
         return PsiTreeUtil.getNonStrictParentOfType(psiElement, JSNamedElement.class);
     }
 
-    @Nonnull
     @Override
     public SuppressIntentionAction[] getSuppressActions(PsiElement element) {
         return new SuppressIntentionAction[]{
@@ -82,7 +78,7 @@ public abstract class JSInspection extends LocalInspectionTool implements Custom
     }
 
     @Override
-    public boolean isSuppressedFor(@Nonnull PsiElement element) {
+    public boolean isSuppressedFor(PsiElement element) {
         return SuppressionUtil.isSuppressedInStatement(element, getID(), JSSuppressionHolder.class);
     }
 }

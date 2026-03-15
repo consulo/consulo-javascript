@@ -36,7 +36,6 @@ import consulo.language.psi.resolve.ResolveState;
 import consulo.language.util.IncorrectOperationException;
 import consulo.project.Project;
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.annotation.Nonnull;
 
 import java.io.IOException;
 
@@ -53,7 +52,7 @@ public class JSPackageStatementImpl extends JSStubbedStatementImpl<JSPackageStat
     }
 
     @Override
-    protected void accept(@Nonnull JSElementVisitor visitor) {
+    protected void accept(JSElementVisitor visitor) {
         visitor.visitJSPackageStatement(this);
     }
 
@@ -96,7 +95,7 @@ public class JSPackageStatementImpl extends JSStubbedStatementImpl<JSPackageStat
 
     @Override
     @RequiredWriteAction
-    public PsiElement setName(@Nonnull String name) throws IncorrectOperationException {
+    public PsiElement setName(String name) throws IncorrectOperationException {
         VirtualFile virtualFile = getContainingFile().getVirtualFile();
         String expectedPackageNameFromFile =
             JSResolveUtil.getExpectedPackageNameFromFile(virtualFile, getProject(), false);
@@ -122,10 +121,10 @@ public class JSPackageStatementImpl extends JSStubbedStatementImpl<JSPackageStat
 
     @Override
     public boolean processDeclarations(
-        @Nonnull PsiScopeProcessor processor,
-        @Nonnull ResolveState substitutor,
+        PsiScopeProcessor processor,
+        ResolveState substitutor,
         PsiElement lastParent,
-        @Nonnull PsiElement place
+        PsiElement place
     ) {
         return !(lastParent != null && lastParent.getParent() == this)
             || JSImportHandlingUtil.tryResolveImports(processor, this, place);
@@ -139,7 +138,7 @@ public class JSPackageStatementImpl extends JSStubbedStatementImpl<JSPackageStat
 
     @Override
     @RequiredWriteAction
-    public PsiElement addBefore(@Nonnull PsiElement element, PsiElement anchor) throws IncorrectOperationException {
+    public PsiElement addBefore(PsiElement element, PsiElement anchor) throws IncorrectOperationException {
         if (JSChangeUtil.isStatementOrComment(element)) {
             PsiElement insertedElement = JSChangeUtil.doAddBefore(this, element, anchor);
             CodeStyleManager.getInstance(getProject()).reformatNewlyAddedElement(getNode(), insertedElement.getNode());
@@ -150,7 +149,7 @@ public class JSPackageStatementImpl extends JSStubbedStatementImpl<JSPackageStat
 
     @Override
     @RequiredWriteAction
-    public PsiElement addAfter(@Nonnull PsiElement element, PsiElement anchor) throws IncorrectOperationException {
+    public PsiElement addAfter(PsiElement element, PsiElement anchor) throws IncorrectOperationException {
         if (JSChangeUtil.isStatementOrComment(element)) {
             PsiElement insertedElement = JSChangeUtil.doAddAfter(this, element, anchor);
             CodeStyleManager.getInstance(getProject()).reformatNewlyAddedElement(getNode(), insertedElement.getNode());

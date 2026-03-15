@@ -44,7 +44,6 @@ import consulo.util.lang.StringUtil;
 import consulo.xml.psi.xml.XmlFile;
 import consulo.xml.psi.xml.XmlTag;
 import consulo.xml.psi.xml.XmlToken;
-import jakarta.annotation.Nonnull;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -917,7 +916,7 @@ abstract public class BaseJSSymbolProcessor implements PsiScopeProcessor {
 
                         @Override
                         @RequiredReadAction
-                        public boolean execute(@Nonnull PsiElement element, ResolveState state) {
+                        public boolean execute(PsiElement element, ResolveState state) {
                             return !(element instanceof JSClass jsClass && !processor.processClass(jsClass));
                         }
                     },
@@ -964,14 +963,14 @@ abstract public class BaseJSSymbolProcessor implements PsiScopeProcessor {
     }
 
     public interface TypeProcessor {
-        void process(@Nonnull String type, @Nonnull EvaluateContext evaluateContext, PsiElement source);
+        void process(String type, EvaluateContext evaluateContext, PsiElement source);
 
         @Deprecated
         boolean ecma();
 
         Set<JavaScriptFeature> getFeatures();
 
-        void setUnknownElement(@Nonnull PsiElement element);
+        void setUnknownElement(PsiElement element);
     }
 
     public interface GenericTypeParametersClient {
@@ -989,7 +988,7 @@ abstract public class BaseJSSymbolProcessor implements PsiScopeProcessor {
         }
 
         @Override
-        public void process(@Nonnull String _type, @Nonnull EvaluateContext evaluateContext, PsiElement _source) {
+        public void process(String _type, EvaluateContext evaluateContext, PsiElement _source) {
             setType(type != null && !type.equals(_type) ? ANY_TYPE : _type, _source);
         }
 
@@ -1010,13 +1009,13 @@ abstract public class BaseJSSymbolProcessor implements PsiScopeProcessor {
 
         @Override
         @RequiredReadAction
-        public boolean execute(@Nonnull PsiElement element, ResolveState state) {
+        public boolean execute(PsiElement element, ResolveState state) {
             result = element;
             return true;
         }
 
         @Override
-        public void setUnknownElement(@Nonnull PsiElement _element) {
+        public void setUnknownElement(PsiElement _element) {
             setType(ANY_TYPE, _element);
         }
 

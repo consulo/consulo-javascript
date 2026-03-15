@@ -33,7 +33,6 @@ import consulo.language.util.IncorrectOperationException;
 import consulo.navigation.ItemPresentation;
 import consulo.navigation.NavigationItem;
 import consulo.util.dataholder.Key;
-import jakarta.annotation.Nonnull;
 
 /**
  * @author max
@@ -50,10 +49,10 @@ public abstract class JSStubElementImpl<T extends StubElement> extends StubBased
         super(t, type);
     }
 
-    protected abstract void accept(@Nonnull JSElementVisitor visitor);
+    protected abstract void accept(JSElementVisitor visitor);
 
     @Override
-    public final void accept(@Nonnull PsiElementVisitor visitor) {
+    public final void accept(PsiElementVisitor visitor) {
         if (visitor instanceof JSElementVisitor elementVisitor) {
             accept(elementVisitor);
         }
@@ -77,7 +76,7 @@ public abstract class JSStubElementImpl<T extends StubElement> extends StubBased
 
     @Override
     @RequiredWriteAction
-    public PsiElement addBefore(@Nonnull PsiElement element, PsiElement anchor) throws IncorrectOperationException {
+    public PsiElement addBefore(PsiElement element, PsiElement anchor) throws IncorrectOperationException {
         if (JSChangeUtil.isStatementOrComment(element)) {
             if (JSChangeUtil.isStatementContainer(this)) {
                 return JSChangeUtil.doAddBefore(this, element, anchor);
@@ -92,7 +91,7 @@ public abstract class JSStubElementImpl<T extends StubElement> extends StubBased
 
     @Override
     @RequiredWriteAction
-    public PsiElement addAfter(@Nonnull PsiElement element, PsiElement anchor) throws IncorrectOperationException {
+    public PsiElement addAfter(PsiElement element, PsiElement anchor) throws IncorrectOperationException {
         if (JSChangeUtil.isStatementOrComment(element)) {
             if (JSChangeUtil.isStatementContainer(this)) {
                 return JSChangeUtil.doAddAfter(this, element, anchor);
@@ -106,7 +105,7 @@ public abstract class JSStubElementImpl<T extends StubElement> extends StubBased
 
     @Override
     @RequiredWriteAction
-    public PsiElement addRangeBefore(@Nonnull PsiElement first, @Nonnull PsiElement last, PsiElement anchor)
+    public PsiElement addRangeBefore(PsiElement first, PsiElement last, PsiElement anchor)
         throws IncorrectOperationException {
         if (JSChangeUtil.isStatementOrComment(first)) {
             if (JSChangeUtil.isStatementContainer(this)) {
@@ -136,7 +135,7 @@ public abstract class JSStubElementImpl<T extends StubElement> extends StubBased
 
     @Override
     @RequiredWriteAction
-    public PsiElement add(@Nonnull PsiElement element) throws IncorrectOperationException {
+    public PsiElement add(PsiElement element) throws IncorrectOperationException {
         return addAfter(element, null);
     }
 
@@ -148,7 +147,7 @@ public abstract class JSStubElementImpl<T extends StubElement> extends StubBased
 
     @Override
     @RequiredReadAction
-    public PsiElement replace(@Nonnull PsiElement newElement) throws IncorrectOperationException {
+    public PsiElement replace(PsiElement newElement) throws IncorrectOperationException {
         ASTNode myNode = getNode();
         ASTNode result = newElement.getNode().copyElement();
         myNode.getTreeParent().replaceChild(myNode, result);

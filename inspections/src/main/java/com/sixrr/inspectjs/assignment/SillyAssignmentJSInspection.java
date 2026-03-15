@@ -15,17 +15,14 @@ import consulo.annotation.component.ExtensionImpl;
 import consulo.language.ast.IElementType;
 import consulo.language.psi.PsiElement;
 import consulo.localize.LocalizeValue;
-import jakarta.annotation.Nonnull;
 
 @ExtensionImpl
 public class SillyAssignmentJSInspection extends JavaScriptInspection {
-    @Nonnull
     @Override
     public LocalizeValue getDisplayName() {
         return InspectionJSLocalize.sillyAssignmentDisplayName();
     }
 
-    @Nonnull
     @Override
     public LocalizeValue getGroupDisplayName() {
         return JSGroupNames.ASSIGNMENT_GROUP_NAME;
@@ -50,7 +47,7 @@ public class SillyAssignmentJSInspection extends JavaScriptInspection {
     private static class Visitor extends BaseInspectionVisitor {
         @Override
         @RequiredReadAction
-        public void visitJSAssignmentExpression(@Nonnull JSAssignmentExpression assignment) {
+        public void visitJSAssignmentExpression(JSAssignmentExpression assignment) {
             super.visitJSAssignmentExpression(assignment);
 
             IElementType sign = assignment.getOperationSign();

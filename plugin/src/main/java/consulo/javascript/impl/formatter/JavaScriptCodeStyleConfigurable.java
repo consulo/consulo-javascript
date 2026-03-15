@@ -1,7 +1,6 @@
 package consulo.javascript.impl.formatter;
 
 import consulo.javascript.localize.JavaScriptLocalize;
-import jakarta.annotation.Nonnull;
 
 import consulo.language.codeStyle.ui.setting.CodeStyleAbstractConfigurable;
 import consulo.language.codeStyle.CodeStyleSettings;
@@ -12,7 +11,7 @@ import consulo.language.codeStyle.ui.setting.CodeStyleAbstractPanel;
  * @since 16.02.2015
  */
 public class JavaScriptCodeStyleConfigurable extends CodeStyleAbstractConfigurable {
-    public JavaScriptCodeStyleConfigurable(@Nonnull CodeStyleSettings settings, CodeStyleSettings cloneSettings) {
+    public JavaScriptCodeStyleConfigurable(CodeStyleSettings settings, CodeStyleSettings cloneSettings) {
         super(settings, cloneSettings, JavaScriptLocalize.javascriptName());
     }
 

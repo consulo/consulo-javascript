@@ -29,8 +29,7 @@ import consulo.localize.LocalizeValue;
 import consulo.ui.image.Image;
 import consulo.virtualFileSystem.VirtualFile;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author VISTALL
@@ -43,19 +42,16 @@ public class EcmaScriptFileType extends LanguageFileType implements JavaScriptFi
         super(JavaScriptLanguage.INSTANCE);
     }
 
-    @Nonnull
     @Override
     public String getId() {
         return "ECMASCRIPT";
     }
 
-    @Nonnull
     @Override
     public LocalizeValue getDescription() {
         return LocalizeValue.localizeTODO("ECMAScript files");
     }
 
-    @Nonnull
     @Override
     public String getDefaultExtension() {
         return "es";
@@ -68,7 +64,6 @@ public class EcmaScriptFileType extends LanguageFileType implements JavaScriptFi
     }
 
     @RequiredReadAction
-    @Nonnull
     @Override
     public LanguageVersion getLanguageVersion(@Nullable Module module, @Nullable VirtualFile virtualFile) {
         if (module == null) {

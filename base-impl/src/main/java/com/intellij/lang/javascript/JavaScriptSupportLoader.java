@@ -25,7 +25,6 @@ import consulo.virtualFileSystem.VirtualFile;
 import consulo.xml.ide.highlighter.XmlFileType;
 import consulo.xml.psi.xml.XmlFile;
 import consulo.xml.psi.xml.XmlTag;
-import org.jetbrains.annotations.NonNls;
 
 /**
  * @by max, maxim.mossienko
@@ -36,23 +35,14 @@ public class JavaScriptSupportLoader {
     public static final Language ECMA_SCRIPT_L4 = new Language("ECMA4_DEPRECATED") {
     };
 
-    @NonNls
     public static final String MXML_FILE_EXTENSION_DOT = ".mxml";
-    @NonNls
     public static final String MXML_FILE_EXTENSION2_DOT = ".mxm";
-    @NonNls
     public static final String MXML_URI = "http://www.adobe.com/2006/mxml";
-    @NonNls
     public static final String MXML_URI2 = "http://www.macromedia.com/2003/mxml";
-    @NonNls
     public static final String MXML_URI3 = "http://ns.adobe.com/mxml/2009";
-    @NonNls
     public static final String MXML_URI4 = "library://ns.adobe.com/flex/spark";
-    @NonNls
     public static final String MXML_URI5 = "library://ns.adobe.com/flex/halo";
-    @NonNls
     public static final String MXML_URI6 = "http://ns.adobe.com/fxg/2008";
-    @NonNls
     public static final String[] MXML_URIS = {
         MXML_URI,
         MXML_URI2,
@@ -61,13 +51,9 @@ public class JavaScriptSupportLoader {
         MXML_URI5,
         MXML_URI6
     };
-    @NonNls
     public static final String BINDOWS_URI = "http://www.bindows.net";
-    @NonNls
     public static final String ACTION_SCRIPT_CLASS_TEMPLATE_NAME = "ActionScript Class";
-    @NonNls
     public static final String ACTION_SCRIPT_INTERFACE_TEMPLATE_NAME = "ActionScript Interface";
-    @NonNls
     public static final String MXML_COMPONENT_TEMPLATE_NAME = "Mxml Component";
 
     public static boolean isFlexMxmFile(PsiFile file) {

@@ -36,7 +36,6 @@ import consulo.javascript.psi.JavaScriptImportStatementBase;
 import consulo.language.editor.folding.FoldingBuilder;
 import consulo.language.psi.PsiWhiteSpace;
 
-import jakarta.annotation.Nonnull;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -46,10 +45,9 @@ import java.util.List;
  */
 @ExtensionImpl
 public class JavaScriptFoldingBuilder implements FoldingBuilder {
-    @Nonnull
     @Override
     @RequiredReadAction
-    public FoldingDescriptor[] buildFoldRegions(@Nonnull ASTNode node, @Nonnull Document document) {
+    public FoldingDescriptor[] buildFoldRegions(ASTNode node, Document document) {
         List<FoldingDescriptor> descriptors = new ArrayList<>();
         appendDescriptors(node, document, descriptors);
         return descriptors.toArray(new FoldingDescriptor[descriptors.size()]);
@@ -190,7 +188,6 @@ public class JavaScriptFoldingBuilder implements FoldingBuilder {
         return CodeFoldingSettings.getInstance().COLLAPSE_DOC_COMMENTS && node.getElementType() == JSTokenTypes.DOC_COMMENT;
     }
 
-    @Nonnull
     @Override
     public Language getLanguage() {
         return JavaScriptLanguage.INSTANCE;

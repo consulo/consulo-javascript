@@ -22,8 +22,7 @@
  */
 package com.intellij.javascript.documentation;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 public interface JSDocumentationProcessor {
     enum MetaDocType {
@@ -53,14 +52,14 @@ public interface JSDocumentationProcessor {
 
     boolean needsPlainCommentData();
 
-    boolean onCommentLine(@Nonnull String line);
+    boolean onCommentLine(String line);
 
     boolean onPatternMatch(
-        @Nonnull MetaDocType type,
+        MetaDocType type,
         @Nullable String matchName,
         @Nullable String matchValue,
         @Nullable String remainingLineContent,
-        @Nonnull String line,
+        String line,
         String patternMatched
     );
 }

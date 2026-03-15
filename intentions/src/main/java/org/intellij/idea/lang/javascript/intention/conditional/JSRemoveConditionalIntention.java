@@ -24,7 +24,6 @@ import consulo.language.editor.intention.IntentionMetaData;
 import consulo.language.psi.PsiElement;
 import consulo.language.util.IncorrectOperationException;
 import consulo.localize.LocalizeValue;
-import jakarta.annotation.Nonnull;
 import org.intellij.idea.lang.javascript.intention.JSElementPredicate;
 import org.intellij.idea.lang.javascript.intention.JSIntention;
 import org.intellij.idea.lang.javascript.psiutil.BoolUtils;
@@ -40,20 +39,18 @@ import org.intellij.idea.lang.javascript.psiutil.ParenthesesUtils;
 )
 public class JSRemoveConditionalIntention extends JSIntention {
     @Override
-    @Nonnull
     public LocalizeValue getText() {
         return JSIntentionLocalize.conditionalRemoveConditional();
     }
 
     @Override
-    @Nonnull
     public JSElementPredicate getElementPredicate() {
         return new RemoveConditionalPredicate();
     }
 
     @Override
     @RequiredReadAction
-    public void processIntention(@Nonnull PsiElement element) throws IncorrectOperationException {
+    public void processIntention(PsiElement element) throws IncorrectOperationException {
         JSConditionalExpression exp = (JSConditionalExpression)element;
         JSExpression condition = exp.getCondition();
         JSExpression thenExpression = exp.getThen();
@@ -72,7 +69,7 @@ public class JSRemoveConditionalIntention extends JSIntention {
     private static class RemoveConditionalPredicate implements JSElementPredicate {
         @Override
         @RequiredReadAction
-        public boolean satisfiedBy(@Nonnull PsiElement element) {
+        public boolean satisfiedBy(PsiElement element) {
             if (element instanceof JSConditionalExpression condition && !ErrorUtil.containsError(element)) {
                 JSExpression thenExpression = ParenthesesUtils.stripParentheses(condition.getThen());
                 JSExpression elseExpression = ParenthesesUtils.stripParentheses(condition.getElse());

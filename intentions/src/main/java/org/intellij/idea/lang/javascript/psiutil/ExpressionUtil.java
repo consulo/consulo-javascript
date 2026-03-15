@@ -21,8 +21,7 @@ import consulo.javascript.psi.JSSimpleLiteralExpression;
 import consulo.language.ast.IElementType;
 import consulo.language.psi.PsiElement;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -40,7 +39,7 @@ public class ExpressionUtil {
         return visitor.isConstant;
     }
 
-    public static boolean isIncrementDecrementExpression(@Nonnull PsiElement expression) {
+    public static boolean isIncrementDecrementExpression(PsiElement expression) {
         if (expression instanceof JSPostfixExpression postfixExpression) {
             IElementType operator = postfixExpression.getOperationSign();
             return JSTokenTypes.PLUSPLUS.equals(operator) || JSTokenTypes.MINUSMINUS.equals(operator);

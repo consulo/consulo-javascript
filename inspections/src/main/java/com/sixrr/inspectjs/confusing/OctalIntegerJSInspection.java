@@ -8,19 +8,15 @@ import consulo.annotation.access.RequiredReadAction;
 import consulo.annotation.component.ExtensionImpl;
 import consulo.javascript.psi.JSSimpleLiteralExpression;
 import consulo.localize.LocalizeValue;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
-import org.jetbrains.annotations.NonNls;
+import org.jspecify.annotations.Nullable;
 
 @ExtensionImpl
 public class OctalIntegerJSInspection extends JavaScriptInspection {
-    @Nonnull
     @Override
     public LocalizeValue getDisplayName() {
         return InspectionJSLocalize.octalIntegerDisplayName();
     }
 
-    @Nonnull
     @Override
     public LocalizeValue getGroupDisplayName() {
         return JSGroupNames.CONFUSING_GROUP_NAME;
@@ -42,7 +38,7 @@ public class OctalIntegerJSInspection extends JavaScriptInspection {
         @Override
         public void visitJSLiteralExpression(JSSimpleLiteralExpression jsLiteralExpression) {
             super.visitJSLiteralExpression(jsLiteralExpression);
-            @NonNls String text = jsLiteralExpression.getText();
+            String text = jsLiteralExpression.getText();
             if (text.startsWith("0") && !"0".equals(text)
                 && !text.startsWith("0x") && !text.startsWith("0X")
                 && !text.contains(".") && !text.contains("e") && !text.contains("E"))

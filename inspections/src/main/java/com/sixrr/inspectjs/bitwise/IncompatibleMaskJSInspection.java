@@ -14,31 +14,26 @@ import consulo.annotation.access.RequiredReadAction;
 import consulo.annotation.component.ExtensionImpl;
 import consulo.language.ast.IElementType;
 import consulo.localize.LocalizeValue;
-import jakarta.annotation.Nonnull;
 import org.intellij.lang.annotations.Pattern;
 
 @ExtensionImpl
 public class IncompatibleMaskJSInspection extends JavaScriptInspection {
-    @Nonnull
     @Override
     @Pattern(value = "[a-zA-Z_0-9.-]+")
     public String getID() {
         return "IncompatibleBitwiseMaskOperation";
     }
 
-    @Nonnull
     @Override
     public LocalizeValue getDisplayName() {
         return InspectionJSLocalize.incompatibleMaskOperationDisplayName();
     }
 
-    @Nonnull
     @Override
     public LocalizeValue getGroupDisplayName() {
         return JSGroupNames.BITWISE_GROUP_NAME;
     }
 
-    @Nonnull
     @Override
     @RequiredReadAction
     public String buildErrorString(Object state, Object... args) {
@@ -65,7 +60,7 @@ public class IncompatibleMaskJSInspection extends JavaScriptInspection {
     private static class IncompatibleMaskVisitor extends BaseInspectionVisitor {
         @Override
         @RequiredReadAction
-        public void visitJSBinaryExpression(@Nonnull JSBinaryExpression expression) {
+        public void visitJSBinaryExpression(JSBinaryExpression expression) {
             super.visitJSBinaryExpression(expression);
             JSExpression rhs = expression.getROperand();
             if (!ComparisonUtils.isEqualityComparison(expression)) {

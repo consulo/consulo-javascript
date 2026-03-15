@@ -25,8 +25,7 @@ import consulo.language.psi.resolve.ResolveState;
 import consulo.language.psi.resolve.PsiScopeProcessor;
 import consulo.annotation.access.RequiredReadAction;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author max
@@ -64,17 +63,17 @@ public class JSVarStatementImpl extends JSStubbedStatementImpl<JSVarStatementStu
     }
 
     @Override
-    protected void accept(@Nonnull JSElementVisitor visitor) {
+    protected void accept(JSElementVisitor visitor) {
         visitor.visitJSVarStatement(this);
     }
 
     @Override
     @RequiredReadAction
     public boolean processDeclarations(
-        @Nonnull PsiScopeProcessor processor,
-        @Nonnull ResolveState state,
+        PsiScopeProcessor processor,
+        ResolveState state,
         PsiElement lastParent,
-        @Nonnull PsiElement place
+        PsiElement place
     ) {
         JSVariable[] vars = getVariables();
 

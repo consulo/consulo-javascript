@@ -9,7 +9,6 @@ import consulo.execution.ui.console.ConsoleViewContentType;
 import consulo.javascript.debugger.browser.BrowserCDTDebugProcess;
 import consulo.javascript.debugger.browser.SessionHolder;
 import consulo.javascript.debugger.cdt.CDTProcessBase;
-import jakarta.annotation.Nonnull;
 import jakarta.inject.Inject;
 
 import java.nio.charset.StandardCharsets;
@@ -31,12 +30,12 @@ public class ExtensionWebSocketAccepter implements WebSocketAccepter {
     }
 
     @Override
-    public void accept(@Nonnull WebSocketConnection webSocketConnection, @Nonnull byte[] bytes) {
+    public void accept(WebSocketConnection webSocketConnection, byte[] bytes) {
         accept(webSocketConnection, new String(bytes, StandardCharsets.UTF_8));
     }
 
     @Override
-    public void accept(@Nonnull WebSocketConnection conn, @Nonnull String text) {
+    public void accept(WebSocketConnection conn, String text) {
         try {
             SessionHolder.BrowserSession session = null;
 

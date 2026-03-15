@@ -25,7 +25,6 @@ import consulo.language.psi.util.PsiTreeUtil;
 import consulo.logging.Logger;
 import consulo.xml.psi.xml.XmlFile;
 import org.intellij.idea.lang.javascript.psiutil.FindReferenceUtil;
-import org.jetbrains.annotations.NonNls;
 
 import java.util.Iterator;
 import java.util.NoSuchElementException;
@@ -86,11 +85,8 @@ public class JSFunctionVisitor extends JSElementVisitor {
      * this.visitElement() can be called.
      */
     private static class EmbeddedJSElementIterator implements Iterator<JSElement> {
-        @NonNls
         private static final String SCRIPT_START = "<SCRIPT";
-        @NonNls
         private static final String SCRIPT_END = "</SCRIPT>";
-        @NonNls
         private static final String HTML_TAG_END = ">";
 
         final XmlFile file;

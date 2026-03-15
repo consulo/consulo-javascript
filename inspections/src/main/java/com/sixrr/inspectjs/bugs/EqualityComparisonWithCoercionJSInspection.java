@@ -16,32 +16,26 @@ import consulo.language.psi.PsiElement;
 import consulo.language.util.IncorrectOperationException;
 import consulo.localize.LocalizeValue;
 import consulo.project.Project;
-import jakarta.annotation.Nonnull;
 import org.intellij.lang.annotations.Pattern;
-import org.jetbrains.annotations.NonNls;
 
 @ExtensionImpl
 public class EqualityComparisonWithCoercionJSInspection extends JavaScriptInspection {
-    @Nonnull
     @Override
     @Pattern(value = "[a-zA-Z_0-9.-]+")
     public String getID() {
         return "EqualityComparisonWithCoercionJS";
     }
 
-    @Nonnull
     @Override
     public LocalizeValue getDisplayName() {
         return InspectionJSLocalize.equalityComparisonWithCoercionDisplayName();
     }
 
-    @Nonnull
     @Override
     public LocalizeValue getGroupDisplayName() {
         return JSGroupNames.BUGS_GROUP_NAME;
     }
 
-    @Nonnull
     @Override
     @RequiredReadAction
     protected String buildErrorString(Object state, Object... args) {
@@ -69,7 +63,6 @@ public class EqualityComparisonWithCoercionJSInspection extends JavaScriptInspec
         }
 
         @Override
-        @Nonnull
         public LocalizeValue getName() {
             return InspectionJSLocalize.equalityComparisonWithCoercionFix(sign);
         }
@@ -90,7 +83,7 @@ public class EqualityComparisonWithCoercionJSInspection extends JavaScriptInspec
 
     private static class EqualityComparisonWithCoercionVisitor extends BaseInspectionVisitor {
         @Override
-        public void visitJSBinaryExpression(@Nonnull JSBinaryExpression expression) {
+        public void visitJSBinaryExpression(JSBinaryExpression expression) {
             super.visitJSBinaryExpression(expression);
             JSExpression lhs = expression.getLOperand();
             if (lhs == null) {
@@ -112,7 +105,7 @@ public class EqualityComparisonWithCoercionJSInspection extends JavaScriptInspec
     }
 
     private static boolean mayCauseCoercion(JSExpression expression) {
-        @NonNls String text = expression.getText();
+        String text = expression.getText();
         return "0".equals(text)
             || "0x0".equals(text)
             || "0X0".equals(text)

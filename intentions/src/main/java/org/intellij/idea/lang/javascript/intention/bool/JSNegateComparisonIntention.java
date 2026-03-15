@@ -25,7 +25,6 @@ import consulo.language.editor.intention.IntentionMetaData;
 import consulo.language.psi.PsiElement;
 import consulo.language.util.IncorrectOperationException;
 import consulo.localize.LocalizeValue;
-import jakarta.annotation.Nonnull;
 import org.intellij.idea.lang.javascript.intention.JSElementPredicate;
 import org.intellij.idea.lang.javascript.intention.JSMutablyNamedIntention;
 import org.intellij.idea.lang.javascript.psiutil.ComparisonUtils;
@@ -38,7 +37,6 @@ import org.intellij.idea.lang.javascript.psiutil.JSElementFactory;
     fileExtensions = "js"
 )
 public class JSNegateComparisonIntention extends JSMutablyNamedIntention {
-    @Nonnull
     @Override
     protected LocalizeValue getBasicText() {
         return JSIntentionLocalize.boolNegateComparison();
@@ -64,14 +62,13 @@ public class JSNegateComparisonIntention extends JSMutablyNamedIntention {
     }
 
     @Override
-    @Nonnull
     public JSElementPredicate getElementPredicate() {
         return new ComparisonPredicate();
     }
 
     @Override
     @RequiredReadAction
-    public void processIntention(@Nonnull PsiElement element) throws IncorrectOperationException {
+    public void processIntention(PsiElement element) throws IncorrectOperationException {
         JSBinaryExpression exp = (JSBinaryExpression)element;
         JSExpression lhs = exp.getLOperand();
         JSExpression rhs = exp.getROperand();

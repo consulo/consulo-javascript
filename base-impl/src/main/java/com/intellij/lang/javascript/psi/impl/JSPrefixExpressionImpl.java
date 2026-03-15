@@ -26,8 +26,7 @@ import consulo.javascript.language.psi.JavaScriptType;
 import consulo.language.ast.ASTNode;
 import consulo.language.psi.PsiElement;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author max
@@ -59,12 +58,11 @@ public class JSPrefixExpressionImpl extends JSExpressionImpl implements JSPrefix
     }
 
     @Override
-    protected void accept(@Nonnull JSElementVisitor visitor) {
+    protected void accept(JSElementVisitor visitor) {
         visitor.visitJSPrefixExpression(this);
     }
 
     @RequiredReadAction
-    @Nonnull
     @Override
     public JavaScriptType getType() {
         JSExpression expression = getExpression();

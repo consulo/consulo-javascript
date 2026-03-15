@@ -27,12 +27,10 @@ import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
 import consulo.language.util.IncorrectOperationException;
 import consulo.localize.LocalizeValue;
-import jakarta.annotation.Nonnull;
 import org.intellij.idea.lang.javascript.intention.JSElementPredicate;
 import org.intellij.idea.lang.javascript.intention.JSIntention;
 import org.intellij.idea.lang.javascript.psiutil.ErrorUtil;
 import org.intellij.idea.lang.javascript.psiutil.JSElementFactory;
-import org.jetbrains.annotations.NonNls;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -44,24 +42,21 @@ import java.util.List;
     fileExtensions = "js"
 )
 public class JSSplitDeclarationAndInitializationIntention extends JSIntention {
-    @NonNls
     private static final String VAR_KEYWORD = "var ";
 
     @Override
-    @Nonnull
     public LocalizeValue getText() {
         return JSIntentionLocalize.initializationSplitDeclarationAndInitialization();
     }
 
     @Override
-    @Nonnull
     protected JSElementPredicate getElementPredicate() {
         return new Predicate();
     }
 
     @Override
     @RequiredReadAction
-    public void processIntention(@Nonnull PsiElement element) throws IncorrectOperationException {
+    public void processIntention(PsiElement element) throws IncorrectOperationException {
         assert (element instanceof JSVarStatement);
 
         JSVarStatement varStatement = (JSVarStatement)element;
@@ -98,7 +93,7 @@ public class JSSplitDeclarationAndInitializationIntention extends JSIntention {
 
     private static class Predicate implements JSElementPredicate {
         @Override
-        public boolean satisfiedBy(@Nonnull PsiElement element) {
+        public boolean satisfiedBy(PsiElement element) {
             PsiElement elementParent;
 
             if (!(element instanceof JSVarStatement)

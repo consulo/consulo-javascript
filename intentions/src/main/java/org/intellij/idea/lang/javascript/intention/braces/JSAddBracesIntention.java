@@ -24,7 +24,6 @@ import consulo.language.psi.PsiComment;
 import consulo.language.psi.PsiElement;
 import consulo.language.util.IncorrectOperationException;
 import consulo.localize.LocalizeValue;
-import jakarta.annotation.Nonnull;
 import org.intellij.idea.lang.javascript.intention.JSElementPredicate;
 import org.intellij.idea.lang.javascript.intention.JSMutablyNamedIntention;
 import org.intellij.idea.lang.javascript.psiutil.JSElementFactory;
@@ -37,12 +36,10 @@ import org.intellij.idea.lang.javascript.psiutil.JSElementFactory;
 )
 public class JSAddBracesIntention extends JSMutablyNamedIntention {
     @Override
-    @Nonnull
     protected JSElementPredicate getElementPredicate() {
         return new AddBracesPredicate();
     }
 
-    @Nonnull
     @Override
     protected LocalizeValue getBasicText() {
         return JSIntentionLocalize.bracesAdd();
@@ -73,7 +70,7 @@ public class JSAddBracesIntention extends JSMutablyNamedIntention {
 
     @Override
     @RequiredReadAction
-    protected void processIntention(@Nonnull PsiElement element) throws IncorrectOperationException {
+    protected void processIntention(PsiElement element) throws IncorrectOperationException {
         if (!(element instanceof JSStatement statement)) {
             return;
         }
@@ -87,7 +84,7 @@ public class JSAddBracesIntention extends JSMutablyNamedIntention {
 
     private static class AddBracesPredicate implements JSElementPredicate {
         @Override
-        public boolean satisfiedBy(@Nonnull PsiElement element) {
+        public boolean satisfiedBy(PsiElement element) {
             if (!(element instanceof JSStatement)
                 || element instanceof JSBlockStatement
                 || !(element.getParent() instanceof JSElement parent)) {

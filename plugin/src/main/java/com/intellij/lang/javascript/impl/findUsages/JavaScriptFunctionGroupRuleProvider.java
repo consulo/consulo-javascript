@@ -21,7 +21,6 @@ import com.intellij.lang.javascript.psi.JSNamedElement;
 import consulo.annotation.component.ExtensionImpl;
 import consulo.application.AllIcons;
 import consulo.usage.UsageGroup;
-import jakarta.annotation.Nonnull;
 
 /**
  * @author Maxim.Mossienko
@@ -39,7 +38,7 @@ public class JavaScriptFunctionGroupRuleProvider extends JavaScriptGroupRuleProv
     }
 
     private static class FunctionUsageGroup extends JavaScriptGroupRuleProviderBase.PsiNamedElementUsageGroupBase<JSFunction> {
-        public FunctionUsageGroup(@Nonnull JSFunction function) {
+        public FunctionUsageGroup(JSFunction function) {
             super(function, AllIcons.Nodes.Function);
         }
     }

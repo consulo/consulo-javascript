@@ -25,8 +25,7 @@ import consulo.javascript.psi.impl.reference.JSPropertyNameReferenceProvider;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiReference;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author VISTALL
@@ -37,7 +36,7 @@ public class DefaultJSPropertyNameReferenceProvider implements JSPropertyNameRef
     @RequiredReadAction
     @Nullable
     @Override
-    public PsiReference getReference(@Nonnull JSProperty property) {
+    public PsiReference getReference(JSProperty property) {
         PsiElement nameIdentifier = property.getNameIdentifier();
         assert nameIdentifier != null;
         return new JSPropertyNameReference(property, nameIdentifier);

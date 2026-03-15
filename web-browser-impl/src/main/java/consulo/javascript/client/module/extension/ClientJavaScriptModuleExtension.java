@@ -16,8 +16,7 @@ import consulo.module.content.layer.extension.SdkModuleInheritableNamedPointerIm
 import consulo.module.extension.ModuleInheritableNamedPointer;
 import org.jdom.Element;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author VISTALL
@@ -28,12 +27,12 @@ public class ClientJavaScriptModuleExtension extends ModuleExtensionBase<ClientJ
 
     protected LanguageVersion myLanguageVersion = StandardJavaScriptVersions.getInstance().getDefaultVersion();
 
-    public ClientJavaScriptModuleExtension(@Nonnull String id, @Nonnull ModuleRootLayer rootLayer) {
+    public ClientJavaScriptModuleExtension(String id, ModuleRootLayer rootLayer) {
         super(id, rootLayer);
         myPointer = new SdkModuleInheritableNamedPointerImpl(rootLayer, id) {
             @Nullable
             @Override
-            public String getItemNameFromModule(@Nonnull Module module) {
+            public String getItemNameFromModule(Module module) {
                 ClientJavaScriptModuleExtension extension = ModuleUtilCore.getExtension(module, ClientJavaScriptModuleExtension.class);
                 if (extension == null) {
                     return null;
@@ -43,7 +42,7 @@ public class ClientJavaScriptModuleExtension extends ModuleExtensionBase<ClientJ
 
             @Nullable
             @Override
-            public Sdk getItemFromModule(@Nonnull Module module) {
+            public Sdk getItemFromModule(Module module) {
                 ClientJavaScriptModuleExtension extension = ModuleUtilCore.getExtension(module, ClientJavaScriptModuleExtension.class);
                 if (extension == null) {
                     return null;
@@ -58,20 +57,19 @@ public class ClientJavaScriptModuleExtension extends ModuleExtensionBase<ClientJ
 
     @RequiredReadAction
     @Override
-    protected void loadStateImpl(@Nonnull Element element) {
+    protected void loadStateImpl(Element element) {
         super.loadStateImpl(element);
         myLanguageVersion = StandardJavaScriptVersions.getInstance().findVersionById(element.getAttributeValue("language-version"));
     }
 
     @Override
-    protected void getStateImpl(@Nonnull Element element) {
+    protected void getStateImpl(Element element) {
         super.getStateImpl(element);
         if (myLanguageVersion != StandardJavaScriptVersions.getInstance().getDefaultVersion()) {
             element.setAttribute("language-version", myLanguageVersion.getId());
         }
     }
 
-    @Nonnull
     @Override
     public ModuleInheritableNamedPointer<Sdk> getInheritableSdk() {
         return myPointer;
@@ -89,13 +87,11 @@ public class ClientJavaScriptModuleExtension extends ModuleExtensionBase<ClientJ
         return myPointer.getName();
     }
 
-    @Nonnull
     @Override
     public Class<? extends SdkType> getSdkTypeClass() {
         throw new IllegalArgumentException();
     }
 
-    @Nonnull
     @Override
     public LanguageVersion getLanguageVersion() {
         return myLanguageVersion;
@@ -103,7 +99,7 @@ public class ClientJavaScriptModuleExtension extends ModuleExtensionBase<ClientJ
 
     @RequiredReadAction
     @Override
-    public void commit(@Nonnull ClientJavaScriptModuleExtension mutableModuleExtension) {
+    public void commit(ClientJavaScriptModuleExtension mutableModuleExtension) {
         super.commit(mutableModuleExtension);
         myLanguageVersion = mutableModuleExtension.getLanguageVersion();
     }

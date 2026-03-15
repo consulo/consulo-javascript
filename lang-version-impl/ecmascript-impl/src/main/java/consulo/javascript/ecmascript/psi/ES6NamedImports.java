@@ -3,7 +3,6 @@ package consulo.javascript.ecmascript.psi;
 import com.intellij.lang.javascript.psi.JSElement;
 import consulo.annotation.access.RequiredReadAction;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
@@ -13,7 +12,6 @@ import jakarta.annotation.Nonnull;
  * .......^^^^^^^ named imports group
  */
 public interface ES6NamedImports extends JSElement {
-    @Nonnull
     @RequiredReadAction
     ES6ImportedBinding[] getBindings();
 }

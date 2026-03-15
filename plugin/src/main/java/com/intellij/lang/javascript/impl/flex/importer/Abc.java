@@ -18,7 +18,6 @@ package com.intellij.lang.javascript.impl.flex.importer;
 
 import consulo.util.collection.ArrayUtil;
 import consulo.util.lang.StringUtil;
-import jakarta.annotation.Nonnull;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -546,7 +545,7 @@ class Abc {
     int totalSize;
     final int opSizes[] = new int[256];
 
-    public Abc(@Nonnull ByteBuffer _data, @Nonnull FlexByteCodeInformationProcessor _processor) {
+    public Abc(ByteBuffer _data, FlexByteCodeInformationProcessor _processor) {
         data = _data;
         processor = _processor;
 
@@ -1088,7 +1087,7 @@ class Abc {
         reportAboutPercentage("MethodBodies size ", data, start, processor);
     }
 
-    private static void reportAboutPercentage(String s, ByteBuffer data, int start, @Nonnull FlexByteCodeInformationProcessor processor) {
+    private static void reportAboutPercentage(String s, ByteBuffer data, int start, FlexByteCodeInformationProcessor processor) {
         processor.dumpStat(s + (data.getPosition() - start) + " " + (int)100f * (data.getPosition() - start) / data.bytesSize() + " %\n");
     }
 }

@@ -22,7 +22,6 @@ import consulo.execution.debug.XDebugSession;
 import consulo.execution.debug.localize.XDebuggerLocalize;
 import consulo.localize.LocalizeValue;
 import consulo.process.ExecutionException;
-import jakarta.annotation.Nonnull;
 import org.chromium.sdk.JavascriptVmFactory;
 import org.chromium.sdk.StandaloneVm;
 
@@ -34,7 +33,7 @@ import java.net.InetSocketAddress;
  */
 @UsedInPlugin
 public class V8DebugProcess extends V8BaseDebugProcess<StandaloneVm> {
-    public V8DebugProcess(@Nonnull XDebugSession session, ExecutionResult result, int port) throws ExecutionException {
+    public V8DebugProcess(XDebugSession session, ExecutionResult result, int port) throws ExecutionException {
         super(session, result);
 
         myVm = JavascriptVmFactory.getInstance().createStandalone(new InetSocketAddress("localhost", port), null);
@@ -45,7 +44,6 @@ public class V8DebugProcess extends V8BaseDebugProcess<StandaloneVm> {
         myVm.attach(new V8DebugEventListener(this));
     }
 
-    @Nonnull
     @Override
     public LocalizeValue getCurrentStateMessage() {
         if (myVm == null) {

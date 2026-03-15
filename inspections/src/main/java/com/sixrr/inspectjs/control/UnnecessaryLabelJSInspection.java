@@ -13,17 +13,14 @@ import consulo.language.psi.PsiElement;
 import consulo.language.util.IncorrectOperationException;
 import consulo.localize.LocalizeValue;
 import consulo.project.Project;
-import jakarta.annotation.Nonnull;
 
 @ExtensionImpl
 public class UnnecessaryLabelJSInspection extends JavaScriptInspection {
-    @Nonnull
     @Override
     public LocalizeValue getDisplayName() {
         return InspectionJSLocalize.unnecessaryLabelDisplayName();
     }
 
-    @Nonnull
     @Override
     public LocalizeValue getGroupDisplayName() {
         return JSGroupNames.CONTROL_FLOW_GROUP_NAME;
@@ -34,7 +31,6 @@ public class UnnecessaryLabelJSInspection extends JavaScriptInspection {
         return new UnusedLabelVisitor();
     }
 
-    @Nonnull
     @Override
     @RequiredReadAction
     protected String buildErrorString(Object state, Object... args) {
@@ -47,7 +43,6 @@ public class UnnecessaryLabelJSInspection extends JavaScriptInspection {
     }
 
     private static class UnusedLabelFix extends InspectionJSFix {
-        @Nonnull
         @Override
         public LocalizeValue getName() {
             return InspectionJSLocalize.removeLabelFix();
@@ -95,14 +90,14 @@ public class UnnecessaryLabelJSInspection extends JavaScriptInspection {
         }
 
         @Override
-        public void visitElement(@Nonnull PsiElement element) {
+        public void visitElement(PsiElement element) {
             if (!found) {
                 super.visitElement(element);
             }
         }
 
         @Override
-        public void visitJSContinueStatement(@Nonnull JSContinueStatement continueStatement) {
+        public void visitJSContinueStatement(JSContinueStatement continueStatement) {
             if (found) {
                 return;
             }
@@ -114,7 +109,7 @@ public class UnnecessaryLabelJSInspection extends JavaScriptInspection {
         }
 
         @Override
-        public void visitJSBreakStatement(@Nonnull JSBreakStatement breakStatement) {
+        public void visitJSBreakStatement(JSBreakStatement breakStatement) {
             if (found) {
                 return;
             }

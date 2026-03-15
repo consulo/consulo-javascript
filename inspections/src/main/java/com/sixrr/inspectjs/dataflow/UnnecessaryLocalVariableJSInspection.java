@@ -13,29 +13,24 @@ import consulo.language.psi.PsiReference;
 import consulo.language.psi.util.PsiTreeUtil;
 
 import consulo.localize.LocalizeValue;
-import jakarta.annotation.Nonnull;
 
 @ExtensionImpl
 public class UnnecessaryLocalVariableJSInspection extends JavaScriptInspection {
-    @Nonnull
     @Override
     public LocalizeValue getDisplayName() {
         return InspectionJSLocalize.redundantLocalVariableDisplayName();
     }
 
-    @Nonnull
     @Override
     public LocalizeValue getGroupDisplayName() {
         return JSGroupNames.DATA_FLOW_ISSUES;
     }
 
-    @Nonnull
     @Override
     public InspectionToolState<?> createStateProvider() {
         return new UnnecessaryLocalVariableJSInspectionState();
     }
 
-    @Nonnull
     @Override
     @RequiredReadAction
     public String buildErrorString(Object state, Object... args) {
@@ -54,7 +49,7 @@ public class UnnecessaryLocalVariableJSInspection extends JavaScriptInspection {
 
     private class UnnecessaryLocalVariableVisitor extends BaseInspectionVisitor<UnnecessaryLocalVariableJSInspectionState> {
         @Override
-        public void visitJSVarStatement(@Nonnull JSVarStatement varStatement) {
+        public void visitJSVarStatement(JSVarStatement varStatement) {
             super.visitJSVarStatement(varStatement);
             JSVariable[] variables = varStatement.getVariables();
             for (JSVariable variable : variables) {

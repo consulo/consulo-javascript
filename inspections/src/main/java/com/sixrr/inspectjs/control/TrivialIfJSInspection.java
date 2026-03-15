@@ -20,28 +20,23 @@ import consulo.language.psi.util.PsiTreeUtil;
 import consulo.language.util.IncorrectOperationException;
 import consulo.localize.LocalizeValue;
 import consulo.project.Project;
-import jakarta.annotation.Nonnull;
 import org.intellij.lang.annotations.Pattern;
-import org.jetbrains.annotations.NonNls;
 
 @ExtensionImpl
 public class TrivialIfJSInspection extends JavaScriptInspection {
     private final TrivialIfFix fix = new TrivialIfFix();
 
-    @Nonnull
     @Override
     @Pattern(value = "[a-zA-Z_0-9.-]+")
     public String getID() {
         return "RedundantIfStatementJS";
     }
 
-    @Nonnull
     @Override
     public LocalizeValue getDisplayName() {
         return InspectionJSLocalize.redundantIfStatementDisplayName();
     }
 
-    @Nonnull
     @Override
     public LocalizeValue getGroupDisplayName() {
         return JSGroupNames.CONTROL_FLOW_GROUP_NAME;
@@ -69,7 +64,6 @@ public class TrivialIfJSInspection extends JavaScriptInspection {
     }
 
     private static class TrivialIfFix extends InspectionJSFix {
-        @Nonnull
         @Override
         public LocalizeValue getName() {
             return InspectionJSLocalize.simplifyFix();
@@ -109,7 +103,7 @@ public class TrivialIfJSInspection extends JavaScriptInspection {
             JSExpression condition = statement.getCondition();
             String conditionText = condition.getText();
             PsiElement nextStatement = PsiTreeUtil.skipSiblingsForward(statement, new Class[]{PsiWhiteSpace.class});
-            @NonNls String newStatement = "return " + conditionText + ';';
+            String newStatement = "return " + conditionText + ';';
             replaceStatement(statement, newStatement);
             assert nextStatement != null;
             deleteElement(nextStatement);
@@ -118,7 +112,7 @@ public class TrivialIfJSInspection extends JavaScriptInspection {
         private void repaceSimplifiableReturn(JSIfStatement statement) throws IncorrectOperationException {
             JSExpression condition = statement.getCondition();
             String conditionText = condition.getText();
-            @NonNls String newStatement = "return " + conditionText + ';';
+            String newStatement = "return " + conditionText + ';';
             replaceStatement(statement, newStatement);
         }
 
@@ -176,7 +170,7 @@ public class TrivialIfJSInspection extends JavaScriptInspection {
             if (nextStatement == null) {
                 return;
             }
-            @NonNls String newStatement = "return " + conditionText + ';';
+            String newStatement = "return " + conditionText + ';';
             replaceStatement(statement, newStatement);
             deleteElement(nextStatement);
         }
@@ -184,7 +178,7 @@ public class TrivialIfJSInspection extends JavaScriptInspection {
         private void repaceSimplifiableReturnNegated(JSIfStatement statement) throws IncorrectOperationException {
             JSExpression condition = statement.getCondition();
             String conditionText = BoolUtils.getNegatedExpressionText(condition);
-            @NonNls String newStatement = "return " + conditionText + ';';
+            String newStatement = "return " + conditionText + ';';
             replaceStatement(statement, newStatement);
         }
 
@@ -205,7 +199,7 @@ public class TrivialIfJSInspection extends JavaScriptInspection {
 
     private static class TrivialIfVisitor extends BaseInspectionVisitor {
         @Override
-        public void visitJSIfStatement(@Nonnull JSIfStatement ifStatement) {
+        public void visitJSIfStatement(JSIfStatement ifStatement) {
             super.visitJSIfStatement(ifStatement);
             JSExpression condition = ifStatement.getCondition();
             if (condition == null) {
@@ -400,7 +394,6 @@ public class TrivialIfJSInspection extends JavaScriptInspection {
         }
     }
 
-    @NonNls
     private static String getTextForOperator(IElementType operator) {
         if (JSTokenTypes.EQ.equals(operator)) {
             return "=";

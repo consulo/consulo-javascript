@@ -3,7 +3,6 @@ package consulo.javascript.jsx.language;
 import consulo.annotation.component.ExtensionImpl;
 import consulo.javascript.ecmascript.lang.EcmaScript6JavaScriptVersion;
 import consulo.javascript.language.JavaScriptLanguage;
-import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
@@ -11,7 +10,6 @@ import jakarta.annotation.Nonnull;
  */
 @ExtensionImpl
 public class JSXJavaScriptVersion extends EcmaScript6JavaScriptVersion {
-    @Nonnull
     public static EcmaScript6JavaScriptVersion getInstance() {
         return JavaScriptLanguage.INSTANCE.findVersionByClass(JSXJavaScriptVersion.class);
     }
@@ -25,7 +23,6 @@ public class JSXJavaScriptVersion extends EcmaScript6JavaScriptVersion {
         return 60;
     }
 
-    @Nonnull
     @Override
     public String getPresentableName() {
         return "JSX";

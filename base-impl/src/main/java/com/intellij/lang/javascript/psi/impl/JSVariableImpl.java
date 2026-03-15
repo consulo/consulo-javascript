@@ -26,7 +26,6 @@ import consulo.annotation.access.RequiredWriteAction;
 import consulo.language.psi.PsiElement;
 import consulo.language.ast.ASTNode;
 import consulo.language.util.IncorrectOperationException;
-import jakarta.annotation.Nonnull;
 
 /**
  * @author max
@@ -41,7 +40,6 @@ public class JSVariableImpl extends JSVariableBaseImpl<JSVariableStub, JSVariabl
         super(stub, JSElementTypes.VARIABLE);
     }
 
-    @Nonnull
     @Override
     @RequiredReadAction
     public PsiElement getNavigationElement() {
@@ -58,7 +56,7 @@ public class JSVariableImpl extends JSVariableBaseImpl<JSVariableStub, JSVariabl
 
     @Override
     @RequiredWriteAction
-    public PsiElement setName(@Nonnull String name) throws IncorrectOperationException {
+    public PsiElement setName(String name) throws IncorrectOperationException {
         String oldName = getName();
         PsiElement element = super.setName(name);
         if (getParent().getParent() instanceof JSPackageStatement) {

@@ -26,7 +26,6 @@ import consulo.language.inject.MultiHostInjector;
 import consulo.language.psi.PsiLanguageInjectionHost;
 import org.intellij.lang.regexp.RegExpLanguage;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
@@ -34,7 +33,6 @@ import jakarta.annotation.Nonnull;
  */
 @ExtensionImpl
 public class JavaScriptRegexpMultiHostInjector implements MultiHostInjector {
-    @Nonnull
     @Override
     public Class<? extends PsiElement> getElementClass() {
         return JSRegExpLiteralExpressionImpl.class;
@@ -42,7 +40,7 @@ public class JavaScriptRegexpMultiHostInjector implements MultiHostInjector {
 
     @Override
     @RequiredReadAction
-    public void injectLanguages(@Nonnull MultiHostRegistrar registrar, @Nonnull PsiElement context) {
+    public void injectLanguages(MultiHostRegistrar registrar, PsiElement context) {
         if (context instanceof JSRegExpLiteralExpressionImpl) {
             String text = context.getText();
 

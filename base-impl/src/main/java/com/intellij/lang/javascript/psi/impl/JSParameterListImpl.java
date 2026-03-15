@@ -23,7 +23,6 @@ import com.intellij.lang.javascript.psi.JSParameterList;
 import com.intellij.lang.javascript.psi.stubs.JSParameterListStub;
 import consulo.language.ast.ASTNode;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * @author max
@@ -44,7 +43,7 @@ public class JSParameterListImpl extends JSStubElementImpl<JSParameterListStub> 
     }
 
     @Override
-    protected void accept(@Nonnull JSElementVisitor visitor) {
+    protected void accept(JSElementVisitor visitor) {
         visitor.visitJSParameterList(this);
     }
 }

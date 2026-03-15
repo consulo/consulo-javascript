@@ -12,23 +12,19 @@ import consulo.annotation.access.RequiredReadAction;
 import consulo.annotation.component.ExtensionImpl;
 import consulo.language.psi.PsiElement;
 import consulo.localize.LocalizeValue;
-import jakarta.annotation.Nonnull;
 
 @ExtensionImpl
 public class TextLabelInSwitchStatementJSInspection extends JavaScriptInspection {
-    @Nonnull
     @Override
     public LocalizeValue getDisplayName() {
         return InspectionJSLocalize.textLabelInSwitchStatementDisplayName();
     }
 
-    @Nonnull
     @Override
     public LocalizeValue getGroupDisplayName() {
         return JSGroupNames.BUGS_GROUP_NAME;
     }
 
-    @Nonnull
     @Override
     @RequiredReadAction
     public String buildErrorString(Object state, Object... args) {
@@ -42,7 +38,7 @@ public class TextLabelInSwitchStatementJSInspection extends JavaScriptInspection
 
     private static class TextLabelInSwitchStatementVisitor extends BaseInspectionVisitor {
         @Override
-        public void visitJSSwitchStatement(@Nonnull JSSwitchStatement statement) {
+        public void visitJSSwitchStatement(JSSwitchStatement statement) {
             super.visitJSSwitchStatement(statement);
             JSCaseClause[] caseClauses = statement.getCaseClauses();
             for (JSCaseClause caseClause : caseClauses) {

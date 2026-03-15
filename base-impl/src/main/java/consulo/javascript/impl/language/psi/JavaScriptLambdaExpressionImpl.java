@@ -30,8 +30,7 @@ import consulo.language.psi.PsiElement;
 import consulo.language.psi.resolve.PsiScopeProcessor;
 import consulo.language.psi.resolve.ResolveState;
 import consulo.language.util.IncorrectOperationException;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author VISTALL
@@ -45,10 +44,10 @@ public class JavaScriptLambdaExpressionImpl extends JSExpressionImpl implements 
     @Override
     @RequiredReadAction
     public boolean processDeclarations(
-        @Nonnull PsiScopeProcessor processor,
-        @Nonnull ResolveState state,
+        PsiScopeProcessor processor,
+        ResolveState state,
         PsiElement lastParent,
-        @Nonnull PsiElement place
+        PsiElement place
     ) {
         if (lastParent != null && lastParent.getParent() == this) {
             JSParameter[] params = getParameterList().getParameters();
@@ -69,12 +68,11 @@ public class JavaScriptLambdaExpressionImpl extends JSExpressionImpl implements 
     }
 
     @Override
-    protected void accept(@Nonnull JSElementVisitor visitor) {
+    protected void accept(JSElementVisitor visitor) {
         visitor.visitLambdaExpression(this);
     }
 
     @RequiredReadAction
-    @Nonnull
     @Override
     public JSParameterList getParameterList() {
         return findNotNullChildByClass(JSParameterList.class);
@@ -94,7 +92,6 @@ public class JavaScriptLambdaExpressionImpl extends JSExpressionImpl implements 
         return result;
     }
 
-    @Nonnull
     @Override
     public JavaScriptType getReturnType() {
         return JavaScriptType.UNKNOWN;
@@ -137,7 +134,7 @@ public class JavaScriptLambdaExpressionImpl extends JSExpressionImpl implements 
 
     @RequiredWriteAction
     @Override
-    public PsiElement setName(@Nonnull String name) throws IncorrectOperationException {
+    public PsiElement setName(String name) throws IncorrectOperationException {
         return null;
     }
 }

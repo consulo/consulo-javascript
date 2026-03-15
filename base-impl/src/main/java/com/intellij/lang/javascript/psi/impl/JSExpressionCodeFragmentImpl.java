@@ -26,9 +26,7 @@ import consulo.language.impl.file.SingleRootFileViewProvider;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiManager;
 import consulo.project.Project;
-import org.jetbrains.annotations.NonNls;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * @author nik
@@ -38,7 +36,7 @@ public class JSExpressionCodeFragmentImpl extends JSFileImpl implements JSExpres
     private boolean myPhysical;
     private FileViewProvider myViewProvider;
 
-    public JSExpressionCodeFragmentImpl(Project project, @NonNls String name, CharSequence text, boolean isPhysical) {
+    public JSExpressionCodeFragmentImpl(Project project, String name, CharSequence text, boolean isPhysical) {
         super(new SingleRootFileViewProvider(
             PsiManager.getInstance(project),
             new LightVirtualFile(name, FileTypeManager.getInstance().getFileTypeByFileName(name), text),
@@ -68,7 +66,6 @@ public class JSExpressionCodeFragmentImpl extends JSFileImpl implements JSExpres
     }
 
     @Override
-    @Nonnull
     public FileViewProvider getViewProvider() {
         return myViewProvider != null ? myViewProvider : super.getViewProvider();
     }

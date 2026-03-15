@@ -20,8 +20,7 @@ import com.intellij.lang.javascript.JSElementTypes;
 import com.intellij.lang.javascript.JSTokenTypes;
 import consulo.javascript.localize.JavaScriptLocalize;
 import consulo.language.parser.PsiBuilder;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author max
@@ -46,7 +45,7 @@ public class FunctionParsing extends Parsing {
     public void parseFunctionNoMarker(
         PsiBuilder builder,
         boolean expressionContext,
-        @Nonnull PsiBuilder.Marker functionMarker
+        PsiBuilder.Marker functionMarker
     ) {
         if (builder.getTokenType() == JSTokenTypes.FUNCTION_KEYWORD) {
             // function keyword may be ommited in context of get/set property definition
@@ -121,7 +120,7 @@ public class FunctionParsing extends Parsing {
         parameterList.done(JSElementTypes.PARAMETER_LIST);
     }
 
-    public void parseParameter(@Nonnull PsiBuilder builder, @Nullable PsiBuilder.Marker parameterMarker) {
+    public void parseParameter(PsiBuilder builder, PsiBuilder.@Nullable Marker parameterMarker) {
         if (parameterMarker == null) {
             parameterMarker = builder.mark();
         }

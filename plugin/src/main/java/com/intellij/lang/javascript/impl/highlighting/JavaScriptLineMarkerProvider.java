@@ -44,8 +44,7 @@ import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.RelativePoint;
 import consulo.util.dataholder.Key;
 import consulo.util.lang.ref.SimpleReference;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.awt.event.MouseEvent;
 import java.util.*;
@@ -144,7 +143,7 @@ public class JavaScriptLineMarkerProvider implements LineMarkerProvider {
 
     @Override
     @RequiredReadAction
-    public LineMarkerInfo getLineMarkerInfo(@Nonnull PsiElement element) {
+    public LineMarkerInfo getLineMarkerInfo(PsiElement element) {
         if (element instanceof JSFunction function) {
             function.putUserData(ourParticipatesInHierarchyKey, null);
             if (function.getNameIdentifier() == null) {
@@ -213,7 +212,7 @@ public class JavaScriptLineMarkerProvider implements LineMarkerProvider {
 
     @Override
     @RequiredReadAction
-    public void collectSlowLineMarkers(@Nonnull List<PsiElement> elements, @Nonnull final Collection<LineMarkerInfo> result) {
+    public void collectSlowLineMarkers(List<PsiElement> elements, final Collection<LineMarkerInfo> result) {
         Map<String, Set<JSFunction>> jsFunctionsToProcess = new HashMap<>();
         Map<JSClass, Set<JSFunction>> jsMethodsToProcess = new HashMap<>();
 
@@ -450,7 +449,6 @@ public class JavaScriptLineMarkerProvider implements LineMarkerProvider {
         protected abstract Query<T> search(T elt);
     }
 
-    @Nonnull
     @Override
     public Language getLanguage() {
         return JavaScriptLanguage.INSTANCE;

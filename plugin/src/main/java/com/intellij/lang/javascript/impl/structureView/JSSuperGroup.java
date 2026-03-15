@@ -25,7 +25,7 @@ import consulo.navigation.ItemPresentation;
 import consulo.fileEditor.structureView.tree.TreeElement;
 import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.ui.image.Image;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author Maxim.Mossienko

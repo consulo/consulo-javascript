@@ -26,7 +26,6 @@ import consulo.language.editor.intention.IntentionMetaData;
 import consulo.language.psi.PsiElement;
 import consulo.language.util.IncorrectOperationException;
 import consulo.localize.LocalizeValue;
-import jakarta.annotation.Nonnull;
 import org.intellij.idea.lang.javascript.intention.JSElementPredicate;
 import org.intellij.idea.lang.javascript.intention.JSIntention;
 import org.intellij.idea.lang.javascript.psiutil.ErrorUtil;
@@ -40,20 +39,18 @@ import org.intellij.idea.lang.javascript.psiutil.JSElementFactory;
 )
 public class JSRemoveRedundantElseIntention extends JSIntention {
     @Override
-    @Nonnull
     public LocalizeValue getText() {
         return JSIntentionLocalize.trivialifRemoveRedundantElse();
     }
 
     @Override
-    @Nonnull
     public JSElementPredicate getElementPredicate() {
         return new RemoveRedundantElsePredicate();
     }
 
     @Override
     @RequiredReadAction
-    public void processIntention(@Nonnull PsiElement element) throws IncorrectOperationException {
+    public void processIntention(PsiElement element) throws IncorrectOperationException {
         JSIfStatement ifStatement = (JSIfStatement)element;
         JSStatement thenBranch = ifStatement.getThen();
         JSStatement elseBranch = ifStatement.getElse();
@@ -73,7 +70,7 @@ public class JSRemoveRedundantElseIntention extends JSIntention {
 
     private static class RemoveRedundantElsePredicate implements JSElementPredicate {
         @Override
-        public boolean satisfiedBy(@Nonnull PsiElement element) {
+        public boolean satisfiedBy(PsiElement element) {
             if (element instanceof JSIfStatement ifStatement && !ErrorUtil.containsError(ifStatement) && ifStatement.getElse() != null) {
                 JSStatement thenBranch = ifStatement.getThen();
                 while (thenBranch instanceof JSBlockStatement thenBlockStatement) {

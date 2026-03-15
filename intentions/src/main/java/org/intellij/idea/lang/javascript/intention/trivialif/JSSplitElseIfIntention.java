@@ -24,7 +24,6 @@ import consulo.language.editor.intention.IntentionMetaData;
 import consulo.language.psi.PsiElement;
 import consulo.language.util.IncorrectOperationException;
 import consulo.localize.LocalizeValue;
-import jakarta.annotation.Nonnull;
 import org.intellij.idea.lang.javascript.intention.JSElementPredicate;
 import org.intellij.idea.lang.javascript.intention.JSIntention;
 import org.intellij.idea.lang.javascript.psiutil.ErrorUtil;
@@ -38,20 +37,18 @@ import org.intellij.idea.lang.javascript.psiutil.JSElementFactory;
 )
 public class JSSplitElseIfIntention extends JSIntention {
     @Override
-    @Nonnull
     public LocalizeValue getText() {
         return JSIntentionLocalize.trivialifSplitElseIf();
     }
 
     @Override
-    @Nonnull
     public JSElementPredicate getElementPredicate() {
         return new SplitElseIfPredicate();
     }
 
     @Override
     @RequiredReadAction
-    public void processIntention(@Nonnull PsiElement element) throws IncorrectOperationException {
+    public void processIntention(PsiElement element) throws IncorrectOperationException {
         JSIfStatement parentStatement = (JSIfStatement)element.getParent();
 
         assert (parentStatement != null);
@@ -64,7 +61,7 @@ public class JSSplitElseIfIntention extends JSIntention {
 
     private static class SplitElseIfPredicate implements JSElementPredicate {
         @Override
-        public boolean satisfiedBy(@Nonnull PsiElement element) {
+        public boolean satisfiedBy(PsiElement element) {
             PsiElement parent = element.getParent();
 
             if (!(parent instanceof JSIfStatement)) {

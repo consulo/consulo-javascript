@@ -23,9 +23,8 @@ import consulo.language.BracePair;
 import consulo.language.Language;
 import consulo.language.PairedBraceMatcher;
 import consulo.language.ast.IElementType;
-import jakarta.annotation.Nonnull;
 
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author max
@@ -45,7 +44,7 @@ public class JSBraceMatcher implements PairedBraceMatcher {
     }
 
     @Override
-    public boolean isPairedBracesAllowedBeforeType(@Nonnull IElementType lbraceType, @Nullable IElementType tokenType) {
+    public boolean isPairedBracesAllowedBeforeType(IElementType lbraceType, @Nullable IElementType tokenType) {
         return tokenType == JSTokenTypes.WHITE_SPACE
             || JSTokenTypes.COMMENTS.contains(tokenType)
             || tokenType == JSTokenTypes.SEMICOLON
@@ -56,7 +55,6 @@ public class JSBraceMatcher implements PairedBraceMatcher {
             || tokenType == null;
     }
 
-    @Nonnull
     @Override
     public Language getLanguage() {
         return JavaScriptLanguage.INSTANCE;

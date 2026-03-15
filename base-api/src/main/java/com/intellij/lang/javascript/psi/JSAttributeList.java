@@ -17,12 +17,11 @@
 package com.intellij.lang.javascript.psi;
 
 import consulo.annotation.access.RequiredReadAction;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import com.intellij.lang.javascript.psi.stubs.JSAttributeListStub;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.StubBasedPsiElement;
-import jakarta.annotation.Nonnull;
 
 /**
  * @author Maxim.Mossienko
@@ -38,9 +37,8 @@ public interface JSAttributeList extends JSElement, StubBasedPsiElement<JSAttrib
 
     JSAttribute[] getAttributes();
 
-    @Nonnull
     @RequiredReadAction
-    JSAttribute[] getAttributesByName(@Nonnull String name);
+    JSAttribute[] getAttributesByName(String name);
 
     enum AccessType {
         PACKAGE_LOCAL,

@@ -28,7 +28,6 @@ import consulo.language.psi.PsiNamedElement;
 import consulo.xml.psi.xml.XmlTag;
 import consulo.xml.psi.xml.XmlToken;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * @author max
@@ -37,13 +36,12 @@ import jakarta.annotation.Nonnull;
 @ExtensionImpl
 public class JavaScriptFindUsagesProvider implements FindUsagesProvider {
     @Override
-    public boolean canFindUsagesFor(@Nonnull PsiElement psiElement) {
+    public boolean canFindUsagesFor(PsiElement psiElement) {
         return psiElement instanceof PsiNamedElement;
     }
 
     @Override
-    @Nonnull
-    public String getType(@Nonnull PsiElement element) {
+    public String getType(PsiElement element) {
         if (element instanceof JSFunction) {
             return JavaScriptLocalize.javascriptLanguageTermFunction().get();
         }
@@ -81,15 +79,13 @@ public class JavaScriptFindUsagesProvider implements FindUsagesProvider {
     }
 
     @Override
-    @Nonnull
-    public String getDescriptiveName(@Nonnull PsiElement element) {
+    public String getDescriptiveName(PsiElement element) {
         String name = ((PsiNamedElement)element).getName();
         return name != null ? name : "";
     }
 
     @Override
-    @Nonnull
-    public String getNodeText(@Nonnull PsiElement element, boolean useFullName) {
+    public String getNodeText(PsiElement element, boolean useFullName) {
         return getDescriptiveName(element);
     }
 
@@ -98,7 +94,6 @@ public class JavaScriptFindUsagesProvider implements FindUsagesProvider {
         return new JSWordsScanner();
     }
 
-    @Nonnull
     @Override
     public Language getLanguage() {
         return JavaScriptLanguage.INSTANCE;

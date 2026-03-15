@@ -22,7 +22,6 @@ import consulo.javascript.ecmascript.codeInsight.quickFixes.EcmaScript6CreateJSF
 import consulo.javascript.ecmascript.lang.BaseEcmaScriptJavaScriptVersion;
 import consulo.javascript.ide.codeInsight.JavaScriptQuickFixFactory;
 import consulo.javascript.language.JavaScriptLanguageVersion;
-import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
@@ -36,7 +35,7 @@ public class EcmaScript6QuickFixFactory extends JavaScriptQuickFixFactory {
     }
 
     @Override
-    public boolean isMyVersion(@Nonnull JavaScriptLanguageVersion version) {
+    public boolean isMyVersion(JavaScriptLanguageVersion version) {
         return version instanceof BaseEcmaScriptJavaScriptVersion;
     }
 }

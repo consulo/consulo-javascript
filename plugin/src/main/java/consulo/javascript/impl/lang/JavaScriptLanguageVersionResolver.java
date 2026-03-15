@@ -32,8 +32,7 @@ import consulo.language.version.LanguageVersion;
 import consulo.language.version.LanguageVersionResolver;
 import consulo.language.Language;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author VISTALL
@@ -42,9 +41,8 @@ import jakarta.annotation.Nullable;
 @ExtensionImpl
 public class JavaScriptLanguageVersionResolver implements LanguageVersionResolver {
     @RequiredReadAction
-    @Nonnull
     @Override
-    public LanguageVersion getLanguageVersion(@Nonnull Language language, @Nullable PsiElement element) {
+    public LanguageVersion getLanguageVersion(Language language, @Nullable PsiElement element) {
         PsiFile containingFile = element == null ? null : element.getContainingFile();
         if (containingFile == null) {
             return StandardJavaScriptVersions.getInstance().getDefaultVersion();
@@ -58,10 +56,9 @@ public class JavaScriptLanguageVersionResolver implements LanguageVersionResolve
         return StandardJavaScriptVersions.getInstance().getDefaultVersion();
     }
 
-    @Nonnull
     @RequiredReadAction
     @Override
-    public LanguageVersion getLanguageVersion(@Nonnull Language language, @Nullable Project project, @Nullable VirtualFile virtualFile) {
+    public LanguageVersion getLanguageVersion(Language language, @Nullable Project project, @Nullable VirtualFile virtualFile) {
         if (project == null || virtualFile == null) {
             return StandardJavaScriptVersions.getInstance().getDefaultVersion();
         }
@@ -75,7 +72,6 @@ public class JavaScriptLanguageVersionResolver implements LanguageVersionResolve
         return StandardJavaScriptVersions.getInstance().getDefaultVersion();
     }
 
-    @Nonnull
     @Override
     public Language getLanguage() {
         return JavaScriptLanguage.INSTANCE;

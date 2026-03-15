@@ -33,7 +33,6 @@ import consulo.language.psi.PsiElement;
 import consulo.language.psi.resolve.PsiScopeProcessor;
 import consulo.language.psi.resolve.ResolveState;
 import consulo.language.util.IncorrectOperationException;
-import jakarta.annotation.Nonnull;
 
 /**
  * @author Maxim.Mossienko
@@ -79,7 +78,7 @@ public class JSClassImpl extends JSClassBase implements JSSuppressionHolder {
 
     @Override
     @RequiredWriteAction
-    public PsiElement setName(@Nonnull String newName) throws IncorrectOperationException {
+    public PsiElement setName(String newName) throws IncorrectOperationException {
         newName = newName.substring(newName.lastIndexOf('.') + 1);
         String oldName = getName();
         if (newName.equals(oldName)) {
@@ -150,10 +149,10 @@ public class JSClassImpl extends JSClassBase implements JSSuppressionHolder {
     @Override
     @RequiredReadAction
     public boolean processDeclarations(
-        @Nonnull PsiScopeProcessor processor,
-        @Nonnull ResolveState substitutor,
+        PsiScopeProcessor processor,
+        ResolveState substitutor,
         PsiElement lastParent,
-        @Nonnull PsiElement place
+        PsiElement place
     ) {
         boolean b = super.processDeclarations(processor, substitutor, lastParent, place);
 
@@ -165,7 +164,7 @@ public class JSClassImpl extends JSClassBase implements JSSuppressionHolder {
 
     @Override
     @RequiredWriteAction
-    public PsiElement addAfter(@Nonnull PsiElement element, PsiElement anchor) throws IncorrectOperationException {
+    public PsiElement addAfter(PsiElement element, PsiElement anchor) throws IncorrectOperationException {
         if (anchor == null) {
             ASTNode node = getNode().findChildByType(JSTokenTypes.RBRACE);
             if (node != null) {
@@ -182,7 +181,7 @@ public class JSClassImpl extends JSClassBase implements JSSuppressionHolder {
 
     @Override
     @RequiredWriteAction
-    public PsiElement addBefore(@Nonnull PsiElement element, PsiElement anchor) throws IncorrectOperationException {
+    public PsiElement addBefore(PsiElement element, PsiElement anchor) throws IncorrectOperationException {
         PsiElement superElement = super.addBefore(element, anchor);
         CodeStyleManager.getInstance(getProject()).reformatNewlyAddedElement(getNode(), superElement.getNode());
         return superElement;
@@ -198,7 +197,6 @@ public class JSClassImpl extends JSClassBase implements JSSuppressionHolder {
             || JSPsiImplUtils.isTheSameClass(another, this);
     }
 
-    @Nonnull
     @Override
     @RequiredReadAction
     public PsiElement getNavigationElement() {

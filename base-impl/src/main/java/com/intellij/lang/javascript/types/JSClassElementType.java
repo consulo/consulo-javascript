@@ -32,7 +32,6 @@ import consulo.language.psi.stub.StubElement;
 import consulo.language.psi.stub.StubInputStream;
 import consulo.language.psi.stub.StubOutputStream;
 import consulo.util.lang.StringUtil;
-import jakarta.annotation.Nonnull;
 
 import java.io.IOException;
 
@@ -46,7 +45,7 @@ public class JSClassElementType extends JSQualifiedStubElementType<JSClassStub, 
     }
 
     @Override
-    public void indexStub(@Nonnull JSClassStub stub, @Nonnull IndexSink sink) {
+    public void indexStub(JSClassStub stub, IndexSink sink) {
         super.indexStub(stub, sink);
 
         String name = stub.getName();
@@ -55,20 +54,19 @@ public class JSClassElementType extends JSQualifiedStubElementType<JSClassStub, 
         }
     }
 
-    @Nonnull
     @Override
-    public PsiElement createElement(@Nonnull ASTNode astNode) {
+    public PsiElement createElement(ASTNode astNode) {
         return new JSClassImpl(astNode);
     }
 
     @Override
-    public JSClass createPsi(@Nonnull JSClassStub stub) {
+    public JSClass createPsi(JSClassStub stub) {
         return new JSClassImpl(stub, this);
     }
 
     @RequiredReadAction
     @Override
-    public JSClassStub createStub(@Nonnull JSClass psi, StubElement parentStub) {
+    public JSClassStub createStub(JSClass psi, StubElement parentStub) {
         String name = psi.getName();
         int flags = JSClassStubImpl.getFlags(psi);
         String qualifiedName = psi.getQualifiedName();
@@ -76,15 +74,14 @@ public class JSClassElementType extends JSQualifiedStubElementType<JSClassStub, 
     }
 
     @Override
-    public void serialize(@Nonnull JSClassStub stub, @Nonnull StubOutputStream dataStream) throws IOException {
+    public void serialize(JSClassStub stub, StubOutputStream dataStream) throws IOException {
         dataStream.writeName(stub.getName());
         dataStream.writeName(stub.getQualifiedName());
         dataStream.writeInt(stub.getFlags());
     }
 
-    @Nonnull
     @Override
-    public JSClassStub deserialize(@Nonnull StubInputStream dataStream, StubElement parentStub) throws IOException {
+    public JSClassStub deserialize(StubInputStream dataStream, StubElement parentStub) throws IOException {
         StringRef nameRef = dataStream.readName();
         StringRef qualifiedRef = dataStream.readName();
         int flags = dataStream.readInt();

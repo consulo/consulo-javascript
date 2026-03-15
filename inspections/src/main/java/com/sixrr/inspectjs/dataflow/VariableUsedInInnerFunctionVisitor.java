@@ -5,7 +5,6 @@ import com.intellij.lang.javascript.psi.JSVariable;
 import com.intellij.lang.javascript.psi.JSFunctionExpression;
 import com.sixrr.inspectjs.JSRecursiveElementVisitor;
 import consulo.language.psi.PsiElement;
-import jakarta.annotation.Nonnull;
 
 public class VariableUsedInInnerFunctionVisitor extends JSRecursiveElementVisitor {
     private final JSVariable variable;
@@ -18,7 +17,7 @@ public class VariableUsedInInnerFunctionVisitor extends JSRecursiveElementVisito
     }
 
     @Override
-    public void visitElement(@Nonnull PsiElement element) {
+    public void visitElement(PsiElement element) {
         if (usedInInnerFunction) {
             return;
         }
@@ -26,7 +25,7 @@ public class VariableUsedInInnerFunctionVisitor extends JSRecursiveElementVisito
     }
 
     @Override
-    public void visitJSFunctionExpression(@Nonnull JSFunctionExpression funcExpr) {
+    public void visitJSFunctionExpression(JSFunctionExpression funcExpr) {
         if (usedInInnerFunction) {
             return;
         }
@@ -37,7 +36,7 @@ public class VariableUsedInInnerFunctionVisitor extends JSRecursiveElementVisito
     }
 
     @Override
-    public void visitJSReferenceExpression(@Nonnull JSReferenceExpression reference) {
+    public void visitJSReferenceExpression(JSReferenceExpression reference) {
         if (usedInInnerFunction) {
             return;
         }

@@ -16,14 +16,12 @@
 
 package com.intellij.lang.javascript;
 
-import jakarta.annotation.Nonnull;
-import org.jetbrains.annotations.NonNls;
 
 /**
  * @author yole
  */
 public class JSDocElementType extends JSElementType {
-    public JSDocElementType(@Nonnull @NonNls String debugName) {
+    public JSDocElementType(String debugName) {
         super(debugName);
     }
 }

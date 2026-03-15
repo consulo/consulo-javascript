@@ -7,10 +7,9 @@ import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import java.awt.*;
 
-import org.jetbrains.annotations.NonNls;
 
 public class SingleCheckboxOptionsPanel extends JPanel {
-    public SingleCheckboxOptionsPanel(String label, BaseInspection owner, @NonNls String property) {
+    public SingleCheckboxOptionsPanel(String label, BaseInspection owner, String property) {
         super(new GridBagLayout());
         boolean selected = getPropertyValue(owner, property);
         JCheckBox checkBox = new JCheckBox(label, selected);

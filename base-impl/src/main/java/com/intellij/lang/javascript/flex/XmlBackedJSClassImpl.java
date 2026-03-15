@@ -45,8 +45,7 @@ import consulo.util.dataholder.Key;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.xml.psi.XmlRecursiveElementVisitor;
 import consulo.xml.psi.xml.*;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.*;
 
@@ -103,7 +102,6 @@ public class XmlBackedJSClassImpl extends JSClassBase implements JSClass {
         return refList;
     }
 
-    @Nonnull
     @Override
     @RequiredReadAction
     public PsiElement getNavigationElement() {
@@ -172,7 +170,7 @@ public class XmlBackedJSClassImpl extends JSClassBase implements JSClass {
 
     @Override
     @RequiredWriteAction
-    public PsiElement setName(@Nonnull String name) throws IncorrectOperationException {
+    public PsiElement setName(String name) throws IncorrectOperationException {
         int i = name.lastIndexOf('.');
         if (i != -1) {
             name = name.substring(0, i);
@@ -206,10 +204,10 @@ public class XmlBackedJSClassImpl extends JSClassBase implements JSClass {
     @Override
     @RequiredReadAction
     public boolean processDeclarations(
-        @Nonnull PsiScopeProcessor processor,
-        @Nonnull ResolveState substitutor,
+        PsiScopeProcessor processor,
+        ResolveState substitutor,
         PsiElement lastParent,
-        @Nonnull PsiElement place
+        PsiElement place
     ) {
         boolean b = super.processDeclarations(processor, substitutor, lastParent, place);
 
@@ -444,7 +442,7 @@ public class XmlBackedJSClassImpl extends JSClassBase implements JSClass {
 
     @Override
     @RequiredWriteAction
-    public PsiElement add(@Nonnull PsiElement element) throws IncorrectOperationException {
+    public PsiElement add(PsiElement element) throws IncorrectOperationException {
         if (element instanceof JSFunction || element instanceof JSVarStatement) {
             JSFile jsFile = createOrGetFirstScriptTag();
 
@@ -510,7 +508,7 @@ public class XmlBackedJSClassImpl extends JSClassBase implements JSClass {
 
     @Override
     @RequiredWriteAction
-    public PsiElement addBefore(@Nonnull PsiElement element, PsiElement anchor) throws IncorrectOperationException {
+    public PsiElement addBefore(PsiElement element, PsiElement anchor) throws IncorrectOperationException {
         if (anchor == null) {
             return add(element);
         }
@@ -558,7 +556,7 @@ public class XmlBackedJSClassImpl extends JSClassBase implements JSClass {
         rootTag.processElements(
             new PsiElementProcessor() {
                 @Override
-                public boolean execute(@Nonnull PsiElement element) {
+                public boolean execute(PsiElement element) {
                     if (element instanceof XmlTag tag) {
                         if (isInlineComponentTag(tag)) {
                             result.add(getXmlBackedClass(tag));
@@ -609,7 +607,7 @@ public class XmlBackedJSClassImpl extends JSClassBase implements JSClass {
 
         @Override
         @RequiredReadAction
-        public boolean execute(@Nonnull PsiElement element) {
+        public boolean execute(PsiElement element) {
             if (element instanceof XmlTag tag) {
                 if (myVisitAllTags || SCRIPT_TAG_NAME.equals(tag.getLocalName())) {
                     String srcLocation = tag.getAttributeValue("source");

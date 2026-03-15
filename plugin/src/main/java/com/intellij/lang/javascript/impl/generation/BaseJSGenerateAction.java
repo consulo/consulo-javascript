@@ -29,7 +29,6 @@ import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.annotation.Nonnull;
 
 /**
  * @author Maxim.Mossienko
@@ -52,7 +51,6 @@ abstract class BaseJSGenerateAction extends AnAction {
         new JavaScriptGenerateAccessorHandler(getGenerationMode()).invoke(project, editor, psifile);
     }
 
-    @Nonnull
     protected abstract JavaScriptGenerateAccessorHandler.GenerationMode getGenerationMode();
 
     @Override

@@ -16,8 +16,7 @@ import consulo.module.Module;
 import consulo.module.content.NewFileModuleResolver;
 import consulo.project.Project;
 import consulo.virtualFileSystem.fileType.FileType;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author VISTALL
@@ -76,7 +75,6 @@ public class JavaScriptCreateFileAction extends CreateFileFromTemplateAction {
         builder.addKind(JavaScriptLocalize.actionJavascriptFileEmptyFileKind(), JavaScriptFileType.INSTANCE.getIcon(), "JavaScriptFile");
     }
 
-    @Nonnull
     @Override
     protected LocalizeValue getActionName(PsiDirectory directory, String newName, String templateName) {
         return JavaScriptLocalize.actionJavascriptFileTitleText();

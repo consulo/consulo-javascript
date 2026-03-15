@@ -20,7 +20,6 @@ import consulo.annotation.access.RequiredReadAction;
 import consulo.language.ast.ASTNode;
 import com.intellij.lang.javascript.psi.*;
 import consulo.language.psi.util.PsiTreeUtil;
-import jakarta.annotation.Nonnull;
 
 /**
  * @author max
@@ -32,7 +31,7 @@ public class JSBreakStatementImpl extends JSStatementWithLabelReferenceImpl impl
     }
 
     @Override
-    protected void accept(@Nonnull JSElementVisitor visitor) {
+    protected void accept(JSElementVisitor visitor) {
         visitor.visitJSBreakStatement(this);
     }
 

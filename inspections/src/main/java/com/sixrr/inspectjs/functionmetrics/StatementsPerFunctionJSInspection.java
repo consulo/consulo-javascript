@@ -11,29 +11,24 @@ import consulo.annotation.component.ExtensionImpl;
 import consulo.language.editor.inspection.InspectionToolState;
 import consulo.language.psi.PsiElement;
 import consulo.localize.LocalizeValue;
-import jakarta.annotation.Nonnull;
 
 @ExtensionImpl
 public class StatementsPerFunctionJSInspection extends JavaScriptInspection {
     @Override
-    @Nonnull
     public String getID() {
         return "FunctionTooLongJS";
     }
 
     @Override
-    @Nonnull
     public LocalizeValue getDisplayName() {
         return InspectionJSLocalize.overlyLongFunctionDisplayName();
     }
 
     @Override
-    @Nonnull
     public LocalizeValue getGroupDisplayName() {
         return JSGroupNames.FUNCTIONMETRICS_GROUP_NAME;
     }
 
-    @Nonnull
     @Override
     public InspectionToolState<?> createStateProvider() {
         return new StatementsPerFunctionJSInspectionState();
@@ -61,7 +56,7 @@ public class StatementsPerFunctionJSInspection extends JavaScriptInspection {
 
     private class Visitor extends BaseInspectionVisitor<StatementsPerFunctionJSInspectionState> {
         @Override
-        public void visitJSFunctionDeclaration(@Nonnull JSFunction function) {
+        public void visitJSFunctionDeclaration(JSFunction function) {
 
             PsiElement lastChild = function.getLastChild();
             if (!(lastChild instanceof JSBlockStatement)) {

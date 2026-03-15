@@ -19,7 +19,6 @@ import consulo.language.editor.util.PsiUtilBase;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiErrorElement;
 import consulo.language.psi.PsiRecursiveElementVisitor;
-import jakarta.annotation.Nonnull;
 
 public class ErrorUtil {
     private ErrorUtil() {
@@ -27,7 +26,7 @@ public class ErrorUtil {
 
     private static final boolean fullTraversal = false;
 
-    public static boolean containsError(@Nonnull PsiElement element) {
+    public static boolean containsError(PsiElement element) {
         // check only immediate children, full tree traversal is too expensive
         if (fullTraversal) {
             ErrorElementVisitor visitor = new ErrorElementVisitor();

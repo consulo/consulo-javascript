@@ -27,7 +27,6 @@ import consulo.language.ast.ASTNode;
 import consulo.language.psi.PsiElement;
 import consulo.localize.LocalizeValue;
 import consulo.project.Project;
-import jakarta.annotation.Nonnull;
 
 /**
  * @author yole
@@ -46,7 +45,7 @@ public class JSWithTryCatchFinallySurrounder extends JSStatementSurrounder {
     }
 
     @RequiredReadAction
-    protected static String getExceptionVarTypeBasedOnContext(@Nonnull PsiElement context) {
+    protected static String getExceptionVarTypeBasedOnContext(PsiElement context) {
         if (context.getContainingFile().getLanguage() == JavaScriptSupportLoader.ECMA_SCRIPT_L4) {
             return ":Error";
         }

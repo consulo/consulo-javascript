@@ -24,11 +24,9 @@ import consulo.annotation.component.ExtensionImpl;
 import consulo.language.psi.stub.StringStubIndexExtension;
 import consulo.language.psi.stub.StubIndexKey;
 
-import jakarta.annotation.Nonnull;
 
 @ExtensionImpl
 public class JSNameIndex extends StringStubIndexExtension<JSQualifiedNamedElement> {
-    @Nonnull
     @Override
     public StubIndexKey<String, JSQualifiedNamedElement> getKey() {
         return JavaScriptIndexKeys.ELEMENTS_BY_NAME;

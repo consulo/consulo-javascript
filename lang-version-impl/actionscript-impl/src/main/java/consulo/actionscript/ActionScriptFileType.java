@@ -28,8 +28,7 @@ import consulo.localize.LocalizeValue;
 import consulo.ui.image.Image;
 import consulo.virtualFileSystem.VirtualFile;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author VISTALL
@@ -42,19 +41,16 @@ public class ActionScriptFileType extends LanguageFileType implements JavaScript
         super(JavaScriptLanguage.INSTANCE);
     }
 
-    @Nonnull
     @Override
     public String getId() {
         return "ACTIONSCRIPT";
     }
 
-    @Nonnull
     @Override
     public LocalizeValue getDescription() {
         return LocalizeValue.localizeTODO("ActionScript files");
     }
 
-    @Nonnull
     @Override
     public String getDefaultExtension() {
         return "as";
@@ -67,7 +63,6 @@ public class ActionScriptFileType extends LanguageFileType implements JavaScript
     }
 
     @RequiredReadAction
-    @Nonnull
     @Override
     public LanguageVersion getLanguageVersion(@Nullable Module module, @Nullable VirtualFile virtualFile) {
         return ActionScriptLanguageVersion.getInstance();

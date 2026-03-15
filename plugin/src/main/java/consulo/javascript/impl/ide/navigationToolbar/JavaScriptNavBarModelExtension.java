@@ -7,9 +7,8 @@ import com.intellij.lang.javascript.impl.structureView.JSStructureItemPresentati
 import consulo.language.psi.PsiElement;
 import consulo.annotation.access.RequiredReadAction;
 import consulo.javascript.language.JavaScriptLanguage;
-import jakarta.annotation.Nonnull;
 
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author VISTALL
@@ -17,7 +16,6 @@ import jakarta.annotation.Nullable;
  */
 @ExtensionImpl
 public class JavaScriptNavBarModelExtension extends StructureAwareNavBarModelExtension {
-    @Nonnull
     @Override
     protected Language getLanguage() {
         return JavaScriptLanguage.INSTANCE;

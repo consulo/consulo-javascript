@@ -37,7 +37,6 @@ import consulo.language.util.IncorrectOperationException;
 import consulo.localize.LocalizeValue;
 import consulo.project.Project;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * @author Maxim.Mossienko
@@ -46,19 +45,16 @@ import jakarta.annotation.Nonnull;
 public class JSUndeclaredVariableInspection extends JSInspection {
     public static final String SHORT_NAME = "JSUndeclaredVariable";
 
-    @Nonnull
     @Override
     public LocalizeValue getGroupDisplayName() {
         return InspectionLocalize.inspectionGeneralToolsGroupName();
     }
 
-    @Nonnull
     @Override
     public LocalizeValue getDisplayName() {
         return JavaScriptLocalize.jsUndeclaredVariableInspectionName();
     }
 
-    @Nonnull
     @Override
     public String getShortName() {
         return SHORT_NAME;
@@ -68,7 +64,7 @@ public class JSUndeclaredVariableInspection extends JSInspection {
     protected JSElementVisitor createVisitor(ProblemsHolder holder) {
         return new JSElementVisitor() {
             @Override
-            public void visitJSReferenceExpression(@Nonnull JSReferenceExpression node) {
+            public void visitJSReferenceExpression(JSReferenceExpression node) {
                 PsiElement parentElement = node.getParent();
 
                 if (!(parentElement instanceof JSCallExpression) && node.shouldCheckReferences()
@@ -136,7 +132,6 @@ public class JSUndeclaredVariableInspection extends JSInspection {
             myFile = expression.getContainingFile();
         }
 
-        @Nonnull
         @Override
         public LocalizeValue getName() {
             return JavaScriptLocalize.javascriptDeclareVariableIntentionName(myReferenceExpression.getReferencedName());
@@ -144,7 +139,7 @@ public class JSUndeclaredVariableInspection extends JSInspection {
 
         @Override
         @RequiredReadAction
-        public void applyFix(@Nonnull Project project, @Nonnull ProblemDescriptor descriptor) {
+        public void applyFix(Project project, ProblemDescriptor descriptor) {
             if (!FileModificationService.getInstance().prepareFileForWrite(myFile)) {
                 return;
             }

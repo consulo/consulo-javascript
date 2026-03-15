@@ -16,14 +16,12 @@
 
 package com.intellij.lang.javascript.psi;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * @author max
  * @since 2005-01-30
  */
 public interface JSFunctionExpression extends JSFunction, JSExpression {
-    @Nonnull
     default JSFunction getFunction() {
         return this;
     }

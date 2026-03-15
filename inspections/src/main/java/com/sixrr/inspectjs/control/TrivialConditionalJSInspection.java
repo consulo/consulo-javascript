@@ -16,28 +16,23 @@ import consulo.language.psi.PsiElement;
 import consulo.language.util.IncorrectOperationException;
 import consulo.localize.LocalizeValue;
 import consulo.project.Project;
-import jakarta.annotation.Nonnull;
 import org.intellij.lang.annotations.Pattern;
-import org.jetbrains.annotations.NonNls;
 
 @ExtensionImpl
 public class TrivialConditionalJSInspection extends JavaScriptInspection {
     private final TrivialConditionalFix fix = new TrivialConditionalFix();
 
-    @Nonnull
     @Override
     @Pattern(value = "[a-zA-Z_0-9.-]+")
     public String getID() {
         return "RedundantConditionalExpressionJS";
     }
 
-    @Nonnull
     @Override
     public LocalizeValue getDisplayName() {
         return InspectionJSLocalize.redundantConditionalExpressionDisplayName();
     }
 
-    @Nonnull
     @Override
     public LocalizeValue getGroupDisplayName() {
         return JSGroupNames.CONTROL_FLOW_GROUP_NAME;
@@ -78,7 +73,6 @@ public class TrivialConditionalJSInspection extends JavaScriptInspection {
     }
 
     private static class TrivialConditionalFix extends InspectionJSFix {
-        @Nonnull
         @Override
         public LocalizeValue getName() {
             return InspectionJSLocalize.simplifyFix();
@@ -114,12 +108,12 @@ public class TrivialConditionalJSInspection extends JavaScriptInspection {
     }
 
     private static boolean isFalse(JSExpression expression) {
-        @NonNls String text = expression.getText();
+        String text = expression.getText();
         return "false".equals(text);
     }
 
     private static boolean isTrue(JSExpression expression) {
-        @NonNls String text = expression.getText();
+        String text = expression.getText();
         return "true".equals(text);
     }
 }

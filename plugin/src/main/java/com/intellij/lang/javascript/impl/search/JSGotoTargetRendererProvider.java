@@ -23,7 +23,7 @@ import consulo.ide.navigation.GotoTargetRendererProvider;
 import consulo.language.editor.ui.PsiElementListCellRenderer;
 import consulo.language.psi.PsiElement;
 import consulo.navigation.ItemPresentation;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author Maxim.Mossienko

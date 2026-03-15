@@ -25,7 +25,6 @@ import consulo.javascript.language.psi.JavaScriptType;
 import consulo.language.ast.ASTNode;
 import consulo.language.ast.IElementType;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * @author max
@@ -36,7 +35,6 @@ public class JSPostfixExpressionImpl extends JSExpressionImpl implements JSPostf
         super(node);
     }
 
-    @Nonnull
     @Override
     @RequiredReadAction
     public JavaScriptType getType() {
@@ -57,7 +55,7 @@ public class JSPostfixExpressionImpl extends JSExpressionImpl implements JSPostf
     }
 
     @Override
-    protected void accept(@Nonnull JSElementVisitor visitor) {
+    protected void accept(JSElementVisitor visitor) {
         visitor.visitJSPostfixExpression(this);
     }
 }

@@ -11,7 +11,6 @@ import consulo.annotation.access.RequiredReadAction;
 import consulo.annotation.component.ExtensionImpl;
 import consulo.language.psi.PsiElement;
 import consulo.localize.LocalizeValue;
-import jakarta.annotation.Nonnull;
 
 @ExtensionImpl
 public class NestedFunctionCallJSInspection extends JavaScriptInspection {
@@ -21,20 +20,17 @@ public class NestedFunctionCallJSInspection extends JavaScriptInspection {
     }
 
     @Override
-    @Nonnull
     public LocalizeValue getGroupDisplayName() {
         return JSGroupNames.STYLE_GROUP_NAME;
     }
 
     @Override
-    @Nonnull
     public LocalizeValue getDisplayName() {
         return InspectionJSLocalize.nestedFunctionCallDisplayName();
     }
 
     @RequiredReadAction
     @Override
-    @Nonnull
     protected String buildErrorString(Object state, Object... args) {
         return InspectionJSLocalize.nestedFunctionCallProblemDescriptor().get();
     }
@@ -46,7 +42,7 @@ public class NestedFunctionCallJSInspection extends JavaScriptInspection {
 
     private static class NestedMethodCallVisitor extends BaseInspectionVisitor {
         @Override
-        public void visitJSCallExpression(@Nonnull JSCallExpression expression) {
+        public void visitJSCallExpression(JSCallExpression expression) {
             super.visitJSCallExpression(expression);
             JSExpression outerExpression = expression;
             while (outerExpression != null && outerExpression.getParent() instanceof JSExpression parentExpression) {

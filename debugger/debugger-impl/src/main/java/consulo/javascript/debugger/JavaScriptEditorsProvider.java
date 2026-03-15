@@ -16,7 +16,6 @@
 
 package consulo.javascript.debugger;
 
-import jakarta.annotation.Nonnull;
 import consulo.javascript.language.JavaScriptFileType;
 import consulo.javascript.impl.language.psi.JSElementFactory;
 import consulo.execution.debug.evaluation.XDebuggerEditorsProviderBase;
@@ -24,7 +23,7 @@ import consulo.language.psi.PsiElement;
 import consulo.project.Project;
 import consulo.language.psi.PsiFile;
 import consulo.virtualFileSystem.fileType.FileType;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author VISTALL
@@ -35,12 +34,11 @@ public class JavaScriptEditorsProvider extends XDebuggerEditorsProviderBase
 	public static final JavaScriptEditorsProvider INSTANCE = new JavaScriptEditorsProvider();
 
 	@Override
-	protected PsiFile createExpressionCodeFragment(@Nonnull Project project, @Nonnull String text, @Nullable PsiElement element, boolean isPhysical)
+	protected PsiFile createExpressionCodeFragment(Project project, String text, @Nullable PsiElement element, boolean isPhysical)
 	{
 		return JSElementFactory.createExpressionCodeFragment(project, text, element, isPhysical);
 	}
 
-	@Nonnull
 	@Override
 	public FileType getFileType()
 	{

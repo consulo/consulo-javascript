@@ -20,9 +20,7 @@ import consulo.language.psi.PsiElement;
 import consulo.language.util.IncorrectOperationException;
 import consulo.localize.LocalizeValue;
 import consulo.project.Project;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
-import org.jetbrains.annotations.NonNls;
+import org.jspecify.annotations.Nullable;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -31,13 +29,11 @@ import java.util.Set;
 public class PointlessBooleanExpressionJSInspection extends JavaScriptInspection {
     private final BooleanLiteralComparisonFix fix = new BooleanLiteralComparisonFix();
 
-    @Nonnull
     @Override
     public LocalizeValue getDisplayName() {
         return InspectionJSLocalize.pointlessBooleanExpressionDisplayName();
     }
 
-    @Nonnull
     @Override
     public LocalizeValue getGroupDisplayName() {
         return JSGroupNames.CONTROL_FLOW_GROUP_NAME;
@@ -120,7 +116,6 @@ public class PointlessBooleanExpressionJSInspection extends JavaScriptInspection
         }
     }
 
-    @NonNls
     private static String calculateSimplifiedPrefixExpression(JSPrefixExpression expression) {
         JSExpression operand = expression.getExpression();
         return isTrue(operand) ? "false" : "true";
@@ -132,7 +127,6 @@ public class PointlessBooleanExpressionJSInspection extends JavaScriptInspection
     }
 
     private class BooleanLiteralComparisonFix extends InspectionJSFix {
-        @Nonnull
         @Override
         public LocalizeValue getName() {
             return InspectionJSLocalize.simplifyFix();
@@ -168,7 +162,7 @@ public class PointlessBooleanExpressionJSInspection extends JavaScriptInspection
         }
 
         @Override
-        public void visitJSBinaryExpression(@Nonnull JSBinaryExpression expression) {
+        public void visitJSBinaryExpression(JSBinaryExpression expression) {
             super.visitJSBinaryExpression(expression);
             if (!(expression.getROperand() != null)) {
                 return;
@@ -203,7 +197,7 @@ public class PointlessBooleanExpressionJSInspection extends JavaScriptInspection
         }
 
         @Override
-        public void visitJSPrefixExpression(@Nonnull JSPrefixExpression expression) {
+        public void visitJSPrefixExpression(JSPrefixExpression expression) {
             super.visitJSPrefixExpression(expression);
             IElementType sign = expression.getOperationSign();
             if (sign == null) {
@@ -241,7 +235,7 @@ public class PointlessBooleanExpressionJSInspection extends JavaScriptInspection
         if (expression == null || !(expression instanceof JSLiteralExpression)) {
             return false;
         }
-        @NonNls String text = expression.getText();
+        String text = expression.getText();
         return "true".equals(text);
     }
 
@@ -249,7 +243,7 @@ public class PointlessBooleanExpressionJSInspection extends JavaScriptInspection
         if (expression == null || !(expression instanceof JSLiteralExpression)) {
             return false;
         }
-        @NonNls String text = expression.getText();
+        String text = expression.getText();
         return "false".equals(text);
     }
 }

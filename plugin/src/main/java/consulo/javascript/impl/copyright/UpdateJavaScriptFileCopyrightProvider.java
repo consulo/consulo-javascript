@@ -11,7 +11,6 @@ import consulo.language.psi.PsiFile;
 import consulo.project.Project;
 import consulo.virtualFileSystem.fileType.FileType;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
@@ -19,30 +18,26 @@ import jakarta.annotation.Nonnull;
  */
 @ExtensionImpl
 public class UpdateJavaScriptFileCopyrightProvider extends UpdateCopyrightsProvider<CopyrightFileConfig> {
-    @Nonnull
     @Override
     public FileType getFileType() {
         return JavaScriptFileType.INSTANCE;
     }
 
-    @Nonnull
     @Override
-    public UpdatePsiFileCopyright<CopyrightFileConfig> createInstance(@Nonnull PsiFile file, @Nonnull CopyrightProfile copyrightProfile) {
+    public UpdatePsiFileCopyright<CopyrightFileConfig> createInstance(PsiFile file, CopyrightProfile copyrightProfile) {
         return new UpdateJavaScriptFileCopyright(file, copyrightProfile);
     }
 
-    @Nonnull
     @Override
     public CopyrightFileConfig createDefaultOptions() {
         return new CopyrightFileConfig();
     }
 
-    @Nonnull
     @Override
     public TemplateCommentPanel createConfigurable(
-        @Nonnull Project project,
-        @Nonnull TemplateCommentPanel parentPane,
-        @Nonnull FileType fileType
+        Project project,
+        TemplateCommentPanel parentPane,
+        FileType fileType
     ) {
         return new TemplateCommentPanel(fileType, parentPane, project);
     }

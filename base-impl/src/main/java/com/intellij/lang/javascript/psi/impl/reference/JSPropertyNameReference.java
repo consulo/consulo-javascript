@@ -31,8 +31,7 @@ import consulo.language.psi.PsiReference;
 import consulo.language.util.IncorrectOperationException;
 import consulo.util.lang.StringUtil;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 public class JSPropertyNameReference implements PsiReference {
     private final JSProperty myProperty;
@@ -67,7 +66,6 @@ public class JSPropertyNameReference implements PsiReference {
         return myProperty;
     }
 
-    @Nonnull
     @Override
     @RequiredReadAction
     public String getCanonicalText() {
@@ -81,7 +79,7 @@ public class JSPropertyNameReference implements PsiReference {
     }
 
     @Override
-    public PsiElement bindToElement(@Nonnull PsiElement element) throws IncorrectOperationException {
+    public PsiElement bindToElement(PsiElement element) throws IncorrectOperationException {
         return null;
     }
 
@@ -102,7 +100,6 @@ public class JSPropertyNameReference implements PsiReference {
         return proxyExpanded && element == element2;
     }
 
-    @Nonnull
     @Override
     @RequiredReadAction
     public Object[] getVariants() {

@@ -20,7 +20,6 @@ import com.intellij.lang.javascript.psi.JSFile;
 import com.intellij.lang.javascript.psi.impl.JSExpressionCodeFragmentImpl;
 import consulo.language.psi.PsiElement;
 import consulo.project.Project;
-import jakarta.annotation.Nonnull;
 
 /**
  * @author nik
@@ -29,8 +28,7 @@ public class JSElementFactory {
     private JSElementFactory() {
     }
 
-    @Nonnull
-    public static JSFile createExpressionCodeFragment(@Nonnull Project project, CharSequence text, PsiElement context, boolean isPhysical) {
+    public static JSFile createExpressionCodeFragment(Project project, CharSequence text, PsiElement context, boolean isPhysical) {
         JSExpressionCodeFragmentImpl codeFragment = new JSExpressionCodeFragmentImpl(project, "fragment.js", text, isPhysical);
         codeFragment.setContext(context);
         return codeFragment;

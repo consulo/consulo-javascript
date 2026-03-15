@@ -38,10 +38,8 @@ import consulo.language.psi.PsiElement;
 import consulo.language.version.LanguageVersion;
 import consulo.project.Project;
 import consulo.xml.psi.xml.XmlTokenType;
-import jakarta.annotation.Nonnull;
-import org.jetbrains.annotations.NonNls;
 
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author max, maxim.mossienko
@@ -441,7 +439,7 @@ public interface JSTokenTypes {
     TokenSet IDENTIFIER_TOKENS_SET = TokenSet.create(IDENTIFIER);
 
     abstract class JSChameleonElementType extends ILazyParseableElementType {
-        public JSChameleonElementType(@NonNls String name) {
+        public JSChameleonElementType(String name) {
             super(name, JavaScriptLanguage.INSTANCE);
         }
 
@@ -449,7 +447,7 @@ public interface JSTokenTypes {
 
         @Override
         @RequiredReadAction
-        protected ASTNode doParseContents(@Nonnull ASTNode chameleon, @Nonnull PsiElement psi) {
+        protected ASTNode doParseContents(ASTNode chameleon, PsiElement psi) {
             Project project = psi.getProject();
             Language languageForParser = getLanguageForParser(psi);
             LanguageVersion tempLanguageVersion = chameleon.getUserData(LanguageVersion.KEY);

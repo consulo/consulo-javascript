@@ -23,7 +23,6 @@ import consulo.language.ast.IElementType;
 import consulo.language.parser.PsiBuilder;
 import consulo.logging.Logger;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * @author max
@@ -578,7 +577,7 @@ public class StatementParsing extends Parsing {
     protected void parseVarStatementWithMarker(
         PsiBuilder builder,
         boolean inForInitializationContext,
-        @Nonnull PsiBuilder.Marker var
+        PsiBuilder.Marker var
     ) {
         IElementType declType = builder.getTokenType();
         LOG.assertTrue(declType == JSTokenTypes.VAR_KEYWORD ||

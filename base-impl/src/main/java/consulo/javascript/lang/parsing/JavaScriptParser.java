@@ -6,16 +6,14 @@ import consulo.language.parser.PsiBuilder;
 import consulo.language.parser.PsiParser;
 import consulo.language.version.LanguageVersion;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
  * @since 24.08.14
  */
 public class JavaScriptParser implements PsiParser {
-    @Nonnull
     @Override
-    public ASTNode parse(@Nonnull IElementType root, @Nonnull PsiBuilder originalBuilder, @Nonnull LanguageVersion languageVersion) {
+    public ASTNode parse(IElementType root, PsiBuilder originalBuilder, LanguageVersion languageVersion) {
         JavaScriptParsingContext parsingContext = createParsingContext();
 
         JavaScriptParserBuilder builder = createBuilder(originalBuilder);
@@ -28,12 +26,10 @@ public class JavaScriptParser implements PsiParser {
         return builder.getTreeBuilt();
     }
 
-    @Nonnull
     public JavaScriptParserBuilder createBuilder(PsiBuilder builder) {
         return new JavaScriptParserBuilder(builder);
     }
 
-    @Nonnull
     public JavaScriptParsingContext createParsingContext() {
         return new JavaScriptParsingContext();
     }

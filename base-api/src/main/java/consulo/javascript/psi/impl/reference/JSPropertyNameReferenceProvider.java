@@ -24,8 +24,7 @@ import consulo.annotation.component.ExtensionAPI;
 import consulo.component.extension.ExtensionPointName;
 import consulo.language.psi.PsiReference;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author VISTALL
@@ -37,5 +36,5 @@ public interface JSPropertyNameReferenceProvider {
 
     @Nullable
     @RequiredReadAction
-    PsiReference getReference(@Nonnull JSProperty property);
+    PsiReference getReference(JSProperty property);
 }

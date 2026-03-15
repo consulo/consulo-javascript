@@ -16,7 +16,7 @@
 
 package com.intellij.lang.javascript.psi;
 
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author Maxim.Mossienko

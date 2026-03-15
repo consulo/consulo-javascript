@@ -9,7 +9,6 @@ import consulo.content.bundle.Sdk;
 import consulo.content.bundle.SdkModificator;
 import consulo.virtualFileSystem.LocalFileSystem;
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.annotation.Nonnull;
 
 import java.io.File;
 import java.util.Map;
@@ -25,7 +24,7 @@ public class ClientJavaScriptPredefinedBundlesProvider extends PredefinedBundles
     private Map<String, String> ourMapping = Map.of("clientAny", ANY_JAVASCRIPT_SDK);
 
     @Override
-    public void createBundles(@Nonnull Context context) {
+    public void createBundles(Context context) {
         File sdkDir = new File(PluginManager.getPluginPath(ClientJavaScriptPredefinedBundlesProvider.class), "sdk");
         if (!sdkDir.exists()) {
             return;

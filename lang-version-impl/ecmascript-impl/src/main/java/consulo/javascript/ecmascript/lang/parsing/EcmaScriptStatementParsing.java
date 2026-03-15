@@ -28,7 +28,6 @@ import consulo.language.ast.TokenSet;
 import consulo.language.parser.PsiBuilder;
 import consulo.logging.Logger;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
@@ -292,7 +291,7 @@ public class EcmaScriptStatementParsing extends StatementParsing {
         parseClassWithMarker(builder, builder.mark(), nameRequired);
     }
 
-    public void parseClassWithMarker(PsiBuilder builder, @Nonnull PsiBuilder.Marker clazz, boolean nameRequired) {
+    public void parseClassWithMarker(PsiBuilder builder, PsiBuilder.Marker clazz, boolean nameRequired) {
         builder.advanceLexer();
 
         if (builder.getTokenType() != JSTokenTypes.IDENTIFIER) {

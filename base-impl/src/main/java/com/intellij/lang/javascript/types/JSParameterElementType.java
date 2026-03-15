@@ -19,7 +19,6 @@ package com.intellij.lang.javascript.types;
 
 import java.io.IOException;
 
-import jakarta.annotation.Nonnull;
 import consulo.annotation.access.RequiredReadAction;
 import com.intellij.lang.javascript.psi.JSParameter;
 import consulo.javascript.impl.language.psi.JSStubElementType;
@@ -43,20 +42,19 @@ public class JSParameterElementType extends JSStubElementType<JSParameterStub, J
         super("FORMAL_PARAMETER");
     }
 
-    @Nonnull
     @Override
-    public PsiElement createElement(@Nonnull ASTNode astNode) {
+    public PsiElement createElement(ASTNode astNode) {
         return new JSParameterImpl(astNode);
     }
 
     @Override
-    public JSParameter createPsi(@Nonnull JSParameterStub stub) {
+    public JSParameter createPsi(JSParameterStub stub) {
         return new JSParameterImpl(stub);
     }
 
     @RequiredReadAction
     @Override
-    public JSParameterStub createStub(@Nonnull JSParameter psi, StubElement parentStub) {
+    public JSParameterStub createStub(JSParameter psi, StubElement parentStub) {
         String name = psi.getName();
         int flags = JSParameterStubImpl.buildFlags(psi);
         String typeString = psi.getTypeString();
@@ -66,7 +64,7 @@ public class JSParameterElementType extends JSStubElementType<JSParameterStub, J
     }
 
     @Override
-    public void serialize(@Nonnull JSParameterStub stub, @Nonnull StubOutputStream dataStream) throws IOException {
+    public void serialize(JSParameterStub stub, StubOutputStream dataStream) throws IOException {
         dataStream.writeName(stub.getName());
         dataStream.writeVarInt(stub.getFlags());
         dataStream.writeName(stub.getTypeString());
@@ -74,9 +72,8 @@ public class JSParameterElementType extends JSStubElementType<JSParameterStub, J
         dataStream.writeName(stub.getQualifiedName());
     }
 
-    @Nonnull
     @Override
-    public JSParameterStub deserialize(@Nonnull StubInputStream dataStream, StubElement parentStub) throws IOException {
+    public JSParameterStub deserialize(StubInputStream dataStream, StubElement parentStub) throws IOException {
         StringRef nameRef = dataStream.readName();
         int flags = dataStream.readVarInt();
         StringRef typeRef = dataStream.readName();

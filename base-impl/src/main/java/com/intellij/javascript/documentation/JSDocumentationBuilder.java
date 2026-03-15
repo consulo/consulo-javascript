@@ -29,9 +29,7 @@ import consulo.language.editor.localize.CodeInsightLocalize;
 import consulo.language.psi.PsiElement;
 import consulo.util.io.URLUtil;
 import consulo.util.lang.StringUtil;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
-import org.jetbrains.annotations.NonNls;
+import org.jspecify.annotations.Nullable;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -65,7 +63,6 @@ class JSDocumentationBuilder implements JSDocumentationProcessor {
     private SymbolInfo generationInfo;
     private ParameterInfo currentParameterInfo;
     private
-    @NonNls
     StringBuilder result;
 
     private JSFunction function;
@@ -137,7 +134,7 @@ class JSDocumentationBuilder implements JSDocumentationProcessor {
     }
 
     @Override
-    public boolean onCommentLine(@Nonnull String line) {
+    public boolean onCommentLine(String line) {
         String trimmedLine = line.trim();
         boolean parametersStarted = false;
         boolean parametersEnded = false;
@@ -195,7 +192,7 @@ class JSDocumentationBuilder implements JSDocumentationProcessor {
         return true;
     }
 
-    private static boolean tagNameThatDoNotNeedEscaping(@NonNls String s) {
+    private static boolean tagNameThatDoNotNeedEscaping(String s) {
         return s.equalsIgnoreCase("p") || s.equalsIgnoreCase("i") || s.equalsIgnoreCase("code")
             || s.equalsIgnoreCase("ul") || s.equalsIgnoreCase("li") || s.equalsIgnoreCase("b");
     }
@@ -207,11 +204,11 @@ class JSDocumentationBuilder implements JSDocumentationProcessor {
 
     @Override
     public boolean onPatternMatch(
-        @Nonnull MetaDocType metaDocType,
+        MetaDocType metaDocType,
         @Nullable String matchName,
         @Nullable String matchValue,
         @Nullable String remainingLineContent,
-        @Nonnull String line,
+        String line,
         String patternMatched
     ) {
         if (metaDocType == MetaDocType.DEFAULT) {

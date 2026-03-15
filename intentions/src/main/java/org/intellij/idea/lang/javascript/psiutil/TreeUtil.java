@@ -18,8 +18,7 @@ package org.intellij.idea.lang.javascript.psiutil;
 import com.intellij.lang.javascript.psi.JSElement;
 import consulo.language.psi.PsiElement;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 public class TreeUtil {
     private TreeUtil() {
@@ -68,7 +67,7 @@ public class TreeUtil {
     @Nullable
     public static <ParentType extends PsiElement> ParentType getParentOfType(
         @Nullable PsiElement element,
-        @Nonnull Class<ParentType> aClass
+        Class<ParentType> aClass
     ) {
         return getParentOfType(element, aClass, true);
     }
@@ -95,7 +94,7 @@ public class TreeUtil {
     @Nullable
     public static <ParentType extends PsiElement> ParentType getPrevLeafOfType(
         @Nullable PsiElement element,
-        @Nonnull Class<ParentType> aClass
+        Class<ParentType> aClass
     ) {
         return getPrevLeafOfType(element, aClass, true);
     }
@@ -122,7 +121,7 @@ public class TreeUtil {
     @Nullable
     public static <ParentType extends PsiElement> ParentType getNextLeafOfType(
         @Nullable PsiElement element,
-        @Nonnull Class<ParentType> aClass
+        Class<ParentType> aClass
     ) {
         return getNextLeafOfType(element, aClass, true);
     }
@@ -146,7 +145,7 @@ public class TreeUtil {
         return (ParentType)element;
     }
 
-    public static boolean isAncestor(@Nonnull JSElement ancestor, @Nonnull JSElement element, boolean strict) {
+    public static boolean isAncestor(JSElement ancestor, JSElement element, boolean strict) {
         PsiElement parent = strict ? element.getParent() : element;
 
         while (parent != null && parent instanceof JSElement) {

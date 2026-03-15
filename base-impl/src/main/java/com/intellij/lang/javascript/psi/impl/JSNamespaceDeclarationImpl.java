@@ -30,7 +30,6 @@ import consulo.language.psi.PsiElement;
 import consulo.language.psi.resolve.PsiScopeProcessor;
 import consulo.language.psi.resolve.ResolveState;
 import consulo.language.util.IncorrectOperationException;
-import jakarta.annotation.Nonnull;
 
 /**
  * @author Maxim.Mossienko
@@ -45,7 +44,7 @@ public class JSNamespaceDeclarationImpl extends JSStubbedStatementImpl<JSNamespa
     }
 
     @Override
-    protected void accept(@Nonnull JSElementVisitor visitor) {
+    protected void accept(JSElementVisitor visitor) {
         visitor.visitJSNamespaceDeclaration(this);
     }
 
@@ -56,7 +55,7 @@ public class JSNamespaceDeclarationImpl extends JSStubbedStatementImpl<JSNamespa
 
     @Override
     @RequiredWriteAction
-    public PsiElement setName(@Nonnull String newName) throws IncorrectOperationException {
+    public PsiElement setName(String newName) throws IncorrectOperationException {
         String oldName = getName();
         if (newName.equals(oldName)) {
             return this;
@@ -132,10 +131,10 @@ public class JSNamespaceDeclarationImpl extends JSStubbedStatementImpl<JSNamespa
 
     @Override
     public boolean processDeclarations(
-        @Nonnull PsiScopeProcessor processor,
-        @Nonnull ResolveState state,
+        PsiScopeProcessor processor,
+        ResolveState state,
         PsiElement lastParent,
-        @Nonnull PsiElement place
+        PsiElement place
     ) {
         return processor.execute(lastParent, state);
     }

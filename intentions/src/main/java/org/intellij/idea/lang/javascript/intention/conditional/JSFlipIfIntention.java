@@ -26,7 +26,6 @@ import consulo.language.editor.intention.IntentionMetaData;
 import consulo.language.psi.PsiElement;
 import consulo.language.util.IncorrectOperationException;
 import consulo.localize.LocalizeValue;
-import jakarta.annotation.Nonnull;
 import org.intellij.idea.lang.javascript.intention.JSElementPredicate;
 import org.intellij.idea.lang.javascript.intention.JSIntention;
 import org.intellij.idea.lang.javascript.psiutil.BoolUtils;
@@ -41,20 +40,18 @@ import org.intellij.idea.lang.javascript.psiutil.JSElementFactory;
 )
 public class JSFlipIfIntention extends JSIntention {
     @Override
-    @Nonnull
     public LocalizeValue getText() {
         return JSIntentionLocalize.conditionalFlipIf();
     }
 
     @Override
-    @Nonnull
     public JSElementPredicate getElementPredicate() {
         return new FlipIfPredicate();
     }
 
     @Override
     @RequiredReadAction
-    public void processIntention(@Nonnull PsiElement element) throws IncorrectOperationException {
+    public void processIntention(PsiElement element) throws IncorrectOperationException {
         JSIfStatement exp = (JSIfStatement)element;
         JSExpression condition = exp.getCondition();
         JSStatement thenBranch = exp.getThen();
@@ -72,7 +69,7 @@ public class JSFlipIfIntention extends JSIntention {
 
     private static class FlipIfPredicate implements JSElementPredicate {
         @Override
-        public boolean satisfiedBy(@Nonnull PsiElement element) {
+        public boolean satisfiedBy(PsiElement element) {
             return element instanceof JSIfStatement ifStatement
                 && !ErrorUtil.containsError(ifStatement)
                 && ifStatement.getCondition() != null;

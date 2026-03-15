@@ -32,7 +32,6 @@ import consulo.language.editor.generation.OverrideMethodHandler;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.resolve.ResolveState;
 import consulo.localize.LocalizeValue;
-import jakarta.annotation.Nonnull;
 
 import java.util.Collection;
 import java.util.Map;
@@ -78,7 +77,7 @@ public class JavaScriptOverrideMethodsHandler extends BaseJSGenerateHandler impl
 
             @Override
             @RequiredReadAction
-            public boolean execute(@Nonnull PsiElement element, ResolveState state) {
+            public boolean execute(PsiElement element, ResolveState state) {
                 if (element instanceof JSFunction function) {
                     if (function.isConstructor() || functionsToOverride == null) {
                         return true;

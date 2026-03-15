@@ -9,25 +9,21 @@ import consulo.annotation.access.RequiredReadAction;
 import consulo.annotation.component.ExtensionImpl;
 import consulo.language.editor.inspection.InspectionToolState;
 import consulo.localize.LocalizeValue;
-import jakarta.annotation.Nonnull;
 import org.intellij.lang.annotations.Pattern;
 
 @ExtensionImpl
 public class EmptyStatementBodyJSInspection extends JavaScriptInspection {
-    @Nonnull
     @Override
     @Pattern(value = "[a-zA-Z_0-9.-]+")
     public String getID() {
         return "StatementWithEmptyBodyJS";
     }
 
-    @Nonnull
     @Override
     public LocalizeValue getDisplayName() {
         return InspectionJSLocalize.statementWithEmptyBodyDisplayName();
     }
 
-    @Nonnull
     @Override
     public LocalizeValue getGroupDisplayName() {
         return JSGroupNames.CONFUSING_GROUP_NAME;
@@ -46,7 +42,6 @@ public class EmptyStatementBodyJSInspection extends JavaScriptInspection {
             : InspectionJSLocalize.statementHasEmptyBodyErrorString().get();
     }
 
-    @Nonnull
     @Override
     public InspectionToolState<?> createStateProvider() {
         return new EmptyStatementBodyJSInspectionState();
@@ -59,7 +54,7 @@ public class EmptyStatementBodyJSInspection extends JavaScriptInspection {
 
     private class EmptyStatementVisitor extends BaseInspectionVisitor<EmptyStatementBodyJSInspectionState> {
         @Override
-        public void visitJSDoWhileStatement(@Nonnull JSDoWhileStatement statement) {
+        public void visitJSDoWhileStatement(JSDoWhileStatement statement) {
             super.visitJSDoWhileStatement(statement);
 
             JSStatement body = statement.getBody();
@@ -73,7 +68,7 @@ public class EmptyStatementBodyJSInspection extends JavaScriptInspection {
         }
 
         @Override
-        public void visitJSWhileStatement(@Nonnull JSWhileStatement statement) {
+        public void visitJSWhileStatement(JSWhileStatement statement) {
             super.visitJSWhileStatement(statement);
 
             JSStatement body = statement.getBody();
@@ -87,7 +82,7 @@ public class EmptyStatementBodyJSInspection extends JavaScriptInspection {
         }
 
         @Override
-        public void visitJSForStatement(@Nonnull JSForStatement statement) {
+        public void visitJSForStatement(JSForStatement statement) {
             super.visitJSForStatement(statement);
 
             JSStatement body = statement.getBody();
@@ -101,7 +96,7 @@ public class EmptyStatementBodyJSInspection extends JavaScriptInspection {
         }
 
         @Override
-        public void visitJSForInStatement(@Nonnull JSForInStatement statement) {
+        public void visitJSForInStatement(JSForInStatement statement) {
             super.visitJSForInStatement(statement);
 
             JSStatement body = statement.getBody();
@@ -115,7 +110,7 @@ public class EmptyStatementBodyJSInspection extends JavaScriptInspection {
         }
 
         @Override
-        public void visitJSIfStatement(@Nonnull JSIfStatement statement) {
+        public void visitJSIfStatement(JSIfStatement statement) {
             super.visitJSIfStatement(statement);
 
             JSStatement thenBranch = statement.getThen();

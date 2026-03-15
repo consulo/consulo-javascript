@@ -11,8 +11,7 @@ import consulo.module.Module;
 import consulo.ui.image.Image;
 import consulo.virtualFileSystem.VirtualFile;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author VISTALL
@@ -25,19 +24,16 @@ public class JSXFileType extends LanguageFileType implements JavaScriptFileTypeW
         super(JavaScriptLanguage.INSTANCE);
     }
 
-    @Nonnull
     @Override
     public String getId() {
         return "JSX";
     }
 
-    @Nonnull
     @Override
     public LocalizeValue getDescription() {
         return LocalizeValue.localizeTODO("JSX files");
     }
 
-    @Nonnull
     @Override
     public String getDefaultExtension() {
         return "jsx";
@@ -50,7 +46,6 @@ public class JSXFileType extends LanguageFileType implements JavaScriptFileTypeW
     }
 
     @RequiredReadAction
-    @Nonnull
     @Override
     public LanguageVersion getLanguageVersion(@Nullable Module module, @Nullable VirtualFile virtualFile) {
         return JSXJavaScriptVersion.getInstance();

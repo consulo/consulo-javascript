@@ -24,7 +24,6 @@ import consulo.language.editor.intention.IntentionMetaData;
 import consulo.language.psi.PsiElement;
 import consulo.language.util.IncorrectOperationException;
 import consulo.localize.LocalizeValue;
-import jakarta.annotation.Nonnull;
 import org.intellij.idea.lang.javascript.intention.JSElementPredicate;
 import org.intellij.idea.lang.javascript.intention.JSIntention;
 import org.intellij.idea.lang.javascript.psiutil.ConditionalUtils;
@@ -37,20 +36,18 @@ import org.intellij.idea.lang.javascript.psiutil.ErrorUtil;
     fileExtensions = "js"
 )
 public class JSSimplifyIfElseIntention extends JSIntention {
-    @Nonnull
     @Override
     public LocalizeValue getText() {
         return JSIntentionLocalize.trivialifSimplifyIfElse();
     }
 
     @Override
-    @Nonnull
     public JSElementPredicate getElementPredicate() {
         return new SimplifyIfElsePredicate();
     }
 
     @Override
-    public void processIntention(@Nonnull PsiElement element) throws IncorrectOperationException {
+    public void processIntention(PsiElement element) throws IncorrectOperationException {
         PsiElement statement = element.getParent() instanceof JSIfStatement ? element.getParent() : element;
 
         ConditionalUtils.replaceAssignmentOrReturnIfSimplifiable((JSIfStatement)statement);
@@ -58,7 +55,7 @@ public class JSSimplifyIfElseIntention extends JSIntention {
 
     private static class SimplifyIfElsePredicate implements JSElementPredicate {
         @Override
-        public boolean satisfiedBy(@Nonnull PsiElement element) {
+        public boolean satisfiedBy(PsiElement element) {
             if (!(element instanceof JSElement)) {
                 return false;
             }

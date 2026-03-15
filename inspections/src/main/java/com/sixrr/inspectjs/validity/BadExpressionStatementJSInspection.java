@@ -16,19 +16,15 @@ import consulo.language.psi.PsiFile;
 import consulo.language.psi.ResolveResult;
 import consulo.language.psi.util.PsiTreeUtil;
 import consulo.localize.LocalizeValue;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
-import org.jetbrains.annotations.NonNls;
+import org.jspecify.annotations.Nullable;
 
 @ExtensionImpl
 public class BadExpressionStatementJSInspection extends JavaScriptInspection {
-    @Nonnull
     @Override
     public LocalizeValue getDisplayName() {
         return InspectionJSLocalize.expressionStatementWhichIsNotAssignmentOrCallDisplayName();
     }
 
-    @Nonnull
     @Override
     public LocalizeValue getGroupDisplayName() {
         return JSGroupNames.VALIDITY_GROUP_NAME;
@@ -89,7 +85,7 @@ public class BadExpressionStatementJSInspection extends JavaScriptInspection {
                 }
                 PsiElement signElement = expression.getFirstChild();
                 if (signElement != null) {
-                    @NonNls String text = signElement.getText();
+                    String text = signElement.getText();
                     if ("delete".equals(text)) {
                         return true;
                     }

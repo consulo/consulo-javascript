@@ -30,8 +30,7 @@ import consulo.language.ast.IElementType;
 import consulo.language.ast.TokenSet;
 import consulo.language.psi.PsiElement;
 import consulo.language.util.IncorrectOperationException;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -64,7 +63,7 @@ public class JSAttributeListImpl extends JSStubElementImpl<JSAttributeListStub> 
     }
 
     @Override
-    protected void accept(@Nonnull JSElementVisitor visitor) {
+    protected void accept(JSElementVisitor visitor) {
         visitor.visitJSAttributeList(this);
     }
 
@@ -92,10 +91,9 @@ public class JSAttributeListImpl extends JSStubElementImpl<JSAttributeListStub> 
         return getStubOrPsiChildren(JSElementTypes.ATTRIBUTE, JSAttribute.ARRAY_FACTORY);
     }
 
-    @Nonnull
     @Override
     @RequiredReadAction
-    public JSAttribute[] getAttributesByName(@Nonnull String name) {
+    public JSAttribute[] getAttributesByName(String name) {
         List<JSAttribute> attributes = null;
         for (JSAttribute attr : getAttributes()) {
             if (name.equals(attr.getName())) {
@@ -152,7 +150,7 @@ public class JSAttributeListImpl extends JSStubElementImpl<JSAttributeListStub> 
 
     @Override
     @RequiredWriteAction
-    public PsiElement add(@Nonnull PsiElement element) throws IncorrectOperationException {
+    public PsiElement add(PsiElement element) throws IncorrectOperationException {
         if (element.getNode().getElementType() == JSTokenTypes.OVERRIDE_KEYWORD) {
             return JSChangeUtil.doDoAddBefore(this, element, getFirstChild());
         }

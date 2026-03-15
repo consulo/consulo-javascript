@@ -27,7 +27,6 @@ import consulo.language.util.IncorrectOperationException;
 import consulo.annotation.access.RequiredReadAction;
 import consulo.javascript.language.psi.JavaScriptType;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * @author max
@@ -43,7 +42,7 @@ public class JSFunctionExpressionImpl extends JSFunctionBaseImpl<JSFunctionStub,
     }
 
     @Override
-    protected void accept(@Nonnull JSElementVisitor visitor) {
+    protected void accept(JSElementVisitor visitor) {
         visitor.visitJSFunctionExpression(this);
     }
 
@@ -53,14 +52,12 @@ public class JSFunctionExpressionImpl extends JSFunctionBaseImpl<JSFunctionStub,
         return JSChangeUtil.createNameIdentifier(getProject(), name);
     }
 
-    @Nonnull
     @Override
     @RequiredWriteAction
     public JSExpression replace(JSExpression newExpr) {
         return JSChangeUtil.replaceExpression(this, newExpr);
     }
 
-    @Nonnull
     @Override
     @RequiredReadAction
     public JavaScriptType getType() {

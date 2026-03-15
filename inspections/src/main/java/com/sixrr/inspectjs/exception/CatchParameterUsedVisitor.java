@@ -5,7 +5,6 @@ import com.intellij.lang.javascript.psi.JSReferenceExpression;
 import com.sixrr.inspectjs.JSRecursiveElementVisitor;
 import consulo.language.psi.PsiElement;
 
-import jakarta.annotation.Nonnull;
 
 class CatchParameterUsedVisitor extends JSRecursiveElementVisitor {
     private final JSParameter parameter;
@@ -17,14 +16,14 @@ class CatchParameterUsedVisitor extends JSRecursiveElementVisitor {
     }
 
     @Override
-    public void visitElement(@Nonnull PsiElement element) {
+    public void visitElement(PsiElement element) {
         if (!used) {
             super.visitElement(element);
         }
     }
 
     @Override
-    public void visitJSReferenceExpression(@Nonnull JSReferenceExpression reference) {
+    public void visitJSReferenceExpression(JSReferenceExpression reference) {
         if (used) {
             return;
         }

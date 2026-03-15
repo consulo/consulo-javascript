@@ -1,6 +1,5 @@
 package com.sixrr.inspectjs.bugs;
 
-import jakarta.annotation.Nonnull;
 
 import consulo.language.ast.IElementType;
 import com.intellij.lang.javascript.psi.*;
@@ -172,7 +171,7 @@ public class RecursionUtils {
         return endsInImplicitReturn;
     }
 
-    public static boolean functionMayRecurse(@Nonnull JSFunction function) {
+    public static boolean functionMayRecurse(JSFunction function) {
         RecursionVisitor recursionVisitor = new RecursionVisitor(function);
         function.accept(recursionVisitor);
         return recursionVisitor.isRecursive();
@@ -451,7 +450,7 @@ public class RecursionUtils {
         return statementDefinitelyRecurses(body, function);
     }
 
-    public static boolean functionDefinitelyRecurses(@Nonnull JSFunction function) {
+    public static boolean functionDefinitelyRecurses(JSFunction function) {
         JSSourceElement[] body = function.getBody();
         if (body == null) {
             return false;

@@ -10,20 +10,16 @@ import com.sixrr.inspectjs.localize.InspectionJSLocalize;
 import consulo.annotation.access.RequiredReadAction;
 import consulo.annotation.component.ExtensionImpl;
 import consulo.localize.LocalizeValue;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
-import org.jetbrains.annotations.NonNls;
+import org.jspecify.annotations.Nullable;
 
 @ExtensionImpl
 public class DebuggerStatementJSInspection extends JavaScriptInspection {
     @Override
-    @Nonnull
     public LocalizeValue getDisplayName() {
         return InspectionJSLocalize.debuggerStatementDisplayName();
     }
 
     @Override
-    @Nonnull
     public LocalizeValue getGroupDisplayName() {
         return JSGroupNames.VALIDITY_GROUP_NAME;
     }
@@ -54,7 +50,7 @@ public class DebuggerStatementJSInspection extends JavaScriptInspection {
             if (!(expression instanceof JSReferenceExpression)) {
                 return;
             }
-            @NonNls String text = expression.getText();
+            String text = expression.getText();
             if (!"debugger".equals(text)) {
                 return;
             }

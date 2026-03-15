@@ -34,7 +34,6 @@ import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.ui.ex.action.Shortcut;
 import consulo.ui.ex.keymap.KeymapManager;
 import consulo.util.lang.ref.SimpleReference;
-import jakarta.annotation.Nonnull;
 
 import java.util.Comparator;
 
@@ -87,13 +86,11 @@ public class JSStructureViewModel extends TextEditorBasedStructureViewModel {
         }
 
         @Override
-        @Nonnull
         public ActionPresentation getPresentation() {
             return null; // will not be shown
         }
 
         @Override
-        @Nonnull
         public String getName() {
             return ID;
         }
@@ -125,13 +122,11 @@ public class JSStructureViewModel extends TextEditorBasedStructureViewModel {
         }
 
         @Override
-        @Nonnull
         public ActionPresentation getPresentation() {
             return new ActionPresentationData(IdeLocalize.actionStructureviewShowFields().get(), null, AllIcons.Nodes.Variable);
         }
 
         @Override
-        @Nonnull
         public String getName() {
             return ID;
         }
@@ -146,7 +141,6 @@ public class JSStructureViewModel extends TextEditorBasedStructureViewModel {
         }
 
         @Override
-        @Nonnull
         public ActionPresentation getPresentation() {
             return new ActionPresentationData(
                 IdeLocalize.actionStructureviewShowInherited().get(),
@@ -156,7 +150,6 @@ public class JSStructureViewModel extends TextEditorBasedStructureViewModel {
         }
 
         @Override
-        @Nonnull
         public String getName() {
             return ID;
         }
@@ -195,25 +188,21 @@ public class JSStructureViewModel extends TextEditorBasedStructureViewModel {
     }
 
     @Override
-    @Nonnull
     public StructureViewTreeElement getRoot() {
         return new JSStructureViewElement(myRoot);
     }
 
     @Override
-    @Nonnull
     public Grouper[] getGroupers() {
         return myGroupers;
     }
 
     @Override
-    @Nonnull
     public Sorter[] getSorters() {
         return mySorters;
     }
 
     @Override
-    @Nonnull
     public Filter[] getFilters() {
         return myFilters;
     }
@@ -291,7 +280,6 @@ public class JSStructureViewModel extends TextEditorBasedStructureViewModel {
         return myRoot.getContainingFile();
     }
 
-    @Nonnull
     @Override
     protected Class[] getSuitableClasses() {
         return SUITABLE_CLASSES;

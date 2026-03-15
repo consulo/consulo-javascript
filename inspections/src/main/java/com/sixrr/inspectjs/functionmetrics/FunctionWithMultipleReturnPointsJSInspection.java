@@ -11,7 +11,6 @@ import consulo.annotation.access.RequiredReadAction;
 import consulo.annotation.component.ExtensionImpl;
 import consulo.language.psi.PsiElement;
 import consulo.localize.LocalizeValue;
-import jakarta.annotation.Nonnull;
 
 @ExtensionImpl
 public class FunctionWithMultipleReturnPointsJSInspection extends JavaScriptInspection {
@@ -20,13 +19,11 @@ public class FunctionWithMultipleReturnPointsJSInspection extends JavaScriptInsp
         return false;
     }
 
-    @Nonnull
     @Override
     public LocalizeValue getDisplayName() {
         return InspectionJSLocalize.functionWithMultipleReturnPointsDisplayName();
     }
 
-    @Nonnull
     @Override
     public LocalizeValue getGroupDisplayName() {
         return JSGroupNames.FUNCTIONMETRICS_GROUP_NAME;
@@ -69,7 +66,7 @@ public class FunctionWithMultipleReturnPointsJSInspection extends JavaScriptInsp
 
     private static class Visitor extends BaseInspectionVisitor {
         @Override
-        public void visitJSFunctionDeclaration(@Nonnull JSFunction function) {
+        public void visitJSFunctionDeclaration(JSFunction function) {
             int returnPointCount = countReturnPoints(function);
             if (returnPointCount <= 1) {
                 return;

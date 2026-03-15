@@ -11,8 +11,7 @@ import consulo.annotation.access.RequiredReadAction;
 import consulo.javascript.language.psi.JavaScriptType;
 import consulo.javascript.language.psi.JavaScriptTypeElement;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author VISTALL
@@ -56,7 +55,6 @@ public class JSFunctionPropertyImpl extends JSPropertyImpl implements JSFunction
         return result;
     }
 
-    @Nonnull
     @Override
     public JavaScriptType getReturnType() {
         return JavaScriptType.UNKNOWN;

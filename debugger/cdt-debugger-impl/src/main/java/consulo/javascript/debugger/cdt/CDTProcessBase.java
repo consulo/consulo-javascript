@@ -28,8 +28,7 @@ import consulo.process.ProcessHandler;
 import consulo.ui.ex.content.Content;
 import consulo.util.io.Url;
 import consulo.util.io.Urls;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.net.SocketException;
 import java.util.Collection;
@@ -58,7 +57,7 @@ public abstract class CDTProcessBase extends XDebugProcess {
 
     private Map<String, CDTBreakpointInfo> myBreakpoints = new HashMap<>();
 
-    public CDTProcessBase(@Nonnull XDebugSession session, ExecutionResult result) throws ExecutionException {
+    public CDTProcessBase(XDebugSession session, ExecutionResult result) throws ExecutionException {
         super(session);
         myScriptListPanel = new JavaScriptListPanel<>();
 
@@ -151,13 +150,11 @@ public abstract class CDTProcessBase extends XDebugProcess {
         return myChromeDevTools != null;
     }
 
-    @Nonnull
     @Override
     public XDebuggerEditorsProvider getEditorsProvider() {
         return JavaScriptEditorsProvider.INSTANCE;
     }
 
-    @Nonnull
     @Override
     public ExecutionConsole createConsole() {
         return myResult.getExecutionConsole();
@@ -168,13 +165,12 @@ public abstract class CDTProcessBase extends XDebugProcess {
         return false;
     }
 
-    @Nonnull
     @Override
     public XBreakpointHandler<?>[] getBreakpointHandlers() {
         return new XBreakpointHandler[]{
             new XBreakpointHandler<>(JavaScriptLineBreakpointType.class) {
                 @Override
-                public void registerBreakpoint(@Nonnull final XLineBreakpoint lineBreakpoint) {
+                public void registerBreakpoint(final XLineBreakpoint lineBreakpoint) {
                     int line = lineBreakpoint.getLine();
                     XExpression conditionExpression = lineBreakpoint.getConditionExpression();
                     String expression = conditionExpression == null ? null : conditionExpression.getExpression();
@@ -199,7 +195,7 @@ public abstract class CDTProcessBase extends XDebugProcess {
                 }
 
                 @Override
-                public void unregisterBreakpoint(@Nonnull XLineBreakpoint breakpoint, boolean b) {
+                public void unregisterBreakpoint(XLineBreakpoint breakpoint, boolean b) {
                     String presentableFilePath = breakpoint.getPresentableFilePath();
                     // myVm.setBreakpoint(new Breakpoint.Target.ScriptName(presentableFilePath), breakpoint.getLine(), Breakpoint.EMPTY_VALUE, false, null, null, null);
                 }
@@ -263,15 +259,14 @@ public abstract class CDTProcessBase extends XDebugProcess {
     }
 
     @Override
-    public void runToPosition(@Nonnull XSourcePosition position, @Nullable XSuspendContext context) {
+    public void runToPosition(XSourcePosition position, @Nullable XSuspendContext context) {
     }
 
-    @Nonnull
     @Override
     public XDebugTabLayouter createTabLayouter() {
         return new XDebugTabLayouter() {
             @Override
-            public void registerAdditionalContent(@Nonnull RunnerLayoutUi ui) {
+            public void registerAdditionalContent(RunnerLayoutUi ui) {
                 Content content = ui.createContent("ScriptListView", myScriptListPanel, "Scripts", JavaScriptIconGroup.javascript(), null);
                 content.setCloseable(false);
 
@@ -280,7 +275,6 @@ public abstract class CDTProcessBase extends XDebugProcess {
         };
     }
 
-    @Nonnull
     @Override
     public LocalizeValue getCurrentStateMessage() {
         if (myChromeDevTools == null) {

@@ -7,8 +7,7 @@ import consulo.javascript.psi.stubs.JSFileStub;
 import consulo.language.psi.stub.IStubFileElementType;
 import consulo.language.psi.stub.PsiFileStubImpl;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author VISTALL
@@ -17,12 +16,12 @@ import jakarta.annotation.Nullable;
 public class JSFileStubImpl extends PsiFileStubImpl<JSFile> implements JSFileStub {
     private StringRef myName;
 
-    public JSFileStubImpl(@Nullable JSFile file, @Nonnull String name) {
+    public JSFileStubImpl(@Nullable JSFile file, String name) {
         super(file);
         myName = StringRef.fromString(name);
     }
 
-    public JSFileStubImpl(@Nullable JSFile file, @Nonnull StringRef name) {
+    public JSFileStubImpl(@Nullable JSFile file, StringRef name) {
         super(file);
         myName = name;
     }
@@ -32,7 +31,6 @@ public class JSFileStubImpl extends PsiFileStubImpl<JSFile> implements JSFileStu
         return JSElementTypes.FILE;
     }
 
-    @Nonnull
     @Override
     public String getName() {
         return StringRef.toString(myName);

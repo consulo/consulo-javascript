@@ -19,7 +19,6 @@ import com.intellij.lang.javascript.JSTokenTypes;
 import com.intellij.lang.javascript.psi.JSBinaryExpression;
 import com.intellij.lang.javascript.psi.JSExpression;
 import consulo.language.ast.IElementType;
-import org.jetbrains.annotations.NonNls;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -118,7 +117,7 @@ public class BinaryOperatorUtils {
         String text;
         boolean commutative;
 
-        public OperatorProperties(@NonNls String text, boolean commutative) {
+        public OperatorProperties(String text, boolean commutative) {
             this.text = text;
             this.commutative = commutative;
         }

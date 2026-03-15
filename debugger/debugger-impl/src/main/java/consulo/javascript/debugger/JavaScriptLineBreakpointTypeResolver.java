@@ -24,9 +24,8 @@ import consulo.execution.debug.breakpoint.XLineBreakpointTypeResolver;
 import consulo.project.Project;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.fileType.FileType;
-import jakarta.annotation.Nonnull;
 
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author VISTALL
@@ -38,12 +37,11 @@ public class JavaScriptLineBreakpointTypeResolver implements XLineBreakpointType
 	@RequiredReadAction
 	@Nullable
 	@Override
-	public XLineBreakpointType<?> resolveBreakpointType(@Nonnull Project project, @Nonnull VirtualFile virtualFile, int line)
+	public XLineBreakpointType<?> resolveBreakpointType(Project project, VirtualFile virtualFile, int line)
 	{
 		return JavaScriptLineBreakpointType.getInstance();
 	}
 
-	@Nonnull
 	@Override
 	public FileType getFileType()
 	{

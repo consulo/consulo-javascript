@@ -11,23 +11,19 @@ import com.sixrr.inspectjs.localize.InspectionJSLocalize;
 import consulo.annotation.access.RequiredReadAction;
 import consulo.annotation.component.ExtensionImpl;
 import consulo.localize.LocalizeValue;
-import jakarta.annotation.Nonnull;
 
 @ExtensionImpl
 public class ChainedFunctionCallJSInspection extends JavaScriptInspection {
-    @Nonnull
     @Override
     public LocalizeValue getGroupDisplayName() {
         return JSGroupNames.STYLE_GROUP_NAME;
     }
 
-    @Nonnull
     @Override
     public LocalizeValue getDisplayName() {
         return InspectionJSLocalize.chainedFunctionCallDisplayName();
     }
 
-    @Nonnull
     @Override
     @RequiredReadAction
     protected String buildErrorString(Object state, Object... args) {
@@ -41,7 +37,7 @@ public class ChainedFunctionCallJSInspection extends JavaScriptInspection {
 
     private static class NestedMethodCallVisitor extends BaseInspectionVisitor {
         @Override
-        public void visitJSCallExpression(@Nonnull JSCallExpression expression) {
+        public void visitJSCallExpression(JSCallExpression expression) {
             super.visitJSCallExpression(expression);
             JSExpression reference = expression.getMethodExpression();
             if (!(reference instanceof JSReferenceExpression)) {

@@ -29,7 +29,6 @@ import consulo.language.psi.PsiNamedElement;
 import consulo.language.psi.resolve.ResolveState;
 import consulo.language.psi.util.PsiTreeUtil;
 import consulo.util.collection.ArrayUtil;
-import jakarta.annotation.Nonnull;
 
 import java.util.*;
 
@@ -212,7 +211,7 @@ public class VariantsProcessor extends BaseJSSymbolProcessor {
 
         @Override
         @RequiredReadAction
-        public void process(@Nonnull String type, EvaluateContext context, PsiElement source) {
+        public void process(String type, EvaluateContext context, PsiElement source) {
             if (context.visitedTypes.contains(type)) {
                 return;
             }
@@ -236,7 +235,7 @@ public class VariantsProcessor extends BaseJSSymbolProcessor {
         }
 
         @Override
-        public void setUnknownElement(@Nonnull PsiElement element) {
+        public void setUnknownElement(PsiElement element) {
             myUnknownElement = element;
         }
 
@@ -283,7 +282,7 @@ public class VariantsProcessor extends BaseJSSymbolProcessor {
 
     @Override
     @RequiredReadAction
-    public boolean execute(@Nonnull PsiElement element, ResolveState state) {
+    public boolean execute(PsiElement element, ResolveState state) {
         if (element instanceof JSNamedElement namedElement) {
             addCompleteMatch(namedElement, namedElement.getName());
         }

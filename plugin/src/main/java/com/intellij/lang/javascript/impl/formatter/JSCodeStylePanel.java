@@ -28,7 +28,6 @@ import consulo.language.psi.PsiFile;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.awt.event.DocumentAdapter;
 import consulo.virtualFileSystem.fileType.FileType;
-import jakarta.annotation.Nonnull;
 
 import javax.swing.*;
 import javax.swing.event.DocumentEvent;
@@ -89,7 +88,6 @@ public class JSCodeStylePanel extends CodeStyleAbstractPanel {
     }
 
     @Override
-    @Nonnull
     protected FileType getFileType() {
         return JavaScriptFileType.INSTANCE;
     }

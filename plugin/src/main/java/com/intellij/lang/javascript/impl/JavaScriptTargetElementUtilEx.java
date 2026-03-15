@@ -22,7 +22,6 @@ import com.intellij.lang.javascript.psi.resolve.JSResolveUtil;
 import consulo.annotation.component.ExtensionImpl;
 import consulo.language.editor.TargetElementUtilExtender;
 import consulo.language.psi.PsiElement;
-import jakarta.annotation.Nonnull;
 
 /**
  * @author Maxim.Mossienko
@@ -31,7 +30,7 @@ import jakarta.annotation.Nonnull;
 @ExtensionImpl
 public class JavaScriptTargetElementUtilEx implements TargetElementUtilExtender {
     @Override
-    public boolean includeSelfInGotoImplementation(@Nonnull PsiElement element) {
+    public boolean includeSelfInGotoImplementation(PsiElement element) {
         if (element instanceof JSFunction function) {
             if (JSResolveUtil.findParent(function) instanceof JSClass jsClass && jsClass.isInterface()) {
                 return false;

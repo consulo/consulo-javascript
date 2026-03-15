@@ -20,9 +20,8 @@ import consulo.annotation.access.RequiredReadAction;
 import consulo.javascript.language.psi.JavaScriptType;
 import consulo.javascript.language.psi.JavaScriptTypeElement;
 import consulo.language.util.IncorrectOperationException;
-import jakarta.annotation.Nonnull;
 
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author max
@@ -42,7 +41,6 @@ public interface JSVariable extends JSQualifiedNamedElement, JSAttributeListOwne
 
     void setInitializer(JSExpression expr) throws IncorrectOperationException;
 
-    @Nonnull
     JavaScriptType getType();
 
     @Nullable

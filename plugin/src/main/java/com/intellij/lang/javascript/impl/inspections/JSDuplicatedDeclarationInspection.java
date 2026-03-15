@@ -37,7 +37,6 @@ import consulo.language.psi.resolve.ResolveState;
 import consulo.language.psi.util.PsiTreeUtil;
 
 import consulo.localize.LocalizeValue;
-import jakarta.annotation.Nonnull;
 
 /**
  * @author Maxim.Mossienko
@@ -46,19 +45,16 @@ import jakarta.annotation.Nonnull;
 public class JSDuplicatedDeclarationInspection extends JSInspection {
     private static final String SHORT_NAME = "JSDuplicatedDeclaration";
 
-    @Nonnull
     @Override
     public LocalizeValue getGroupDisplayName() {
         return InspectionLocalize.inspectionGeneralToolsGroupName();
     }
 
-    @Nonnull
     @Override
     public LocalizeValue getDisplayName() {
         return JavaScriptLocalize.jsDuplicatedDeclarationInspectionName();
     }
 
-    @Nonnull
     @Override
     public String getShortName() {
         return SHORT_NAME;
@@ -69,7 +65,7 @@ public class JSDuplicatedDeclarationInspection extends JSInspection {
         return new JSElementVisitor() {
             @Override
             @RequiredReadAction
-            public void visitJSClass(@Nonnull JSClass node) {
+            public void visitJSClass(JSClass node) {
                 String name = node.getName();
                 if (name == null) {
                     return;
@@ -81,7 +77,7 @@ public class JSDuplicatedDeclarationInspection extends JSInspection {
 
             @Override
             @RequiredReadAction
-            public void visitJSFunctionDeclaration(@Nonnull JSFunction node) {
+            public void visitJSFunctionDeclaration(JSFunction node) {
                 String name = node.getName();
                 if (name == null) {
                     return;
@@ -114,7 +110,7 @@ public class JSDuplicatedDeclarationInspection extends JSInspection {
                 ResolveProcessor processor = new ResolveProcessor(name, scope) {
                     @Override
                     @RequiredReadAction
-                    public boolean execute(@Nonnull PsiElement element, ResolveState state) {
+                    public boolean execute(PsiElement element, ResolveState state) {
                         if (element == decl) {
                             return true;
                         }
@@ -190,7 +186,7 @@ public class JSDuplicatedDeclarationInspection extends JSInspection {
 
             @Override
             @RequiredReadAction
-            public void visitJSProperty(@Nonnull JSProperty node) {
+            public void visitJSProperty(JSProperty node) {
                 String name = node.getName();
                 if (name == null) {
                     return;
@@ -200,7 +196,7 @@ public class JSDuplicatedDeclarationInspection extends JSInspection {
 
             @Override
             @RequiredReadAction
-            public void visitJSVariable(@Nonnull JSVariable var) {
+            public void visitJSVariable(JSVariable var) {
                 PsiElement nameIdentifier = var.getNameIdentifier();
                 PsiElement next = nameIdentifier != null ? nameIdentifier.getNextSibling() : null;
                 String name = nameIdentifier != null ? nameIdentifier.getText() : null;
@@ -216,7 +212,6 @@ public class JSDuplicatedDeclarationInspection extends JSInspection {
     }
 
     @Override
-    @Nonnull
     public HighlightDisplayLevel getDefaultLevel() {
         return HighlightDisplayLevel.WARNING;
     }

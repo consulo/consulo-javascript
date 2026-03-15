@@ -23,7 +23,6 @@ import com.intellij.lang.javascript.psi.JSExpression;
 import com.intellij.lang.javascript.psi.JSStatement;
 import com.intellij.lang.javascript.psi.JSWhileStatement;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * @author max
@@ -46,7 +45,7 @@ public class JSWhileStatementImpl extends JSStatementImpl implements JSWhileStat
     }
 
     @Override
-    protected void accept(@Nonnull JSElementVisitor visitor) {
+    protected void accept(JSElementVisitor visitor) {
         visitor.visitJSWhileStatement(this);
     }
 }

@@ -23,7 +23,6 @@ import consulo.language.editor.intention.IntentionMetaData;
 import consulo.language.psi.PsiElement;
 import consulo.language.util.IncorrectOperationException;
 import consulo.localize.LocalizeValue;
-import jakarta.annotation.Nonnull;
 import org.intellij.idea.lang.javascript.intention.JSElementPredicate;
 import org.intellij.idea.lang.javascript.intention.JSIntention;
 import org.intellij.idea.lang.javascript.psiutil.ErrorUtil;
@@ -40,20 +39,18 @@ import java.util.Iterator;
 )
 public class JSMergeDeclarationAndInitializationIntention extends JSIntention {
     @Override
-    @Nonnull
     public LocalizeValue getText() {
         return JSIntentionLocalize.initializationMergeDeclarationAndInitialization();
     }
 
     @Override
-    @Nonnull
     protected JSElementPredicate getElementPredicate() {
         return new Predicate();
     }
 
     @Override
     @RequiredReadAction
-    public void processIntention(@Nonnull PsiElement element) throws IncorrectOperationException {
+    public void processIntention(PsiElement element) throws IncorrectOperationException {
         assert (element instanceof JSVarStatement);
 
         JSVarStatement varStatement = (JSVarStatement)element;
@@ -97,7 +94,7 @@ public class JSMergeDeclarationAndInitializationIntention extends JSIntention {
     private static class Predicate implements JSElementPredicate {
         @Override
         @RequiredReadAction
-        public boolean satisfiedBy(@Nonnull PsiElement element) {
+        public boolean satisfiedBy(PsiElement element) {
             if (element instanceof JSVarStatement varStatement && !ErrorUtil.containsError(varStatement)) {
                 for (JSVariable variable : varStatement.getVariables()) {
                     if (variable.hasInitializer()) {

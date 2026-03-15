@@ -23,7 +23,6 @@ import consulo.document.util.TextRange;
 import consulo.language.editor.hint.DeclarationRangeHandler;
 import consulo.language.psi.PsiElement;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * @author Maxim.Mossienko
@@ -31,16 +30,14 @@ import jakarta.annotation.Nonnull;
  */
 @ExtensionImpl
 public class JSDeclarationRangeHandler implements DeclarationRangeHandler<JSNamedElement> {
-    @Nonnull
     @Override
     public Class<JSNamedElement> getElementClass() {
         return JSNamedElement.class;
     }
 
-    @Nonnull
     @Override
     @RequiredReadAction
-    public TextRange getDeclarationRange(@Nonnull JSNamedElement namedElement) {
+    public TextRange getDeclarationRange(JSNamedElement namedElement) {
         TextRange textRange = namedElement.getTextRange();
         PsiElement nameIdentifier = namedElement.getNameIdentifier();
         TextRange nameIdentifierRange = nameIdentifier != null ? nameIdentifier.getTextRange() : null;

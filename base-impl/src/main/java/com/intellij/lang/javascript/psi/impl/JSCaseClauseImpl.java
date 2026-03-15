@@ -23,7 +23,6 @@ import com.intellij.lang.javascript.psi.JSExpression;
 import com.intellij.lang.javascript.psi.JSStatement;
 import consulo.annotation.access.RequiredReadAction;
 import consulo.language.ast.ASTNode;
-import jakarta.annotation.Nonnull;
 
 /**
  * @author max
@@ -52,7 +51,7 @@ public class JSCaseClauseImpl extends JSElementImpl implements JSCaseClause {
     }
 
     @Override
-    protected void accept(@Nonnull JSElementVisitor visitor) {
+    protected void accept(JSElementVisitor visitor) {
         visitor.visitJSCaseClause(this);
     }
 }

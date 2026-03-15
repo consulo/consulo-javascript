@@ -1,7 +1,6 @@
 package consulo.javascript.ecmascript.lang;
 
 import consulo.annotation.component.ExtensionImpl;
-import jakarta.annotation.Nonnull;
 import jakarta.inject.Inject;
 
 /**
@@ -15,7 +14,6 @@ public class EcmaScript8JavaScriptVersion extends EcmaScript6JavaScriptVersion {
         super("ECMASCRIPT_8");
     }
 
-    @Nonnull
     @Override
     public String getPresentableName() {
         return "ECMAScript 8";

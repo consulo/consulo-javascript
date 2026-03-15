@@ -17,20 +17,17 @@ import consulo.language.psi.util.PsiTreeUtil;
 import consulo.language.util.IncorrectOperationException;
 import consulo.localize.LocalizeValue;
 import consulo.project.Project;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 @ExtensionImpl
 public class UnnecessaryLabelOnBreakStatementJSInspection extends JavaScriptInspection {
     private final UnnecessaryLabelOnBreakStatementFix fix = new UnnecessaryLabelOnBreakStatementFix();
 
-    @Nonnull
     @Override
     public LocalizeValue getDisplayName() {
         return InspectionJSLocalize.unnecessaryLabelOnBreakStatementDisplayName();
     }
 
-    @Nonnull
     @Override
     public LocalizeValue getGroupDisplayName() {
         return JSGroupNames.CONTROL_FLOW_GROUP_NAME;
@@ -42,7 +39,6 @@ public class UnnecessaryLabelOnBreakStatementJSInspection extends JavaScriptInsp
     }
 
     private static class UnnecessaryLabelOnBreakStatementFix extends InspectionJSFix {
-        @Nonnull
         @Override
         public LocalizeValue getName() {
             return InspectionJSLocalize.removeLabelFix();
@@ -70,7 +66,7 @@ public class UnnecessaryLabelOnBreakStatementJSInspection extends JavaScriptInsp
 
     private static class Visitor extends BaseInspectionVisitor {
         @Override
-        public void visitJSBreakStatement(@Nonnull JSBreakStatement statement) {
+        public void visitJSBreakStatement(JSBreakStatement statement) {
             super.visitJSBreakStatement(statement);
             if (statement.getLabel() == null) {
                 return;

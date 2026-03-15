@@ -11,7 +11,6 @@ import com.sixrr.inspectjs.utils.EquivalenceChecker;
 import consulo.annotation.access.RequiredReadAction;
 import consulo.annotation.component.ExtensionImpl;
 import consulo.localize.LocalizeValue;
-import jakarta.annotation.Nonnull;
 
 import java.util.Arrays;
 import java.util.HashSet;
@@ -19,13 +18,11 @@ import java.util.Set;
 
 @ExtensionImpl
 public class DuplicateCaseLabelJSInspection extends JavaScriptInspection {
-    @Nonnull
     @Override
     public LocalizeValue getDisplayName() {
         return InspectionJSLocalize.duplicateCaseLabelDisplayName();
     }
 
-    @Nonnull
     @Override
     public LocalizeValue getGroupDisplayName() {
         return JSGroupNames.VALIDITY_GROUP_NAME;
@@ -49,7 +46,7 @@ public class DuplicateCaseLabelJSInspection extends JavaScriptInspection {
 
     private static class Visitor extends BaseInspectionVisitor {
         @Override
-        public void visitJSSwitchStatement(@Nonnull JSSwitchStatement statement) {
+        public void visitJSSwitchStatement(JSSwitchStatement statement) {
             super.visitJSSwitchStatement(statement);
 
             Set<JSExpression> conditions = new HashSet<>();

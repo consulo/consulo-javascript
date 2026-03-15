@@ -31,7 +31,6 @@ import consulo.language.ast.ASTNode;
 import consulo.language.psi.stub.StubElement;
 import consulo.language.psi.stub.StubInputStream;
 import consulo.language.psi.stub.StubOutputStream;
-import jakarta.annotation.Nonnull;
 
 /**
  * @author Maxim.Mossienko
@@ -43,20 +42,19 @@ public class JSNamespaceDeclarationElementType extends JSQualifiedStubElementTyp
         super("NAMESPACE_DECLARATION");
     }
 
-    @Nonnull
     @Override
-    public PsiElement createElement(@Nonnull ASTNode astNode) {
+    public PsiElement createElement(ASTNode astNode) {
         return new JSNamespaceDeclarationImpl(astNode);
     }
 
     @Override
-    public JSNamespaceDeclaration createPsi(@Nonnull JSNamespaceDeclarationStub stub) {
+    public JSNamespaceDeclaration createPsi(JSNamespaceDeclarationStub stub) {
         return new JSNamespaceDeclarationImpl(stub);
     }
 
     @RequiredReadAction
     @Override
-    public JSNamespaceDeclarationStub createStub(@Nonnull JSNamespaceDeclaration psi, StubElement parentStub) {
+    public JSNamespaceDeclarationStub createStub(JSNamespaceDeclaration psi, StubElement parentStub) {
         String name = psi.getName();
         String qualifiedName = psi.getQualifiedName();
         String initialValueString = psi.getInitialValueString();
@@ -64,15 +62,14 @@ public class JSNamespaceDeclarationElementType extends JSQualifiedStubElementTyp
     }
 
     @Override
-    public void serialize(@Nonnull JSNamespaceDeclarationStub stub, @Nonnull StubOutputStream dataStream) throws IOException {
+    public void serialize(JSNamespaceDeclarationStub stub, StubOutputStream dataStream) throws IOException {
         dataStream.writeName(stub.getName());
         dataStream.writeName(stub.getQualifiedName());
         dataStream.writeName(stub.getInitialValueString());
     }
 
-    @Nonnull
     @Override
-    public JSNamespaceDeclarationStub deserialize(@Nonnull StubInputStream dataStream, StubElement parentStub) throws IOException {
+    public JSNamespaceDeclarationStub deserialize(StubInputStream dataStream, StubElement parentStub) throws IOException {
         StringRef nameRef = dataStream.readName();
         StringRef qualifiedRef = dataStream.readName();
         StringRef initialValueRef = dataStream.readName();

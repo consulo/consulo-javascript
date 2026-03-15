@@ -8,7 +8,6 @@ import consulo.language.editor.highlight.LanguageVersionableSyntaxHighlighterFac
 import consulo.language.editor.highlight.SyntaxHighlighter;
 import consulo.language.version.LanguageVersion;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
@@ -19,15 +18,13 @@ public class JavaScriptSyntaxHighlightFactory extends LanguageVersionableSyntaxH
     public JavaScriptSyntaxHighlightFactory() {
     }
 
-    @Nonnull
     @Override
     public Language getLanguage() {
         return JavaScriptLanguage.INSTANCE;
     }
 
-    @Nonnull
     @Override
-    public SyntaxHighlighter getSyntaxHighlighter(@Nonnull LanguageVersion languageVersion) {
+    public SyntaxHighlighter getSyntaxHighlighter(LanguageVersion languageVersion) {
         if (languageVersion instanceof BaseJavaScriptLanguageVersion baseJavaScriptLanguageVersion) {
             return baseJavaScriptLanguageVersion.getSyntaxHighlighter();
         }

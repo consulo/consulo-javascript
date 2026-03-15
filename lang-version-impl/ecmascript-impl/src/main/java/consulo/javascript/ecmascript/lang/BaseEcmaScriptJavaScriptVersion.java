@@ -16,14 +16,13 @@ import consulo.language.lexer.Lexer;
 import consulo.language.lexer.MergingLexerAdapter;
 import consulo.language.parser.PsiParser;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
  * @since 06/12/2021
  */
 public abstract class BaseEcmaScriptJavaScriptVersion extends BaseJavaScriptLanguageVersion implements StandardJavaScriptVersion, JavaScriptVersionWithHelper {
-    protected BaseEcmaScriptJavaScriptVersion(@Nonnull String id) {
+    protected BaseEcmaScriptJavaScriptVersion(String id) {
         super(id);
     }
 
@@ -31,13 +30,11 @@ public abstract class BaseEcmaScriptJavaScriptVersion extends BaseJavaScriptLang
         super(name, mimeTypes);
     }
 
-    @Nonnull
     @Override
     public Lexer createLexer() {
         return createLexer(false);
     }
 
-    @Nonnull
     @Override
     public SyntaxHighlighter getSyntaxHighlighter() {
         return new JavaScriptHighlighter(() -> createLexer(true));
@@ -50,13 +47,11 @@ public abstract class BaseEcmaScriptJavaScriptVersion extends BaseJavaScriptLang
         );
     }
 
-    @Nonnull
     @Override
     public PsiParser createParser() {
         return new EcmaScriptParser();
     }
 
-    @Nonnull
     @Override
     public ResolveHelper getHelper() {
         return EcmaScript6ResolveHelper.INSTANCE;

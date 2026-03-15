@@ -5,7 +5,6 @@ import consulo.annotation.component.ExtensionAPI;
 import consulo.component.extension.ExtensionPointName;
 import consulo.javascript.psi.stubs.JSFileStub;
 import consulo.language.psi.stub.IndexSink;
-import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
@@ -15,7 +14,7 @@ import jakarta.annotation.Nonnull;
 public abstract class JavaScriptIndexer {
     public static final ExtensionPointName<JavaScriptIndexer> EP_NAME = ExtensionPointName.create(JavaScriptIndexer.class);
 
-    public void indexFile(@Nonnull JSFileStub fileStub, @Nonnull IndexSink sink) {
+    public void indexFile(JSFileStub fileStub, IndexSink sink) {
     }
 
     public int getVersion() {

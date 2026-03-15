@@ -34,7 +34,6 @@ import consulo.language.psi.search.DefinitionsScopedSearch;
 import consulo.language.psi.search.DefinitionsScopedSearchExecutor;
 import consulo.language.psi.search.ReferencesSearch;
 
-import jakarta.annotation.Nonnull;
 
 import java.util.function.Predicate;
 
@@ -47,8 +46,8 @@ public class JSDefinitionsSearchExecutor implements DefinitionsScopedSearchExecu
     @Override
     @RequiredReadAction
     public boolean execute(
-        @Nonnull DefinitionsScopedSearch.SearchParameters parameters,
-        @Nonnull Predicate<? super PsiElement> consumer
+        DefinitionsScopedSearch.SearchParameters parameters,
+        Predicate<? super PsiElement> consumer
     ) {
         PsiElement sourceElement = parameters.getElement();
         if (sourceElement instanceof PsiNamedElement namedElement && namedElement.getLanguage().isKindOf(JavaScriptLanguage.INSTANCE)) {

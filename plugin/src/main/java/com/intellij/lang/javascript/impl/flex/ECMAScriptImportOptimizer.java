@@ -39,7 +39,6 @@ import consulo.util.lang.Couple;
 import consulo.util.lang.EmptyRunnable;
 import consulo.util.lang.Pair;
 
-import jakarta.annotation.Nonnull;
 
 import java.util.*;
 
@@ -56,7 +55,6 @@ public class ECMAScriptImportOptimizer implements ImportOptimizer {
     }
 
     @Override
-    @Nonnull
     public Runnable processFile(final PsiFile file) {
         if (!FileModificationService.getInstance().prepareFileForWrite(file)) {
             return EmptyRunnable.INSTANCE;
@@ -227,7 +225,6 @@ public class ECMAScriptImportOptimizer implements ImportOptimizer {
         };
     }
 
-    @Nonnull
     @Override
     public Language getLanguage() {
         return JavaScriptLanguage.INSTANCE;

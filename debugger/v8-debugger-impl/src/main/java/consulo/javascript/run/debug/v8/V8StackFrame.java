@@ -25,8 +25,7 @@ import consulo.execution.debug.frame.XValueChildrenList;
 import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.ui.ex.ColoredTextContainer;
 import consulo.ui.ex.SimpleTextAttributes;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import org.chromium.sdk.*;
 
 import java.util.Collections;
@@ -48,7 +47,7 @@ public class V8StackFrame extends XStackFrame {
     public XDebuggerEvaluator getEvaluator() {
         return new XDebuggerEvaluator() {
             @Override
-            public void evaluate(@Nonnull final String expression, @Nonnull final XEvaluationCallback callback, @Nullable XSourcePosition expressionPosition) {
+            public void evaluate(final String expression, final XEvaluationCallback callback, @Nullable XSourcePosition expressionPosition) {
                 final JsEvaluateContext evaluateContext = myCallFrame.getEvaluateContext();
                 evaluateContext.evaluateSync(expression, Collections.<String, JsValue>emptyMap(), new JsEvaluateContext.EvaluateCallback() {
                     @Override
@@ -77,7 +76,7 @@ public class V8StackFrame extends XStackFrame {
     }
 
     @Override
-    public void computeChildren(@Nonnull XCompositeNode node) {
+    public void computeChildren(XCompositeNode node) {
         JsEvaluateContext evaluateContext = myCallFrame.getEvaluateContext();
         List<? extends JsScope> variableScopes = myCallFrame.getVariableScopes();
 

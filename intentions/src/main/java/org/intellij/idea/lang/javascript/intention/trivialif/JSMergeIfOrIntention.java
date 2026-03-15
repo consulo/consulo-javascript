@@ -26,7 +26,6 @@ import consulo.language.editor.intention.IntentionMetaData;
 import consulo.language.psi.PsiElement;
 import consulo.language.util.IncorrectOperationException;
 import consulo.localize.LocalizeValue;
-import jakarta.annotation.Nonnull;
 import org.intellij.idea.lang.javascript.intention.JSElementPredicate;
 import org.intellij.idea.lang.javascript.intention.JSIntention;
 import org.intellij.idea.lang.javascript.psiutil.*;
@@ -39,20 +38,18 @@ import org.intellij.idea.lang.javascript.psiutil.*;
 )
 public class JSMergeIfOrIntention extends JSIntention {
     @Override
-    @Nonnull
     public LocalizeValue getText() {
         return JSIntentionLocalize.trivialifMergeIfOr();
     }
 
     @Override
-    @Nonnull
     public JSElementPredicate getElementPredicate() {
         return new MergeIfOrPredicate();
     }
 
     @Override
     @RequiredReadAction
-    public void processIntention(@Nonnull PsiElement element) throws IncorrectOperationException {
+    public void processIntention(PsiElement element) throws IncorrectOperationException {
         assert (element instanceof JSElement);
         JSElement jsElement = (JSElement)element;
         if (MergeIfOrPredicate.isMergableExplicitIf(jsElement)) {
@@ -121,7 +118,7 @@ public class JSMergeIfOrIntention extends JSIntention {
 
     private static class MergeIfOrPredicate implements JSElementPredicate {
         @Override
-        public boolean satisfiedBy(@Nonnull PsiElement element) {
+        public boolean satisfiedBy(PsiElement element) {
             return element instanceof JSElement jsElement
                 && (isMergableExplicitIf(jsElement) || isMergableImplicitIf(jsElement));
         }

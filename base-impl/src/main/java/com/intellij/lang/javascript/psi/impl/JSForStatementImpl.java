@@ -25,7 +25,6 @@ import consulo.language.psi.PsiElement;
 import consulo.language.psi.resolve.ResolveState;
 import consulo.language.psi.resolve.PsiScopeProcessor;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * @author max
@@ -116,10 +115,10 @@ public class JSForStatementImpl extends JSStatementImpl implements JSForStatemen
     @Override
     @RequiredReadAction
     public boolean processDeclarations(
-        @Nonnull PsiScopeProcessor processor,
-        @Nonnull ResolveState state,
+        PsiScopeProcessor processor,
+        ResolveState state,
         PsiElement lastParent,
-        @Nonnull PsiElement place
+        PsiElement place
     ) {
         if (lastParent != null) {
             JSVarStatement statement = getVarDeclaration();
@@ -137,7 +136,7 @@ public class JSForStatementImpl extends JSStatementImpl implements JSForStatemen
     }
 
     @Override
-    protected void accept(@Nonnull JSElementVisitor visitor) {
+    protected void accept(JSElementVisitor visitor) {
         visitor.visitJSForStatement(this);
     }
 }

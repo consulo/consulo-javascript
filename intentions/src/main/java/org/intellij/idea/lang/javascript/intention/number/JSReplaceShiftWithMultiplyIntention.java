@@ -25,7 +25,6 @@ import consulo.language.editor.intention.IntentionMetaData;
 import consulo.language.psi.PsiElement;
 import consulo.language.util.IncorrectOperationException;
 import consulo.localize.LocalizeValue;
-import jakarta.annotation.Nonnull;
 import org.intellij.idea.lang.javascript.intention.JSElementPredicate;
 import org.intellij.idea.lang.javascript.intention.JSMutablyNamedIntention;
 import org.intellij.idea.lang.javascript.psiutil.BinaryOperatorUtils;
@@ -39,7 +38,6 @@ import org.intellij.idea.lang.javascript.psiutil.ParenthesesUtils;
     fileExtensions = "js"
 )
 public class JSReplaceShiftWithMultiplyIntention extends JSMutablyNamedIntention {
-    @Nonnull
     @Override
     protected LocalizeValue getBasicText() {
         return JSIntentionLocalize.numberReplaceShiftWithMultiply();
@@ -62,14 +60,13 @@ public class JSReplaceShiftWithMultiplyIntention extends JSMutablyNamedIntention
     }
 
     @Override
-    @Nonnull
     public JSElementPredicate getElementPredicate() {
         return new ShiftByLiteralPredicate();
     }
 
     @Override
     @RequiredReadAction
-    public void processIntention(@Nonnull PsiElement element) throws IncorrectOperationException {
+    public void processIntention(PsiElement element) throws IncorrectOperationException {
         if (element instanceof JSAssignmentExpression assignmentExpression) {
             this.replaceShiftAssignWithMultiplyOrDivideAssign(assignmentExpression);
         }
@@ -111,7 +108,7 @@ public class JSReplaceShiftWithMultiplyIntention extends JSMutablyNamedIntention
     private static class ShiftByLiteralPredicate implements JSElementPredicate {
         @Override
         @RequiredReadAction
-        public boolean satisfiedBy(@Nonnull PsiElement element) {
+        public boolean satisfiedBy(PsiElement element) {
             return element instanceof JSAssignmentExpression assignmentExpression
                 ? this.isAssignmentShiftByLiteral(assignmentExpression)
                 : element instanceof JSBinaryExpression binaryExpression && this.isBinaryShiftByLiteral(binaryExpression);

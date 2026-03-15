@@ -10,31 +10,26 @@ import com.sixrr.inspectjs.localize.InspectionJSLocalize;
 import consulo.annotation.access.RequiredReadAction;
 import consulo.annotation.component.ExtensionImpl;
 import consulo.localize.LocalizeValue;
-import jakarta.annotation.Nonnull;
 import org.intellij.lang.annotations.Pattern;
 
 @ExtensionImpl
 public class ObjectAllocationIgnoredJSInspection extends JavaScriptInspection {
-    @Nonnull
     @Override
     @Pattern(value = "[a-zA-Z_0-9.-]+")
     public String getID() {
         return "ObjectAllocationIgnored";
     }
 
-    @Nonnull
     @Override
     public LocalizeValue getDisplayName() {
         return InspectionJSLocalize.resultOfObjectAllocationIgnoredDisplayName();
     }
 
-    @Nonnull
     @Override
     public LocalizeValue getGroupDisplayName() {
         return JSGroupNames.BUGS_GROUP_NAME;
     }
 
-    @Nonnull
     @Override
     @RequiredReadAction
     protected String buildErrorString(Object state, Object... args) {
@@ -48,7 +43,7 @@ public class ObjectAllocationIgnoredJSInspection extends JavaScriptInspection {
 
     private static class ObjectAllocationIgnoredVisitor extends BaseInspectionVisitor {
         @Override
-        public void visitJSExpressionStatement(@Nonnull JSExpressionStatement statement) {
+        public void visitJSExpressionStatement(JSExpressionStatement statement) {
             super.visitJSExpressionStatement(statement);
             if (!(statement.getExpression()instanceof JSNewExpression)) {
                 return;

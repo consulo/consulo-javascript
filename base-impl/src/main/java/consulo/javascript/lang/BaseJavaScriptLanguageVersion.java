@@ -9,7 +9,6 @@ import consulo.language.ast.TokenSet;
 import consulo.language.editor.highlight.SyntaxHighlighter;
 import consulo.language.parser.PsiParser;
 
-import jakarta.annotation.Nonnull;
 
 import java.util.LinkedHashSet;
 import java.util.Set;
@@ -28,37 +27,31 @@ public abstract class BaseJavaScriptLanguageVersion extends JavaScriptLanguageVe
         super(name, name, JavaScriptLanguage.INSTANCE, mimeTypes);
     }
 
-    protected void addFeature(@Nonnull JavaScriptFeature feature) {
+    protected void addFeature(JavaScriptFeature feature) {
         myFeatures.add(feature);
     }
 
-    @Nonnull
     public Set<JavaScriptFeature> getFeatures() {
         return myFeatures;
     }
 
-    @Nonnull
     public abstract SyntaxHighlighter getSyntaxHighlighter();
 
-    @Nonnull
     @Override
     public PsiParser createParser() {
         return new JavaScriptParser();
     }
 
-    @Nonnull
     @Override
     public TokenSet getWhitespaceTokens() {
         return JavaScriptTokenSets.WHITE_SPACES;
     }
 
-    @Nonnull
     @Override
     public TokenSet getCommentTokens() {
         return JSTokenTypes.COMMENTS;
     }
 
-    @Nonnull
     @Override
     public TokenSet getStringLiteralElements() {
         return ourLiterals;

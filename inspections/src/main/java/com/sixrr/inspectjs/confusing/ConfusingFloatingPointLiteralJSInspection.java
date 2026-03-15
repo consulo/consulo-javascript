@@ -15,7 +15,6 @@ import consulo.language.psi.PsiElement;
 import consulo.language.util.IncorrectOperationException;
 import consulo.localize.LocalizeValue;
 import consulo.project.Project;
-import jakarta.annotation.Nonnull;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -24,19 +23,16 @@ import java.util.regex.Pattern;
 public class ConfusingFloatingPointLiteralJSInspection extends JavaScriptInspection {
     private static final Pattern PICKY_FLOATING_POINT_PATTERN = Pattern.compile("[0-9]+\\.[0-9]+((e|E)(-)?[0-9]+)?(f|F|d|D)?");
 
-    @Nonnull
     @Override
     public LocalizeValue getGroupDisplayName() {
         return JSGroupNames.CONFUSING_GROUP_NAME;
     }
 
-    @Nonnull
     @Override
     public LocalizeValue getDisplayName() {
         return InspectionJSLocalize.confusingFloatingPointLiteralDisplayName();
     }
 
-    @Nonnull
     @Override
     @RequiredReadAction
     protected String buildErrorString(Object state, Object... args) {
@@ -49,7 +45,6 @@ public class ConfusingFloatingPointLiteralJSInspection extends JavaScriptInspect
     }
 
     private static class ConfusingFloatingPointLiteralFix extends InspectionJSFix {
-        @Nonnull
         @Override
         public LocalizeValue getName() {
             return InspectionJSLocalize.confusingFloatingPointLiteralChangeQuickfix();
@@ -120,7 +115,7 @@ public class ConfusingFloatingPointLiteralJSInspection extends JavaScriptInspect
 
     private static class ConfusingFloatingPointLiteralVisitor extends BaseInspectionVisitor {
         @Override
-        public void visitJSLiteralExpression(@Nonnull JSSimpleLiteralExpression literal) {
+        public void visitJSLiteralExpression(JSSimpleLiteralExpression literal) {
             super.visitJSLiteralExpression(literal);
             String text = literal.getText();
             if (text == null) {

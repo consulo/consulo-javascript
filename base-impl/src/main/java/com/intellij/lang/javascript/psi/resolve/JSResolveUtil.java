@@ -82,8 +82,7 @@ import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.util.VirtualFileUtil;
 import consulo.xml.ide.highlighter.XmlFileType;
 import consulo.xml.psi.xml.*;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.*;
 
@@ -101,7 +100,7 @@ public class JSResolveUtil {
 
     public static final String COMMENT_DELIMITERS = "|/";
 
-    public static void processInjectedFileForTag(@Nonnull XmlTag tag, @Nonnull JSInjectedFilesVisitor visitor) {
+    public static void processInjectedFileForTag(XmlTag tag, JSInjectedFilesVisitor visitor) {
         InjectedLanguageManager injectedLanguageManager = InjectedLanguageManager.getInstance(tag.getProject());
 
         for (XmlTagChild child : tag.getValue().getChildren()) {
@@ -357,7 +356,7 @@ public class JSResolveUtil {
 
                 @Override
                 @RequiredReadAction
-                public boolean execute(@Nonnull PsiElement element, ResolveState state) {
+                public boolean execute(PsiElement element, ResolveState state) {
                     if (!(element instanceof JSClass jsClass)) {
                         return true;
                     }
@@ -418,7 +417,7 @@ public class JSResolveUtil {
         return currentParent;
     }
 
-    public static PsiElement getTopReferenceExpression(@Nonnull PsiElement parent) {
+    public static PsiElement getTopReferenceExpression(PsiElement parent) {
         PsiElement element = parent;
 
         for (PsiElement currentParent = parent.getParent(); currentParent instanceof JSReferenceExpression;
@@ -563,7 +562,7 @@ public class JSResolveUtil {
         return jsParameters[0].getTypeString();
     }
 
-    public static boolean shouldProcessTopLevelGlobalContext(@Nonnull PsiElement place, @Nonnull PsiScopeProcessor processor) {
+    public static boolean shouldProcessTopLevelGlobalContext(PsiElement place, PsiScopeProcessor processor) {
         PsiElement placeParent = null;
 
         return shouldProcessImports(place, processor) && (
@@ -573,7 +572,7 @@ public class JSResolveUtil {
                 || placeParent instanceof JSNewExpression);
     }
 
-    public static boolean shouldProcessImports(@Nonnull PsiElement place, @Nonnull PsiScopeProcessor processor) {
+    public static boolean shouldProcessImports(PsiElement place, PsiScopeProcessor processor) {
         if (!(processor instanceof ResolveProcessor resolveProcessor && !resolveProcessor.isLocalResolve())) {
             return false;
         }
@@ -642,7 +641,7 @@ public class JSResolveUtil {
         return result;
     }
 
-    static boolean walkOverStructure(@Nonnull PsiElement context, Processor<PsiNamedElement> processor) {
+    static boolean walkOverStructure(PsiElement context, Processor<PsiNamedElement> processor) {
         PsiNamedElement parent = PsiTreeUtil.getNonStrictParentOfType(context, JSQualifiedNamedElement.class, PsiFile.class);
 
         if (parent instanceof JSClass jsClass) {
@@ -711,7 +710,7 @@ public class JSResolveUtil {
 
                                 @Override
                                 @RequiredReadAction
-                                public boolean execute(@Nonnull PsiElement element, ResolveState state) {
+                                public boolean execute(PsiElement element, ResolveState state) {
                                     if (!(element instanceof JSUseNamespaceDirective)) {
                                         return true;
                                     }
@@ -766,7 +765,7 @@ public class JSResolveUtil {
 
     @Nullable
     @RequiredReadAction
-    public static JSParameter findParameterForUsedArgument(@Nonnull JSExpression mainOccurence, @Nonnull JSArgumentList parent) {
+    public static JSParameter findParameterForUsedArgument(JSExpression mainOccurence, JSArgumentList parent) {
         int paramIndex = 0;
 
         for (JSExpression expr : parent.getArguments()) {
@@ -798,7 +797,7 @@ public class JSResolveUtil {
         implements PsiLanguageInjectionHost.InjectedPsiVisitor, XmlBackedJSClassImpl.InjectedFileVisitor {
         @Override
         @RequiredReadAction
-        public void visit(@Nonnull PsiFile injectedPsi, @Nonnull List<PsiLanguageInjectionHost.Shred> places) {
+        public void visit(PsiFile injectedPsi, List<PsiLanguageInjectionHost.Shred> places) {
             if (injectedPsi instanceof JSFile jsFile) {
                 process(jsFile);
             }
@@ -1017,7 +1016,7 @@ public class JSResolveUtil {
 
     @Nullable
     @RequiredReadAction
-    private static PsiElement processFunctionDeclarations(@Nonnull PsiScopeProcessor processor, @Nullable PsiElement context) {
+    private static PsiElement processFunctionDeclarations(PsiScopeProcessor processor, @Nullable PsiElement context) {
         if (!(context instanceof JSElement)) {
             return null;
         }
@@ -1084,7 +1083,7 @@ public class JSResolveUtil {
      */
     private static boolean visitAllImplementedInterfaces(
         JSClass clazz,
-        @Nonnull Collection<JSClass> visited,
+        Collection<JSClass> visited,
         Processor<JSClass> processor
     ) {
         if (visited.contains(clazz)) {
@@ -1401,13 +1400,13 @@ public class JSResolveUtil {
 
     @Nullable
     @RequiredReadAction
-    public static PsiElement findClassByQName(String link, @Nonnull PsiElement context) {
+    public static PsiElement findClassByQName(String link, PsiElement context) {
         return findClassByQName(link, context.getProject(), context.getResolveScope());
     }
 
     @Nullable
     @RequiredReadAction
-    public static PsiElement findClassByQName(String link, @Nonnull GlobalSearchScope scope, @Nonnull Project project) {
+    public static PsiElement findClassByQName(String link, GlobalSearchScope scope, Project project) {
         return findClassByQName(link, project, scope);
     }
 
@@ -1541,7 +1540,7 @@ public class JSResolveUtil {
 
             @Override
             @RequiredReadAction
-            public boolean execute(@Nonnull PsiElement element, ResolveState state) {
+            public boolean execute(PsiElement element, ResolveState state) {
                 if (!(element instanceof JSFunction)) {
                     return true;
                 }
@@ -2353,7 +2352,7 @@ public class JSResolveUtil {
 
     public interface MetaDataProcessor {
         @RequiredReadAction
-        boolean process(@Nonnull JSAttribute jsAttribute);
+        boolean process(JSAttribute jsAttribute);
 
         boolean handleOtherElement(PsiElement el, PsiElement context, @Nullable SimpleReference<PsiElement> continuePassElement);
     }
@@ -2373,11 +2372,11 @@ public class JSResolveUtil {
 
         @Override
         @RequiredReadAction
-        public boolean execute(@Nonnull PsiElement element, ResolveState state) {
+        public boolean execute(PsiElement element, ResolveState state) {
             ResolveProcessor processor = new ResolveProcessor(myName, place) {
                 @Override
                 @RequiredReadAction
-                public boolean execute(@Nonnull PsiElement element, ResolveState state) {
+                public boolean execute(PsiElement element, ResolveState state) {
                     if (element instanceof JSFunction function) {
                         if (OBJECT_CLASS_NAME.equals(((JSClass)findParent(function)).getQualifiedName()) || function.isConstructor()) {
                             return true;
@@ -2507,7 +2506,7 @@ public class JSResolveUtil {
         }
 
         @Override
-        public void accept(@Nonnull PsiElementVisitor visitor) {
+        public void accept(PsiElementVisitor visitor) {
             if (visitor instanceof JSElementVisitor elementVisitor) {
                 elementVisitor.visitJSVariable(this);
             }
@@ -2531,7 +2530,6 @@ public class JSResolveUtil {
             return false;
         }
 
-        @Nonnull
         @Override
         public ASTNode getNode() {
             return null;
@@ -2558,7 +2556,6 @@ public class JSResolveUtil {
         public void setInitializer(JSExpression expr) throws IncorrectOperationException {
         }
 
-        @Nonnull
         @Override
         public JavaScriptType getType() {
             return JavaScriptType.UNKNOWN;
@@ -2604,7 +2601,7 @@ public class JSResolveUtil {
 
         @Override
         @RequiredWriteAction
-        public PsiElement setName(@Nonnull String name) throws IncorrectOperationException {
+        public PsiElement setName(String name) throws IncorrectOperationException {
             throw new IncorrectOperationException();
         }
 

@@ -4,7 +4,6 @@ import consulo.builtinWebServer.webSocket.WebSocketConnection;
 import consulo.execution.debug.DefaultDebugProcessHandler;
 import consulo.javascript.debugger.browser.transport.DetachDebuggerRequest;
 import consulo.javascript.debugger.browser.transport.ExtensionWebSocketAccepter;
-import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
@@ -13,7 +12,7 @@ import jakarta.annotation.Nonnull;
 public class BrowserDebuggerProcess extends DefaultDebugProcessHandler {
     private final SessionHolder.BrowserSession myBrowserSession;
 
-    public BrowserDebuggerProcess(@Nonnull SessionHolder.BrowserSession browserSession) {
+    public BrowserDebuggerProcess(SessionHolder.BrowserSession browserSession) {
         myBrowserSession = browserSession;
     }
 

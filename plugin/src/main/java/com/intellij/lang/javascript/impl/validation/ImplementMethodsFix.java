@@ -27,7 +27,6 @@ import consulo.language.editor.intention.SyntheticIntentionAction;
 import consulo.language.psi.PsiFile;
 import consulo.localize.LocalizeValue;
 import consulo.project.Project;
-import jakarta.annotation.Nonnull;
 
 /**
  * @author Maxim.Mossienko
@@ -39,13 +38,12 @@ public class ImplementMethodsFix extends BaseCreateMethodsFix<JSFunction> implem
     }
 
     @Override
-    @Nonnull
     public LocalizeValue getText() {
         return JavaScriptLocalize.javascriptFixImplementMethods();
     }
 
     @Override
-    public boolean isAvailable(@Nonnull Project project, Editor editor, PsiFile file) {
+    public boolean isAvailable(Project project, Editor editor, PsiFile file) {
         return myJsClass.isValid();
     }
 

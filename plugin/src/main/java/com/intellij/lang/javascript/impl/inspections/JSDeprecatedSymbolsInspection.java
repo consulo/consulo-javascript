@@ -30,7 +30,6 @@ import consulo.language.editor.inspection.localize.InspectionLocalize;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.ResolveResult;
 import consulo.localize.LocalizeValue;
-import jakarta.annotation.Nonnull;
 
 /**
  * @author Maxim.Mossienko
@@ -39,19 +38,16 @@ import jakarta.annotation.Nonnull;
 public class JSDeprecatedSymbolsInspection extends JSInspection {
     private static final String SHORT_NAME = "JSDeprecatedSymbols";
 
-    @Nonnull
     @Override
     public LocalizeValue getGroupDisplayName() {
         return InspectionLocalize.inspectionGeneralToolsGroupName();
     }
 
-    @Nonnull
     @Override
     public LocalizeValue getDisplayName() {
         return JavaScriptLocalize.jsDeprecatedSymbolsInspectionName();
     }
 
-    @Nonnull
     @Override
     public String getShortName() {
         return SHORT_NAME;
@@ -62,7 +58,7 @@ public class JSDeprecatedSymbolsInspection extends JSInspection {
         return new JSElementVisitor() {
             @Override
             @RequiredReadAction
-            public void visitJSReferenceExpression(@Nonnull JSReferenceExpression node) {
+            public void visitJSReferenceExpression(JSReferenceExpression node) {
                 for (ResolveResult r : node.multiResolve(false)) {
                     PsiElement element = r.getElement();
                     if (element instanceof JSDefinitionExpression definition && definition.getParent() instanceof JSAssignmentExpression

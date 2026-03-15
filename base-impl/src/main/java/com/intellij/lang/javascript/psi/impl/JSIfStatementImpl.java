@@ -24,7 +24,6 @@ import com.intellij.lang.javascript.psi.JSElementVisitor;
 import com.intellij.lang.javascript.psi.JSExpression;
 import com.intellij.lang.javascript.psi.JSIfStatement;
 import com.intellij.lang.javascript.psi.JSStatement;
-import jakarta.annotation.Nonnull;
 
 /**
  * @author max
@@ -70,7 +69,7 @@ public class JSIfStatementImpl extends JSStatementImpl implements JSIfStatement 
     }
 
     @Override
-    protected void accept(@Nonnull JSElementVisitor visitor) {
+    protected void accept(JSElementVisitor visitor) {
         visitor.visitJSIfStatement(this);
     }
 }

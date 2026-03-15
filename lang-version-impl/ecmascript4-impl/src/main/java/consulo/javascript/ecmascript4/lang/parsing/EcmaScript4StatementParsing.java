@@ -8,7 +8,6 @@ import consulo.language.ast.IElementType;
 import consulo.language.parser.PsiBuilder;
 import consulo.logging.Logger;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
@@ -316,7 +315,7 @@ public class EcmaScript4StatementParsing extends StatementParsing {
         }
     }
 
-    private boolean parseNamespaceNoMarker(PsiBuilder builder, @Nonnull PsiBuilder.Marker useNSStatement) {
+    private boolean parseNamespaceNoMarker(PsiBuilder builder, PsiBuilder.Marker useNSStatement) {
         EcmaScript4StatementParsing.LOGGER.assertTrue(builder.getTokenType() == JSTokenTypes.NAMESPACE_KEYWORD);
 
         builder.advanceLexer();
@@ -367,7 +366,7 @@ public class EcmaScript4StatementParsing extends StatementParsing {
         parseClassNoMarker(builder, builder.mark());
     }
 
-    private void parseClassNoMarker(PsiBuilder builder, @Nonnull PsiBuilder.Marker clazz) {
+    private void parseClassNoMarker(PsiBuilder builder, PsiBuilder.Marker clazz) {
         IElementType tokenType = builder.getTokenType();
         EcmaScript4StatementParsing.LOGGER.assertTrue(
             JSTokenTypes.CLASS_KEYWORD == tokenType || JSTokenTypes.INTERFACE_KEYWORD == tokenType

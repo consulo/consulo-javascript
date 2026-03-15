@@ -38,8 +38,7 @@ import consulo.util.dataholder.Key;
 import consulo.util.dataholder.UserDataHolderBase;
 import consulo.xml.psi.xml.XmlAttributeValue;
 import consulo.xml.psi.xml.XmlTag;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.*;
 
@@ -184,7 +183,7 @@ public class ResolveProcessor extends UserDataHolderBase implements PsiScopeProc
 
     @Override
     @RequiredReadAction
-    public boolean execute(@Nonnull PsiElement element, ResolveState state) {
+    public boolean execute(PsiElement element, ResolveState state) {
         if ((element instanceof JSVariable && !(element instanceof JSParameter)) || element instanceof JSFunction) {
             JSAttributeList attributeList = ((JSAttributeListOwner) element).getAttributeList();
 
@@ -368,7 +367,7 @@ public class ResolveProcessor extends UserDataHolderBase implements PsiScopeProc
                     ResolveProcessor processor = new ResolveProcessor(myName) {
                         @Override
                         @RequiredReadAction
-                        public boolean execute(@Nonnull PsiElement element, ResolveState state) {
+                        public boolean execute(PsiElement element, ResolveState state) {
                             if (element instanceof JSQualifiedNamedElement qualifiedNamedElement) {
                                 if (!qName.equals(qualifiedNamedElement.getQualifiedName())) {
                                     return true;
@@ -423,7 +422,7 @@ public class ResolveProcessor extends UserDataHolderBase implements PsiScopeProc
     }
 
     @Override
-    public <T> T getHint(@Nonnull Key<T> hintClass) {
+    public <T> T getHint(Key<T> hintClass) {
         return null;
     }
 
@@ -483,7 +482,7 @@ public class ResolveProcessor extends UserDataHolderBase implements PsiScopeProc
 
                                         @Override
                                         @RequiredReadAction
-                                        public boolean execute(@Nonnull PsiElement element, ResolveState state) {
+                                        public boolean execute(PsiElement element, ResolveState state) {
                                             if (!(element instanceof JSClass jsClass)) {
                                                 return true;
                                             }

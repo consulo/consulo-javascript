@@ -49,8 +49,7 @@ import consulo.localize.LocalizeValue;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.xml.ide.highlighter.XmlFileType;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -63,19 +62,16 @@ import java.util.function.BiFunction;
 public class JSUnresolvedFunctionInspection extends JSInspection {
     private static final String SHORT_NAME = "JSUnresolvedFunction";
 
-    @Nonnull
     @Override
     public LocalizeValue getGroupDisplayName() {
         return InspectionLocalize.inspectionGeneralToolsGroupName();
     }
 
-    @Nonnull
     @Override
     public LocalizeValue getDisplayName() {
         return JavaScriptLocalize.jsUnresolvedFunctionInspectionName();
     }
 
-    @Nonnull
     @Override
     public String getShortName() {
         return SHORT_NAME;
@@ -86,7 +82,7 @@ public class JSUnresolvedFunctionInspection extends JSInspection {
         return new JSElementVisitor() {
             @Override
             @RequiredReadAction
-            public void visitJSCallExpression(@Nonnull JSCallExpression node) {
+            public void visitJSCallExpression(JSCallExpression node) {
                 if (node.getMethodExpression() instanceof JSReferenceExpression methodRefExpr) {
                     ResolveResult[] resolveResults = methodRefExpr.multiResolve(false);
 
@@ -220,7 +216,7 @@ public class JSUnresolvedFunctionInspection extends JSInspection {
 
             @Override
             @RequiredReadAction
-            public void visitJSAssignmentExpression(@Nonnull JSAssignmentExpression node) {
+            public void visitJSAssignmentExpression(JSAssignmentExpression node) {
                 JSExpression lOperand = node.getLOperand();
                 if (lOperand == null) {
                     return;
@@ -261,7 +257,7 @@ public class JSUnresolvedFunctionInspection extends JSInspection {
 
             @Override
             @RequiredReadAction
-            public void visitJSReturnStatement(@Nonnull JSReturnStatement node) {
+            public void visitJSReturnStatement(JSReturnStatement node) {
                 JSExpression expression = node.getExpression();
                 if (expression == null) {
                     return;
@@ -291,7 +287,7 @@ public class JSUnresolvedFunctionInspection extends JSInspection {
 
             @Override
             @RequiredReadAction
-            public void visitJSVariable(@Nonnull JSVariable node) {
+            public void visitJSVariable(JSVariable node) {
                 JSExpression initializer = node.getInitializer();
                 if (initializer == null) {
                     return;
@@ -307,7 +303,7 @@ public class JSUnresolvedFunctionInspection extends JSInspection {
 
             @Override
             @RequiredReadAction
-            public void visitJSBinaryExpression(@Nonnull JSBinaryExpression node) {
+            public void visitJSBinaryExpression(JSBinaryExpression node) {
                 IElementType sign = node.getOperationSign();
 
                 if (sign == JSTokenTypes.AS_KEYWORD || sign == JSTokenTypes.IS_KEYWORD) {
@@ -323,7 +319,7 @@ public class JSUnresolvedFunctionInspection extends JSInspection {
 
             @Override
             @RequiredReadAction
-            public void visitJSForInStatement(@Nonnull JSForInStatement node) {
+            public void visitJSForInStatement(JSForInStatement node) {
                 if (!node.isForEach()) {
                     JSVarStatement statement = node.getDeclarationStatement();
 
@@ -393,7 +389,7 @@ public class JSUnresolvedFunctionInspection extends JSInspection {
     }
 
     @RequiredReadAction
-    static ProblemHighlightType getUnresolveReferenceHighlightType(@Nullable JSExpression qualifier, @Nonnull JSExpression node) {
+    static ProblemHighlightType getUnresolveReferenceHighlightType(@Nullable JSExpression qualifier, JSExpression node) {
         JSClass jsClass;
 
         PsiFile containingFile = node.getContainingFile();
@@ -574,7 +570,7 @@ public class JSUnresolvedFunctionInspection extends JSInspection {
     }
 
     @RequiredReadAction
-    private static ProblemHighlightType getHighlightTypeForTypeOrSignatureProblem(@Nonnull PsiElement node) {
+    private static ProblemHighlightType getHighlightTypeForTypeOrSignatureProblem(PsiElement node) {
         if (node.getContainingFile().getLanguage() == JavaScriptSupportLoader.ECMA_SCRIPT_L4) {
             return ProblemHighlightType.GENERIC_ERROR;
         }
@@ -589,14 +585,13 @@ public class JSUnresolvedFunctionInspection extends JSInspection {
         }
 
         @Override
-        @Nonnull
         public LocalizeValue getName() {
             return JavaScriptLocalize.javascriptInsertCastFix();
         }
 
         @Override
         @RequiredUIAccess
-        public void applyFix(@Nonnull Project project, @Nonnull ProblemDescriptor descriptor) {
+        public void applyFix(Project project, ProblemDescriptor descriptor) {
             PsiElement element = descriptor.getPsiElement();
             Editor editor = BaseCreateFix.getEditor(project, element.getContainingFile());
             if (editor == null) {

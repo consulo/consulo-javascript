@@ -19,11 +19,9 @@ package com.intellij.lang.javascript.types;
 
 import java.io.IOException;
 
-import jakarta.annotation.Nonnull;
 
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.stub.*;
-import org.jetbrains.annotations.NonNls;
 import consulo.language.ast.ASTNode;
 import com.intellij.lang.javascript.JSElementTypes;
 import com.intellij.lang.javascript.psi.JSReferenceList;
@@ -43,12 +41,12 @@ import consulo.javascript.language.psi.stub.JavaScriptIndexKeys;
  * Time: 7:51:24 PM
  */
 public class JSReferenceListElementType extends JSStubElementType<JSReferenceListStub, JSReferenceList> {
-    public JSReferenceListElementType(@NonNls String name) {
+    public JSReferenceListElementType(String name) {
         super(name);
     }
 
     @Override
-    public void indexStub(@Nonnull JSReferenceListStub stub, @Nonnull IndexSink sink) {
+    public void indexStub(JSReferenceListStub stub, IndexSink sink) {
         if (this == JSElementTypes.EXTENDS_LIST) {
             doIndex(sink, stub, JavaScriptIndexKeys.EXTENDS_INDEX);
         }
@@ -65,26 +63,25 @@ public class JSReferenceListElementType extends JSStubElementType<JSReferenceLis
         }
     }
 
-    @Nonnull
     @Override
-    public PsiElement createElement(@Nonnull ASTNode astNode) {
+    public PsiElement createElement(ASTNode astNode) {
         return new JSReferenceListImpl(astNode);
     }
 
     @Override
-    public JSReferenceList createPsi(@Nonnull JSReferenceListStub stub) {
+    public JSReferenceList createPsi(JSReferenceListStub stub) {
         return new JSReferenceListImpl(stub, this);
     }
 
     @RequiredReadAction
     @Override
-    public JSReferenceListStub createStub(@Nonnull JSReferenceList psi, StubElement parentStub) {
+    public JSReferenceListStub createStub(JSReferenceList psi, StubElement parentStub) {
         String[] referenceTexts = psi.getReferenceTexts();
         return new JSReferenceListStubImpl(referenceTexts, parentStub, this);
     }
 
     @Override
-    public void serialize(@Nonnull JSReferenceListStub stub, @Nonnull StubOutputStream dataStream) throws IOException {
+    public void serialize(JSReferenceListStub stub, StubOutputStream dataStream) throws IOException {
         String[] referenceTexts = stub.getReferenceTexts();
         dataStream.writeVarInt(referenceTexts.length);
         for (String referenceText : referenceTexts) {
@@ -92,9 +89,8 @@ public class JSReferenceListElementType extends JSStubElementType<JSReferenceLis
         }
     }
 
-    @Nonnull
     @Override
-    public JSReferenceListStub deserialize(@Nonnull StubInputStream dataStream, StubElement parentStub) throws IOException {
+    public JSReferenceListStub deserialize(StubInputStream dataStream, StubElement parentStub) throws IOException {
         int count = dataStream.readVarInt();
         String[] refs = ArrayUtil.newStringArray(count);
         for (int i = 0; i < count; i++) {

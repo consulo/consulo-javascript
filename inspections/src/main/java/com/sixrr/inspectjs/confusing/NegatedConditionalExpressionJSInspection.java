@@ -19,20 +19,17 @@ import consulo.language.psi.PsiElement;
 import consulo.language.util.IncorrectOperationException;
 import consulo.localize.LocalizeValue;
 import consulo.project.Project;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 @ExtensionImpl
 public class NegatedConditionalExpressionJSInspection extends JavaScriptInspection {
     private final NegatedConditionalFix fix = new NegatedConditionalFix();
 
-    @Nonnull
     @Override
     public LocalizeValue getDisplayName() {
         return InspectionJSLocalize.negatedConditionalExpressionDisplayName();
     }
 
-    @Nonnull
     @Override
     public LocalizeValue getGroupDisplayName() {
         return JSGroupNames.CONFUSING_GROUP_NAME;
@@ -51,7 +48,6 @@ public class NegatedConditionalExpressionJSInspection extends JavaScriptInspecti
     }
 
     private static class NegatedConditionalFix extends InspectionJSFix {
-        @Nonnull
         @Override
         public LocalizeValue getName() {
             return InspectionJSLocalize.invertConditionFix();

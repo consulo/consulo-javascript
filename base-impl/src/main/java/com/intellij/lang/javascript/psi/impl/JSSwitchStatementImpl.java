@@ -23,7 +23,6 @@ import com.intellij.lang.javascript.psi.JSExpression;
 import com.intellij.lang.javascript.psi.JSSwitchStatement;
 import consulo.language.ast.ASTNode;
 import consulo.language.ast.TokenSet;
-import jakarta.annotation.Nonnull;
 
 /**
  * @author max
@@ -47,7 +46,7 @@ public class JSSwitchStatementImpl extends JSStatementImpl implements JSSwitchSt
     }
 
     @Override
-    protected void accept(@Nonnull JSElementVisitor visitor) {
+    protected void accept(JSElementVisitor visitor) {
         visitor.visitJSSwitchStatement(this);
     }
 }

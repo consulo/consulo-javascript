@@ -11,7 +11,6 @@ import consulo.annotation.component.ExtensionImpl;
 import consulo.language.ast.IElementType;
 import consulo.language.editor.inspection.InspectionToolState;
 import consulo.localize.LocalizeValue;
-import jakarta.annotation.Nonnull;
 
 import java.util.Set;
 
@@ -25,19 +24,16 @@ public class OverlyComplexArithmeticExpressionJSInspection extends JavaScriptIns
         JSTokenTypes.PERC
     );
 
-    @Nonnull
     @Override
     public LocalizeValue getDisplayName() {
         return InspectionJSLocalize.overlyComplexArithmeticExpressionDisplayName();
     }
 
-    @Nonnull
     @Override
     public LocalizeValue getGroupDisplayName() {
         return JSGroupNames.CONFUSING_GROUP_NAME;
     }
 
-    @Nonnull
     @Override
     public InspectionToolState<?> createStateProvider() {
         return new OverlyComplexArithmeticExpressionJSInspectionState();
@@ -57,21 +53,21 @@ public class OverlyComplexArithmeticExpressionJSInspection extends JavaScriptIns
     private class Visitor extends BaseInspectionVisitor<OverlyComplexArithmeticExpressionJSInspectionState> {
         @Override
         @RequiredReadAction
-        public void visitJSBinaryExpression(@Nonnull JSBinaryExpression expression) {
+        public void visitJSBinaryExpression(JSBinaryExpression expression) {
             super.visitJSBinaryExpression(expression);
             checkExpression(expression);
         }
 
         @Override
         @RequiredReadAction
-        public void visitJSPrefixExpression(@Nonnull JSPrefixExpression expression) {
+        public void visitJSPrefixExpression(JSPrefixExpression expression) {
             super.visitJSPrefixExpression(expression);
             checkExpression(expression);
         }
 
         @Override
         @RequiredReadAction
-        public void visitJSParenthesizedExpression(@Nonnull JSParenthesizedExpression expression) {
+        public void visitJSParenthesizedExpression(JSParenthesizedExpression expression) {
             super.visitJSParenthesizedExpression(expression);
             checkExpression(expression);
         }

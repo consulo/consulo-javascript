@@ -23,7 +23,6 @@ import com.intellij.lang.javascript.psi.JSElementVisitor;
 import com.intellij.lang.javascript.psi.JSExpression;
 import com.intellij.lang.javascript.psi.JSIndexedPropertyAccessExpression;
 import consulo.language.ast.IElementType;
-import jakarta.annotation.Nonnull;
 
 /**
  * @author max
@@ -70,7 +69,7 @@ public class JSIndexedPropertyAccessExpressionImpl extends JSExpressionImpl impl
     }
 
     @Override
-    protected void accept(@Nonnull JSElementVisitor visitor) {
+    protected void accept(JSElementVisitor visitor) {
         visitor.visitJSIndexedPropertyAccessExpression(this);
     }
 }

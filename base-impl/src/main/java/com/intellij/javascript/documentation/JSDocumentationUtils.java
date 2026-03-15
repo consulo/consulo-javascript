@@ -36,8 +36,7 @@ import consulo.language.psi.*;
 import consulo.language.psi.util.PsiTreeUtil;
 import consulo.util.lang.StringUtil;
 import consulo.util.lang.ref.SimpleReference;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.Enumeration;
 import java.util.HashMap;
@@ -353,7 +352,7 @@ public class JSDocumentationUtils {
     }
 
     @Nullable
-    static ASTNode findTrailingCommentInFunctionBody(@Nonnull JSFunction function) {
+    static ASTNode findTrailingCommentInFunctionBody(JSFunction function) {
         ASTNode block = function.getNode().findChildByType(JSElementTypes.BLOCK_STATEMENT);
         if (block == null) {
             return null;
@@ -371,7 +370,7 @@ public class JSDocumentationUtils {
     }
 
     @Nullable
-    static ASTNode findLeadingCommentInFunctionBody(@Nonnull PsiElement element) {
+    static ASTNode findLeadingCommentInFunctionBody(PsiElement element) {
         ASTNode functionNode = element.getNode();
         ASTNode block = functionNode.findChildByType(JSElementTypes.BLOCK_STATEMENT);
         if (block == null) {
@@ -481,7 +480,7 @@ public class JSDocumentationUtils {
 
     @Nullable
     @RequiredReadAction
-    private static String getPropertyNameFromExprStatement(@Nonnull PsiElement element) {
+    private static String getPropertyNameFromExprStatement(PsiElement element) {
         String propName = null;
 
         if (element instanceof JSExpressionStatement expressionStatement
@@ -511,17 +510,17 @@ public class JSDocumentationUtils {
                     }
 
                     @Override
-                    public boolean onCommentLine(@Nonnull String line) {
+                    public boolean onCommentLine(String line) {
                         return true;
                     }
 
                     @Override
                     public boolean onPatternMatch(
-                        @Nonnull MetaDocType type,
+                        MetaDocType type,
                         @Nullable String matchName,
                         @Nullable String matchValue,
                         @Nullable String remainingLineContent,
-                        @Nonnull String line,
+                        String line,
                         String patternMatched
                     ) {
                         if (isparameter && type == MetaDocType.PARAMETER && matchName != null && matchName.equals(name)) {
@@ -573,18 +572,18 @@ public class JSDocumentationUtils {
                         }
 
                         @Override
-                        public boolean onCommentLine(@Nonnull String line) {
+                        public boolean onCommentLine(String line) {
                             return true;
                         }
 
                         @Override
                         @RequiredReadAction
                         public boolean onPatternMatch(
-                            @Nonnull MetaDocType type,
+                            MetaDocType type,
                             @Nullable String matchName,
                             @Nullable String matchValue,
                             @Nullable String remainingLineContent,
-                            @Nonnull String line,
+                            String line,
                             String patternMatched
                         ) {
                             for (MetaDocType expectedType : expectedTypes) {
@@ -659,17 +658,17 @@ public class JSDocumentationUtils {
                     }
 
                     @Override
-                    public boolean onCommentLine(@Nonnull String line) {
+                    public boolean onCommentLine(String line) {
                         return true;
                     }
 
                     @Override
                     public boolean onPatternMatch(
-                        @Nonnull MetaDocType type,
+                        MetaDocType type,
                         @Nullable String matchName,
                         @Nullable String matchValue,
                         @Nullable String remainingLineContent,
-                        @Nonnull String line,
+                        String line,
                         String patternMatched
                     ) {
                         if (type == MetaDocType.DEPRECATED) {
@@ -828,17 +827,17 @@ public class JSDocumentationUtils {
                 }
 
                 @Override
-                public boolean onCommentLine(@Nonnull String line) {
+                public boolean onCommentLine(String line) {
                     return true;
                 }
 
                 @Override
                 public boolean onPatternMatch(
-                    @Nonnull MetaDocType type,
+                    MetaDocType type,
                     @Nullable String matchName,
                     @Nullable String matchValue,
                     @Nullable String remainingLineContent,
-                    @Nonnull String line,
+                    String line,
                     String patternMatched
                 ) {
                     if (type == MetaDocType.OPTIONAL_PARAMETERS && matchName != null && matchName.equals(name) && matchValue == null) {

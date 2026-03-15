@@ -12,18 +12,15 @@ import consulo.language.editor.inspection.InspectionToolState;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.util.PsiTreeUtil;
 import consulo.localize.LocalizeValue;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 @ExtensionImpl
 public class NestedFunctionJSInspection extends JavaScriptInspection {
-    @Nonnull
     @Override
     public LocalizeValue getDisplayName() {
         return InspectionJSLocalize.nestedFunctionDisplayName();
     }
 
-    @Nonnull
     @Override
     public LocalizeValue getGroupDisplayName() {
         return JSGroupNames.CONFUSING_GROUP_NAME;
@@ -40,7 +37,6 @@ public class NestedFunctionJSInspection extends JavaScriptInspection {
         return InspectionJSLocalize.nestedAnonymousFunctionErrorString().get();
     }
 
-    @Nonnull
     @Override
     public InspectionToolState<?> createStateProvider() {
         return new NestedFunctionJSInspectionState();

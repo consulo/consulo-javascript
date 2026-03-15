@@ -42,7 +42,6 @@ import consulo.project.Project;
 import consulo.util.collection.primitive.objects.ObjectIntMap;
 import consulo.util.collection.primitive.objects.ObjectMaps;
 import consulo.util.dataholder.Key;
-import jakarta.annotation.Nonnull;
 
 import java.util.BitSet;
 import java.util.Collections;
@@ -57,19 +56,16 @@ public class JSUnusedLocalSymbolsInspection extends JSInspection {
     private static final Logger LOG = Logger.getInstance("JSUnusedLocalSymbols");
     public static final String SHORT_NAME = "JSUnusedLocalSymbols";
 
-    @Nonnull
     @Override
     public LocalizeValue getGroupDisplayName() {
         return InspectionLocalize.inspectionGeneralToolsGroupName();
     }
 
-    @Nonnull
     @Override
     public LocalizeValue getDisplayName() {
         return JavaScriptLocalize.jsUnusedLocalSymbolInspectionName();
     }
 
-    @Nonnull
     @Override
     public String getShortName() {
         return SHORT_NAME;
@@ -82,12 +78,12 @@ public class JSUnusedLocalSymbolsInspection extends JSInspection {
     protected JSElementVisitor createVisitor(final ProblemsHolder holder) {
         return new JSElementVisitor() {
             @Override
-            public void visitJSVariable(@Nonnull JSVariable node) {
+            public void visitJSVariable(JSVariable node) {
                 handleLocalDeclaration(node);
             }
 
             @Override
-            public void visitJSParameterList(@Nonnull JSParameterList node) {
+            public void visitJSParameterList(JSParameterList node) {
                 PsiElement parent = node.getParent();
                 Set<PsiElement> set = parent.getUserData(UNUSED_LOCAL_DECLARATIONS_SET_KEY);
 
@@ -109,7 +105,7 @@ public class JSUnusedLocalSymbolsInspection extends JSInspection {
 
             @Override
             @RequiredReadAction
-            public void visitJSParameter(@Nonnull JSParameter node) {
+            public void visitJSParameter(JSParameter node) {
                 PsiElement scopeNode = PsiTreeUtil.getParentOfType(node, JSFunction.class, JSCatchBlock.class);
 
                 if (scopeNode == null || scopeNode instanceof JSCatchBlock) {
@@ -145,7 +141,7 @@ public class JSUnusedLocalSymbolsInspection extends JSInspection {
 
             @Override
             @RequiredReadAction
-            public void visitJSReferenceExpression(@Nonnull JSReferenceExpression node) {
+            public void visitJSReferenceExpression(JSReferenceExpression node) {
                 if (node.getParent() instanceof JSFunction) {
                     return;
                 }
@@ -197,13 +193,13 @@ public class JSUnusedLocalSymbolsInspection extends JSInspection {
 
             @Override
             @RequiredReadAction
-            public void visitJSFunctionExpression(@Nonnull JSFunctionExpression node) {
+            public void visitJSFunctionExpression(JSFunctionExpression node) {
                 visitJSFunctionDeclaration(node);
             }
 
             @Override
             @RequiredReadAction
-            public void visitJSFunctionDeclaration(@Nonnull JSFunction node) {
+            public void visitJSFunctionDeclaration(JSFunction node) {
                 processDeclarationHost(node, holder);
                 handleLocalDeclaration(node);
             }
@@ -233,7 +229,7 @@ public class JSUnusedLocalSymbolsInspection extends JSInspection {
                     continue;
                 }
                 LocalizeValue message;
-                @Nonnull PsiElement highlightedElement;
+                PsiElement highlightedElement;
 
                 if (p instanceof JSParameter parameter) {
                     // There are cases of predefined sinatures for which we are not interested in reported unused parameters
@@ -266,7 +262,7 @@ public class JSUnusedLocalSymbolsInspection extends JSInspection {
 
                                         @Override
                                         @RequiredReadAction
-                                        public boolean execute(@Nonnull PsiElement element, ResolveState state) {
+                                        public boolean execute(PsiElement element, ResolveState state) {
                                             return !(element instanceof JSClass jsClass && myName.equals(jsClass.getQualifiedName()));
                                         }
                                     };
@@ -360,13 +356,11 @@ public class JSUnusedLocalSymbolsInspection extends JSInspection {
     }
 
     @Override
-    @Nonnull
     public HighlightDisplayLevel getDefaultLevel() {
         return HighlightDisplayLevel.WARNING;
     }
 
     private static class RemoveElementLocalQuickFix implements LocalQuickFix {
-        @Nonnull
         @Override
         public LocalizeValue getName() {
             return JavaScriptLocalize.jsUnusedSymbolRemove();
@@ -374,7 +368,7 @@ public class JSUnusedLocalSymbolsInspection extends JSInspection {
 
         @Override
         @RequiredWriteAction
-        public void applyFix(@Nonnull Project project, @Nonnull ProblemDescriptor descriptor) {
+        public void applyFix(Project project, ProblemDescriptor descriptor) {
             try {
                 PsiElement element = descriptor.getPsiElement();
                 if (!(element instanceof JSNamedElement)) {

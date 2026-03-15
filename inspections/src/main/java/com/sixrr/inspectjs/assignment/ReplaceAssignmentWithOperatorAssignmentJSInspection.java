@@ -21,27 +21,23 @@ import consulo.language.psi.PsiElement;
 import consulo.language.util.IncorrectOperationException;
 import consulo.localize.LocalizeValue;
 import consulo.project.Project;
-import jakarta.annotation.Nonnull;
 import org.intellij.lang.annotations.Pattern;
 
 import java.util.Map;
 
 @ExtensionImpl
 public class ReplaceAssignmentWithOperatorAssignmentJSInspection extends JavaScriptInspection {
-    @Nonnull
     @Override
     @Pattern(value = "[a-zA-Z_0-9.-]+")
     public String getID() {
         return "AssignmentReplaceableWithOperatorAssignmentJS";
     }
 
-    @Nonnull
     @Override
     public LocalizeValue getDisplayName() {
         return InspectionJSLocalize.assignmentReplaceableWithOperatorAssignmentDisplayName();
     }
 
-    @Nonnull
     @Override
     public LocalizeValue getGroupDisplayName() {
         return JSGroupNames.ASSIGNMENT_GROUP_NAME;
@@ -78,7 +74,6 @@ public class ReplaceAssignmentWithOperatorAssignmentJSInspection extends JavaScr
     }
 
     private static class ReplaceAssignmentWithOperatorAssignmentFix extends InspectionJSFix {
-        @Nonnull
         private final LocalizeValue myName;
 
         @RequiredReadAction
@@ -91,7 +86,6 @@ public class ReplaceAssignmentWithOperatorAssignmentJSInspection extends JavaScr
             myName = InspectionJSLocalize.replaceWithOperatorAssignFix(signText);
         }
 
-        @Nonnull
         @Override
         public LocalizeValue getName() {
             return myName;
@@ -109,7 +103,7 @@ public class ReplaceAssignmentWithOperatorAssignmentJSInspection extends JavaScr
     private static class ReplaceAssignmentWithOperatorAssignmentVisitor extends BaseInspectionVisitor {
         @Override
         @RequiredReadAction
-        public void visitJSAssignmentExpression(@Nonnull JSAssignmentExpression assignment) {
+        public void visitJSAssignmentExpression(JSAssignmentExpression assignment) {
             super.visitJSAssignmentExpression(assignment);
 
             IElementType sign = assignment.getOperationSign();

@@ -9,18 +9,15 @@ import consulo.annotation.access.RequiredReadAction;
 import consulo.annotation.component.ExtensionImpl;
 
 import consulo.localize.LocalizeValue;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 @ExtensionImpl
 public class ContinueStatementJSInspection extends JavaScriptInspection {
-    @Nonnull
     @Override
     public LocalizeValue getDisplayName() {
         return InspectionJSLocalize.continueStatementDisplayName();
     }
 
-    @Nonnull
     @Override
     public LocalizeValue getGroupDisplayName() {
         return JSGroupNames.CONTROL_FLOW_GROUP_NAME;
@@ -39,7 +36,7 @@ public class ContinueStatementJSInspection extends JavaScriptInspection {
     }
 
     private static class Visitor extends BaseInspectionVisitor {
-        @Override public void visitJSContinueStatement(@Nonnull JSContinueStatement statement) {
+        @Override public void visitJSContinueStatement(JSContinueStatement statement) {
             super.visitJSContinueStatement(statement);
             registerStatementError(statement);
         }

@@ -22,7 +22,6 @@ import consulo.language.editor.intention.IntentionMetaData;
 import consulo.language.psi.PsiElement;
 import consulo.language.util.IncorrectOperationException;
 import consulo.localize.LocalizeValue;
-import jakarta.annotation.Nonnull;
 import org.intellij.idea.lang.javascript.intention.JSElementPredicate;
 import org.intellij.idea.lang.javascript.intention.JSIntention;
 import org.intellij.idea.lang.javascript.psiutil.ConditionalUtils;
@@ -35,26 +34,24 @@ import org.intellij.idea.lang.javascript.psiutil.ConditionalUtils;
 )
 public class JSReplaceConditionalWithIfIntention extends JSIntention {
     @Override
-    @Nonnull
     public LocalizeValue getText() {
         return JSIntentionLocalize.conditionalReplaceConditionalWithIf();
     }
 
     @Override
-    @Nonnull
     public JSElementPredicate getElementPredicate() {
         return new ReplaceConditionalWithIfPredicate();
     }
 
     @Override
-    public void processIntention(@Nonnull PsiElement element) throws IncorrectOperationException {
+    public void processIntention(PsiElement element) throws IncorrectOperationException {
         assert (element instanceof JSConditionalExpression);
         ConditionalUtils.replaceConditionalWithIf((JSConditionalExpression)element);
     }
 
     private static class ReplaceConditionalWithIfPredicate implements JSElementPredicate {
         @Override
-        public boolean satisfiedBy(@Nonnull PsiElement element) {
+        public boolean satisfiedBy(PsiElement element) {
             return (element instanceof JSConditionalExpression);
         }
     }

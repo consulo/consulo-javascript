@@ -15,27 +15,23 @@ import consulo.language.util.IncorrectOperationException;
 import consulo.localize.LocalizeValue;
 import consulo.project.Project;
 
-import jakarta.annotation.Nonnull;
 import org.intellij.lang.annotations.Pattern;
 
 @ExtensionImpl
 public class ConstantOnLHSOfComparisonJSInspection extends JavaScriptInspection {
     private final SwapComparisonFix fix = new SwapComparisonFix();
 
-    @Nonnull
     @Override
     @Pattern(value = "[a-zA-Z_0-9.-]+")
     public String getID() {
         return "ConstantOnLefSideOfComparisonJS";
     }
 
-    @Nonnull
     @Override
     public LocalizeValue getDisplayName() {
         return InspectionJSLocalize.constantOnLeftSideOfComparisonDisplayName();
     }
 
-    @Nonnull
     @Override
     public LocalizeValue getGroupDisplayName() {
         return JSGroupNames.STYLE_GROUP_NAME;
@@ -58,7 +54,6 @@ public class ConstantOnLHSOfComparisonJSInspection extends JavaScriptInspection 
     }
 
     private static class SwapComparisonFix extends InspectionJSFix {
-        @Nonnull
         @Override
         public LocalizeValue getName() {
             return InspectionJSLocalize.flipComparisonFix();
@@ -80,7 +75,7 @@ public class ConstantOnLHSOfComparisonJSInspection extends JavaScriptInspection 
 
     private static class ConstantOnRHSOfComparisonVisitor extends BaseInspectionVisitor {
         @Override
-        public void visitJSBinaryExpression(@Nonnull JSBinaryExpression expression) {
+        public void visitJSBinaryExpression(JSBinaryExpression expression) {
             super.visitJSBinaryExpression(expression);
             if (!(expression.getROperand() != null)) {
                 return;

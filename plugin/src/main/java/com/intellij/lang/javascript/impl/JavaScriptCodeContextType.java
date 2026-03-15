@@ -35,7 +35,6 @@ import consulo.language.psi.PsiLanguageInjectionHost;
 import consulo.language.psi.util.PsiTreeUtil;
 import consulo.util.lang.ref.SimpleReference;
 import consulo.xml.lang.xml.XMLLanguage;
-import jakarta.annotation.Nonnull;
 
 /**
  * @author Maxim.Mossienko
@@ -51,7 +50,7 @@ public class JavaScriptCodeContextType extends BaseTemplateContextType {
 
     @Override
     @RequiredReadAction
-    public boolean isInContext(@Nonnull TemplateActionContext context) {
+    public boolean isInContext(TemplateActionContext context) {
         PsiFile file = context.getFile();
         int offset = context.getStartOffset();
 

@@ -21,7 +21,6 @@ import consulo.annotation.access.RequiredReadAction;
 import consulo.annotation.access.RequiredWriteAction;
 import consulo.javascript.language.psi.JavaScriptType;
 import consulo.language.ast.ASTNode;
-import jakarta.annotation.Nonnull;
 
 /**
  * @author ven
@@ -31,14 +30,12 @@ public abstract class JSExpressionImpl extends JSElementImpl implements JSExpres
         super(node);
     }
 
-    @Nonnull
     @Override
     @RequiredReadAction
     public JavaScriptType getType() {
         return JavaScriptType.UNKNOWN;
     }
 
-    @Nonnull
     @Override
     @RequiredWriteAction
     public JSExpression replace(JSExpression newExpr) {

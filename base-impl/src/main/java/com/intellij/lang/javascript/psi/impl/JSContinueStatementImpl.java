@@ -21,7 +21,6 @@ import consulo.annotation.access.RequiredReadAction;
 import consulo.language.ast.ASTNode;
 import consulo.language.psi.util.PsiTreeUtil;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * @author max
@@ -45,7 +44,7 @@ public class JSContinueStatementImpl extends JSStatementWithLabelReferenceImpl i
     }
 
     @Override
-    protected void accept(@Nonnull JSElementVisitor visitor) {
+    protected void accept(JSElementVisitor visitor) {
         visitor.visitJSContinueStatement(this);
     }
 }

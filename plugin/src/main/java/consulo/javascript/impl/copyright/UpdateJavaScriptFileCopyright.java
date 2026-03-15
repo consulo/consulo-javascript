@@ -23,10 +23,9 @@ import consulo.language.psi.PsiComment;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
 import consulo.language.psi.PsiWhiteSpace;
-import jakarta.annotation.Nonnull;
 
 public class UpdateJavaScriptFileCopyright extends UpdatePsiFileCopyright<CopyrightFileConfig> {
-    public UpdateJavaScriptFileCopyright(@Nonnull PsiFile psiFile, @Nonnull CopyrightProfile copyrightProfile) {
+    public UpdateJavaScriptFileCopyright(PsiFile psiFile, CopyrightProfile copyrightProfile) {
         super(psiFile, copyrightProfile);
     }
 

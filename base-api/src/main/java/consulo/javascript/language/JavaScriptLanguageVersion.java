@@ -4,7 +4,6 @@ import consulo.language.Language;
 import consulo.language.version.LanguageVersion;
 import consulo.language.version.LanguageVersionWithParsing;
 
-import jakarta.annotation.Nonnull;
 
 import java.util.Set;
 
@@ -13,14 +12,12 @@ import java.util.Set;
  * @since 2017-12-23
  */
 public abstract class JavaScriptLanguageVersion extends LanguageVersion implements LanguageVersionWithParsing {
-    public JavaScriptLanguageVersion(@Nonnull String id, @Nonnull String name, @Nonnull Language language, String... mimeTypes) {
+    public JavaScriptLanguageVersion(String id, String name, Language language, String... mimeTypes) {
         super(id, name, language, mimeTypes);
     }
 
-    @Nonnull
     public abstract Set<JavaScriptFeature> getFeatures();
 
-    @Nonnull
     public String getPresentableName() {
         return getName();
     }

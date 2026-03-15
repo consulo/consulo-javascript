@@ -12,23 +12,19 @@ import consulo.annotation.access.RequiredReadAction;
 import consulo.annotation.component.ExtensionImpl;
 import consulo.language.ast.IElementType;
 import consulo.localize.LocalizeValue;
-import jakarta.annotation.Nonnull;
 
 @ExtensionImpl
 public class ShiftOutOfRangeJSInspection extends JavaScriptInspection {
-    @Nonnull
     @Override
     public LocalizeValue getDisplayName() {
         return InspectionJSLocalize.shiftOperationByInappropriateConstantDisplayName();
     }
 
-    @Nonnull
     @Override
     public LocalizeValue getGroupDisplayName() {
         return JSGroupNames.BITWISE_GROUP_NAME;
     }
 
-    @Nonnull
     @Override
     @RequiredReadAction
     public String buildErrorString(Object state, Object... args) {
@@ -50,7 +46,7 @@ public class ShiftOutOfRangeJSInspection extends JavaScriptInspection {
 
     private static class ShiftOutOfRange extends BaseInspectionVisitor {
         @Override
-        public void visitJSBinaryExpression(@Nonnull JSBinaryExpression expression) {
+        public void visitJSBinaryExpression(JSBinaryExpression expression) {
             super.visitJSBinaryExpression(expression);
             IElementType tokenType = expression.getOperationSign();
             if (tokenType == null || (!JSTokenTypes.LTLT.equals(tokenType)

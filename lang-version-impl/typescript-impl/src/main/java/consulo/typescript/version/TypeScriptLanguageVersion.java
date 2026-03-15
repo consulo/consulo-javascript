@@ -5,7 +5,6 @@ import consulo.javascript.ecmascript.lang.BaseEcmaScriptJavaScriptVersion;
 import consulo.javascript.language.JavaScriptFeature;
 import consulo.javascript.language.JavaScriptLanguage;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
@@ -13,7 +12,6 @@ import jakarta.annotation.Nonnull;
  */
 @ExtensionImpl
 public class TypeScriptLanguageVersion extends BaseEcmaScriptJavaScriptVersion {
-    @Nonnull
     public static TypeScriptLanguageVersion getInstance() {
         return JavaScriptLanguage.INSTANCE.findVersionByClass(TypeScriptLanguageVersion.class);
     }
@@ -28,7 +26,6 @@ public class TypeScriptLanguageVersion extends BaseEcmaScriptJavaScriptVersion {
         addFeature(JavaScriptFeature.FUNCTION_PROPERTY);
     }
 
-    @Nonnull
     @Override
     public String getPresentableName() {
         return "TypeScript";

@@ -8,19 +8,15 @@ import com.sixrr.inspectjs.localize.InspectionJSLocalize;
 import consulo.annotation.access.RequiredReadAction;
 import consulo.annotation.component.ExtensionImpl;
 import consulo.localize.LocalizeValue;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
-import org.jetbrains.annotations.NonNls;
+import org.jspecify.annotations.Nullable;
 
 @ExtensionImpl
 public class LabeledStatementJSInspection extends JavaScriptInspection {
-    @Nonnull
     @Override
     public LocalizeValue getDisplayName() {
         return InspectionJSLocalize.labeledStatementDisplayName();
     }
 
-    @Nonnull
     @Override
     public LocalizeValue getGroupDisplayName() {
         return JSGroupNames.CONTROL_FLOW_GROUP_NAME;
@@ -40,9 +36,9 @@ public class LabeledStatementJSInspection extends JavaScriptInspection {
 
     private static class Visitor extends BaseInspectionVisitor {
         @Override
-        public void visitJSLabeledStatement(@Nonnull JSLabeledStatement statement) {
+        public void visitJSLabeledStatement(JSLabeledStatement statement) {
             super.visitJSLabeledStatement(statement);
-            @NonNls String label = statement.getLabel();
+            String label = statement.getLabel();
             if ("javascript".equals(label)) {
                 return;
             }

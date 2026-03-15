@@ -28,7 +28,6 @@ import consulo.language.editor.intention.IntentionMetaData;
 import consulo.language.psi.PsiElement;
 import consulo.language.util.IncorrectOperationException;
 import consulo.localize.LocalizeValue;
-import jakarta.annotation.Nonnull;
 import org.intellij.idea.lang.javascript.intention.JSElementPredicate;
 import org.intellij.idea.lang.javascript.intention.JSMutablyNamedIntention;
 import org.intellij.idea.lang.javascript.psiutil.*;
@@ -40,7 +39,6 @@ import org.intellij.idea.lang.javascript.psiutil.*;
     fileExtensions = "js"
 )
 public class JSReplaceWithOperatorAssignmentIntention extends JSMutablyNamedIntention {
-    @Nonnull
     @Override
     protected LocalizeValue getBasicText() {
         return JSIntentionLocalize.opassignReplaceWithOperatorAssignment();
@@ -58,14 +56,13 @@ public class JSReplaceWithOperatorAssignmentIntention extends JSMutablyNamedInte
     }
 
     @Override
-    @Nonnull
     public JSElementPredicate getElementPredicate() {
         return new Predicate();
     }
 
     @Override
     @RequiredReadAction
-    public void processIntention(@Nonnull PsiElement element) throws IncorrectOperationException {
+    public void processIntention(PsiElement element) throws IncorrectOperationException {
         JSAssignmentExpression exp = (JSAssignmentExpression)element;
         JSBinaryExpression rhs = (JSBinaryExpression)exp.getROperand();
         JSExpression lhs = exp.getLOperand();
@@ -84,7 +81,7 @@ public class JSReplaceWithOperatorAssignmentIntention extends JSMutablyNamedInte
     private static class Predicate implements JSElementPredicate {
         @Override
         @RequiredReadAction
-        public boolean satisfiedBy(@Nonnull PsiElement element) {
+        public boolean satisfiedBy(PsiElement element) {
             if (!(element instanceof JSAssignmentExpression) || ErrorUtil.containsError(element)) {
                 return false;
             }

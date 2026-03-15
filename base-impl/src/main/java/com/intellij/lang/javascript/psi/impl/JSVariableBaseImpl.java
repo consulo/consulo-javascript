@@ -36,7 +36,6 @@ import consulo.language.psi.PsiElement;
 import consulo.language.psi.resolve.PsiScopeProcessor;
 import consulo.language.psi.resolve.ResolveState;
 import consulo.language.util.IncorrectOperationException;
-import jakarta.annotation.Nonnull;
 
 import java.util.function.Supplier;
 
@@ -88,7 +87,6 @@ public class JSVariableBaseImpl<T extends JSVariableStubBase<T2>, T2 extends JSV
         return expression != null ? expression.getText() : null;
     }
 
-    @Nonnull
     @Override
     @RequiredReadAction
     public SearchScope getUseScope() {
@@ -123,7 +121,6 @@ public class JSVariableBaseImpl<T extends JSVariableStubBase<T2>, T2 extends JSV
         throw new UnsupportedOperationException("TODO: implement");
     }
 
-    @Nonnull
     @Override
     @RequiredReadAction
     public JavaScriptType getType() {
@@ -169,7 +166,7 @@ public class JSVariableBaseImpl<T extends JSVariableStubBase<T2>, T2 extends JSV
 
     @Override
     @RequiredWriteAction
-    public PsiElement setName(@Nonnull String name) throws IncorrectOperationException {
+    public PsiElement setName(String name) throws IncorrectOperationException {
         PsiElement nameNode = getNameIdentifier();
         if (nameNode == null) {
             return this;
@@ -180,7 +177,7 @@ public class JSVariableBaseImpl<T extends JSVariableStubBase<T2>, T2 extends JSV
     }
 
     @Override
-    protected void accept(@Nonnull JSElementVisitor visitor) {
+    protected void accept(JSElementVisitor visitor) {
         visitor.visitJSVariable(this);
     }
 
@@ -261,10 +258,10 @@ public class JSVariableBaseImpl<T extends JSVariableStubBase<T2>, T2 extends JSV
 
     @Override
     public boolean processDeclarations(
-        @Nonnull PsiScopeProcessor processor,
-        @Nonnull ResolveState state,
+        PsiScopeProcessor processor,
+        ResolveState state,
         PsiElement lastParent,
-        @Nonnull PsiElement place
+        PsiElement place
     ) {
         if (lastParent != null && lastParent.getParent() == this) {
             processor.handleEvent(PsiScopeProcessor.Event.SET_DECLARATION_HOLDER, this);

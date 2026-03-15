@@ -44,8 +44,7 @@ import consulo.util.lang.ref.Ref;
 import consulo.xml.psi.xml.XmlFile;
 import consulo.xml.psi.xml.XmlTag;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.HashMap;
 import java.util.HashSet;
@@ -77,7 +76,7 @@ public class JSImportHandlingUtil {
             }
         };
 
-    public static String resolveTypeName(String _str, @Nonnull PsiElement context) {
+    public static String resolveTypeName(String _str, PsiElement context) {
         JSImportedElementResolveResult resolveResult = _resolveTypeName(_str, context);
         if (resolveResult == null) {
             return _str;
@@ -86,7 +85,7 @@ public class JSImportHandlingUtil {
     }
 
     // TODO _str should be JSReferenceExpression for caching!
-    private static JSImportedElementResolveResult _resolveTypeName(String _name, @Nonnull PsiElement context) {
+    private static JSImportedElementResolveResult _resolveTypeName(String _name, PsiElement context) {
         String name = _name;
         if (name == null) {
             return null;
@@ -210,7 +209,7 @@ public class JSImportHandlingUtil {
 
     public static
     @Nullable
-    JSImportedElementResolveResult resolveTypeNameUsingImports(@Nonnull JSReferenceExpression expr) {
+    JSImportedElementResolveResult resolveTypeNameUsingImports(JSReferenceExpression expr) {
         if (expr.getQualifier() != null) {
             return null;
         }
@@ -227,7 +226,7 @@ public class JSImportHandlingUtil {
 
     private static
     @Nullable
-    JSImportedElementResolveResult resolveTypeNameUsingImports(@Nonnull String referencedName, PsiNamedElement parent) {
+    JSImportedElementResolveResult resolveTypeNameUsingImports(String referencedName, PsiNamedElement parent) {
         LanguageVersion languageVersion = parent.getLanguageVersion();
         if (languageVersion instanceof JavaScriptVersionWithHelper javaScriptVersionWithHelper) {
             ResolveHelper helper = javaScriptVersionWithHelper.getHelper();
@@ -346,7 +345,7 @@ public class JSImportHandlingUtil {
         return null;
     }
 
-    public static boolean tryResolveImports(PsiScopeProcessor processor, PsiNamedElement parent, @Nonnull PsiElement place) {
+    public static boolean tryResolveImports(PsiScopeProcessor processor, PsiNamedElement parent, PsiElement place) {
         return !isAdequatePlaceForImport(parent, place) || !importClass(processor, parent);
     }
 
@@ -413,7 +412,7 @@ public class JSImportHandlingUtil {
         }
     }
 
-    public static boolean isAdequatePlaceForImport(PsiNamedElement parent, @Nonnull PsiElement place) {
+    public static boolean isAdequatePlaceForImport(PsiNamedElement parent, PsiElement place) {
         if (parent instanceof JSFile && !parent.getLanguage().isKindOf(JavaScriptSupportLoader.ECMA_SCRIPT_L4)) {
             return false;
         }

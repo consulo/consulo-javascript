@@ -11,7 +11,6 @@ import consulo.language.editor.refactoring.action.RefactoringActionHandlerFactor
 import consulo.language.psi.PsiElement;
 import consulo.localize.LocalizeValue;
 import consulo.project.Project;
-import jakarta.annotation.Nonnull;
 
 public class RenameFix extends InspectionJSFix {
     private final String m_targetName;
@@ -27,7 +26,6 @@ public class RenameFix extends InspectionJSFix {
     }
 
     @Override
-    @Nonnull
     public LocalizeValue getName() {
         return m_targetName == null
             ? InspectionJSLocalize.renameFix()

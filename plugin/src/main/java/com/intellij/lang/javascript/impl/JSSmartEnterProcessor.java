@@ -33,7 +33,6 @@ import consulo.language.psi.util.PsiTreeUtil;
 import consulo.localize.LocalizeValue;
 import consulo.project.Project;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * @author Maxim.Mossienko
@@ -43,7 +42,7 @@ import jakarta.annotation.Nonnull;
 public class JSSmartEnterProcessor extends SmartEnterProcessor {
     @Override
     @RequiredWriteAction
-    public boolean process(@Nonnull Project project, @Nonnull Editor editor, @Nonnull PsiFile psiFile) {
+    public boolean process(Project project, Editor editor, PsiFile psiFile) {
         int offset = editor.getCaretModel().getOffset();
         PsiElement at = psiFile.findElementAt(offset);
         if (at == null && offset > 0) {
@@ -159,7 +158,6 @@ public class JSSmartEnterProcessor extends SmartEnterProcessor {
         return prev;
     }
 
-    @Nonnull
     @Override
     public Language getLanguage() {
         return JavaScriptLanguage.INSTANCE;

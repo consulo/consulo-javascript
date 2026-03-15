@@ -34,7 +34,6 @@ import consulo.util.lang.ref.Ref;
 import consulo.util.lang.ref.SimpleReference;
 import consulo.xml.psi.xml.XmlFile;
 import consulo.xml.psi.xml.XmlTag;
-import jakarta.annotation.Nonnull;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -47,7 +46,7 @@ import java.util.Map;
  */
 public class JSSmartCompletionVariantsHandler {
     @RequiredReadAction
-    static Object[] getSmartVariants(@Nonnull PsiElement expr, boolean ecma) {
+    static Object[] getSmartVariants(PsiElement expr, boolean ecma) {
         PsiElement parent = expr.getParent();
 
         if (parent instanceof JSArgumentList argumentList && argumentList.getArguments()[0] == expr && ecma
@@ -94,7 +93,7 @@ public class JSSmartCompletionVariantsHandler {
 
         @Override
         @RequiredReadAction
-        public boolean execute(@Nonnull PsiElement element, ResolveState state) {
+        public boolean execute(PsiElement element, ResolveState state) {
             if (element instanceof JSVariable variable) {
                 JSAttributeList attributeList = variable.getAttributeList();
 
@@ -173,7 +172,7 @@ public class JSSmartCompletionVariantsHandler {
 
         @Override
         @RequiredReadAction
-        public boolean process(@Nonnull JSAttribute jsAttribute) {
+        public boolean process(JSAttribute jsAttribute) {
             if ("Event".equals(jsAttribute.getName())) {
                 JSAttributeNameValuePair eventName = jsAttribute.getValueByName("name");
 

@@ -24,7 +24,6 @@ import com.intellij.lang.javascript.psi.JSCallExpression;
 import com.intellij.lang.javascript.psi.JSElementVisitor;
 import com.intellij.lang.javascript.psi.JSExpression;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * @author max
@@ -48,7 +47,7 @@ public class JSCallExpressionImpl extends JSExpressionImpl implements JSCallExpr
     }
 
     @Override
-    protected void accept(@Nonnull JSElementVisitor visitor) {
+    protected void accept(JSElementVisitor visitor) {
         visitor.visitJSCallExpression(this);
     }
 }

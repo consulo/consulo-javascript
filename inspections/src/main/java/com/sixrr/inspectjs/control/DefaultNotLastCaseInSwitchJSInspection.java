@@ -9,23 +9,19 @@ import com.sixrr.inspectjs.localize.InspectionJSLocalize;
 import consulo.annotation.access.RequiredReadAction;
 import consulo.annotation.component.ExtensionImpl;
 import consulo.localize.LocalizeValue;
-import jakarta.annotation.Nonnull;
 
 @ExtensionImpl
 public class DefaultNotLastCaseInSwitchJSInspection extends JavaScriptInspection {
-    @Nonnull
     @Override
     public LocalizeValue getGroupDisplayName() {
         return JSGroupNames.CONTROL_FLOW_GROUP_NAME;
     }
 
-    @Nonnull
     @Override
     public LocalizeValue getDisplayName() {
         return InspectionJSLocalize.defaultNotLastCaseInSwitchDisplayName();
     }
 
-    @Nonnull
     @Override
     @RequiredReadAction
     protected String buildErrorString(Object state, Object... args) {
@@ -39,7 +35,7 @@ public class DefaultNotLastCaseInSwitchJSInspection extends JavaScriptInspection
 
     private static class DefaultNotLastCaseInSwitchVisitor extends BaseInspectionVisitor {
         @Override
-        public void visitJSSwitchStatement(@Nonnull JSSwitchStatement statement) {
+        public void visitJSSwitchStatement(JSSwitchStatement statement) {
             super.visitJSSwitchStatement(statement);
             JSCaseClause[] caseClauses = statement.getCaseClauses();
             if (caseClauses == null) {

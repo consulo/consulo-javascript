@@ -10,7 +10,6 @@ import consulo.language.codeStyle.setting.LanguageCodeStyleSettingsProvider;
 import consulo.language.codeStyle.ui.setting.SmartIndentOptionsEditor;
 import consulo.util.io.FileUtil;
 
-import jakarta.annotation.Nonnull;
 
 import java.io.IOException;
 
@@ -38,14 +37,13 @@ public class JavaScriptLanguageCodeStyleSettingsProvider extends LanguageCodeSty
         return defaultSettings;
     }
 
-    @Nonnull
     @Override
     public Language getLanguage() {
         return JavaScriptLanguage.INSTANCE;
     }
 
     @Override
-    public void customizeSettings(@Nonnull CodeStyleSettingsCustomizable consumer, @Nonnull SettingsType settingsType) {
+    public void customizeSettings(CodeStyleSettingsCustomizable consumer, SettingsType settingsType) {
         if (settingsType == SettingsType.SPACING_SETTINGS) {
             consumer.showStandardOptions(
                 "SPACE_BEFORE_METHOD_CALL_PARENTHESES",
@@ -127,7 +125,7 @@ public class JavaScriptLanguageCodeStyleSettingsProvider extends LanguageCodeSty
     }
 
     @Override
-    public String getCodeSample(@Nonnull SettingsType settingsType) {
+    public String getCodeSample(SettingsType settingsType) {
         return loadPreview("codeStyle.txt");
     }
 

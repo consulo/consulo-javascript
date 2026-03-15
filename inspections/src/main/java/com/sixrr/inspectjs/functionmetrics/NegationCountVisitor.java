@@ -7,7 +7,6 @@ import com.intellij.lang.javascript.psi.JSFunction;
 import com.intellij.lang.javascript.psi.JSPrefixExpression;
 import consulo.language.ast.IElementType;
 import com.sixrr.inspectjs.JSRecursiveElementVisitor;
-import jakarta.annotation.Nonnull;
 
 class NegationCountVisitor extends JSRecursiveElementVisitor {
     private int negationCount = 0;
@@ -26,7 +25,7 @@ class NegationCountVisitor extends JSRecursiveElementVisitor {
     }
 
     @Override
-    public void visitJSBinaryExpression(@Nonnull JSBinaryExpression expression) {
+    public void visitJSBinaryExpression(JSBinaryExpression expression) {
         super.visitJSBinaryExpression(expression);
         IElementType sign = expression.getOperationSign();
         if (JSTokenTypes.NE.equals(sign) || JSTokenTypes.NEQEQ.equals(sign)) {
@@ -35,7 +34,7 @@ class NegationCountVisitor extends JSRecursiveElementVisitor {
     }
 
     @Override
-    public void visitJSPrefixExpression(@Nonnull JSPrefixExpression expression) {
+    public void visitJSPrefixExpression(JSPrefixExpression expression) {
         super.visitJSPrefixExpression(expression);
         IElementType sign = expression.getOperationSign();
         if (JSTokenTypes.EXCL.equals(sign)) {

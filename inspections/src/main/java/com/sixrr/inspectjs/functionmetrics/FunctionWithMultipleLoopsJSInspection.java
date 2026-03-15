@@ -10,18 +10,15 @@ import consulo.annotation.access.RequiredReadAction;
 import consulo.annotation.component.ExtensionImpl;
 import consulo.language.psi.PsiElement;
 import consulo.localize.LocalizeValue;
-import jakarta.annotation.Nonnull;
 
 @ExtensionImpl
 public class FunctionWithMultipleLoopsJSInspection extends JavaScriptInspection {
     @Override
-    @Nonnull
     public LocalizeValue getDisplayName() {
         return InspectionJSLocalize.functionWithMultipleLoopsDisplayName();
     }
 
     @Override
-    @Nonnull
     public LocalizeValue getGroupDisplayName() {
         return JSGroupNames.FUNCTIONMETRICS_GROUP_NAME;
     }
@@ -48,7 +45,7 @@ public class FunctionWithMultipleLoopsJSInspection extends JavaScriptInspection 
 
     private static class Visitor extends BaseInspectionVisitor {
         @Override
-        public void visitJSFunctionDeclaration(@Nonnull JSFunction function) {
+        public void visitJSFunctionDeclaration(JSFunction function) {
             // note: no call to super
             PsiElement lastChild = function.getLastChild();
             if (!(lastChild instanceof JSBlockStatement)) {

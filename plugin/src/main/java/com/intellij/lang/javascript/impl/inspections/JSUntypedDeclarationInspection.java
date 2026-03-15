@@ -44,7 +44,6 @@ import consulo.localize.LocalizeValue;
 import consulo.navigation.OpenFileDescriptor;
 import consulo.navigation.OpenFileDescriptorFactory;
 import consulo.project.Project;
-import jakarta.annotation.Nonnull;
 
 import java.util.Collections;
 
@@ -55,26 +54,22 @@ import java.util.Collections;
 public class JSUntypedDeclarationInspection extends JSInspection {
     public static final String SHORT_NAME = "JSUntypedDeclaration";
 
-    @Nonnull
     @Override
     public LocalizeValue getGroupDisplayName() {
         return InspectionLocalize.inspectionGeneralToolsGroupName();
     }
 
-    @Nonnull
     @Override
     public LocalizeValue getDisplayName() {
         return JavaScriptLocalize.jsUntypedDeclarationInspectionName();
     }
 
-    @Nonnull
     @Override
     public HighlightDisplayLevel getDefaultLevel() {
         return HighlightDisplayLevel.WARNING;
     }
 
     @Override
-    @Nonnull
     public String getShortName() {
         return SHORT_NAME;
     }
@@ -84,19 +79,19 @@ public class JSUntypedDeclarationInspection extends JSInspection {
         return new JSElementVisitor() {
             @Override
             @RequiredReadAction
-            public void visitJSVariable(@Nonnull JSVariable node) {
+            public void visitJSVariable(JSVariable node) {
                 process(node, holder);
             }
 
             @Override
             @RequiredReadAction
-            public void visitJSFunctionExpression(@Nonnull JSFunctionExpression node) {
+            public void visitJSFunctionExpression(JSFunctionExpression node) {
                 process(node.getFunction(), holder);
             }
 
             @Override
             @RequiredReadAction
-            public void visitJSFunctionDeclaration(@Nonnull JSFunction node) {
+            public void visitJSFunctionDeclaration(JSFunction node) {
                 if (node.isConstructor() || node.isSetProperty()) {
                     return;
                 }
@@ -128,7 +123,6 @@ public class JSUntypedDeclarationInspection extends JSInspection {
     }
 
     private static class AddTypeToDclFix implements LocalQuickFix {
-        @Nonnull
         @Override
         public LocalizeValue getName() {
             return JavaScriptLocalize.jsUntypedDeclarationProblemAddtypeFix();
@@ -136,7 +130,7 @@ public class JSUntypedDeclarationInspection extends JSInspection {
 
         @Override
         @RequiredReadAction
-        public void applyFix(@Nonnull Project project, @Nonnull ProblemDescriptor descriptor) {
+        public void applyFix(Project project, ProblemDescriptor descriptor) {
             PsiElement anchor = descriptor.getPsiElement();
             PsiFile containingFile = anchor.getContainingFile();
             if (!FileModificationService.getInstance().prepareFileForWrite(containingFile)) {

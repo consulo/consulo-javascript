@@ -9,7 +9,6 @@ import consulo.module.extension.ModuleExtension;
 import consulo.module.extension.MutableModuleExtension;
 import consulo.ui.image.Image;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
@@ -17,7 +16,6 @@ import jakarta.annotation.Nonnull;
  */
 @ExtensionImpl
 public class ClientJavaScriptModuleExtensionProvider implements ModuleExtensionProvider<ClientJavaScriptModuleExtension> {
-    @Nonnull
     @Override
     public String getId() {
         return "client-javascript";
@@ -28,27 +26,23 @@ public class ClientJavaScriptModuleExtensionProvider implements ModuleExtensionP
         return true;
     }
 
-    @Nonnull
     @Override
     public LocalizeValue getName() {
         return LocalizeValue.localizeTODO("JavaScript (Client)");
     }
 
-    @Nonnull
     @Override
     public Image getIcon() {
         return JavaScriptIconGroup.javascriptmodule();
     }
 
-    @Nonnull
     @Override
-    public ModuleExtension<ClientJavaScriptModuleExtension> createImmutableExtension(@Nonnull ModuleRootLayer moduleRootLayer) {
+    public ModuleExtension<ClientJavaScriptModuleExtension> createImmutableExtension(ModuleRootLayer moduleRootLayer) {
         return new ClientJavaScriptModuleExtension(getId(), moduleRootLayer);
     }
 
-    @Nonnull
     @Override
-    public MutableModuleExtension<ClientJavaScriptModuleExtension> createMutableExtension(@Nonnull ModuleRootLayer moduleRootLayer) {
+    public MutableModuleExtension<ClientJavaScriptModuleExtension> createMutableExtension(ModuleRootLayer moduleRootLayer) {
         return new ClientJavaScriptMutableModuleExtension(getId(), moduleRootLayer);
     }
 }

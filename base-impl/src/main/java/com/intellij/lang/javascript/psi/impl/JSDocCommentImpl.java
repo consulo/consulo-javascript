@@ -23,7 +23,6 @@ import com.intellij.lang.javascript.psi.JSElementVisitor;
 import consulo.annotation.access.RequiredReadAction;
 import consulo.language.ast.IElementType;
 import consulo.language.ast.ASTNode;
-import jakarta.annotation.Nonnull;
 
 public class JSDocCommentImpl extends JSElementImpl implements JSDocComment {
     public JSDocCommentImpl(ASTNode node) {
@@ -37,7 +36,7 @@ public class JSDocCommentImpl extends JSElementImpl implements JSDocComment {
     }
 
     @Override
-    protected void accept(@Nonnull JSElementVisitor visitor) {
+    protected void accept(JSElementVisitor visitor) {
         visitor.visitJSDocComment(this);
     }
 

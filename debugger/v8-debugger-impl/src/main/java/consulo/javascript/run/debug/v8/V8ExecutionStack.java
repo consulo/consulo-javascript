@@ -18,7 +18,7 @@ package consulo.javascript.run.debug.v8;
 
 import consulo.execution.debug.frame.XExecutionStack;
 import consulo.execution.debug.frame.XStackFrame;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import org.chromium.sdk.CallFrame;
 import org.chromium.sdk.DebugContext;
 

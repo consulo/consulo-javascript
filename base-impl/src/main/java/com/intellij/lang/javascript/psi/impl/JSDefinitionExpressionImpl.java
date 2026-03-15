@@ -25,7 +25,6 @@ import consulo.language.psi.resolve.PsiScopeProcessor;
 import consulo.language.util.IncorrectOperationException;
 import consulo.language.ast.ASTNode;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * @author maxim.mossienko
@@ -51,23 +50,23 @@ public class JSDefinitionExpressionImpl extends JSExpressionImpl implements JSDe
 
     @Override
     @RequiredWriteAction
-    public PsiElement setName(@Nonnull String name) throws IncorrectOperationException {
+    public PsiElement setName(String name) throws IncorrectOperationException {
         return getExpression() instanceof JSReferenceExpressionImpl referenceExpression
             ? referenceExpression.handleElementRenameInternal(name)
             : null;
     }
 
     @Override
-    protected void accept(@Nonnull JSElementVisitor visitor) {
+    protected void accept(JSElementVisitor visitor) {
         visitor.visitJSDefinitionExpression(this);
     }
 
     @Override
     public boolean processDeclarations(
-        @Nonnull PsiScopeProcessor processor,
-        @Nonnull ResolveState state,
+        PsiScopeProcessor processor,
+        ResolveState state,
         PsiElement lastParent,
-        @Nonnull PsiElement place
+        PsiElement place
     ) {
         return lastParent != null || processor.execute(this, state);
     }

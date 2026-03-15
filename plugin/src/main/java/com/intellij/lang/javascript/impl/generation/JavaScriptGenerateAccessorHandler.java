@@ -38,7 +38,6 @@ import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.awt.NonFocusableCheckBox;
 import consulo.util.lang.StringUtil;
-import jakarta.annotation.Nonnull;
 
 import javax.swing.*;
 import java.util.*;
@@ -102,7 +101,7 @@ class JavaScriptGenerateAccessorHandler extends BaseJSGenerateHandler {
                 @Override
                 @RequiredUIAccess
                 @RequiredWriteAction
-                public void invoke(@Nonnull Project project, Editor editor, PsiFile file) throws IncorrectOperationException {
+                public void invoke(Project project, Editor editor, PsiFile file) throws IncorrectOperationException {
                     evalAnchor(editor, file);
 
                     for (JSVariable e : getElementsToProcess()) {
@@ -117,7 +116,7 @@ class JavaScriptGenerateAccessorHandler extends BaseJSGenerateHandler {
                 @Override
                 @RequiredUIAccess
                 @RequiredWriteAction
-                public void invoke(@Nonnull Project project, Editor editor, PsiFile file) throws IncorrectOperationException {
+                public void invoke(Project project, Editor editor, PsiFile file) throws IncorrectOperationException {
                     JSCodeStyleSettings codeStyleSettings =
                         CodeStyleSettingsManager.getSettings(project).getCustomSettings(JSCodeStyleSettings.class);
                     evalAnchor(editor, file);
@@ -196,7 +195,7 @@ class JavaScriptGenerateAccessorHandler extends BaseJSGenerateHandler {
                 @Override
                 @RequiredUIAccess
                 @RequiredWriteAction
-                public void invoke(@Nonnull Project project, Editor editor, PsiFile file) throws IncorrectOperationException {
+                public void invoke(Project project, Editor editor, PsiFile file) throws IncorrectOperationException {
                     evalAnchor(editor, file);
 
                     boolean[] needOverride = new boolean[1];
@@ -257,7 +256,7 @@ class JavaScriptGenerateAccessorHandler extends BaseJSGenerateHandler {
 
             @Override
             @RequiredReadAction
-            public boolean execute(@Nonnull PsiElement element, ResolveState state) {
+            public boolean execute(PsiElement element, ResolveState state) {
                 if (element instanceof JSVariable variable) {
                     if (variable.isConst()) {
                         return true;

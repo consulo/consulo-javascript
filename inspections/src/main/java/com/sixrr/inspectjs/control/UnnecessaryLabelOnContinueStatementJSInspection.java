@@ -16,20 +16,17 @@ import consulo.language.psi.util.PsiTreeUtil;
 import consulo.language.util.IncorrectOperationException;
 import consulo.localize.LocalizeValue;
 import consulo.project.Project;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 @ExtensionImpl
 public class UnnecessaryLabelOnContinueStatementJSInspection extends JavaScriptInspection {
     private final UnnecessaryLabelOnContinueStatementFix fix = new UnnecessaryLabelOnContinueStatementFix();
 
-    @Nonnull
     @Override
     public LocalizeValue getDisplayName() {
         return InspectionJSLocalize.unnecessaryLabelOnContinueStatementDisplayName();
     }
 
-    @Nonnull
     @Override
     public LocalizeValue getGroupDisplayName() {
         return JSGroupNames.CONTROL_FLOW_GROUP_NAME;
@@ -58,7 +55,6 @@ public class UnnecessaryLabelOnContinueStatementJSInspection extends JavaScriptI
     }
 
     private static class UnnecessaryLabelOnContinueStatementFix extends InspectionJSFix {
-        @Nonnull
         @Override
         public LocalizeValue getName() {
             return InspectionJSLocalize.removeLabelFix();
@@ -74,7 +70,7 @@ public class UnnecessaryLabelOnContinueStatementJSInspection extends JavaScriptI
 
     private static class Visitor extends BaseInspectionVisitor {
         @Override
-        public void visitJSContinueStatement(@Nonnull JSContinueStatement statement) {
+        public void visitJSContinueStatement(JSContinueStatement statement) {
             super.visitJSContinueStatement(statement);
             if (statement.getLabel() == null) {
                 return;

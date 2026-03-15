@@ -39,8 +39,7 @@ import consulo.language.psi.resolve.ResolveState;
 import consulo.util.collection.ArrayFactory;
 import consulo.util.collection.ArrayUtil;
 import consulo.util.dataholder.Key;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.*;
 
@@ -67,7 +66,7 @@ public abstract class JSClassBase extends JSStubElementImpl<JSClassStub> impleme
     }
 
     @Override
-    protected void accept(@Nonnull JSElementVisitor visitor) {
+    protected void accept(JSElementVisitor visitor) {
         visitor.visitJSClass(this);
     }
 
@@ -104,7 +103,7 @@ public abstract class JSClassBase extends JSStubElementImpl<JSClassStub> impleme
             processDeclarations(
                 new PsiScopeProcessor() {
                     @Override
-                    public boolean execute(@Nonnull PsiElement element, ResolveState state) {
+                    public boolean execute(PsiElement element, ResolveState state) {
                         if (element instanceof JSFunction function) {
                             functions.add(function);
                         }
@@ -112,7 +111,7 @@ public abstract class JSClassBase extends JSStubElementImpl<JSClassStub> impleme
                     }
 
                     @Override
-                    public <T> T getHint(@Nonnull Key<T> hintClass) {
+                    public <T> T getHint(Key<T> hintClass) {
                         return null;
                     }
 
@@ -160,7 +159,7 @@ public abstract class JSClassBase extends JSStubElementImpl<JSClassStub> impleme
             processDeclarations(
                 new PsiScopeProcessor() {
                     @Override
-                    public boolean execute(@Nonnull PsiElement element, ResolveState state) {
+                    public boolean execute(PsiElement element, ResolveState state) {
                         if (element instanceof JSVariable variable) {
                             vars.add(variable);
                         }
@@ -168,7 +167,7 @@ public abstract class JSClassBase extends JSStubElementImpl<JSClassStub> impleme
                     }
 
                     @Override
-                    public <T> T getHint(@Nonnull Key<T> hintClass) {
+                    public <T> T getHint(Key<T> hintClass) {
                         return null;
                     }
 
@@ -190,7 +189,6 @@ public abstract class JSClassBase extends JSStubElementImpl<JSClassStub> impleme
         return initFields().get(name);
     }
 
-    @Nonnull
     @RequiredReadAction
     private Map<String, JSVariable> initFields() {
         Map<String, JSVariable> name2FieldsMap = myName2FieldsMap;
@@ -216,7 +214,6 @@ public abstract class JSClassBase extends JSStubElementImpl<JSClassStub> impleme
         return name2FieldsMap;
     }
 
-    @Nonnull
     @RequiredReadAction
     private Map<String, Object> initFunctions() {
         Map<String, Object> name2FunctionMap = myName2FunctionMap;
@@ -280,7 +277,7 @@ public abstract class JSClassBase extends JSStubElementImpl<JSClassStub> impleme
         return superClasses.toArray(new JSClass[superClasses.size()]);
     }
 
-    private List<JSClass> getClassesFromReferenceList(@Nullable JSReferenceList extendsList, @Nonnull IElementType type) {
+    private List<JSClass> getClassesFromReferenceList(@Nullable JSReferenceList extendsList, IElementType type) {
         PsiElement element = extendsList != null ? extendsList : this;
 
         if (type == JSElementTypes.EXTENDS_LIST) {
@@ -294,10 +291,10 @@ public abstract class JSClassBase extends JSStubElementImpl<JSClassStub> impleme
     @Override
     @RequiredReadAction
     public boolean processDeclarations(
-        @Nonnull PsiScopeProcessor processor,
-        @Nonnull ResolveState substitutor,
+        PsiScopeProcessor processor,
+        ResolveState substitutor,
         PsiElement lastParent,
-        @Nonnull PsiElement place
+        PsiElement place
     ) {
         ResolveProcessor resolveProcessor = processor instanceof ResolveProcessor rProcessor ? rProcessor : null;
         boolean toProcessClass = resolveProcessor != null && resolveProcessor.isTypeContext();

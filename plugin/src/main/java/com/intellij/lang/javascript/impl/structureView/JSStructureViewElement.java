@@ -32,8 +32,7 @@ import consulo.navigation.ItemPresentation;
 import consulo.util.collection.primitive.ints.IntMaps;
 import consulo.util.collection.primitive.ints.IntObjectMap;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.*;
 
@@ -72,7 +71,6 @@ public class JSStructureViewElement implements StructureViewTreeElement {
         return canNavigate();
     }
 
-    @Nonnull
     @Override
     @RequiredReadAction
     public StructureViewTreeElement[] getChildren() {
@@ -234,13 +232,13 @@ public class JSStructureViewElement implements StructureViewTreeElement {
             }
 
             @Override
-            public void visitJSParameter(@Nonnull JSParameter node) {
+            public void visitJSParameter(JSParameter node) {
                 // Do not add parameters to structure view
             }
 
             @Override
             @RequiredReadAction
-            public void visitJSIncludeDirective(@Nonnull JSIncludeDirective includeDirective) {
+            public void visitJSIncludeDirective(JSIncludeDirective includeDirective) {
                 if (includeDirective.resolveFile() instanceof JSFile jsFile) {
                     if (visited != null && visited.contains(jsFile)) {
                         return;
@@ -259,7 +257,7 @@ public class JSStructureViewElement implements StructureViewTreeElement {
             }
 
             @Override
-            public void visitJSObjectLiteralExpression(@Nonnull JSObjectLiteralExpression node) {
+            public void visitJSObjectLiteralExpression(JSObjectLiteralExpression node) {
                 PsiElement parent = node.getParent();
                 if (parent instanceof JSVariable
                     || parent instanceof JSProperty
@@ -282,7 +280,7 @@ public class JSStructureViewElement implements StructureViewTreeElement {
             }
 
             @Override
-            public void visitJSVariable(@Nonnull JSVariable node) {
+            public void visitJSVariable(JSVariable node) {
                 if (element instanceof JSFunction) {
                     return;
                 }
@@ -291,7 +289,7 @@ public class JSStructureViewElement implements StructureViewTreeElement {
 
             @Override
             @RequiredReadAction
-            public void visitJSAssignmentExpression(@Nonnull JSAssignmentExpression node) {
+            public void visitJSAssignmentExpression(JSAssignmentExpression node) {
                 JSExpression rOperand = node.getROperand();
                 JSExpression lOperand = node.getLOperand();
 

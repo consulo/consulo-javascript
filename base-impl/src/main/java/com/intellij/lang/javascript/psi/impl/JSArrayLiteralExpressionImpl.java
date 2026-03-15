@@ -24,7 +24,6 @@ import consulo.annotation.access.RequiredReadAction;
 import consulo.language.ast.ASTNode;
 import consulo.language.ast.IElementType;
 
-import jakarta.annotation.Nonnull;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -65,7 +64,7 @@ public class JSArrayLiteralExpressionImpl extends JSExpressionImpl implements JS
     }
 
     @Override
-    protected void accept(@Nonnull JSElementVisitor visitor) {
+    protected void accept(JSElementVisitor visitor) {
         visitor.visitJSArrayLiteralExpression(this);
     }
 }

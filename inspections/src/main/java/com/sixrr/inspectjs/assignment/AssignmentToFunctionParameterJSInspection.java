@@ -10,18 +10,15 @@ import consulo.annotation.access.RequiredReadAction;
 import consulo.annotation.component.ExtensionImpl;
 import consulo.language.ast.IElementType;
 import consulo.localize.LocalizeValue;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 @ExtensionImpl
 public class AssignmentToFunctionParameterJSInspection extends JavaScriptInspection {
-    @Nonnull
     @Override
     public LocalizeValue getDisplayName() {
         return InspectionJSLocalize.assignmentToFunctionParameterDisplayName();
     }
 
-    @Nonnull
     @Override
     public LocalizeValue getGroupDisplayName() {
         return JSGroupNames.ASSIGNMENT_GROUP_NAME;
@@ -42,7 +39,7 @@ public class AssignmentToFunctionParameterJSInspection extends JavaScriptInspect
     private static class Visitor extends BaseInspectionVisitor {
         @Override
         @RequiredReadAction
-        public void visitJSAssignmentExpression(@Nonnull JSAssignmentExpression jsAssignmentExpression) {
+        public void visitJSAssignmentExpression(JSAssignmentExpression jsAssignmentExpression) {
             super.visitJSAssignmentExpression(jsAssignmentExpression);
             JSExpression lhs = jsAssignmentExpression.getLOperand();
             checkOperand(lhs);
@@ -50,7 +47,7 @@ public class AssignmentToFunctionParameterJSInspection extends JavaScriptInspect
 
         @Override
         @RequiredReadAction
-        public void visitJSPrefixExpression(@Nonnull JSPrefixExpression expression) {
+        public void visitJSPrefixExpression(JSPrefixExpression expression) {
             super.visitJSPrefixExpression(expression);
             IElementType sign = expression.getOperationSign();
             if (!JSTokenTypes.PLUSPLUS.equals(sign) && !JSTokenTypes.MINUSMINUS.equals(sign)) {
@@ -62,7 +59,7 @@ public class AssignmentToFunctionParameterJSInspection extends JavaScriptInspect
 
         @Override
         @RequiredReadAction
-        public void visitJSPostfixExpression(@Nonnull JSPostfixExpression postfixExpr) {
+        public void visitJSPostfixExpression(JSPostfixExpression postfixExpr) {
             super.visitJSPostfixExpression(postfixExpr);
             IElementType sign = postfixExpr.getOperationSign();
             if (!JSTokenTypes.PLUSPLUS.equals(sign) && !JSTokenTypes.MINUSMINUS.equals(sign)) {

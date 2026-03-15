@@ -24,7 +24,6 @@ import consulo.language.codeStyle.CodeStyleSettings;
 import consulo.language.codeStyle.Block;
 import consulo.language.codeStyle.FormattingDocumentModel;
 import consulo.language.psi.PsiFile;
-import jakarta.annotation.Nonnull;
 
 /**
  * @author ven
@@ -37,13 +36,11 @@ public class JSFormattingModel implements FormattingModel {
     }
 
     @Override
-    @Nonnull
     public Block getRootBlock() {
         return myModel.getRootBlock();
     }
 
     @Override
-    @Nonnull
     public FormattingDocumentModel getDocumentModel() {
         return myModel.getDocumentModel();
     }

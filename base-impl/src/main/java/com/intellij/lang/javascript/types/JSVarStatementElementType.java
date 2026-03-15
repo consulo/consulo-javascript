@@ -19,7 +19,6 @@ package com.intellij.lang.javascript.types;
 
 import java.io.IOException;
 
-import jakarta.annotation.Nonnull;
 
 import consulo.annotation.access.RequiredReadAction;
 import consulo.language.ast.ASTNode;
@@ -52,31 +51,29 @@ public class JSVarStatementElementType extends JSStubElementType<JSVarStatementS
         return element instanceof JSClass || element instanceof JSPackageStatement || element instanceof JSFile;
     }
 
-    @Nonnull
     @Override
-    public PsiElement createElement(@Nonnull ASTNode astNode) {
+    public PsiElement createElement(ASTNode astNode) {
         return new JSVarStatementImpl(astNode);
     }
 
     @Override
-    public JSVarStatement createPsi(@Nonnull JSVarStatementStub stub) {
+    public JSVarStatement createPsi(JSVarStatementStub stub) {
         return new JSVarStatementImpl(stub);
     }
 
     @RequiredReadAction
     @Override
-    public JSVarStatementStub createStub(@Nonnull JSVarStatement psi, StubElement parentStub) {
+    public JSVarStatementStub createStub(JSVarStatement psi, StubElement parentStub) {
         return new JSVarStatementStubImpl(parentStub, this);
     }
 
     @Override
-    public void serialize(@Nonnull JSVarStatementStub stub, @Nonnull StubOutputStream dataStream) throws IOException {
+    public void serialize(JSVarStatementStub stub, StubOutputStream dataStream) throws IOException {
 
     }
 
-    @Nonnull
     @Override
-    public JSVarStatementStub deserialize(@Nonnull StubInputStream dataStream, StubElement parentStub) throws IOException {
+    public JSVarStatementStub deserialize(StubInputStream dataStream, StubElement parentStub) throws IOException {
         return new JSVarStatementStubImpl(parentStub, this);
     }
 }

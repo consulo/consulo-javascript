@@ -14,15 +14,13 @@ import consulo.language.psi.PsiFile;
 import consulo.language.psi.PsiNamedElement;
 import consulo.language.psi.util.PsiTreeUtil;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 public abstract class BaseInspection extends LocalInspectionTool implements CustomSuppressableInspectionTool {
     @Override
-    @Nonnull
     @SuppressWarnings("unchecked")
     public PsiElementVisitor buildVisitor(
-        @Nonnull ProblemsHolder problemsHolder,
+        ProblemsHolder problemsHolder,
         boolean onTheFly,
         LocalInspectionToolSession session,
         Object state
@@ -45,13 +43,12 @@ public abstract class BaseInspection extends LocalInspectionTool implements Cust
         return JavaScriptLanguage.INSTANCE;
     }
 
-    @Nonnull
     @Override
     public HighlightDisplayLevel getDefaultLevel() {
         return HighlightDisplayLevel.WARNING;
     }
 
-    public boolean canBuildVisitor(@Nonnull PsiFile psiFile) {
+    public boolean canBuildVisitor(PsiFile psiFile) {
         return true;
     }
 
@@ -95,7 +92,7 @@ public abstract class BaseInspection extends LocalInspectionTool implements Cust
     }
 
     @Override
-    public boolean isSuppressedFor(@Nonnull PsiElement element) {
+    public boolean isSuppressedFor(PsiElement element) {
         return SuppressionUtil.isSuppressedInStatement(element, getID(), JSSuppressionHolder.class);
     }
 }

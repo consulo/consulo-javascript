@@ -21,7 +21,6 @@ import com.intellij.lang.javascript.JSTokenTypes;
 import consulo.javascript.localize.JavaScriptLocalize;
 import consulo.language.ast.IElementType;
 import consulo.language.parser.PsiBuilder;
-import org.jetbrains.annotations.NonNls;
 
 /**
  * @author Maxim.Mossienko
@@ -52,7 +51,7 @@ public class JSDocParsing {
         PsiBuilder.Marker docTagMarker = builder.mark();
 
         try {
-            @NonNls String tagName = builder.getTokenText();
+            String tagName = builder.getTokenText();
 
             builder.advanceLexer();
             if ("@param".equals(tagName)) {
@@ -114,7 +113,7 @@ public class JSDocParsing {
         return builder.eof() || tokenType == JSDocTokenTypes.DOC_COMMENT_LEADING_ASTERISK || tokenType == JSDocTokenTypes.DOC_COMMENT_END;
     }
 
-    private static boolean isToCreateDocTagValue(@NonNls String tokenText) {
+    private static boolean isToCreateDocTagValue(String tokenText) {
         return tokenText.equals("@see") ||
             tokenText.equals("@class") ||
             tokenText.equals("@member") ||

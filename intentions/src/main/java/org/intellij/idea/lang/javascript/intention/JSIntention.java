@@ -25,8 +25,7 @@ import consulo.language.util.IncorrectOperationException;
 import consulo.localize.LocalizeValue;
 import consulo.project.Project;
 import consulo.xml.psi.xml.XmlElement;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 public abstract class JSIntention extends PsiElementBaseIntentionAction {
     private final JSElementPredicate predicate;
@@ -36,7 +35,7 @@ public abstract class JSIntention extends PsiElementBaseIntentionAction {
     }
 
     @Override
-    public void invoke(@Nonnull Project project, Editor editor, @Nonnull PsiElement element) throws IncorrectOperationException {
+    public void invoke(Project project, Editor editor, PsiElement element) throws IncorrectOperationException {
         PsiElement matchingElement = findMatchingElement(element);
         if (matchingElement == null) {
             return;
@@ -44,9 +43,8 @@ public abstract class JSIntention extends PsiElementBaseIntentionAction {
         processIntention(matchingElement);
     }
 
-    protected abstract void processIntention(@Nonnull PsiElement element) throws IncorrectOperationException;
+    protected abstract void processIntention(PsiElement element) throws IncorrectOperationException;
 
-    @Nonnull
     protected abstract JSElementPredicate getElementPredicate();
 
     @Nullable
@@ -73,7 +71,7 @@ public abstract class JSIntention extends PsiElementBaseIntentionAction {
     }
 
     @Override
-    public boolean isAvailable(@Nonnull Project project, Editor editor, @Nullable PsiElement element) {
+    public boolean isAvailable(Project project, Editor editor, @Nullable PsiElement element) {
         return element != null && findMatchingElement(element) != null;
     }
 
@@ -83,6 +81,5 @@ public abstract class JSIntention extends PsiElementBaseIntentionAction {
     }
 
     @Override
-    @Nonnull
     public abstract LocalizeValue getText();
 }

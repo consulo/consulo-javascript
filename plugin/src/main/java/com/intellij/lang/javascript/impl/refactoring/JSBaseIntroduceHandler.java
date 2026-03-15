@@ -48,8 +48,7 @@ import consulo.project.ui.wm.WindowManager;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.awt.DialogWrapper;
 import consulo.undoRedo.CommandProcessor;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -132,7 +131,7 @@ public abstract class JSBaseIntroduceHandler<T extends JSElement, S extends Base
 
     @Override
     @RequiredWriteAction
-    public void invoke(@Nonnull Project project, Editor editor, PsiFile file, DataContext dataContext) {
+    public void invoke(Project project, Editor editor, PsiFile file, DataContext dataContext) {
         if (!editor.getSelectionModel().hasSelection()) {
             editor.getSelectionModel().selectLineAtCaret();
         }
@@ -424,7 +423,7 @@ public abstract class JSBaseIntroduceHandler<T extends JSElement, S extends Base
 
     @Override
     @RequiredUIAccess
-    public void invoke(@Nonnull Project project, @Nonnull PsiElement[] elements, DataContext dataContext) {
+    public void invoke(Project project, PsiElement[] elements, DataContext dataContext) {
         throw new RuntimeException("Not implemented");
     }
 }

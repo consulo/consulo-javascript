@@ -27,7 +27,6 @@ import consulo.language.editor.intention.IntentionMetaData;
 import consulo.language.psi.PsiElement;
 import consulo.language.util.IncorrectOperationException;
 import consulo.localize.LocalizeValue;
-import jakarta.annotation.Nonnull;
 import org.intellij.idea.lang.javascript.intention.JSElementPredicate;
 import org.intellij.idea.lang.javascript.intention.JSIntention;
 import org.intellij.idea.lang.javascript.psiutil.ErrorUtil;
@@ -42,19 +41,17 @@ import org.intellij.idea.lang.javascript.psiutil.ParenthesesUtils;
 )
 public class JSRemoveUnnecessaryParenthesesIntention extends JSIntention {
     @Override
-    @Nonnull
     public LocalizeValue getText() {
         return JSIntentionLocalize.parenthesisRemoveUnnecessaryParentheses();
     }
 
     @Override
-    @Nonnull
     public JSElementPredicate getElementPredicate() {
         return new UnnecessaryParenthesesPredicate();
     }
 
     @Override
-    public void processIntention(@Nonnull PsiElement element) throws IncorrectOperationException {
+    public void processIntention(PsiElement element) throws IncorrectOperationException {
         JSExpression exp = (JSExpression)element;
 
         while (exp.getParent() instanceof JSExpression parentExp) {
@@ -69,7 +66,7 @@ public class JSRemoveUnnecessaryParenthesesIntention extends JSIntention {
     private static class UnnecessaryParenthesesPredicate implements JSElementPredicate {
         @Override
         @RequiredReadAction
-        public boolean satisfiedBy(@Nonnull PsiElement element) {
+        public boolean satisfiedBy(PsiElement element) {
             if (element instanceof JSParenthesizedExpression expression && !ErrorUtil.containsError(element)) {
                 if (!(expression.getParent() instanceof JSExpression parentExpression)) {
                     return true;

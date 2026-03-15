@@ -27,7 +27,6 @@ import consulo.language.psi.stub.IStubElementType;
 import consulo.language.psi.stub.StubIndex;
 import consulo.project.Project;
 import consulo.util.collection.ArrayUtil;
-import jakarta.annotation.Nonnull;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -45,18 +44,16 @@ public class JSReferenceListImpl extends JSStubElementImpl<JSReferenceListStub> 
     }
 
     @Override
-    protected void accept(@Nonnull JSElementVisitor visitor) {
+    protected void accept(JSElementVisitor visitor) {
         visitor.visitJSReferenceList(this);
     }
 
     @RequiredReadAction
-    @Nonnull
     @Override
     public JSReferenceExpression[] getExpressions() {
         return findChildrenByClass(JSReferenceExpression.class);
     }
 
-    @Nonnull
     @Override
     @RequiredReadAction
     public String[] getReferenceTexts() {
@@ -78,7 +75,6 @@ public class JSReferenceListImpl extends JSStubElementImpl<JSReferenceListStub> 
         return result;
     }
 
-    @Nonnull
     @Override
     @RequiredReadAction
     public JSClass[] getReferencedClasses() {

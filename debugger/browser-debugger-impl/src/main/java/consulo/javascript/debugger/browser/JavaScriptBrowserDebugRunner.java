@@ -11,7 +11,6 @@ import consulo.execution.runner.ExecutionEnvironment;
 import consulo.execution.ui.RunContentDescriptor;
 import consulo.javascript.debugger.cdt.CDTProcessBase;
 import consulo.process.ExecutionException;
-import jakarta.annotation.Nonnull;
 
 import java.util.Objects;
 
@@ -21,14 +20,13 @@ import java.util.Objects;
  */
 @ExtensionImpl
 public class JavaScriptBrowserDebugRunner extends DefaultProgramRunner {
-    @Nonnull
     @Override
     public String getRunnerId() {
         return "browser-javascript-debug";
     }
 
     @Override
-    protected RunContentDescriptor doExecute(@Nonnull RunProfileState state, @Nonnull ExecutionEnvironment env) throws ExecutionException {
+    protected RunContentDescriptor doExecute(RunProfileState state, ExecutionEnvironment env) throws ExecutionException {
         return XDebuggerManager.getInstance(env.getProject()).startSession(env, xDebugSession -> {
             ExecutionResult result = Objects.requireNonNull(state.execute(env.getExecutor(), env.getRunner()));
 
@@ -43,7 +41,7 @@ public class JavaScriptBrowserDebugRunner extends DefaultProgramRunner {
     }
 
     @Override
-    public boolean canRun(@Nonnull String executorId, @Nonnull RunProfile runProfile) {
+    public boolean canRun(String executorId, RunProfile runProfile) {
         return executorId.equals(DefaultDebugExecutor.EXECUTOR_ID) && runProfile instanceof JavaScriptBrowserConfiguration;
     }
 }

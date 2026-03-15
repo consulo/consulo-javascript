@@ -5,27 +5,25 @@ import com.intellij.lang.javascript.psi.*;
 import consulo.language.psi.PsiElement;
 import consulo.language.ast.IElementType;
 import com.sixrr.inspectjs.JSRecursiveElementVisitor;
-import jakarta.annotation.Nonnull;
 
 public class VariableAssignedVisitor extends JSRecursiveElementVisitor {
     private boolean assigned = false;
-    @Nonnull
     private final JSVariable variable;
 
-    public VariableAssignedVisitor(@Nonnull JSVariable variable) {
+    public VariableAssignedVisitor(JSVariable variable) {
         super();
         this.variable = variable;
     }
 
     @Override
-    public void visitElement(@Nonnull PsiElement element) {
+    public void visitElement(PsiElement element) {
         if (!assigned) {
             super.visitElement(element);
         }
     }
 
     @Override
-    public void visitJSAssignmentExpression(@Nonnull JSAssignmentExpression assignment) {
+    public void visitJSAssignmentExpression(JSAssignmentExpression assignment) {
         if (assigned) {
             return;
         }
@@ -37,7 +35,7 @@ public class VariableAssignedVisitor extends JSRecursiveElementVisitor {
     }
 
     @Override
-    public void visitJSPrefixExpression(@Nonnull JSPrefixExpression expression) {
+    public void visitJSPrefixExpression(JSPrefixExpression expression) {
         if (assigned) {
             return;
         }
@@ -54,7 +52,7 @@ public class VariableAssignedVisitor extends JSRecursiveElementVisitor {
     }
 
     @Override
-    public void visitJSPostfixExpression(@Nonnull JSPostfixExpression postfixExpression) {
+    public void visitJSPostfixExpression(JSPostfixExpression postfixExpression) {
         if (assigned) {
             return;
         }

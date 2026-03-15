@@ -29,8 +29,7 @@ import consulo.language.codeStyle.*;
 import consulo.language.psi.PsiErrorElement;
 import consulo.language.psi.PsiWhiteSpace;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.List;
 
@@ -66,13 +65,11 @@ public class JSBlock implements Block {
     }
 
     @Override
-    @Nonnull
     public TextRange getTextRange() {
         return myNode.getTextRange();
     }
 
     @Override
-    @Nonnull
     public List<Block> getSubBlocks() {
         if (mySubBlocks == null) {
             SubBlockVisitor visitor = new SubBlockVisitor(getSettings());
@@ -110,7 +107,6 @@ public class JSBlock implements Block {
     }
 
     @Override
-    @Nonnull
     public ChildAttributes getChildAttributes(int newChildIndex) {
         Indent indent = null;
         IElementType blockElementType = myNode.getElementType();

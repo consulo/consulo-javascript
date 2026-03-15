@@ -42,8 +42,7 @@ import consulo.util.lang.Pair;
 import consulo.xml.psi.xml.XmlAttributeValue;
 import consulo.xml.psi.xml.XmlTag;
 import consulo.xml.psi.xml.XmlText;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.*;
 
@@ -93,7 +92,7 @@ public class ImportUtils {
     }
 
     @RequiredWriteAction
-    public static void doImport(@Nonnull PsiElement subject, @Nonnull String fqn) {
+    public static void doImport(PsiElement subject, String fqn) {
         assert fqn.contains(".") : "Qualified name belongs to default package: " + fqn;
 
         if (!FileModificationService.getInstance().prepareFileForWrite(subject.getContainingFile())) {

@@ -19,7 +19,6 @@ package com.intellij.lang.javascript.types;
 
 import java.io.IOException;
 
-import jakarta.annotation.Nonnull;
 
 import consulo.annotation.access.RequiredReadAction;
 import consulo.index.io.StringRef;
@@ -44,31 +43,29 @@ public class JSUseNamespaceDirectiveType extends JSStubElementType<JSUseNamespac
         super("USE_NAMESPACE_DIRECTIVE");
     }
 
-    @Nonnull
     @Override
-    public PsiElement createElement(@Nonnull ASTNode astNode) {
+    public PsiElement createElement(ASTNode astNode) {
         return new JSUseNamespaceDirectiveImpl(astNode);
     }
 
     @Override
-    public JSUseNamespaceDirective createPsi(@Nonnull JSUseNamespaceDirectiveStub stub) {
+    public JSUseNamespaceDirective createPsi(JSUseNamespaceDirectiveStub stub) {
         return new JSUseNamespaceDirectiveImpl(stub);
     }
 
     @RequiredReadAction
     @Override
-    public JSUseNamespaceDirectiveStub createStub(@Nonnull JSUseNamespaceDirective psi, StubElement parentStub) {
+    public JSUseNamespaceDirectiveStub createStub(JSUseNamespaceDirective psi, StubElement parentStub) {
         return new JSUseNamespaceDirectiveStubImpl(psi.getNamespaceToBeUsed(), parentStub, this);
     }
 
     @Override
-    public void serialize(@Nonnull JSUseNamespaceDirectiveStub stub, @Nonnull StubOutputStream dataStream) throws IOException {
+    public void serialize(JSUseNamespaceDirectiveStub stub, StubOutputStream dataStream) throws IOException {
         dataStream.writeName(stub.getNamespaceToUse());
     }
 
-    @Nonnull
     @Override
-    public JSUseNamespaceDirectiveStub deserialize(@Nonnull StubInputStream dataStream, StubElement parentStub) throws IOException {
+    public JSUseNamespaceDirectiveStub deserialize(StubInputStream dataStream, StubElement parentStub) throws IOException {
         StringRef nameRef = dataStream.readName();
         return new JSUseNamespaceDirectiveStubImpl(StringRef.toString(nameRef), parentStub, this);
     }

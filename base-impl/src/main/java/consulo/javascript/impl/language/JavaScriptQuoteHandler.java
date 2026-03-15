@@ -27,7 +27,6 @@ import consulo.language.editor.action.JavaLikeQuoteHandler;
 import consulo.language.editor.action.SimpleTokenSetQuoteHandler;
 import consulo.language.psi.PsiElement;
 import consulo.virtualFileSystem.fileType.FileType;
-import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
@@ -55,7 +54,7 @@ public class JavaScriptQuoteHandler extends SimpleTokenSetQuoteHandler implement
     }
 
     @Override
-    public boolean isAppropriateElementTypeForLiteral(@Nonnull IElementType tokenType) {
+    public boolean isAppropriateElementTypeForLiteral(IElementType tokenType) {
         return JavaScriptTokenSets.COMMENTS.contains(tokenType)
             || tokenType == JSTokenTypes.WHITE_SPACE
             || tokenType == JSTokenTypes.SEMICOLON
@@ -72,7 +71,6 @@ public class JavaScriptQuoteHandler extends SimpleTokenSetQuoteHandler implement
         return false;
     }
 
-    @Nonnull
     @Override
     public FileType getFileType() {
         return JavaScriptFileType.INSTANCE;

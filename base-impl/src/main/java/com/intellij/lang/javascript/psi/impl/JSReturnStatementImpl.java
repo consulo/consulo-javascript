@@ -20,7 +20,6 @@ import com.intellij.lang.javascript.psi.JSElementVisitor;
 import com.intellij.lang.javascript.psi.JSExpression;
 import com.intellij.lang.javascript.psi.JSReturnStatement;
 import consulo.language.ast.ASTNode;
-import jakarta.annotation.Nonnull;
 
 /**
  * @author max
@@ -37,7 +36,7 @@ public class JSReturnStatementImpl extends JSStatementImpl implements JSReturnSt
     }
 
     @Override
-    protected void accept(@Nonnull JSElementVisitor visitor) {
+    protected void accept(JSElementVisitor visitor) {
         visitor.visitJSReturnStatement(this);
     }
 }

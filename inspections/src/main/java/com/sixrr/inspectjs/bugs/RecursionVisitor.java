@@ -3,7 +3,6 @@ package com.sixrr.inspectjs.bugs;
 import com.intellij.lang.javascript.psi.*;
 import consulo.language.psi.PsiElement;
 import com.sixrr.inspectjs.JSRecursiveElementVisitor;
-import jakarta.annotation.Nonnull;
 
 public class RecursionVisitor extends JSRecursiveElementVisitor {
 
@@ -11,21 +10,21 @@ public class RecursionVisitor extends JSRecursiveElementVisitor {
     private final JSFunction function;
     private String functionName;
 
-    public RecursionVisitor(@Nonnull JSFunction function) {
+    public RecursionVisitor(JSFunction function) {
         super();
         this.function = function;
         functionName = function.getName();
     }
 
     @Override
-    public void visitElement(@Nonnull PsiElement element) {
+    public void visitElement(PsiElement element) {
         if (!recursive) {
             super.visitElement(element);
         }
     }
 
     @Override
-    public void visitJSCallExpression(@Nonnull JSCallExpression call) {
+    public void visitJSCallExpression(JSCallExpression call) {
         if (recursive) {
             return;
         }

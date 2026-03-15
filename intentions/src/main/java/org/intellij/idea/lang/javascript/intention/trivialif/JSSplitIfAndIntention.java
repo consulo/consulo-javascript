@@ -27,7 +27,6 @@ import consulo.language.editor.intention.IntentionMetaData;
 import consulo.language.psi.PsiElement;
 import consulo.language.util.IncorrectOperationException;
 import consulo.localize.LocalizeValue;
-import jakarta.annotation.Nonnull;
 import org.intellij.idea.lang.javascript.intention.JSElementPredicate;
 import org.intellij.idea.lang.javascript.intention.JSIntention;
 import org.intellij.idea.lang.javascript.psiutil.ErrorUtil;
@@ -42,20 +41,18 @@ import org.intellij.idea.lang.javascript.psiutil.ParenthesesUtils;
 )
 public class JSSplitIfAndIntention extends JSIntention {
     @Override
-    @Nonnull
     public LocalizeValue getText() {
         return JSIntentionLocalize.trivialifSplitIfAnd();
     }
 
     @Override
-    @Nonnull
     public JSElementPredicate getElementPredicate() {
         return new SplitIfAndPredicate();
     }
 
     @Override
     @RequiredReadAction
-    public void processIntention(@Nonnull PsiElement element) throws IncorrectOperationException {
+    public void processIntention(PsiElement element) throws IncorrectOperationException {
         PsiElement jsElement = (element.getParent() instanceof JSIfStatement ? element.getParent() : element);
 
         assert (jsElement != null);
@@ -98,7 +95,7 @@ public class JSSplitIfAndIntention extends JSIntention {
     private static class SplitIfAndPredicate implements JSElementPredicate {
         @Override
         @RequiredReadAction
-        public boolean satisfiedBy(@Nonnull PsiElement element) {
+        public boolean satisfiedBy(PsiElement element) {
             PsiElement parent = element.getParent();
 
             if (!(parent instanceof JSIfStatement)) {

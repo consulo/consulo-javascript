@@ -23,8 +23,7 @@ import consulo.util.xml.serializer.XmlSerializer;
 import consulo.webBrowser.BrowserLauncher;
 import consulo.webBrowser.WebBrowser;
 import consulo.webBrowser.WebBrowserManager;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import org.jdom.Element;
 
 import java.util.Arrays;
@@ -64,7 +63,6 @@ public class JavaScriptBrowserConfiguration extends ModuleBasedConfiguration<Run
         return Arrays.asList(manager.getModules());
     }
 
-    @Nonnull
     @Override
     public SettingsEditor<? extends RunConfiguration> getConfigurationEditor() {
         return new JavaScriptBrowserConfigurationEditor();
@@ -72,10 +70,10 @@ public class JavaScriptBrowserConfiguration extends ModuleBasedConfiguration<Run
 
     @Nullable
     @Override
-    public RunProfileState getState(@Nonnull Executor executor, @Nonnull ExecutionEnvironment environment) throws ExecutionException {
+    public RunProfileState getState(Executor executor, ExecutionEnvironment environment) throws ExecutionException {
         return new RunProfileState() {
             @Override
-            public ExecutionResult execute(Executor executor, @Nonnull ProgramRunner programRunner) throws ExecutionException {
+            public ExecutionResult execute(Executor executor, ProgramRunner programRunner) throws ExecutionException {
                 TextConsoleBuilder builder = TextConsoleBuilderFactory.getInstance().createBuilder(environment.getProject());
 
                 ConsoleView console = builder.getConsole();

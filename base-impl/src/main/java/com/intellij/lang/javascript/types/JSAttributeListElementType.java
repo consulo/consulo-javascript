@@ -30,7 +30,6 @@ import consulo.language.psi.stub.StubElement;
 import consulo.language.psi.stub.StubInputStream;
 import consulo.language.psi.stub.StubOutputStream;
 
-import jakarta.annotation.Nonnull;
 
 import java.io.IOException;
 
@@ -44,34 +43,32 @@ public class JSAttributeListElementType extends JSStubElementType<JSAttributeLis
         super("ATTRIBUTE_LIST");
     }
 
-    @Nonnull
     @Override
-    public PsiElement createElement(@Nonnull ASTNode astNode) {
+    public PsiElement createElement(ASTNode astNode) {
         return new JSAttributeListImpl(astNode);
     }
 
     @Override
-    public JSAttributeList createPsi(@Nonnull JSAttributeListStub stub) {
+    public JSAttributeList createPsi(JSAttributeListStub stub) {
         return new JSAttributeListImpl(stub);
     }
 
     @RequiredReadAction
     @Override
-    public JSAttributeListStub createStub(@Nonnull JSAttributeList psi, StubElement parentStub) {
+    public JSAttributeListStub createStub(JSAttributeList psi, StubElement parentStub) {
         String namespace = psi.getNamespace();
         int flags = JSAttributeListStubImpl.getFlags(psi);
         return new JSAttributeListStubImpl(namespace, flags, parentStub, this);
     }
 
     @Override
-    public void serialize(@Nonnull JSAttributeListStub stub, @Nonnull StubOutputStream dataStream) throws IOException {
+    public void serialize(JSAttributeListStub stub, StubOutputStream dataStream) throws IOException {
         dataStream.writeName(stub.getNamespace());
         dataStream.writeInt(stub.getFlags());
     }
 
-    @Nonnull
     @Override
-    public JSAttributeListStub deserialize(@Nonnull StubInputStream dataStream, StubElement parentStub) throws IOException {
+    public JSAttributeListStub deserialize(StubInputStream dataStream, StubElement parentStub) throws IOException {
         StringRef namespaceRef = dataStream.readName();
         int i = dataStream.readInt();
         return new JSAttributeListStubImpl(StringRef.toString(namespaceRef), i, parentStub, this);

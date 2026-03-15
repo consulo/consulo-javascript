@@ -29,7 +29,6 @@ import consulo.language.psi.stub.StubElement;
 import consulo.language.psi.stub.StubInputStream;
 import consulo.language.psi.stub.StubOutputStream;
 
-import jakarta.annotation.Nonnull;
 
 import java.io.IOException;
 
@@ -43,31 +42,29 @@ public class JSParameterListElementType extends JSStubElementType<JSParameterLis
         super("PARAMETER_LIST");
     }
 
-    @Nonnull
     @Override
-    public PsiElement createElement(@Nonnull ASTNode astNode) {
+    public PsiElement createElement(ASTNode astNode) {
         return new JSParameterListImpl(astNode);
     }
 
     @Override
-    public JSParameterList createPsi(@Nonnull JSParameterListStub stub) {
+    public JSParameterList createPsi(JSParameterListStub stub) {
         return new JSParameterListImpl(stub);
     }
 
     @RequiredReadAction
     @Override
-    public JSParameterListStub createStub(@Nonnull JSParameterList psi, StubElement parentStub) {
+    public JSParameterListStub createStub(JSParameterList psi, StubElement parentStub) {
         return new JSParameterListStubImpl(parentStub, this);
     }
 
     @Override
-    public void serialize(@Nonnull JSParameterListStub stub, @Nonnull StubOutputStream dataStream) throws IOException {
+    public void serialize(JSParameterListStub stub, StubOutputStream dataStream) throws IOException {
 
     }
 
-    @Nonnull
     @Override
-    public JSParameterListStub deserialize(@Nonnull StubInputStream dataStream, StubElement parentStub) throws IOException {
+    public JSParameterListStub deserialize(StubInputStream dataStream, StubElement parentStub) throws IOException {
         return new JSParameterListStubImpl(parentStub, this);
     }
 }

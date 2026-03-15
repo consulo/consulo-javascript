@@ -32,8 +32,7 @@ import consulo.language.psi.meta.PsiMetaData;
 import consulo.language.psi.resolve.PsiElementProcessor;
 import consulo.language.util.IncorrectOperationException;
 import consulo.xml.psi.xml.*;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -49,14 +48,12 @@ public class JSXmlLiteralExpressionImpl extends JSExpressionImpl implements JSLi
             super(manager, language);
         }
 
-        @Nonnull
         @Override
         @RequiredReadAction
         public TextRange getTextRange() {
             return TextRange.EMPTY_RANGE;
         }
 
-        @Nonnull
         @Override
         @RequiredReadAction
         public XmlTagChild[] getChildren() {
@@ -73,13 +70,11 @@ public class JSXmlLiteralExpressionImpl extends JSExpressionImpl implements JSLi
             return 0;
         }
 
-        @Nonnull
         @Override
         public XmlText[] getTextElements() {
             return new XmlText[0];
         }
 
-        @Nonnull
         @Override
         public String getTrimmedText() {
             return "";
@@ -105,14 +100,12 @@ public class JSXmlLiteralExpressionImpl extends JSExpressionImpl implements JSLi
         super(node);
     }
 
-    @Nonnull
     @Override
     public PsiReference[] getReferences() {
         return ReferenceProvidersRegistry.getReferencesFromProviders(this);
     }
 
     @RequiredReadAction
-    @Nonnull
     @Override
     public PsiElement[] getChildren() {
         PsiElement psiChild = getFirstChild();
@@ -130,11 +123,10 @@ public class JSXmlLiteralExpressionImpl extends JSExpressionImpl implements JSLi
     }
 
     @Override
-    protected void accept(@Nonnull JSElementVisitor visitor) {
+    protected void accept(JSElementVisitor visitor) {
         visitor.visitJSElement(this);
     }
 
-    @Nonnull
     @Override
     @RequiredReadAction
     public String getName() {
@@ -144,17 +136,15 @@ public class JSXmlLiteralExpressionImpl extends JSExpressionImpl implements JSLi
 
     @RequiredWriteAction
     @Override
-    public PsiElement setName(@Nonnull String s) throws IncorrectOperationException {
+    public PsiElement setName(String s) throws IncorrectOperationException {
         return null;
     }
 
-    @Nonnull
     @Override
     public String getNamespace() {
         return "";
     }
 
-    @Nonnull
     @Override
     @RequiredReadAction
     public String getLocalName() {
@@ -167,7 +157,6 @@ public class JSXmlLiteralExpressionImpl extends JSExpressionImpl implements JSLi
         return null;
     }
 
-    @Nonnull
     @Override
     public XmlAttribute[] getAttributes() {
         return new XmlAttribute[0];
@@ -218,19 +207,16 @@ public class JSXmlLiteralExpressionImpl extends JSExpressionImpl implements JSLi
         return null;
     }
 
-    @Nonnull
     @Override
     public XmlTag[] getSubTags() {
         return new XmlTag[0];
     }
 
-    @Nonnull
     @Override
     public XmlTag[] findSubTags(String qname) {
         return new XmlTag[0];
     }
 
-    @Nonnull
     @Override
     public XmlTag[] findSubTags(String localName, @Nullable String namespace) {
         return new XmlTag[0];
@@ -242,13 +228,11 @@ public class JSXmlLiteralExpressionImpl extends JSExpressionImpl implements JSLi
         return null;
     }
 
-    @Nonnull
     @Override
     public String getNamespacePrefix() {
         return "";
     }
 
-    @Nonnull
     @Override
     public String getNamespaceByPrefix(String prefix) {
         return "";
@@ -270,7 +254,6 @@ public class JSXmlLiteralExpressionImpl extends JSExpressionImpl implements JSLi
         return false;
     }
 
-    @Nonnull
     @Override
     public Map<String, String> getLocalNamespaceDeclarations() {
         return Collections.emptyMap();
@@ -282,7 +265,6 @@ public class JSXmlLiteralExpressionImpl extends JSExpressionImpl implements JSLi
         return 0;
     }
 
-    @Nonnull
     @Override
     public XmlTagValue getValue() {
         return new LightXmlValue(getManager(), getLanguage());

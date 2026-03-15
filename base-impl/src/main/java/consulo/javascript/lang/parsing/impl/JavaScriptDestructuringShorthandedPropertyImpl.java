@@ -7,7 +7,6 @@ import com.intellij.lang.javascript.psi.JSVariable;
 import com.intellij.lang.javascript.psi.impl.JSElementImpl;
 import consulo.annotation.access.RequiredReadAction;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
@@ -19,11 +18,10 @@ public class JavaScriptDestructuringShorthandedPropertyImpl extends JSElementImp
     }
 
     @Override
-    protected void accept(@Nonnull JSElementVisitor visitor) {
+    protected void accept(JSElementVisitor visitor) {
         visitor.visitJSElement(this);
     }
 
-    @Nonnull
     @Override
     @RequiredReadAction
     public JSVariable getVariable() {

@@ -12,7 +12,6 @@ import consulo.language.editor.inspection.InspectionToolState;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.util.PsiTreeUtil;
 import consulo.localize.LocalizeValue;
-import jakarta.annotation.Nonnull;
 
 @ExtensionImpl
 public class FunctionNamingConventionJSInspection extends ConventionInspection {
@@ -23,19 +22,16 @@ public class FunctionNamingConventionJSInspection extends ConventionInspection {
         return false;
     }
 
-    @Nonnull
     @Override
     public InspectionToolState<?> createStateProvider() {
         return new FunctionNamingConventionJSInspectionState();
     }
 
-    @Nonnull
     @Override
     public LocalizeValue getDisplayName() {
         return InspectionJSLocalize.functionNamingConventionDisplayName();
     }
 
-    @Nonnull
     @Override
     public LocalizeValue getGroupDisplayName() {
         return JSGroupNames.NAMING_CONVENTIONS_GROUP_NAME;

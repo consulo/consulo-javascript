@@ -29,8 +29,7 @@ import consulo.language.icon.IconDescriptor;
 import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.ui.image.Image;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author VISTALL
@@ -40,7 +39,7 @@ import jakarta.annotation.Nullable;
 public class JavaScriptIconDescriptorUpdater implements IconDescriptorUpdater {
     @RequiredReadAction
     @Override
-    public void updateIcon(@Nonnull IconDescriptor iconDescriptor, @Nonnull PsiElement element, int flags) {
+    public void updateIcon(IconDescriptor iconDescriptor, PsiElement element, int flags) {
         if (element instanceof JSProperty) {
             if (element instanceof JSFunction && ((JSFunction)element).isGetProperty()) {
                 iconDescriptor.setMainIcon(PlatformIconGroup.nodesPropertyread());

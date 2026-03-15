@@ -19,7 +19,6 @@ package com.intellij.lang.javascript.types;
 
 import java.io.IOException;
 
-import jakarta.annotation.Nonnull;
 
 import consulo.annotation.access.RequiredReadAction;
 import consulo.language.ast.ASTNode;
@@ -44,31 +43,29 @@ public class JSAttributeElementType extends JSStubElementType<JSAttributeStub, J
         super("ATTRIBUTE");
     }
 
-    @Nonnull
     @Override
-    public PsiElement createElement(@Nonnull ASTNode astNode) {
+    public PsiElement createElement(ASTNode astNode) {
         return new JSAttributeImpl(astNode);
     }
 
     @Override
-    public JSAttribute createPsi(@Nonnull JSAttributeStub stub) {
+    public JSAttribute createPsi(JSAttributeStub stub) {
         return new JSAttributeImpl(stub);
     }
 
     @RequiredReadAction
     @Override
-    public JSAttributeStub createStub(@Nonnull JSAttribute psi, StubElement parentStub) {
+    public JSAttributeStub createStub(JSAttribute psi, StubElement parentStub) {
         return new JSAttributeStubImpl(psi.getName(), 0, parentStub);
     }
 
     @Override
-    public void serialize(@Nonnull JSAttributeStub stub, @Nonnull StubOutputStream dataStream) throws IOException {
+    public void serialize(JSAttributeStub stub, StubOutputStream dataStream) throws IOException {
         dataStream.writeName(stub.getName());
     }
 
-    @Nonnull
     @Override
-    public JSAttributeStub deserialize(@Nonnull StubInputStream dataStream, StubElement parentStub) throws IOException {
+    public JSAttributeStub deserialize(StubInputStream dataStream, StubElement parentStub) throws IOException {
         StringRef name = dataStream.readName();
         return new JSAttributeStubImpl(StringRef.toString(name), 0, parentStub);
     }

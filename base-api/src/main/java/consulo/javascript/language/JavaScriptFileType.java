@@ -28,8 +28,7 @@ import consulo.module.Module;
 import consulo.ui.image.Image;
 import consulo.virtualFileSystem.VirtualFile;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author max
@@ -43,30 +42,25 @@ public class JavaScriptFileType extends LanguageFileType implements JavaScriptFi
     }
 
     @Override
-    @Nonnull
     public String getId() {
         return "JavaScript";
     }
 
     @Override
-    @Nonnull
     public LocalizeValue getDescription() {
         return JavaScriptLocalize.javascriptFiletypeDescription();
     }
 
     @Override
-    @Nonnull
     public String getDefaultExtension() {
         return "js";
     }
 
-    @Nonnull
     @Override
     public Image getIcon() {
         return JavaScriptIconGroup.javascript();
     }
 
-    @Nonnull
     @Override
     @RequiredReadAction
     public LanguageVersion getLanguageVersion(@Nullable Module module, @Nullable VirtualFile virtualFile) {

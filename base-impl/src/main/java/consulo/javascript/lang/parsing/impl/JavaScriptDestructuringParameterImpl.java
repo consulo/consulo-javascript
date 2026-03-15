@@ -12,10 +12,8 @@ import consulo.language.psi.PsiElement;
 import consulo.language.psi.resolve.PsiScopeProcessor;
 import consulo.language.psi.resolve.ResolveState;
 import consulo.language.util.IncorrectOperationException;
-import org.jetbrains.annotations.NonNls;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author VISTALL
@@ -29,10 +27,10 @@ public class JavaScriptDestructuringParameterImpl extends JSElementImpl implemen
     @Override
     @RequiredReadAction
     public boolean processDeclarations(
-        @Nonnull PsiScopeProcessor processor,
-        @Nonnull ResolveState state,
+        PsiScopeProcessor processor,
+        ResolveState state,
         PsiElement lastParent,
-        @Nonnull PsiElement place
+        PsiElement place
     ) {
         JSDestructuringObject destructuringObject = getDestructuringObject();
         if (destructuringObject == null) {
@@ -53,7 +51,7 @@ public class JavaScriptDestructuringParameterImpl extends JSElementImpl implemen
     }
 
     @Override
-    protected void accept(@Nonnull JSElementVisitor visitor) {
+    protected void accept(JSElementVisitor visitor) {
         visitor.visitJSElement(this);
     }
 
@@ -109,7 +107,6 @@ public class JavaScriptDestructuringParameterImpl extends JSElementImpl implemen
 
     }
 
-    @Nonnull
     @Override
     public JavaScriptType getType() {
         return JavaScriptType.UNKNOWN;
@@ -164,7 +161,7 @@ public class JavaScriptDestructuringParameterImpl extends JSElementImpl implemen
 
     @RequiredWriteAction
     @Override
-    public PsiElement setName(@Nonnull @NonNls String name) throws IncorrectOperationException {
+    public PsiElement setName(String name) throws IncorrectOperationException {
         return null;
     }
 }

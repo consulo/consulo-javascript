@@ -8,7 +8,6 @@ import consulo.annotation.access.RequiredReadAction;
 import consulo.javascript.language.psi.JavaScriptType;
 import consulo.language.ast.ASTNode;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
@@ -24,21 +23,19 @@ public class JavaScriptSpreadExpressionImpl extends JSElementImpl implements JSS
         return findNotNullChildByClass(JSExpression.class);
     }
 
-    @Nonnull
     @Override
     public JSExpression replace(JSExpression other) {
         return this;
     }
 
     @RequiredReadAction
-    @Nonnull
     @Override
     public JavaScriptType getType() {
         return JavaScriptType.UNKNOWN;
     }
 
     @Override
-    protected void accept(@Nonnull JSElementVisitor visitor) {
+    protected void accept(JSElementVisitor visitor) {
         visitor.visitJSElement(this);
     }
 }

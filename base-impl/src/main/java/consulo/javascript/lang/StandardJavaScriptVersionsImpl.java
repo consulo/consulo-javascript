@@ -8,8 +8,7 @@ import consulo.javascript.language.StandardJavaScriptVersion;
 import consulo.javascript.language.StandardJavaScriptVersions;
 import consulo.language.version.LanguageVersion;
 import consulo.util.lang.StringUtil;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import jakarta.inject.Singleton;
 
 import java.util.ArrayList;
@@ -22,7 +21,6 @@ import java.util.List;
 @Singleton
 @ServiceImpl
 public class StandardJavaScriptVersionsImpl extends StandardJavaScriptVersions {
-    @Nonnull
     public JavaScriptLanguageVersion getDefaultVersion() {
         LanguageVersion[] versions = JavaScriptLanguage.INSTANCE.getVersions();
         for (LanguageVersion version : versions) {
@@ -33,7 +31,6 @@ public class StandardJavaScriptVersionsImpl extends StandardJavaScriptVersions {
         return JavaScript15LanguageVersion.getInstance();
     }
 
-    @Nonnull
     public List<JavaScriptLanguageVersion> getValidLanguageVersions() {
         List<JavaScriptLanguageVersion> list = new ArrayList<>();
         LanguageVersion[] versions = JavaScriptLanguage.INSTANCE.getVersions();
@@ -47,7 +44,6 @@ public class StandardJavaScriptVersionsImpl extends StandardJavaScriptVersions {
         return list;
     }
 
-    @Nonnull
     public JavaScriptLanguageVersion findVersionById(@Nullable String id) {
         if (StringUtil.isEmpty(id)) {
             return getDefaultVersion();

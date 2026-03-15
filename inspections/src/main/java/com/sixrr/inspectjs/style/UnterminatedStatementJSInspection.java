@@ -17,8 +17,7 @@ import consulo.localize.LocalizeValue;
 import consulo.project.Project;
 import consulo.xml.psi.xml.XmlAttributeValue;
 import consulo.xml.psi.xml.XmlTagChild;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 @ExtensionImpl
 public class UnterminatedStatementJSInspection extends JavaScriptInspection {
@@ -30,13 +29,11 @@ public class UnterminatedStatementJSInspection extends JavaScriptInspection {
     private final TerminateStatementFix fix = new TerminateStatementFix();
 
     @Override
-    @Nonnull
     public LocalizeValue getDisplayName() {
         return InspectionJSLocalize.unterminatedStatementDisplayName();
     }
 
     @Override
-    @Nonnull
     public LocalizeValue getGroupDisplayName() {
         return JSGroupNames.STYLE_GROUP_NAME;
     }
@@ -60,7 +57,6 @@ public class UnterminatedStatementJSInspection extends JavaScriptInspection {
 
     private static class TerminateStatementFix extends InspectionJSFix {
         @Override
-        @Nonnull
         public LocalizeValue getName() {
             return InspectionJSLocalize.terminateStatementFix();
         }

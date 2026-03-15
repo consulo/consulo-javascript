@@ -5,7 +5,6 @@ import consulo.javascript.internal.DefaultJavaScriptVersion;
 import consulo.javascript.language.JavaScriptLanguage;
 import jakarta.inject.Inject;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
@@ -13,7 +12,6 @@ import jakarta.annotation.Nonnull;
  */
 @ExtensionImpl
 public class EcmaScript12JavaScriptVersion extends EcmaScript6JavaScriptVersion implements DefaultJavaScriptVersion {
-    @Nonnull
     public static EcmaScript12JavaScriptVersion getInstance() {
         return JavaScriptLanguage.INSTANCE.findVersionByClass(EcmaScript12JavaScriptVersion.class);
     }
@@ -23,7 +21,6 @@ public class EcmaScript12JavaScriptVersion extends EcmaScript6JavaScriptVersion 
         super("ECMASCRIPT_12");
     }
 
-    @Nonnull
     @Override
     public String getPresentableName() {
         return "ECMAScript 12";

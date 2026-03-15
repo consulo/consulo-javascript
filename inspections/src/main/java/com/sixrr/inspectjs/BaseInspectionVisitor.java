@@ -6,8 +6,7 @@ import consulo.language.editor.inspection.*;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiWhiteSpace;
 import consulo.language.psi.util.PsiTreeUtil;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.List;
 
@@ -99,7 +98,7 @@ public abstract class BaseInspectionVisitor<T> extends JSElementVisitor {
         return ProblemHighlightType.GENERIC_ERROR_OR_WARNING;
     }
 
-    protected PsiElement getEditorErrorLocation(@Nonnull PsiElement location) {
+    protected PsiElement getEditorErrorLocation(PsiElement location) {
         return location;
     }
 

@@ -25,11 +25,9 @@ import consulo.language.editor.intention.IntentionMetaData;
 import consulo.language.psi.PsiElement;
 import consulo.language.util.IncorrectOperationException;
 import consulo.localize.LocalizeValue;
-import jakarta.annotation.Nonnull;
 import org.intellij.idea.lang.javascript.intention.JSElementPredicate;
 import org.intellij.idea.lang.javascript.intention.JSIntention;
 import org.intellij.idea.lang.javascript.psiutil.*;
-import org.jetbrains.annotations.NonNls;
 
 import java.util.*;
 
@@ -40,32 +38,25 @@ import java.util.*;
     fileExtensions = "js"
 )
 public class JSReplaceIfWithSwitchIntention extends JSIntention {
-    @NonNls
     private static final String IF_KEYWORD = "if";
-    @NonNls
     private static final String DEFAULT_LABEL_NAME = "Label";
-    @NonNls
     private static final String DEFAULT_CASE_CLAUSE_EXPRESSION = "default: ";
-    @NonNls
     private static final String LABELED_BREAK_STATEMENT_PREFIX = "break ";
-    @NonNls
     private static final String BREAK_STATEMENT = "\nbreak;";
 
     @Override
-    @Nonnull
     public LocalizeValue getText() {
         return JSIntentionLocalize.switchtoifReplaceIfWithSwitch();
     }
 
     @Override
-    @Nonnull
     public JSElementPredicate getElementPredicate() {
         return new IfToSwitchPredicate();
     }
 
     @Override
     @RequiredReadAction
-    public void processIntention(@Nonnull PsiElement element) throws IncorrectOperationException {
+    public void processIntention(PsiElement element) throws IncorrectOperationException {
         JSIfStatement ifStatement = (JSIfStatement)element.getParent();
 
         assert (ifStatement != null);
@@ -338,7 +329,7 @@ public class JSReplaceIfWithSwitchIntention extends JSIntention {
     private static class IfToSwitchPredicate implements JSElementPredicate {
         @Override
         @RequiredReadAction
-        public boolean satisfiedBy(@Nonnull PsiElement element) {
+        public boolean satisfiedBy(PsiElement element) {
             return element.getParent() instanceof JSIfStatement statement
                 && IF_KEYWORD.equals(element.getText())
                 && !ErrorUtil.containsError(statement)

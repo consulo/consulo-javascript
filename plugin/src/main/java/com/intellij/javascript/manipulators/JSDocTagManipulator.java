@@ -21,7 +21,6 @@ import com.intellij.lang.javascript.psi.impl.JSChangeUtil;
 import consulo.annotation.component.ExtensionImpl;
 import consulo.language.psi.PsiElement;
 import consulo.project.Project;
-import jakarta.annotation.Nonnull;
 
 @ExtensionImpl
 public class JSDocTagManipulator extends JSAbstractElementManipulator<JSDocTag> {
@@ -32,7 +31,6 @@ public class JSDocTagManipulator extends JSAbstractElementManipulator<JSDocTag> 
         return ((JSDocComment)element).getTags()[0];
     }
 
-    @Nonnull
     @Override
     public Class<JSDocTag> getElementClass() {
         return JSDocTag.class;

@@ -24,7 +24,6 @@ import consulo.language.ast.ASTNode;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.resolve.ResolveState;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * @author max
@@ -41,16 +40,16 @@ public class JSObjectLiteralExpressionImpl extends JSExpressionImpl implements J
     }
 
     @Override
-    protected void accept(@Nonnull JSElementVisitor visitor) {
+    protected void accept(JSElementVisitor visitor) {
         visitor.visitJSObjectLiteralExpression(this);
     }
 
     @Override
     public boolean processDeclarations(
-        @Nonnull PsiScopeProcessor processor,
-        @Nonnull ResolveState state,
+        PsiScopeProcessor processor,
+        ResolveState state,
         PsiElement lastParent,
-        @Nonnull PsiElement place
+        PsiElement place
     ) {
         if (lastParent == null || !(place instanceof JSProperty)) {
             return true;

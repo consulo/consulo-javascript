@@ -6,7 +6,6 @@ import consulo.language.editor.rawHighlight.HighlightVisitor;
 import consulo.language.editor.rawHighlight.HighlightVisitorFactory;
 import consulo.language.psi.PsiFile;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
@@ -15,11 +14,10 @@ import jakarta.annotation.Nonnull;
 @ExtensionImpl
 public class JavaScriptHighlightVisitorFactory implements HighlightVisitorFactory {
     @Override
-    public boolean suitableForFile(@Nonnull PsiFile psiFile) {
+    public boolean suitableForFile(PsiFile psiFile) {
         return psiFile instanceof JSFile;
     }
 
-    @Nonnull
     @Override
     public HighlightVisitor createVisitor() {
         return new JavaScriptHighlightVisitor();

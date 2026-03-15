@@ -15,19 +15,16 @@ import consulo.language.psi.PsiElement;
 import consulo.language.util.IncorrectOperationException;
 import consulo.localize.LocalizeValue;
 import consulo.project.Project;
-import jakarta.annotation.Nonnull;
 
 @ExtensionImpl
 public class IfStatementWithIdenticalBranchesJSInspection extends JavaScriptInspection {
     private InspectionJSFix fix = new CollapseIfFix();
 
-    @Nonnull
     @Override
     public LocalizeValue getDisplayName() {
         return InspectionJSLocalize.ifStatementWithIdenticalBranchesDisplayName();
     }
 
-    @Nonnull
     @Override
     public LocalizeValue getGroupDisplayName() {
         return JSGroupNames.CONTROL_FLOW_GROUP_NAME;
@@ -45,7 +42,6 @@ public class IfStatementWithIdenticalBranchesJSInspection extends JavaScriptInsp
     }
 
     private static class CollapseIfFix extends InspectionJSFix {
-        @Nonnull
         @Override
         public LocalizeValue getName() {
             return InspectionJSLocalize.collapseIfStatementFix();
@@ -69,7 +65,7 @@ public class IfStatementWithIdenticalBranchesJSInspection extends JavaScriptInsp
 
     private static class IfStatementWithIdenticalBranchesVisitor extends BaseInspectionVisitor {
 
-        @Override public void visitJSIfStatement(@Nonnull JSIfStatement statement) {
+        @Override public void visitJSIfStatement(JSIfStatement statement) {
             super.visitJSIfStatement(statement);
             JSStatement thenBranch = statement.getThen();
             JSStatement elseBranch = statement.getElse();

@@ -8,7 +8,6 @@ import consulo.language.pattern.StandardPatterns;
 import consulo.language.psi.*;
 import consulo.language.util.ProcessingContext;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
@@ -19,9 +18,8 @@ public class JSXmlTagReferenceContributor extends PsiReferenceContributor {
     @Override
     public void registerReferenceProviders(PsiReferenceRegistrar registrar) {
         registrar.registerReferenceProvider(StandardPatterns.psiElement(JSXmlLiteralExpressionImpl.class), new PsiReferenceProvider() {
-            @Nonnull
             @Override
-            public PsiReference[] getReferencesByElement(@Nonnull PsiElement psiElement, @Nonnull ProcessingContext processingContext) {
+            public PsiReference[] getReferencesByElement(PsiElement psiElement, ProcessingContext processingContext) {
                 return PsiReference.EMPTY_ARRAY;
                 // TODO
 //				ASTNode[] children = psiElement.getNode().getChildren(TokenSet.create(JSTokenTypes.XML_NAME));
@@ -34,7 +32,6 @@ public class JSXmlTagReferenceContributor extends PsiReferenceContributor {
         });
     }
 
-    @Nonnull
     @Override
     public Language getLanguage() {
         return JavaScriptLanguage.INSTANCE;

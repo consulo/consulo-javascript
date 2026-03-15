@@ -24,7 +24,6 @@ import consulo.language.icon.IconDescriptorUpdaters;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiNamedElement;
 import consulo.ui.image.Image;
-import jakarta.annotation.Nonnull;
 
 /**
  * @author Maxim.Mossienko
@@ -47,7 +46,7 @@ public class JSStructureItemPresentation extends JSStructureViewElement.JSStruct
     }
 
     @RequiredReadAction
-    public static String getName(@Nonnull PsiElement psiElement) {
+    public static String getName(PsiElement psiElement) {
         if (psiElement instanceof JSObjectLiteralExpression objectLiteral) {
             if (objectLiteral.getParent() instanceof JSAssignmentExpression assignment) {
                 JSDefinitionExpression lOperand = (JSDefinitionExpression)assignment.getLOperand();

@@ -21,8 +21,7 @@ import consulo.annotation.access.RequiredReadAction;
 import consulo.javascript.language.psi.JavaScriptType;
 import consulo.language.psi.PsiElement;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author VISTALL
@@ -36,7 +35,6 @@ public class JavaScriptClassType implements JavaScriptType {
     }
 
     @RequiredReadAction
-    @Nonnull
     @Override
     public String getPresentableText() {
         String name = myClass.getName();

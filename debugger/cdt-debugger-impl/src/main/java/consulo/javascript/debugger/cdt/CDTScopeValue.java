@@ -6,7 +6,6 @@ import com.github.kklisura.cdt.protocol.types.runtime.RemoteObject;
 import consulo.execution.debug.frame.XCompositeNode;
 import consulo.execution.debug.frame.XValueGroup;
 import consulo.util.lang.StringUtil;
-import jakarta.annotation.Nonnull;
 
 import java.util.Locale;
 
@@ -15,14 +14,12 @@ import java.util.Locale;
  * @since 2026-02-15
  */
 public class CDTScopeValue extends XValueGroup {
-    @Nonnull
     private final Scope myScope;
-    @Nonnull
     private final RemoteObject myRemoteObject;
     private final CDTProcessBase myProcess;
 
-    public CDTScopeValue(@Nonnull Scope scope,
-                         @Nonnull RemoteObject remoteObject,
+    public CDTScopeValue(Scope scope,
+                         RemoteObject remoteObject,
                          CDTProcessBase process) {
         super(StringUtil.capitalize(scope.getType().name().toLowerCase(Locale.ROOT)));
         myScope = scope;
@@ -31,7 +28,7 @@ public class CDTScopeValue extends XValueGroup {
     }
 
     @Override
-    public void computeChildren(@Nonnull XCompositeNode node) {
+    public void computeChildren(XCompositeNode node) {
         CDTRemoteObjectValue.fill(myRemoteObject, node, myProcess);
     }
 

@@ -24,7 +24,6 @@ import consulo.language.psi.PsiComment;
 import consulo.language.psi.PsiElement;
 import consulo.language.util.IncorrectOperationException;
 import consulo.localize.LocalizeValue;
-import jakarta.annotation.Nonnull;
 import org.intellij.idea.lang.javascript.intention.JSElementPredicate;
 import org.intellij.idea.lang.javascript.intention.JSMutablyNamedIntention;
 import org.intellij.idea.lang.javascript.psiutil.JSElementFactory;
@@ -36,14 +35,12 @@ import org.intellij.idea.lang.javascript.psiutil.JSElementFactory;
     fileExtensions = "js"
 )
 public class JSRemoveBracesIntention extends JSMutablyNamedIntention {
-    @Nonnull
     @Override
     protected LocalizeValue getBasicText() {
         return JSIntentionLocalize.bracesRemove();
     }
 
     @Override
-    @Nonnull
     protected JSElementPredicate getElementPredicate() {
         return new RemoveBracesPredicate();
     }
@@ -73,7 +70,7 @@ public class JSRemoveBracesIntention extends JSMutablyNamedIntention {
 
     @Override
     @RequiredReadAction
-    protected void processIntention(@Nonnull PsiElement element) throws IncorrectOperationException {
+    protected void processIntention(PsiElement element) throws IncorrectOperationException {
         JSBlockStatement blockStatement = (JSBlockStatement)element;
         JSStatement[] statements = blockStatement.getStatements();
         JSStatement statement = statements[0];
@@ -113,7 +110,7 @@ public class JSRemoveBracesIntention extends JSMutablyNamedIntention {
 
     public static class RemoveBracesPredicate implements JSElementPredicate {
         @Override
-        public boolean satisfiedBy(@Nonnull PsiElement element) {
+        public boolean satisfiedBy(PsiElement element) {
             if (!(element instanceof JSBlockStatement blockStatement)) {
                 return false;
             }

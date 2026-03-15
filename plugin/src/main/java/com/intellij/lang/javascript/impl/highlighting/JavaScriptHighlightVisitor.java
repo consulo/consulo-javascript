@@ -36,15 +36,14 @@ import consulo.language.editor.rawHighlight.HighlightVisitor;
 import consulo.language.psi.*;
 import consulo.language.psi.util.PsiTreeUtil;
 import consulo.util.lang.StringUtil;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 public class JavaScriptHighlightVisitor extends JSElementVisitor implements HighlightVisitor {
     private HighlightInfoHolder myHighlightInfoHolder;
 
     @Override
     @RequiredReadAction
-    public void visitJSBinaryExpression(@Nonnull JSBinaryExpression node) {
+    public void visitJSBinaryExpression(JSBinaryExpression node) {
         super.visitJSBinaryExpression(node);
 
         IElementType operationSign = node.getOperationSign();
@@ -55,7 +54,7 @@ public class JavaScriptHighlightVisitor extends JSElementVisitor implements High
 
     @Override
     @RequiredReadAction
-    public void visitJSAssignmentExpression(@Nonnull JSAssignmentExpression node) {
+    public void visitJSAssignmentExpression(JSAssignmentExpression node) {
         super.visitJSAssignmentExpression(node);
 
         IElementType operationSign = node.getOperationSign();
@@ -90,7 +89,7 @@ public class JavaScriptHighlightVisitor extends JSElementVisitor implements High
 
     @Override
     @RequiredReadAction
-    public void visitJSProperty(@Nonnull JSProperty node) {
+    public void visitJSProperty(JSProperty node) {
         super.visitJSProperty(node);
 
         if (node instanceof JSFunction function) {
@@ -100,7 +99,7 @@ public class JavaScriptHighlightVisitor extends JSElementVisitor implements High
 
     @Override
     @RequiredReadAction
-    public void visitJSLiteralExpression(@Nonnull JSSimpleLiteralExpression node) {
+    public void visitJSLiteralExpression(JSSimpleLiteralExpression node) {
         super.visitJSLiteralExpression(node);
         if (node.getLiteralElementType() == JSTokenTypes.NUMERIC_LITERAL) {
             String text = node.getText();
@@ -114,7 +113,7 @@ public class JavaScriptHighlightVisitor extends JSElementVisitor implements High
     }
 
     @RequiredReadAction
-    private void highlightPropertyName(@Nonnull JSProperty property, @Nonnull PsiElement nameIdentifier) {
+    private void highlightPropertyName(JSProperty property, PsiElement nameIdentifier) {
         JSExpression expression = property.getValue();
         TextAttributesKey type = expression instanceof JSFunctionExpression
             ? JavaScriptSyntaxHighlightKeys.JS_INSTANCE_MEMBER_FUNCTION
@@ -129,7 +128,7 @@ public class JavaScriptHighlightVisitor extends JSElementVisitor implements High
 
     @Override
     @RequiredReadAction
-    public void visitJSAttribute(@Nonnull JSAttribute jsAttribute) {
+    public void visitJSAttribute(JSAttribute jsAttribute) {
         super.visitJSAttribute(jsAttribute);
 
         myHighlightInfoHolder.add(
@@ -143,7 +142,7 @@ public class JavaScriptHighlightVisitor extends JSElementVisitor implements High
 
     @Override
     @RequiredReadAction
-    public void visitJSParameter(@Nonnull JSParameter parameter) {
+    public void visitJSParameter(JSParameter parameter) {
         super.visitJSParameter(parameter);
 
         JSExpression initializer = parameter.getInitializer();
@@ -159,7 +158,7 @@ public class JavaScriptHighlightVisitor extends JSElementVisitor implements High
 
     @Override
     @RequiredReadAction
-    public void visitJSReferenceExpression(@Nonnull JSReferenceExpression element) {
+    public void visitJSReferenceExpression(JSReferenceExpression element) {
         super.visitJSReferenceExpression(element);
 
         PsiElement parent = element.getParent();
@@ -191,7 +190,7 @@ public class JavaScriptHighlightVisitor extends JSElementVisitor implements High
 
     @Override
     @RequiredReadAction
-    public void visitJSPrefixExpression(@Nonnull JSPrefixExpression expression) {
+    public void visitJSPrefixExpression(JSPrefixExpression expression) {
         super.visitJSPrefixExpression(expression);
 
         if (expression.getOperationSign() == JSTokenTypes.DOT_DOT_DOT) {
@@ -202,7 +201,7 @@ public class JavaScriptHighlightVisitor extends JSElementVisitor implements High
     }
 
     @RequiredReadAction
-    private void addElementHighlight(@Nonnull PsiElement resolvedElement, @Nonnull PsiElement targetForHighlight) {
+    private void addElementHighlight(PsiElement resolvedElement, PsiElement targetForHighlight) {
         boolean isStatic = false;
         boolean isMethod = false;
         boolean isFunction = false;
@@ -276,7 +275,7 @@ public class JavaScriptHighlightVisitor extends JSElementVisitor implements High
 
     @Nullable
     @RequiredReadAction
-    private static HighlightInfo buildHighlightForVariable(@Nonnull PsiElement element, @Nonnull PsiElement markerAddTo) {
+    private static HighlightInfo buildHighlightForVariable(PsiElement element, PsiElement markerAddTo) {
         TextAttributesKey type;
 
         if (element instanceof JSParameter) {
@@ -304,7 +303,7 @@ public class JavaScriptHighlightVisitor extends JSElementVisitor implements High
     }
 
     @RequiredReadAction
-    private void reportFeatureUsage(@Nonnull PsiElement element, @Nonnull JavaScriptFeature javaScriptFeature) {
+    private void reportFeatureUsage(PsiElement element, JavaScriptFeature javaScriptFeature) {
         if (JavaScriptVersionUtil.containsFeature(element, javaScriptFeature)) {
             return;
         }
@@ -318,16 +317,16 @@ public class JavaScriptHighlightVisitor extends JSElementVisitor implements High
     }
 
     @Override
-    public void visit(@Nonnull PsiElement element) {
+    public void visit(PsiElement element) {
         element.acceptChildren(this);
     }
 
     @Override
     public boolean analyze(
-        @Nonnull PsiFile psiFile,
+        PsiFile psiFile,
         boolean b,
-        @Nonnull HighlightInfoHolder highlightInfoHolder,
-        @Nonnull Runnable runnable
+        HighlightInfoHolder highlightInfoHolder,
+        Runnable runnable
     ) {
         myHighlightInfoHolder = highlightInfoHolder;
         runnable.run();

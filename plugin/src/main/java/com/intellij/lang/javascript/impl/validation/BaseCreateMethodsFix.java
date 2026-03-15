@@ -32,7 +32,6 @@ import consulo.language.psi.PsiWhiteSpace;
 import consulo.language.util.IncorrectOperationException;
 import consulo.project.Project;
 import consulo.util.lang.StringUtil;
-import jakarta.annotation.Nonnull;
 
 import java.util.*;
 
@@ -50,7 +49,7 @@ public abstract class BaseCreateMethodsFix<T extends JSNamedElement & JSAttribut
     }
 
     @RequiredWriteAction
-    public void invoke(@Nonnull Project project, Editor editor, PsiFile file) throws IncorrectOperationException {
+    public void invoke(Project project, Editor editor, PsiFile file) throws IncorrectOperationException {
         evalAnchor(editor, file);
         for (T e : getElementsToProcess()) {
             anchor = doAddOneMethod(project, buildFunctionText(e), anchor);

@@ -15,23 +15,19 @@ import consulo.language.ast.IElementType;
 import consulo.language.editor.inspection.InspectionToolState;
 import consulo.language.psi.PsiElement;
 import consulo.localize.LocalizeValue;
-import jakarta.annotation.Nonnull;
 
 @ExtensionImpl
 public class OverlyComplexBooleanExpressionJSInspection extends JavaScriptInspection {
-    @Nonnull
     @Override
     public LocalizeValue getDisplayName() {
         return InspectionJSLocalize.overlyComplexBooleanExpressionDisplayName();
     }
 
-    @Nonnull
     @Override
     public LocalizeValue getGroupDisplayName() {
         return JSGroupNames.CONFUSING_GROUP_NAME;
     }
 
-    @Nonnull
     @Override
     public InspectionToolState<?> createStateProvider() {
         return new OverlyComplexBooleanExpressionJSInspectionState();
@@ -56,13 +52,13 @@ public class OverlyComplexBooleanExpressionJSInspection extends JavaScriptInspec
     private class Visitor extends BaseInspectionVisitor<OverlyComplexBooleanExpressionJSInspectionState> {
 
         @Override
-        public void visitJSBinaryExpression(@Nonnull JSBinaryExpression expression) {
+        public void visitJSBinaryExpression(JSBinaryExpression expression) {
             super.visitJSBinaryExpression(expression);
             checkExpression(expression);
         }
 
         @Override
-        public void visitJSPrefixExpression(@Nonnull JSPrefixExpression expression) {
+        public void visitJSPrefixExpression(JSPrefixExpression expression) {
             super.visitJSPrefixExpression(expression);
             checkExpression(expression);
         }

@@ -19,7 +19,6 @@ package com.intellij.lang.javascript.types;
 
 import java.io.IOException;
 
-import jakarta.annotation.Nonnull;
 
 import consulo.annotation.access.RequiredReadAction;
 import com.intellij.lang.javascript.JSElementTypes;
@@ -67,20 +66,19 @@ public class JSVariableElementType extends JSQualifiedStubElementType<JSVariable
             || discriminatingParentType instanceof JSFileElementType;
     }
 
-    @Nonnull
     @Override
-    public PsiElement createElement(@Nonnull ASTNode astNode) {
+    public PsiElement createElement(ASTNode astNode) {
         return new JSVariableImpl(astNode);
     }
 
     @Override
-    public JSVariable createPsi(@Nonnull JSVariableStub stub) {
+    public JSVariable createPsi(JSVariableStub stub) {
         return new JSVariableImpl(stub);
     }
 
     @RequiredReadAction
     @Override
-    public JSVariableStub createStub(@Nonnull JSVariable psi, StubElement parentStub) {
+    public JSVariableStub createStub(JSVariable psi, StubElement parentStub) {
         String name = psi.getName();
         int flags = JSVariableStubImpl.buildFlags(psi);
         String typeString = psi.getTypeString();
@@ -90,7 +88,7 @@ public class JSVariableElementType extends JSQualifiedStubElementType<JSVariable
     }
 
     @Override
-    public void serialize(@Nonnull JSVariableStub stub, @Nonnull StubOutputStream dataStream) throws IOException {
+    public void serialize(JSVariableStub stub, StubOutputStream dataStream) throws IOException {
         dataStream.writeName(stub.getName());
         dataStream.writeVarInt(stub.getFlags());
         dataStream.writeName(stub.getTypeString());
@@ -98,9 +96,8 @@ public class JSVariableElementType extends JSQualifiedStubElementType<JSVariable
         dataStream.writeName(stub.getQualifiedName());
     }
 
-    @Nonnull
     @Override
-    public JSVariableStub deserialize(@Nonnull StubInputStream dataStream, StubElement parentStub) throws IOException {
+    public JSVariableStub deserialize(StubInputStream dataStream, StubElement parentStub) throws IOException {
         StringRef nameRef = dataStream.readName();
         int flags = dataStream.readVarInt();
         StringRef typeRef = dataStream.readName();

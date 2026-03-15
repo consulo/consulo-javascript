@@ -33,9 +33,7 @@ import consulo.language.psi.meta.PsiMetaData;
 import consulo.util.lang.StringUtil;
 import consulo.xml.psi.html.HtmlTag;
 import consulo.xml.psi.xml.*;
-import org.jetbrains.annotations.NonNls;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * @author Maxim.Mossienko
@@ -43,15 +41,13 @@ import jakarta.annotation.Nonnull;
  * Time: 8:40:38 PM
  */
 public abstract class JSLanguageInjector implements MultiHostInjector {
-    @NonNls
     private static final String JAVASCRIPT_PREFIX = "javascript:";
-    @NonNls
     public static final String JSP_URI = "http://java.sun.com/JSP/Page";
 
     private static final NamedPointer<Language> CSS_LANGUAGE = LanguagePointerUtil.createPointer("CSS");
 
     @Override
-    public void injectLanguages(@Nonnull MultiHostRegistrar registrar, @Nonnull PsiElement host) {
+    public void injectLanguages(MultiHostRegistrar registrar, PsiElement host) {
         if (host instanceof XmlAttributeValue attributeValue) {
             PsiElement attribute = attributeValue.getParent();
             PsiElement tag = attribute.getParent();
@@ -60,7 +56,7 @@ public abstract class JSLanguageInjector implements MultiHostInjector {
                 if (attributeValue.getTextLength() == 0) {
                     return;
                 }
-                @NonNls String attrName = xmlAttribute.getName();
+                String attrName = xmlAttribute.getName();
                 if (tag instanceof HtmlTag) {
                     attrName = attrName.toLowerCase();
                 }
@@ -116,10 +112,10 @@ public abstract class JSLanguageInjector implements MultiHostInjector {
             }
         }
         else if (host instanceof XmlText && host.getParent() instanceof XmlTag tag) {
-            @NonNls String localName = tag.getLocalName();
+            String localName = tag.getLocalName();
 
             if ("attribute".equals(localName) && JSP_URI.equals(tag.getNamespace())) {
-                @NonNls String name = tag.getAttributeValue("name");
+                String name = tag.getAttributeValue("name");
                 if (name != null && name.startsWith("on")) {
                     Language language = JavaScriptLanguage.INSTANCE;
                     injectToXmlText(registrar, host, language, null, null);
@@ -161,8 +157,8 @@ public abstract class JSLanguageInjector implements MultiHostInjector {
                     //|| (property = ("property".equals(localName) && tag.getSubTags().length == 0))
                     || (constructor = "constructor".equals(localName)))
                     && isMozillaXulOrXblNs(tag.getNamespace())) {
-                    @NonNls String prefix = null;
-                    @NonNls String suffix = null;
+                    String prefix = null;
+                    String suffix = null;
 
                     if (getter || setter) {
                         String name = getNameFromTag(tag.getParentTag(), "property");
@@ -233,11 +229,11 @@ public abstract class JSLanguageInjector implements MultiHostInjector {
         registrar.startInjecting(language).addPlace(prefix, suffix, (PsiLanguageInjectionHost)host, range).doneInjecting();
     }
 
-    private static String getNameFromTag(XmlTag parentTag, @NonNls String s) {
+    private static String getNameFromTag(XmlTag parentTag, String s) {
         return parentTag != null && s.equals(parentTag.getLocalName()) ? parentTag.getAttributeValue("name") : "";
     }
 
-    public static boolean isMozillaXulOrXblNs(@NonNls String ns) {
+    public static boolean isMozillaXulOrXblNs(String ns) {
         return "http://www.mozilla.org/xbl".equals(ns) || "http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul".equals(ns);
     }
 
@@ -336,8 +332,8 @@ public abstract class JSLanguageInjector implements MultiHostInjector {
             if (type == null) {
                 type = "*";
             }
-            @NonNls String prefix = "(function (event:" + type + ") {";
-            @NonNls String suffix = "})();";
+            String prefix = "(function (event:" + type + ") {";
+            String suffix = "})();";
 
             if (host instanceof XmlText) {
                 injectToXmlText(registrar, host, JavaScriptSupportLoader.ECMA_SCRIPT_L4, prefix, suffix);

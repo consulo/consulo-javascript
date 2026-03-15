@@ -21,7 +21,6 @@ import consulo.annotation.access.RequiredReadAction;
 import consulo.language.psi.PsiNamedElement;
 import consulo.language.psi.StubBasedPsiElement;
 import consulo.util.collection.ArrayFactory;
-import jakarta.annotation.Nonnull;
 
 /**
  * @author Maxim.Mossienko
@@ -30,7 +29,6 @@ public interface JSAttribute extends JSElement, PsiNamedElement, StubBasedPsiEle
     JSAttribute[] EMPTY_ARRAY = new JSAttribute[0];
 
     ArrayFactory<JSAttribute> ARRAY_FACTORY = new ArrayFactory<>() {
-        @Nonnull
         @Override
         public JSAttribute[] create(int count) {
             return count == 0 ? EMPTY_ARRAY : new JSAttribute[count];

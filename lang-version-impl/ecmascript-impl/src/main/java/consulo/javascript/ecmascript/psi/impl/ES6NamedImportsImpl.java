@@ -10,7 +10,6 @@ import consulo.language.psi.PsiElement;
 import consulo.language.psi.resolve.PsiScopeProcessor;
 import consulo.language.psi.resolve.ResolveState;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
@@ -22,16 +21,16 @@ public class ES6NamedImportsImpl extends JSElementImpl implements ES6NamedImport
     }
 
     @Override
-    protected void accept(@Nonnull JSElementVisitor visitor) {
+    protected void accept(JSElementVisitor visitor) {
         visitor.visitJSElement(this);
     }
 
     @Override
     public boolean processDeclarations(
-        @Nonnull PsiScopeProcessor processor,
-        @Nonnull ResolveState state,
+        PsiScopeProcessor processor,
+        ResolveState state,
         PsiElement lastParent,
-        @Nonnull PsiElement place
+        PsiElement place
     ) {
         for (PsiElement child : getChildren()) {
             if (!child.processDeclarations(processor, state, lastParent, place)) {
@@ -42,7 +41,6 @@ public class ES6NamedImportsImpl extends JSElementImpl implements ES6NamedImport
     }
 
     @RequiredReadAction
-    @Nonnull
     @Override
     public ES6ImportedBinding[] getBindings() {
         return findChildrenByClass(ES6ImportedBinding.class);

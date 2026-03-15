@@ -16,8 +16,7 @@
 
 package com.intellij.lang.javascript.impl.flex.importer;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author Maxim.Mossienko
@@ -31,12 +30,12 @@ class AbcDumper extends AbstractDumpProcessor {
     }
 
     @Override
-    public void dumpStat(@Nonnull String stat) {
+    public void dumpStat(String stat) {
         sb.append(stat);
     }
 
     @Override
-    public void hasError(@Nonnull String error) {
+    public void hasError(String error) {
         sb.append(error);
     }
 
@@ -48,7 +47,7 @@ class AbcDumper extends AbstractDumpProcessor {
 
     @Override
     public void processMultinameAsPackageName(
-        @Nonnull Multiname name,
+        Multiname name,
         @Nullable String parentName,
         boolean referenceNameRequested
     ) {
@@ -56,19 +55,19 @@ class AbcDumper extends AbstractDumpProcessor {
     }
 
     @Override
-    public void dumpToplevelAnonymousMethod(@Nonnull Abc abc, @Nonnull MethodInfo m) {
+    public void dumpToplevelAnonymousMethod(Abc abc, MethodInfo m) {
         m.dump(abc, "", "", this);
     }
 
     @Override
-    public void dumpTopLevelTraits(@Nonnull Abc abc, @Nonnull Traits t, String indent) {
+    public void dumpTopLevelTraits(Abc abc, Traits t, String indent) {
         sb.append(indent).append(t.name).append("\n");
         t.dump(abc, indent, "", this);
         t.init.dump(abc, indent, "", this);
     }
 
     @Override
-    public boolean doDumpMember(@Nonnull MemberInfo memberInfo) {
+    public boolean doDumpMember(MemberInfo memberInfo) {
         return true;
     }
 
@@ -93,13 +92,13 @@ class AbcDumper extends AbstractDumpProcessor {
     }
 
     @Override
-    public boolean doDumpMetaData(@Nonnull MetaData md) {
+    public boolean doDumpMetaData(MetaData md) {
         return true;
     }
 
     @Override
     public void processParameter(
-        @Nonnull String name,
+        String name,
         @Nullable Multiname type,
         String parentName,
         @Nullable Multiname value,

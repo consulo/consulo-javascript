@@ -20,7 +20,6 @@ import com.intellij.lang.javascript.psi.JSAssignmentExpression;
 import com.intellij.lang.javascript.psi.JSElementVisitor;
 import consulo.language.ast.ASTNode;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * @author max
@@ -32,7 +31,7 @@ public class JSAssignmentExpressionImpl extends JSBinaryExpressionImpl implement
     }
 
     @Override
-    protected void accept(@Nonnull JSElementVisitor visitor) {
+    protected void accept(JSElementVisitor visitor) {
         visitor.visitJSAssignmentExpression(this);
     }
 }

@@ -8,9 +8,8 @@ import consulo.language.Language;
 import consulo.language.ast.IElementType;
 import consulo.language.lexer.Lexer;
 import consulo.xml.lang.HtmlScriptContentProvider;
-import jakarta.annotation.Nonnull;
 
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author VISTALL
@@ -29,7 +28,6 @@ public class JavaScriptHtmlScriptContentProvider implements HtmlScriptContentPro
         return new JavaScript15Lexer();
     }
 
-    @Nonnull
     @Override
     public Language getLanguage() {
         return JavaScriptLanguage.INSTANCE;

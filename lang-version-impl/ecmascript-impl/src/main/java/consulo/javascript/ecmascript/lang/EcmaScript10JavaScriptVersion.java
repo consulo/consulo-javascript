@@ -3,7 +3,6 @@ package consulo.javascript.ecmascript.lang;
 import consulo.annotation.component.ExtensionImpl;
 import jakarta.inject.Inject;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
@@ -16,7 +15,6 @@ public class EcmaScript10JavaScriptVersion extends EcmaScript6JavaScriptVersion 
         super("ECMASCRIPT_10");
     }
 
-    @Nonnull
     @Override
     public String getPresentableName() {
         return "ECMAScript 10";

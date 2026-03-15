@@ -21,21 +21,17 @@ import consulo.language.psi.PsiElement;
 import consulo.language.util.IncorrectOperationException;
 import consulo.localize.LocalizeValue;
 import consulo.project.Project;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
-import org.jetbrains.annotations.NonNls;
+import org.jspecify.annotations.Nullable;
 
 @ExtensionImpl
 public class NegatedIfStatementJSInspection extends JavaScriptInspection {
     private final NegatedIfElseFix fix = new NegatedIfElseFix();
 
-    @Nonnull
     @Override
     public LocalizeValue getDisplayName() {
         return InspectionJSLocalize.negatedIfStatementDisplayName();
     }
 
-    @Nonnull
     @Override
     public LocalizeValue getGroupDisplayName() {
         return JSGroupNames.CONFUSING_GROUP_NAME;
@@ -59,7 +55,6 @@ public class NegatedIfStatementJSInspection extends JavaScriptInspection {
     }
 
     private static class NegatedIfElseFix extends InspectionJSFix {
-        @Nonnull
         @Override
         public LocalizeValue getName() {
             return InspectionJSLocalize.invertIfConditionFix();
@@ -83,7 +78,7 @@ public class NegatedIfStatementJSInspection extends JavaScriptInspection {
                     elseText += '\n';
                 }
             }
-            @NonNls String newStatement = "if(" + negatedCondition + ')' + elseText + " else " + thenBranch.getText();
+            String newStatement = "if(" + negatedCondition + ')' + elseText + " else " + thenBranch.getText();
             replaceStatement(ifStatement, newStatement);
         }
     }

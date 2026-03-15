@@ -21,8 +21,7 @@ import consulo.javascript.language.psi.JavaScriptType;
 import consulo.javascript.language.psi.JavaScriptTypeElement;
 import consulo.util.collection.ArrayFactory;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author max
@@ -54,7 +53,6 @@ public interface JSFunction extends JSQualifiedNamedElement, JSSourceElement, JS
         return false;
     }
 
-    @Nonnull
     JavaScriptType getReturnType();
 
     String getReturnTypeString();
@@ -69,7 +67,6 @@ public interface JSFunction extends JSQualifiedNamedElement, JSSourceElement, JS
         SIMPLE
     }
 
-    @Nonnull
     @RequiredReadAction
     default FunctionKind getKind() {
         if (isGetProperty()) {

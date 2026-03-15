@@ -19,7 +19,6 @@ package com.intellij.lang.javascript.types;
 
 import java.io.IOException;
 
-import jakarta.annotation.Nonnull;
 
 import consulo.annotation.access.RequiredReadAction;
 import com.intellij.lang.javascript.psi.JSPackageStatement;
@@ -44,34 +43,32 @@ public class JSPackageStatementElementType extends JSStubElementType<JSPackageSt
         super("PACKAGE_STATEMENT");
     }
 
-    @Nonnull
     @Override
-    public PsiElement createElement(@Nonnull ASTNode astNode) {
+    public PsiElement createElement(ASTNode astNode) {
         return new JSPackageStatementImpl(astNode);
     }
 
     @Override
-    public JSPackageStatement createPsi(@Nonnull JSPackageStatementStub stub) {
+    public JSPackageStatement createPsi(JSPackageStatementStub stub) {
         return new JSPackageStatementImpl(stub);
     }
 
     @RequiredReadAction
     @Override
-    public JSPackageStatementStub createStub(@Nonnull JSPackageStatement psi, StubElement parentStub) {
+    public JSPackageStatementStub createStub(JSPackageStatement psi, StubElement parentStub) {
         String name = psi.getName();
         String qualifiedName = psi.getQualifiedName();
         return new JSPackageStatementStubImpl(name, qualifiedName, parentStub, this);
     }
 
     @Override
-    public void serialize(@Nonnull JSPackageStatementStub stub, @Nonnull StubOutputStream dataStream) throws IOException {
+    public void serialize(JSPackageStatementStub stub, StubOutputStream dataStream) throws IOException {
         dataStream.writeName(stub.getName());
         dataStream.writeName(stub.getQualifiedName());
     }
 
-    @Nonnull
     @Override
-    public JSPackageStatementStub deserialize(@Nonnull StubInputStream dataStream, StubElement parentStub) throws IOException {
+    public JSPackageStatementStub deserialize(StubInputStream dataStream, StubElement parentStub) throws IOException {
         StringRef nameRef = dataStream.readName();
         StringRef qualifiedRef = dataStream.readName();
         return new JSPackageStatementStubImpl(StringRef.toString(nameRef), StringRef.toString(qualifiedRef), parentStub, this);

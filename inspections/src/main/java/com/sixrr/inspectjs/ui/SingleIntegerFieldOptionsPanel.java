@@ -9,10 +9,9 @@ import javax.swing.text.Document;
 import java.awt.*;
 import java.text.NumberFormat;
 
-import org.jetbrains.annotations.NonNls;
 
 public class SingleIntegerFieldOptionsPanel extends JPanel {
-    public SingleIntegerFieldOptionsPanel(String labelString, final BaseInspection owner, @NonNls final String property) {
+    public SingleIntegerFieldOptionsPanel(String labelString, final BaseInspection owner, final String property) {
         super(new GridBagLayout());
         JLabel label = new JLabel(labelString);
         NumberFormat formatter = NumberFormat.getIntegerInstance();

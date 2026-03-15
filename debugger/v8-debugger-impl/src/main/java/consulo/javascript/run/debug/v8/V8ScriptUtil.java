@@ -24,7 +24,6 @@ import consulo.language.file.light.LightVirtualFile;
 import consulo.util.dataholder.Key;
 import org.chromium.sdk.Script;
 
-import jakarta.annotation.Nonnull;
 import java.io.File;
 
 /**
@@ -35,8 +34,7 @@ public class V8ScriptUtil
 {
 	private static final Key<Object> SOME_VALUE_TO_EQUALS = Key.create("some-value-to-equals");
 
-	@Nonnull
-	public static VirtualFile toVirtualFile(@Nonnull Script value, boolean toOpen)
+	public static VirtualFile toVirtualFile(Script value, boolean toOpen)
 	{
 		String scriptName = value.getName();
 		assert scriptName != null;

@@ -1,6 +1,5 @@
 package com.sixrr.inspectjs.dataflow;
 
-import jakarta.annotation.Nonnull;
 
 import com.intellij.lang.javascript.psi.JSElement;
 import com.intellij.lang.javascript.psi.JSReferenceExpression;
@@ -10,23 +9,22 @@ import com.sixrr.inspectjs.JSRecursiveElementVisitor;
 
 public class VariableUsedVisitor extends JSRecursiveElementVisitor {
     private boolean used = false;
-    @Nonnull
     private final JSVariable variable;
 
-    public VariableUsedVisitor(@Nonnull JSVariable variable) {
+    public VariableUsedVisitor(JSVariable variable) {
         super();
         this.variable = variable;
     }
 
     @Override
-    public void visitElement(@Nonnull PsiElement element) {
+    public void visitElement(PsiElement element) {
         if (!used) {
             super.visitElement(element);
         }
     }
 
     @Override
-    public void visitJSReferenceExpression(@Nonnull JSReferenceExpression ref) {
+    public void visitJSReferenceExpression(JSReferenceExpression ref) {
         if (used) {
             return;
         }

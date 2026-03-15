@@ -9,18 +9,15 @@ import consulo.annotation.access.RequiredReadAction;
 import consulo.annotation.component.ExtensionImpl;
 import consulo.language.psi.PsiElement;
 import consulo.localize.LocalizeValue;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 @ExtensionImpl
 public class AssignmentResultUsedJSInspection extends JavaScriptInspection {
-    @Nonnull
     @Override
     public LocalizeValue getDisplayName() {
         return InspectionJSLocalize.resultOfAssignmentUsedDisplayname();
     }
 
-    @Nonnull
     @Override
     public LocalizeValue getGroupDisplayName() {
         return JSGroupNames.ASSIGNMENT_GROUP_NAME;
@@ -40,7 +37,7 @@ public class AssignmentResultUsedJSInspection extends JavaScriptInspection {
 
     private static class Visitor extends BaseInspectionVisitor {
         @Override
-        public void visitJSAssignmentExpression(@Nonnull JSAssignmentExpression jsAssignmentExpression) {
+        public void visitJSAssignmentExpression(JSAssignmentExpression jsAssignmentExpression) {
             super.visitJSAssignmentExpression(jsAssignmentExpression);
             PsiElement parent = jsAssignmentExpression.getParent();
             if (parent == null) {

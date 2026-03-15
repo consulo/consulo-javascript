@@ -25,8 +25,7 @@ import com.intellij.lang.javascript.psi.resolve.ResolveProcessor;
 import consulo.annotation.access.RequiredReadAction;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.resolve.ResolveState;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -125,7 +124,7 @@ public abstract class ImplementedMethodProcessor extends JSResolveUtil.CollectMe
 
                 @Override
                 @RequiredReadAction
-                public boolean execute(@Nonnull PsiElement element, ResolveState state) {
+                public boolean execute(PsiElement element, ResolveState state) {
                     if (element instanceof JSFunction function) {
                         if (function.isConstructor()) {
                             return true; // SWC stubs have constructor methods :(

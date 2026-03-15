@@ -30,9 +30,8 @@ import consulo.project.Project;
 import consulo.util.lang.ref.Ref;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.xml.lang.xml.XMLLanguage;
-import jakarta.annotation.Nonnull;
 
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.util.List;
 
 /**
@@ -43,7 +42,7 @@ import java.util.List;
 public class JSDebuggerSupportUtils
 {
 	@Nullable
-	public static TextRange getExpressionAtOffset(@Nonnull Project project, @Nonnull Document document, final int offset)
+	public static TextRange getExpressionAtOffset(Project project, Document document, final int offset)
 	{
 		PsiFile file = PsiDocumentManager.getInstance(project).getPsiFile(document);
 		if(file == null)
@@ -75,7 +74,7 @@ public class JSDebuggerSupportUtils
 				InjectedLanguageManager.getInstance(project).enumerate(psiLanguageInjectionHost, new PsiLanguageInjectionHost.InjectedPsiVisitor()
 				{
 					@Override
-					public void visit(@Nonnull PsiFile injectedPsi, @Nonnull List<PsiLanguageInjectionHost.Shred> places)
+					public void visit(PsiFile injectedPsi, List<PsiLanguageInjectionHost.Shred> places)
 					{
 						PsiLanguageInjectionHost.Shred shred = places.get(0);
 						int injectedStart = shred.getRangeInsideHost().getStartOffset() + shred.getHost().getTextOffset();
@@ -146,7 +145,7 @@ public class JSDebuggerSupportUtils
 	}
 
 	@Nullable
-	public static PsiElement getContextElement(VirtualFile virtualFile, int offset, @Nonnull Project project)
+	public static PsiElement getContextElement(VirtualFile virtualFile, int offset, Project project)
 	{
 		Document document = FileDocumentManager.getInstance().getDocument(virtualFile);
 		PsiFile file = PsiManager.getInstance(project).findFile(virtualFile);
@@ -197,7 +196,7 @@ public class JSDebuggerSupportUtils
 				InjectedLanguageManager.getInstance(project).enumerate(parent, new PsiLanguageInjectionHost.InjectedPsiVisitor()
 				{
 					@Override
-					public void visit(@Nonnull PsiFile injectedPsi, @Nonnull List<PsiLanguageInjectionHost.Shred> places)
+					public void visit(PsiFile injectedPsi, List<PsiLanguageInjectionHost.Shred> places)
 					{
 						PsiLanguageInjectionHost.Shred shred = places.get(0);
 						int injectedStart = shred.getRangeInsideHost().getStartOffset() + shred.getHost().getTextOffset();

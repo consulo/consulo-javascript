@@ -40,8 +40,7 @@ import consulo.ui.image.Image;
 import consulo.util.dataholder.Key;
 import consulo.util.lang.Comparing;
 import consulo.virtualFileSystem.status.FileStatus;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author Maxim.Mossienko
@@ -55,7 +54,7 @@ abstract class JavaScriptGroupRuleProviderBase<T extends JSNamedElement> impleme
             @Override
             @RequiredReadAction
             @SuppressWarnings("unchecked")
-            public UsageGroup groupUsage(@Nonnull Usage usage) {
+            public UsageGroup groupUsage(Usage usage) {
                 if (usage instanceof PsiElementUsage elementUsage) {
                     PsiElement psiElement = elementUsage.getElement();
 
@@ -91,7 +90,7 @@ abstract class JavaScriptGroupRuleProviderBase<T extends JSNamedElement> impleme
         private String myName;
         private Image myIcon;
 
-        PsiNamedElementUsageGroupBase(@Nonnull T element, Image icon) {
+        PsiNamedElementUsageGroupBase(T element, Image icon) {
             myIcon = icon;
 
             myName = element.getName();
@@ -111,7 +110,6 @@ abstract class JavaScriptGroupRuleProviderBase<T extends JSNamedElement> impleme
         }
 
         @Override
-        @Nonnull
         public String getText(UsageView view) {
             return myName;
         }

@@ -24,7 +24,6 @@ import consulo.language.editor.intention.IntentionMetaData;
 import consulo.language.psi.PsiElement;
 import consulo.language.util.IncorrectOperationException;
 import consulo.localize.LocalizeValue;
-import jakarta.annotation.Nonnull;
 import org.intellij.idea.lang.javascript.intention.JSElementPredicate;
 import org.intellij.idea.lang.javascript.intention.JSMutablyNamedIntention;
 import org.intellij.idea.lang.javascript.psiutil.*;
@@ -37,7 +36,6 @@ import org.intellij.idea.lang.javascript.psiutil.*;
 )
 public class JSExtractIncrementIntention extends JSMutablyNamedIntention {
     @Override
-    @Nonnull
     protected LocalizeValue getBasicText() {
         return JSIntentionLocalize.incrementExtract();
     }
@@ -49,14 +47,13 @@ public class JSExtractIncrementIntention extends JSMutablyNamedIntention {
     }
 
     @Override
-    @Nonnull
     public JSElementPredicate getElementPredicate() {
         return new ExtractIncrementPredicate();
     }
 
     @Override
     @RequiredReadAction
-    public void processIntention(@Nonnull PsiElement element) throws IncorrectOperationException {
+    public void processIntention(PsiElement element) throws IncorrectOperationException {
         boolean isPostfix = (element instanceof JSPostfixExpression);
         JSExpression operand = isPostfix
             ? ((JSPostfixExpression)element).getExpression()
@@ -83,7 +80,7 @@ public class JSExtractIncrementIntention extends JSMutablyNamedIntention {
 
     private static class ExtractIncrementPredicate implements JSElementPredicate {
         @Override
-        public boolean satisfiedBy(@Nonnull PsiElement element) {
+        public boolean satisfiedBy(PsiElement element) {
             if (!ExpressionUtil.isIncrementDecrementExpression(element)
                 || ErrorUtil.containsError(element)
                 || element.getParent() instanceof JSExpressionStatement) {

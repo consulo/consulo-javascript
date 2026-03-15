@@ -8,7 +8,7 @@ import consulo.language.editor.inspection.InspectionToolState;
 import consulo.ui.Label;
 import consulo.util.xml.serializer.XmlSerializerUtil;
 
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author VISTALL

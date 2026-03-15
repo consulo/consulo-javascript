@@ -12,8 +12,7 @@ import consulo.ui.Label;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.layout.VerticalLayout;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 
@@ -22,11 +21,10 @@ import javax.swing.*;
  * @since 2014-06-29
  */
 public class ClientJavaScriptMutableModuleExtension extends ClientJavaScriptModuleExtension implements JavaScriptMutableModuleExtension<ClientJavaScriptModuleExtension>, SwingMutableModuleExtension {
-    public ClientJavaScriptMutableModuleExtension(@Nonnull String id, @Nonnull ModuleRootLayer rootModel) {
+    public ClientJavaScriptMutableModuleExtension(String id, ModuleRootLayer rootModel) {
         super(id, rootModel);
     }
 
-    @Nonnull
     @Override
     public MutableModuleInheritableNamedPointer<Sdk> getInheritableSdk() {
         return (MutableModuleInheritableNamedPointer<Sdk>)super.getInheritableSdk();
@@ -35,14 +33,14 @@ public class ClientJavaScriptMutableModuleExtension extends ClientJavaScriptModu
     @RequiredUIAccess
     @Nullable
     @Override
-    public Component createConfigurationComponent(@Nonnull Disposable disposable, @Nonnull Runnable runnable) {
+    public Component createConfigurationComponent(Disposable disposable, Runnable runnable) {
         return VerticalLayout.create().add(Label.create("Unsupported UI"));
     }
 
     @RequiredUIAccess
     @Nullable
     @Override
-    public JComponent createConfigurablePanel(@Nonnull Disposable disposable, @Nonnull Runnable runnable) {
+    public JComponent createConfigurablePanel(Disposable disposable, Runnable runnable) {
         return new ClientJavaScriptModuleExtensionPanel(this);
     }
 
@@ -52,12 +50,12 @@ public class ClientJavaScriptMutableModuleExtension extends ClientJavaScriptModu
     }
 
     @Override
-    public boolean isModified(@Nonnull ClientJavaScriptModuleExtension originalExtension) {
+    public boolean isModified(ClientJavaScriptModuleExtension originalExtension) {
         return myIsEnabled != originalExtension.isEnabled() || myLanguageVersion != originalExtension.getLanguageVersion();
     }
 
     @Override
-    public void setLanguageVersion(@Nonnull LanguageVersion languageVersion) {
+    public void setLanguageVersion(LanguageVersion languageVersion) {
         myLanguageVersion = languageVersion;
     }
 }

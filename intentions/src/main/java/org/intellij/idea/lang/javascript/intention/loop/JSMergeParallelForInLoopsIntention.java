@@ -28,7 +28,6 @@ import consulo.language.editor.intention.IntentionMetaData;
 import consulo.language.psi.PsiElement;
 import consulo.language.util.IncorrectOperationException;
 import consulo.localize.LocalizeValue;
-import jakarta.annotation.Nonnull;
 import org.intellij.idea.lang.javascript.intention.JSElementPredicate;
 import org.intellij.idea.lang.javascript.intention.JSIntention;
 import org.intellij.idea.lang.javascript.psiutil.ControlFlowUtils;
@@ -44,20 +43,18 @@ import org.intellij.idea.lang.javascript.psiutil.JSElementFactory;
 )
 public class JSMergeParallelForInLoopsIntention extends JSIntention {
     @Override
-    @Nonnull
     public LocalizeValue getText() {
         return JSIntentionLocalize.loopMergeParallelForInLoops();
     }
 
     @Override
-    @Nonnull
     public JSElementPredicate getElementPredicate() {
         return new MergeParallelForInLoopsPredicate();
     }
 
     @Override
     @RequiredReadAction
-    public void processIntention(@Nonnull PsiElement element) throws IncorrectOperationException {
+    public void processIntention(PsiElement element) throws IncorrectOperationException {
         PsiElement nextElement = JSElementFactory.getNonWhiteSpaceSibling(element, true);
 
         assert (nextElement != null);
@@ -89,7 +86,7 @@ public class JSMergeParallelForInLoopsIntention extends JSIntention {
 
     private static class MergeParallelForInLoopsPredicate implements JSElementPredicate {
         @Override
-        public boolean satisfiedBy(@Nonnull PsiElement element) {
+        public boolean satisfiedBy(PsiElement element) {
             return element instanceof JSForInStatement forInStatement
                 && !ErrorUtil.containsError(element)
                 && JSElementFactory.getNonWhiteSpaceSibling(element, true) instanceof JSForInStatement nextForInStatement

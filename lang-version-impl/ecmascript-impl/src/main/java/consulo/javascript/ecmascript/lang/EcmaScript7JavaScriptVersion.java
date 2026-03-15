@@ -4,7 +4,6 @@ import consulo.annotation.component.ExtensionImpl;
 import consulo.javascript.language.JavaScriptFeature;
 import jakarta.inject.Inject;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
@@ -19,7 +18,6 @@ public class EcmaScript7JavaScriptVersion extends EcmaScript6JavaScriptVersion {
         addFeature(JavaScriptFeature.EXPONENTIATION_OPERATOR);
     }
 
-    @Nonnull
     @Override
     public String getPresentableName() {
         return "ECMAScript 7";

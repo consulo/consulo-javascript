@@ -33,7 +33,6 @@ import consulo.language.psi.PsiFile;
 import consulo.language.psi.PsiWhiteSpace;
 import consulo.language.psi.util.PsiTreeUtil;
 
-import jakarta.annotation.Nonnull;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -60,7 +59,6 @@ public class JSStatementsSurroundDescriptor implements SurroundDescriptor {
     };
 
     @Override
-    @Nonnull
     @RequiredReadAction
     public PsiElement[] getElementsToSurround(PsiFile file, int startOffset, int endOffset) {
         PsiElement[] statements = findStatementsInRange(file, startOffset, endOffset);
@@ -71,7 +69,6 @@ public class JSStatementsSurroundDescriptor implements SurroundDescriptor {
     }
 
     @Override
-    @Nonnull
     public Surrounder[] getSurrounders() {
         return SURROUNDERS;
     }
@@ -163,7 +160,6 @@ public class JSStatementsSurroundDescriptor implements SurroundDescriptor {
         return array.toArray(new PsiElement[array.size()]);
     }
 
-    @Nonnull
     @Override
     public Language getLanguage() {
         return JavaScriptLanguage.INSTANCE;

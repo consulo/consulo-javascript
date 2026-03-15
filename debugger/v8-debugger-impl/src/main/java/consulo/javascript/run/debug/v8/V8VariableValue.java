@@ -20,8 +20,7 @@ import consulo.execution.debug.frame.XValueChildrenList;
 import consulo.execution.debug.frame.XValueModifier;
 import org.chromium.sdk.*;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author VISTALL
@@ -29,7 +28,7 @@ import jakarta.annotation.Nullable;
  */
 public class V8VariableValue extends V8BaseVariableValue
 {
-	public static void addValue(@Nonnull XValueChildrenList valueChildrenList, @Nonnull JsEvaluateContext debugContext, @Nonnull JsVariable jsVariable)
+	public static void addValue(XValueChildrenList valueChildrenList, JsEvaluateContext debugContext, JsVariable jsVariable)
 	{
 		JsValue value = jsVariable.getValue();
 		if(value instanceof JsFunction)
@@ -41,7 +40,7 @@ public class V8VariableValue extends V8BaseVariableValue
 
 	private JsVariable myJsVariable;
 
-	public V8VariableValue(@Nonnull JsEvaluateContext evaluateContext, @Nonnull JsVariable jsVariable)
+	public V8VariableValue(JsEvaluateContext evaluateContext, JsVariable jsVariable)
 	{
 		super(evaluateContext, jsVariable.getName());
 		myJsVariable = jsVariable;
@@ -71,7 +70,7 @@ public class V8VariableValue extends V8BaseVariableValue
 				return new XValueModifier()
 				{
 					@Override
-					public void setValue(@Nonnull String expression, @Nonnull final XModificationCallback callback)
+					public void setValue(String expression, final XModificationCallback callback)
 					{
 						JsEvaluateContext.PrimitiveValueFactory valueFactory = myEvaluateContext.getValueFactory();
 						JsValue value = null;
@@ -146,7 +145,6 @@ public class V8VariableValue extends V8BaseVariableValue
 		}
 	}
 
-	@Nonnull
 	@Override
 	protected JsValue getValue()
 	{

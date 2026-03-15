@@ -28,7 +28,6 @@ import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.util.lang.StringUtil;
 import consulo.util.lang.ref.SimpleReference;
-import jakarta.annotation.Nonnull;
 
 import javax.swing.*;
 
@@ -67,7 +66,7 @@ class JSIntroduceFieldDialog extends JSBaseClassBasedIntroduceDialog implements 
         myMainOccurrence.accept(new JSElementVisitor() {
             @Override
             @RequiredReadAction
-            public void visitJSReferenceExpression(@Nonnull JSReferenceExpression node) {
+            public void visitJSReferenceExpression(JSReferenceExpression node) {
                 if (node.getQualifier() == null) {
                     ResolveResult[] results = node.multiResolve(true);
                     if (results.length == 0) {
@@ -84,7 +83,7 @@ class JSIntroduceFieldDialog extends JSBaseClassBasedIntroduceDialog implements 
             }
 
             @Override
-            public void visitJSElement(@Nonnull JSElement node) {
+            public void visitJSElement(JSElement node) {
                 node.acceptChildren(this);
             }
         });

@@ -1,9 +1,7 @@
 package com.sixrr.inspectjs.utils;
 
 import com.intellij.lang.javascript.psi.*;
-import org.jetbrains.annotations.NonNls;
 
-@NonNls
 public class ConditionalUtils {
     private ConditionalUtils() {
         super();

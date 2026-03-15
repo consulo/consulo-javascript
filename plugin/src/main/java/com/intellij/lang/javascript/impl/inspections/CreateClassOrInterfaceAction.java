@@ -42,7 +42,6 @@ import consulo.ui.ex.awt.DialogWrapper;
 import consulo.util.lang.text.StringTokenizer;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.util.VirtualFileUtil;
-import jakarta.annotation.Nonnull;
 
 import java.util.Properties;
 
@@ -63,7 +62,6 @@ class CreateClassOrInterfaceAction implements LocalQuickFix {
     }
 
     @Override
-    @Nonnull
     public LocalizeValue getName() {
         return myIsInterface
             ? JavaScriptLocalize.javascriptCreateInterfaceIntentionName(classNameToCreate)
@@ -72,7 +70,7 @@ class CreateClassOrInterfaceAction implements LocalQuickFix {
 
     @Override
     @RequiredUIAccess
-    public void applyFix(@Nonnull Project project, @Nonnull ProblemDescriptor descriptor) {
+    public void applyFix(Project project, ProblemDescriptor descriptor) {
         PsiFile contextFile = myContext.getContainingFile();
         PsiElement context = contextFile.getContext();
         if (context != null) {

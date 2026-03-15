@@ -9,17 +9,14 @@ import com.sixrr.inspectjs.utils.ControlFlowUtils;
 import consulo.annotation.access.RequiredReadAction;
 import consulo.annotation.component.ExtensionImpl;
 import consulo.localize.LocalizeValue;
-import jakarta.annotation.Nonnull;
 
 @ExtensionImpl
 public class LoopStatementThatDoesntLoopJSInspection extends JavaScriptInspection {
-    @Nonnull
     @Override
     public LocalizeValue getDisplayName() {
         return InspectionJSLocalize.loopStatementThatDoesnTLoopDisplayName();
     }
 
-    @Nonnull
     @Override
     public LocalizeValue getGroupDisplayName() {
         return JSGroupNames.CONTROL_FLOW_GROUP_NAME;
@@ -43,7 +40,7 @@ public class LoopStatementThatDoesntLoopJSInspection extends JavaScriptInspectio
 
     private static class Visitor extends BaseInspectionVisitor {
         @Override
-        public void visitJSForStatement(@Nonnull JSForStatement statement) {
+        public void visitJSForStatement(JSForStatement statement) {
             super.visitJSForStatement(statement);
             JSStatement body = statement.getBody();
             if (body == null) {
@@ -59,7 +56,7 @@ public class LoopStatementThatDoesntLoopJSInspection extends JavaScriptInspectio
         }
 
         @Override
-        public void visitJSForInStatement(@Nonnull JSForInStatement statement) {
+        public void visitJSForInStatement(JSForInStatement statement) {
             super.visitJSForInStatement(statement);
             JSStatement body = statement.getBody();
             if (body == null) {
@@ -75,7 +72,7 @@ public class LoopStatementThatDoesntLoopJSInspection extends JavaScriptInspectio
         }
 
         @Override
-        public void visitJSWhileStatement(@Nonnull JSWhileStatement statement) {
+        public void visitJSWhileStatement(JSWhileStatement statement) {
             super.visitJSWhileStatement(statement);
             JSStatement body = statement.getBody();
             if (body == null
@@ -86,7 +83,7 @@ public class LoopStatementThatDoesntLoopJSInspection extends JavaScriptInspectio
             registerStatementError(statement);
         }
 
-        @Override public void visitJSDoWhileStatement(@Nonnull JSDoWhileStatement statement) {
+        @Override public void visitJSDoWhileStatement(JSDoWhileStatement statement) {
             super.visitJSDoWhileStatement(statement);
             JSStatement body = statement.getBody();
             if (body == null

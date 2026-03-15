@@ -22,8 +22,6 @@ import consulo.javascript.impl.language.psi.JSStubElementType;
 import com.intellij.lang.javascript.psi.stubs.JSQualifiedStub;
 import consulo.javascript.language.psi.stub.JavaScriptIndexKeys;
 import consulo.language.psi.stub.IndexSink;
-import jakarta.annotation.Nonnull;
-import org.jetbrains.annotations.NonNls;
 
 /**
  * @author VISTALL
@@ -31,12 +29,12 @@ import org.jetbrains.annotations.NonNls;
  */
 public abstract class JSQualifiedStubElementType<StubT extends JSQualifiedStub<PsiT>, PsiT extends JSQualifiedNamedElement>
     extends JSStubElementType<StubT, PsiT> {
-    public JSQualifiedStubElementType(@NonNls String debugName) {
+    public JSQualifiedStubElementType(String debugName) {
         super(debugName);
     }
 
     @Override
-    public void indexStub(@Nonnull StubT stub, @Nonnull IndexSink sink) {
+    public void indexStub(StubT stub, IndexSink sink) {
         String name = stub.getName();
         String fqn = stub.getQualifiedName();
 

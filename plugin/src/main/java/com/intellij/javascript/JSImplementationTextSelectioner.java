@@ -30,26 +30,24 @@ import consulo.language.editor.ImplementationTextSelectioner;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.util.PsiTreeUtil;
 
-import jakarta.annotation.Nonnull;
 
 @ExtensionImpl
 public class JSImplementationTextSelectioner implements ImplementationTextSelectioner {
     @RequiredReadAction
     @Override
-    public int getTextStartOffset(@Nonnull PsiElement element) {
+    public int getTextStartOffset(PsiElement element) {
         return element.getTextOffset();
     }
 
     @RequiredReadAction
     @Override
-    public int getTextEndOffset(@Nonnull PsiElement element) {
+    public int getTextEndOffset(PsiElement element) {
         if (element instanceof JSDefinitionExpression) {
             element = PsiTreeUtil.getParentOfType(element, JSExpressionStatement.class);
         }
         return element.getTextRange().getEndOffset();
     }
 
-    @Nonnull
     @Override
     public Language getLanguage() {
         return JavaScriptLanguage.INSTANCE;

@@ -21,7 +21,6 @@ import com.intellij.lang.javascript.psi.JSElementVisitor;
 import com.intellij.lang.javascript.psi.JSExpression;
 import com.intellij.lang.javascript.psi.JSYieldStatement;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * @author maxim
@@ -37,7 +36,7 @@ public class JSYieldStatementImpl extends JSStatementImpl implements JSYieldStat
     }
 
     @Override
-    protected void accept(@Nonnull JSElementVisitor visitor) {
+    protected void accept(JSElementVisitor visitor) {
         visitor.visitJSYieldStatement(this);
     }
 }

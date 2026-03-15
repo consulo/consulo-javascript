@@ -26,8 +26,7 @@ import consulo.execution.debug.evaluation.XDebuggerEditorsProvider;
 import consulo.project.Project;
 import consulo.virtualFileSystem.fileType.FileType;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author VISTALL
@@ -36,7 +35,6 @@ import jakarta.annotation.Nullable;
 @ExtensionImpl
 public class JavaScriptLineBreakpointType extends XLineBreakpointTypeBase
 {
-	@Nonnull
 	public static JavaScriptLineBreakpointType getInstance()
 	{
 		return EXTENSION_POINT_NAME.findExtensionOrFail(JavaScriptLineBreakpointType.class);
@@ -46,16 +44,14 @@ public class JavaScriptLineBreakpointType extends XLineBreakpointTypeBase
 	{
 		super("javascript", "JavaScript Breakpoints", new XDebuggerEditorsProvider()
 		{
-			@Nonnull
 			@Override
 			public FileType getFileType()
 			{
 				return JavaScriptFileType.INSTANCE;
 			}
 
-			@Nonnull
 			@Override
-			public Document createDocument(@Nonnull Project project, @Nonnull String s, @Nullable XSourcePosition sourcePosition, @Nonnull EvaluationMode evaluationMode)
+			public Document createDocument(Project project, String s, @Nullable XSourcePosition sourcePosition, EvaluationMode evaluationMode)
 			{
 				return JSDebuggerSupportUtils.createDocument(s, project, sourcePosition == null ? null : sourcePosition.getFile(), sourcePosition == null ? 0 : sourcePosition.getOffset());
 			}

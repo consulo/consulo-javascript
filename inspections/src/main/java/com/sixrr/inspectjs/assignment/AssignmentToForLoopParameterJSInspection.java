@@ -11,17 +11,14 @@ import consulo.annotation.component.ExtensionImpl;
 import consulo.language.ast.IElementType;
 import consulo.language.psi.util.PsiTreeUtil;
 import consulo.localize.LocalizeValue;
-import jakarta.annotation.Nonnull;
 
 @ExtensionImpl
 public class AssignmentToForLoopParameterJSInspection extends JavaScriptInspection {
-    @Nonnull
     @Override
     public LocalizeValue getDisplayName() {
         return InspectionJSLocalize.assignmentToForLoopParameterDisplayName();
     }
 
-    @Nonnull
     @Override
     public LocalizeValue getGroupDisplayName() {
         return JSGroupNames.ASSIGNMENT_GROUP_NAME;
@@ -41,7 +38,7 @@ public class AssignmentToForLoopParameterJSInspection extends JavaScriptInspecti
     private static class Visitor extends BaseInspectionVisitor {
         @Override
         @RequiredReadAction
-        public void visitJSAssignmentExpression(@Nonnull JSAssignmentExpression expression) {
+        public void visitJSAssignmentExpression(JSAssignmentExpression expression) {
             super.visitJSAssignmentExpression(expression);
             JSExpression rhs = expression.getROperand();
             if (rhs == null) {
@@ -54,7 +51,7 @@ public class AssignmentToForLoopParameterJSInspection extends JavaScriptInspecti
 
         @Override
         @RequiredReadAction
-        public void visitJSPrefixExpression(@Nonnull JSPrefixExpression expression) {
+        public void visitJSPrefixExpression(JSPrefixExpression expression) {
             super.visitJSPrefixExpression(expression);
             IElementType sign = expression.getOperationSign();
             if (!JSTokenTypes.PLUSPLUS.equals(sign) &&
@@ -71,7 +68,7 @@ public class AssignmentToForLoopParameterJSInspection extends JavaScriptInspecti
 
         @Override
         @RequiredReadAction
-        public void visitJSPostfixExpression(@Nonnull JSPostfixExpression expression) {
+        public void visitJSPostfixExpression(JSPostfixExpression expression) {
             super.visitJSPostfixExpression(expression);
             IElementType sign = expression.getOperationSign();
             if (!JSTokenTypes.PLUSPLUS.equals(sign) && !JSTokenTypes.MINUSMINUS.equals(sign)) {

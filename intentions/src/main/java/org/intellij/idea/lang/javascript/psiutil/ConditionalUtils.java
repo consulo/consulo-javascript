@@ -21,7 +21,6 @@ import consulo.language.ast.IElementType;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.util.PsiTreeUtil;
 import consulo.language.util.IncorrectOperationException;
-import org.jetbrains.annotations.NonNls;
 
 public class ConditionalUtils {
     private ConditionalUtils() {
@@ -221,7 +220,7 @@ public class ConditionalUtils {
         JSExpression condition = statement.getCondition();
         String conditionText = negated ? BoolUtils.getNegatedExpressionText(condition) : condition.getText();
         JSElement nextStatement = (JSElement)JSElementFactory.getNonWhiteSpaceSibling(statement, true);
-        @NonNls String newStatement = "return " + conditionText + ';';
+        String newStatement = "return " + conditionText + ';';
 
         JSElementFactory.replaceStatement(statement, newStatement);
         assert (nextStatement != null);
@@ -232,7 +231,7 @@ public class ConditionalUtils {
         throws IncorrectOperationException {
         JSExpression condition = statement.getCondition();
         String conditionText = (negated ? BoolUtils.getNegatedExpressionText(condition) : condition.getText());
-        @NonNls String newStatement = "return " + conditionText + ';';
+        String newStatement = "return " + conditionText + ';';
 
         JSElementFactory.replaceStatement(statement, newStatement);
     }
@@ -313,7 +312,7 @@ public class ConditionalUtils {
         JSExpression thenExpression = ParenthesesUtils.stripParentheses(conditional.getThen());
         JSExpression elseExpression = ParenthesesUtils.stripParentheses(conditional.getElse());
 
-        @NonNls String ifStatementText = "if (" + condition.getText() + ") {" +
+        String ifStatementText = "if (" + condition.getText() + ") {" +
             statementStart + thenExpression.getText() + statementEnd +
             "} else {" +
             statementStart + elseExpression.getText() + statementEnd +

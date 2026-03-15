@@ -23,7 +23,6 @@ import consulo.language.editor.intention.IntentionMetaData;
 import consulo.language.psi.PsiElement;
 import consulo.language.util.IncorrectOperationException;
 import consulo.localize.LocalizeValue;
-import jakarta.annotation.Nonnull;
 import org.intellij.idea.lang.javascript.intention.JSElementPredicate;
 import org.intellij.idea.lang.javascript.intention.JSIntention;
 import org.intellij.idea.lang.javascript.psiutil.JSElementFactory;
@@ -37,19 +36,17 @@ import org.intellij.idea.lang.javascript.psiutil.NumberUtil;
 )
 public class JSConvertIntegerToDecimalIntention extends JSIntention {
     @Override
-    @Nonnull
     public LocalizeValue getText() {
         return JSIntentionLocalize.numberConvertIntegerToDecimal();
     }
 
     @Override
-    @Nonnull
     public JSElementPredicate getElementPredicate() {
         return new ConvertIntegerToDecimalPredicate();
     }
 
     @Override
-    public void processIntention(@Nonnull PsiElement element) throws IncorrectOperationException {
+    public void processIntention(PsiElement element) throws IncorrectOperationException {
         JSLiteralExpression exp = (JSLiteralExpression)element;
 
         JSElementFactory.replaceExpression(exp, NumberUtil.getLiteralNumber(exp).toString());
@@ -58,7 +55,7 @@ public class JSConvertIntegerToDecimalIntention extends JSIntention {
     private static class ConvertIntegerToDecimalPredicate implements JSElementPredicate {
         @Override
         @RequiredReadAction
-        public boolean satisfiedBy(@Nonnull PsiElement element) {
+        public boolean satisfiedBy(PsiElement element) {
             if (!(element instanceof JSLiteralExpression)) {
                 return false;
             }

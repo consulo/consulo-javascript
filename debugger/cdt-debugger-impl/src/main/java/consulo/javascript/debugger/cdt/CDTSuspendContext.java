@@ -3,7 +3,7 @@ package consulo.javascript.debugger.cdt;
 import com.github.kklisura.cdt.protocol.events.debugger.Paused;
 import consulo.execution.debug.frame.XExecutionStack;
 import consulo.execution.debug.frame.XSuspendContext;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author VISTALL

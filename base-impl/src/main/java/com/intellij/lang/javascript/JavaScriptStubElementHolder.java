@@ -3,8 +3,7 @@ package com.intellij.lang.javascript;
 import consulo.annotation.component.ExtensionImpl;
 import consulo.language.psi.stub.ObjectStubSerializerProvider;
 import consulo.language.psi.stub.StubElementTypeHolder;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.lang.reflect.Field;
 import java.util.List;
@@ -21,7 +20,6 @@ public class JavaScriptStubElementHolder extends StubElementTypeHolder<JSStubEle
         return "js.";
     }
 
-    @Nonnull
     @Override
     public List<ObjectStubSerializerProvider> loadSerializers() {
         return allFromStaticFields(JSStubElementTypes.class, Field::get);

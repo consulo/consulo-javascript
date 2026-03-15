@@ -8,8 +8,7 @@ import consulo.execution.debug.frame.*;
 import consulo.execution.debug.frame.presentation.XValuePresentation;
 import consulo.execution.debug.icon.ExecutionDebugIconGroup;
 import consulo.ui.image.Image;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.List;
 
@@ -23,14 +22,14 @@ public class CDTRemoteObjectValue extends XNamedValue {
 
     private final CDTProcessBase myProcess;
 
-    public CDTRemoteObjectValue(@Nonnull String name, @Nullable RemoteObject remoteObject, CDTProcessBase process) {
+    public CDTRemoteObjectValue(String name, @Nullable RemoteObject remoteObject, CDTProcessBase process) {
         super(name);
         myRemoteObject = remoteObject;
         myProcess = process;
     }
 
     @Override
-    public void computeChildren(@Nonnull XCompositeNode node) {
+    public void computeChildren(XCompositeNode node) {
         fill(myRemoteObject, node, myProcess);
     }
 
@@ -63,13 +62,12 @@ public class CDTRemoteObjectValue extends XNamedValue {
         });
     }
 
-    @Nonnull
     protected Image getObjectIcon() {
         return ExecutionDebugIconGroup.nodeValue();
     }
 
     @Override
-    public void computePresentation(@Nonnull XValueNode node, @Nonnull XValuePlace place) {
+    public void computePresentation(XValueNode node, XValuePlace place) {
         if (myRemoteObject == null) {
             node.setPresentation(getObjectIcon(), null, "null", false);
             return;
@@ -81,7 +79,7 @@ public class CDTRemoteObjectValue extends XNamedValue {
         else {
             node.setPresentation(ExecutionDebugIconGroup.nodePrimitive(), new XValuePresentation() {
                 @Override
-                public void renderValue(@Nonnull XValueTextRenderer renderer) {
+                public void renderValue(XValueTextRenderer renderer) {
                     switch (myRemoteObject.getType()) {
                         case STRING:
                             renderer.renderStringValue(String.valueOf(myRemoteObject.getValue()));

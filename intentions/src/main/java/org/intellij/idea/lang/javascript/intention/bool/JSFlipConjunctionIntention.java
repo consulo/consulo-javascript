@@ -26,7 +26,6 @@ import consulo.language.editor.intention.IntentionMetaData;
 import consulo.language.psi.PsiElement;
 import consulo.language.util.IncorrectOperationException;
 import consulo.localize.LocalizeValue;
-import jakarta.annotation.Nonnull;
 import org.intellij.idea.lang.javascript.intention.JSElementPredicate;
 import org.intellij.idea.lang.javascript.intention.JSMutablyNamedIntention;
 import org.intellij.idea.lang.javascript.psiutil.BinaryOperatorUtils;
@@ -39,7 +38,6 @@ import org.intellij.idea.lang.javascript.psiutil.JSElementFactory;
     fileExtensions = "js"
 )
 public class JSFlipConjunctionIntention extends JSMutablyNamedIntention {
-    @Nonnull
     @Override
     protected LocalizeValue getBasicText() {
         return JSIntentionLocalize.boolFlipConjunction();
@@ -55,14 +53,13 @@ public class JSFlipConjunctionIntention extends JSMutablyNamedIntention {
     }
 
     @Override
-    @Nonnull
     public JSElementPredicate getElementPredicate() {
         return new ConjunctionPredicate();
     }
 
     @Override
     @RequiredReadAction
-    public void processIntention(@Nonnull PsiElement element) throws IncorrectOperationException {
+    public void processIntention(PsiElement element) throws IncorrectOperationException {
         JSBinaryExpression binaryExpression = (JSBinaryExpression)element;
         JSExpression exp = binaryExpression;
 

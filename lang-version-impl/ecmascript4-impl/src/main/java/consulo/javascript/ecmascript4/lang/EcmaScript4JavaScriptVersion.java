@@ -10,7 +10,6 @@ import consulo.javascript.lang.BaseJavaScriptLanguageVersion;
 import consulo.javascript.language.JavaScriptFeature;
 import consulo.language.lexer.Lexer;
 import consulo.language.parser.PsiParser;
-import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
@@ -27,19 +26,16 @@ public class EcmaScript4JavaScriptVersion extends BaseJavaScriptLanguageVersion 
         addFeature(JavaScriptFeature.CLASS);
     }
 
-    @Nonnull
     @Override
     public PsiParser createParser() {
         return new EcmaScript4Parser();
     }
 
-    @Nonnull
     @Override
     public JSHighlighter getSyntaxHighlighter() {
         return new JSHighlighter(myDialectOptionHolder);
     }
 
-    @Nonnull
     @Override
     public Lexer createLexer() {
         return new JavaScriptParsingFlexLexer(myDialectOptionHolder);

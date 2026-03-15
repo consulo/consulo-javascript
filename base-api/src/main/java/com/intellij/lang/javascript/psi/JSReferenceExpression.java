@@ -19,7 +19,7 @@ package com.intellij.lang.javascript.psi;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiPolyVariantReference;
 
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author max

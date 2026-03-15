@@ -28,8 +28,7 @@ import consulo.language.psi.PsiElement;
 import consulo.language.util.IncorrectOperationException;
 import consulo.localize.LocalizeValue;
 import consulo.util.lang.StringEscapeUtil;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import org.intellij.idea.lang.javascript.intention.JSElementPredicate;
 import org.intellij.idea.lang.javascript.intention.JSMutablyNamedIntention;
 import org.intellij.idea.lang.javascript.psiutil.BinaryOperatorUtils;
@@ -44,13 +43,11 @@ import org.intellij.idea.lang.javascript.psiutil.ParenthesesUtils;
     fileExtensions = "js"
 )
 public class JSConstantSubexpressionIntention extends JSMutablyNamedIntention {
-    @Nonnull
     @Override
     protected JSElementPredicate getElementPredicate() {
         return new ConstantSubexpressionPredicate();
     }
 
-    @Nonnull
     @Override
     protected LocalizeValue getBasicText() {
         return JSIntentionLocalize.constantComputeSubexpression();
@@ -78,7 +75,7 @@ public class JSConstantSubexpressionIntention extends JSMutablyNamedIntention {
 
     @Override
     @RequiredReadAction
-    public void processIntention(@Nonnull PsiElement element) throws IncorrectOperationException {
+    public void processIntention(PsiElement element) throws IncorrectOperationException {
         PsiElement parent = element.getParent();
         JSExpression expression = (JSExpression) (parent instanceof JSBinaryExpression ? parent : element);
         StringBuilder newExpression = new StringBuilder();
@@ -158,7 +155,7 @@ public class JSConstantSubexpressionIntention extends JSMutablyNamedIntention {
     private static class ConstantSubexpressionPredicate implements JSElementPredicate {
         @Override
         @RequiredReadAction
-        public boolean satisfiedBy(@Nonnull PsiElement element) {
+        public boolean satisfiedBy(PsiElement element) {
             if (!(element instanceof JSElement || element.getPrevSibling() instanceof JSElement)) {
                 return false;
             }

@@ -13,8 +13,7 @@ import consulo.language.psi.resolve.PsiScopeProcessor;
 import consulo.language.psi.resolve.ResolveState;
 import consulo.language.util.IncorrectOperationException;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author VISTALL
@@ -26,7 +25,7 @@ public class ES6ImportedBindingImpl extends JSElementImpl implements ES6Imported
     }
 
     @Override
-    protected void accept(@Nonnull JSElementVisitor visitor) {
+    protected void accept(JSElementVisitor visitor) {
         visitor.visitJSElement(this);
     }
 
@@ -57,16 +56,16 @@ public class ES6ImportedBindingImpl extends JSElementImpl implements ES6Imported
 
     @RequiredWriteAction
     @Override
-    public PsiElement setName(@Nonnull String s) throws IncorrectOperationException {
+    public PsiElement setName(String s) throws IncorrectOperationException {
         return null;
     }
 
     @Override
     public boolean processDeclarations(
-        @Nonnull PsiScopeProcessor processor,
-        @Nonnull ResolveState state,
+        PsiScopeProcessor processor,
+        ResolveState state,
         PsiElement lastParent,
-        @Nonnull PsiElement place
+        PsiElement place
     ) {
         return processor.execute(this, state);
     }

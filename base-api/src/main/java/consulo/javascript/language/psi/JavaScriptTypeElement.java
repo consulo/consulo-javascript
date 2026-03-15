@@ -16,7 +16,6 @@
 
 package consulo.javascript.language.psi;
 
-import jakarta.annotation.Nonnull;
 import com.intellij.lang.javascript.psi.JSElement;
 
 /**
@@ -24,6 +23,5 @@ import com.intellij.lang.javascript.psi.JSElement;
  * @since 2016-02-29
  */
 public interface JavaScriptTypeElement extends JSElement {
-    @Nonnull
     JavaScriptType getType();
 }

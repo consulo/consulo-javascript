@@ -30,7 +30,6 @@ import consulo.language.psi.util.PsiTreeUtil;
 import consulo.language.util.IncorrectOperationException;
 import consulo.localize.LocalizeValue;
 import consulo.util.collection.ArrayUtil;
-import jakarta.annotation.Nonnull;
 
 public class JSDocTagImpl extends JSElementImpl implements JSDocTag {
     private volatile PsiReference[] myRefs;
@@ -49,12 +48,12 @@ public class JSDocTagImpl extends JSElementImpl implements JSDocTag {
 
     @Override
     @RequiredWriteAction
-    public PsiElement setName(@Nonnull String name) throws IncorrectOperationException {
+    public PsiElement setName(String name) throws IncorrectOperationException {
         throw new IncorrectOperationException();
     }
 
     @Override
-    protected void accept(@Nonnull JSElementVisitor visitor) {
+    protected void accept(JSElementVisitor visitor) {
         visitor.visitJSDocTag(this);
     }
 
@@ -63,7 +62,6 @@ public class JSDocTagImpl extends JSElementImpl implements JSDocTag {
         return findChildByClass(JSDocTagValue.class);
     }
 
-    @Nonnull
     @Override
     @RequiredReadAction
     public PsiReference[] getReferences() {
@@ -141,14 +139,12 @@ public class JSDocTagImpl extends JSElementImpl implements JSDocTag {
             return myJsDocTagValue.getParent();
         }
 
-        @Nonnull
         @Override
         @RequiredReadAction
         public TextRange getRangeInElement() {
             return myRange;
         }
 
-        @Nonnull
         @Override
         @RequiredReadAction
         public String getCanonicalText() {
@@ -168,7 +164,7 @@ public class JSDocTagImpl extends JSElementImpl implements JSDocTag {
 
         @Override
         @RequiredWriteAction
-        public PsiElement bindToElement(@Nonnull PsiElement element) throws IncorrectOperationException {
+        public PsiElement bindToElement(PsiElement element) throws IncorrectOperationException {
             return null;
         }
 
@@ -256,7 +252,6 @@ public class JSDocTagImpl extends JSElementImpl implements JSDocTag {
             return null;
         }
 
-        @Nonnull
         @Override
         @RequiredReadAction
         public Object[] getVariants() {
@@ -276,9 +271,8 @@ public class JSDocTagImpl extends JSElementImpl implements JSDocTag {
             return ArrayUtil.EMPTY_OBJECT_ARRAY;
         }
 
-        @Nonnull
         @Override
-        public LocalizeValue buildUnresolvedMessage(@Nonnull String referenceText) {
+        public LocalizeValue buildUnresolvedMessage(String referenceText) {
             return JavaScriptLocalize.javascriptValidationMessageIncorrectParameterName();
         }
     }

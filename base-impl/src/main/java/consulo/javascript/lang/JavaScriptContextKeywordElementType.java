@@ -5,8 +5,7 @@ import com.google.common.collect.HashBiMap;
 import com.intellij.lang.javascript.JSElementType;
 import consulo.language.ast.IElementType;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author VISTALL
@@ -20,11 +19,11 @@ public class JavaScriptContextKeywordElementType extends JSElementType {
         return ourCache.get(text);
     }
 
-    public static boolean containsKeyword(@Nonnull IElementType e) {
+    public static boolean containsKeyword(IElementType e) {
         return ourCache.inverse().containsKey(e);
     }
 
-    public JavaScriptContextKeywordElementType(@Nonnull String id, @Nonnull String keyword) {
+    public JavaScriptContextKeywordElementType(String id, String keyword) {
         super(id);
 
         ourCache.put(keyword, this);

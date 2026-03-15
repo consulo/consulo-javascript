@@ -45,8 +45,7 @@ import consulo.util.collection.HashingStrategy;
 import consulo.util.lang.StringUtil;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.xml.psi.xml.XmlFile;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.io.IOException;
 import java.util.Collection;
@@ -65,7 +64,7 @@ public class JSPsiImplUtils {
 
     @Nullable
     @RequiredReadAction
-    public static JavaScriptTypeElement findTypeElement(@Nonnull PsiElement element) {
+    public static JavaScriptTypeElement findTypeElement(PsiElement element) {
         if (element instanceof StubBasedPsiElement stubBasedPsiElement) {
             StubElement<?> stub = stubBasedPsiElement.getStub();
             if (stub != null) {
@@ -85,7 +84,7 @@ public class JSPsiImplUtils {
     @Nullable
     @RequiredReadAction
     @SuppressWarnings("unchecked")
-    private static <T> T findChildrenByClass(@Nonnull PsiElement element, Class<T> aClass) {
+    private static <T> T findChildrenByClass(PsiElement element, Class<T> aClass) {
         for (PsiElement cur = element.getFirstChild(); cur != null; cur = cur.getNextSibling()) {
             if (aClass.isInstance(cur)) {
                 return (T)cur;
@@ -188,9 +187,8 @@ public class JSPsiImplUtils {
         return packageStatement;
     }
 
-    @Nonnull
     @RequiredReadAction
-    static PsiElement findTopLevelNavigatableElement(@Nonnull JSQualifiedNamedElement jsClass) {
+    static PsiElement findTopLevelNavigatableElement(JSQualifiedNamedElement jsClass) {
         PsiElement sourceElement = findTopLevelNavigatableElementWithSource(jsClass, null);
         if (sourceElement != null) {
             return sourceElement;
@@ -201,7 +199,7 @@ public class JSPsiImplUtils {
     @Nullable
     @RequiredReadAction
     public static PsiElement findTopLevelNavigatableElementWithSource(
-        @Nonnull JSQualifiedNamedElement jsClass,
+        JSQualifiedNamedElement jsClass,
         @Nullable Consumer<JSQualifiedNamedElement> candidatesConsumer
     ) {
         if (candidatesConsumer != null) {
@@ -335,8 +333,8 @@ public class JSPsiImplUtils {
     @Nullable
     @RequiredReadAction
     public static String getTypeFromAnnotationParameter(
-        @Nonnull JSAttributeList attributeList,
-        @Nonnull String annotationName,
+        JSAttributeList attributeList,
+        String annotationName,
         @Nullable String annotationParameter
     ) {
         String arrayType = null;
@@ -386,7 +384,7 @@ public class JSPsiImplUtils {
 
     @Nullable
     @RequiredReadAction
-    static String getQNameForMove(@Nonnull PsiElement targetElement, PsiElement elementToBind) {
+    static String getQNameForMove(PsiElement targetElement, PsiElement elementToBind) {
         String qName = null;
         Project project = targetElement.getProject();
 

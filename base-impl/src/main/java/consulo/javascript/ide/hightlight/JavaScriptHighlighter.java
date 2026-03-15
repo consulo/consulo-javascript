@@ -28,7 +28,6 @@ import consulo.language.editor.highlight.SyntaxHighlighterBase;
 import consulo.language.lexer.Lexer;
 import consulo.util.collection.MultiMap;
 import consulo.xml.editor.XmlHighlighterColors;
-import jakarta.annotation.Nonnull;
 
 import java.util.function.Supplier;
 
@@ -107,20 +106,18 @@ public class JavaScriptHighlighter extends SyntaxHighlighterBase {
     private final Supplier<Lexer> myFactory;
     private final MultiMap<IElementType, TextAttributesKey> keys = MultiMap.createLinked();
 
-    public JavaScriptHighlighter(@Nonnull Supplier<Lexer> factory) {
+    public JavaScriptHighlighter(Supplier<Lexer> factory) {
         myFactory = factory;
 
         storeDefaults(keys);
     }
 
-    @Nonnull
     @Override
     public Lexer getHighlightingLexer() {
         return new JavaScriptHighlightingLexer(myFactory);
     }
 
     @Override
-    @Nonnull
     public TextAttributesKey[] getTokenHighlights(IElementType tokenType) {
         return keys.get(tokenType).toArray(new TextAttributesKey[0]);
     }

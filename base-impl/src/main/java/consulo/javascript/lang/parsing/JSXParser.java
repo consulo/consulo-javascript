@@ -11,8 +11,7 @@ import consulo.localize.LocalizeValue;
 import consulo.xml.impl.localize.XmlErrorLocalize;
 import consulo.xml.psi.xml.XmlElementType;
 import consulo.xml.psi.xml.XmlTokenType;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.Stack;
 
@@ -200,16 +199,14 @@ public class JSXParser {
         terminateText(xmlText);
     }
 
-    @Nullable
-    private static PsiBuilder.Marker terminateText(@Nullable PsiBuilder.Marker xmlText) {
+    private static PsiBuilder.@Nullable Marker terminateText(PsiBuilder.@Nullable Marker xmlText) {
         if (xmlText != null) {
             xmlText.done(XmlElementType.XML_TEXT);
         }
         return null;
     }
 
-    @Nonnull
-    private PsiBuilder.Marker startText(@Nullable PsiBuilder.Marker xmlText) {
+    private PsiBuilder.Marker startText(PsiBuilder.@Nullable Marker xmlText) {
         if (xmlText == null) {
             xmlText = mark();
         }

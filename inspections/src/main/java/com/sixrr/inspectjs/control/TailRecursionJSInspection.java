@@ -10,23 +10,20 @@ import consulo.annotation.component.ExtensionImpl;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.util.PsiTreeUtil;
 import consulo.localize.LocalizeValue;
-import jakarta.annotation.Nonnull;
+import org.jspecify.annotations.Nullable;
 
 @ExtensionImpl
 public class TailRecursionJSInspection extends JavaScriptInspection {
-    @Nonnull
     @Override
     public LocalizeValue getGroupDisplayName() {
         return JSGroupNames.CONTROL_FLOW_GROUP_NAME;
     }
 
-    @Nonnull
     @Override
     public LocalizeValue getDisplayName() {
         return InspectionJSLocalize.tailRecursionDisplayName();
     }
 
-    @Nonnull
     @Override
     @RequiredReadAction
     protected String buildErrorString(Object state, Object... args) {
@@ -180,7 +177,7 @@ public class TailRecursionJSInspection extends JavaScriptInspection {
 
         @Override
         public void visitJSReturnStatement(
-            @Nonnull JSReturnStatement statement
+            JSReturnStatement statement
         ) {
             super.visitJSReturnStatement(statement);
             JSExpression returnValue = statement.getExpression();

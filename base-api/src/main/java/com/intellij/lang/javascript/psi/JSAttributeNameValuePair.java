@@ -17,7 +17,7 @@
 package com.intellij.lang.javascript.psi;
 
 import consulo.annotation.access.RequiredReadAction;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import com.intellij.lang.javascript.psi.stubs.JSAttributeNameValuePairStub;
 import consulo.language.psi.PsiNamedElement;
 import consulo.language.psi.StubBasedPsiElement;

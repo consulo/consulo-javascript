@@ -21,20 +21,17 @@ import consulo.javascript.lang.parsing.JavaScriptParserBuilder;
 import consulo.javascript.lang.parsing.JavaScriptParsingContext;
 import consulo.language.parser.PsiBuilder;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
  * @since 15.02.2016
  */
 public class EcmaScriptParser extends JavaScriptParser {
-    @Nonnull
     @Override
     public JavaScriptParsingContext createParsingContext() {
         return new EcmaScriptParsingContext();
     }
 
-    @Nonnull
     @Override
     public JavaScriptParserBuilder createBuilder(PsiBuilder builder) {
         return new EcmaScriptStrictParserBuilder(builder);

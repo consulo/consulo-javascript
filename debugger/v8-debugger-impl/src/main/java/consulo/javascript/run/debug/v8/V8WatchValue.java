@@ -18,7 +18,6 @@ package consulo.javascript.run.debug.v8;
 
 import consulo.execution.debug.icon.ExecutionDebugIconGroup;
 import consulo.ui.image.Image;
-import jakarta.annotation.Nonnull;
 import org.chromium.sdk.JsEvaluateContext;
 import org.chromium.sdk.JsValue;
 
@@ -29,18 +28,16 @@ import org.chromium.sdk.JsValue;
 public class V8WatchValue extends V8BaseVariableValue {
     private JsValue myValue;
 
-    public V8WatchValue(@Nonnull JsEvaluateContext evaluateContext, @Nonnull String text, @Nonnull JsValue value) {
+    public V8WatchValue(JsEvaluateContext evaluateContext, String text, JsValue value) {
         super(evaluateContext, text);
         myValue = value;
     }
 
-    @Nonnull
     @Override
     protected Image getIconForValue(JsValue value, JsValue.Type valueType) {
         return ExecutionDebugIconGroup.nodeWatch();
     }
 
-    @Nonnull
     @Override
     protected JsValue getValue() {
         return myValue;

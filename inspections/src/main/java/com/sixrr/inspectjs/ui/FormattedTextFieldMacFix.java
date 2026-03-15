@@ -1,6 +1,5 @@
 package com.sixrr.inspectjs.ui;
 
-import org.jetbrains.annotations.NonNls;
 
 import javax.swing.*;
 import java.awt.*;
@@ -15,7 +14,7 @@ public class FormattedTextFieldMacFix {
         if (isMacOs()) {
             Toolkit toolkit = Toolkit.getDefaultToolkit();
             int commandKeyMask = toolkit.getMenuShortcutKeyMask();
-            @NonNls InputMap inputMap = field.getInputMap();
+            InputMap inputMap = field.getInputMap();
             KeyStroke copyKeyStroke = KeyStroke.getKeyStroke(KeyEvent.VK_C, commandKeyMask);
             inputMap.put(copyKeyStroke, "copy-to-clipboard");
             KeyStroke pasteKeyStroke = KeyStroke.getKeyStroke(KeyEvent.VK_V, commandKeyMask);

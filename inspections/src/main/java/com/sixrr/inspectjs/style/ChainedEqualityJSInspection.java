@@ -11,31 +11,26 @@ import consulo.annotation.access.RequiredReadAction;
 import consulo.annotation.component.ExtensionImpl;
 import consulo.language.ast.IElementType;
 import consulo.localize.LocalizeValue;
-import jakarta.annotation.Nonnull;
 import org.intellij.lang.annotations.Pattern;
 
 @ExtensionImpl
 public class ChainedEqualityJSInspection extends JavaScriptInspection {
-    @Nonnull
     @Override
     @Pattern(value = "[a-zA-Z_0-9.-]+")
     public String getID() {
         return "ChainedEqualityComparisonsJS";
     }
 
-    @Nonnull
     @Override
     public LocalizeValue getDisplayName() {
         return InspectionJSLocalize.chainedEqualityDisplayName();
     }
 
-    @Nonnull
     @Override
     public LocalizeValue getGroupDisplayName() {
         return JSGroupNames.STYLE_GROUP_NAME;
     }
 
-    @Nonnull
     @Override
     @RequiredReadAction
     public String buildErrorString(Object state, Object... args) {
@@ -49,7 +44,7 @@ public class ChainedEqualityJSInspection extends JavaScriptInspection {
 
     private static class ChainedEqualityVisitor extends BaseInspectionVisitor {
         @Override
-        public void visitJSBinaryExpression(@Nonnull JSBinaryExpression expression) {
+        public void visitJSBinaryExpression(JSBinaryExpression expression) {
             super.visitJSBinaryExpression(expression);
             if (!(expression.getROperand() != null)) {
                 return;
@@ -67,7 +62,7 @@ public class ChainedEqualityJSInspection extends JavaScriptInspection {
             registerError(expression);
         }
 
-        private static boolean isEqualityComparison(@Nonnull JSBinaryExpression expression) {
+        private static boolean isEqualityComparison(JSBinaryExpression expression) {
             IElementType tokenType = expression.getOperationSign();
             return JSTokenTypes.EQEQ.equals(tokenType) || JSTokenTypes.NE.equals(tokenType);
         }

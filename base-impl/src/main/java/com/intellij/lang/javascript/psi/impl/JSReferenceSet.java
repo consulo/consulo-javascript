@@ -34,8 +34,7 @@ import consulo.project.Project;
 import consulo.util.collection.ArrayUtil;
 import consulo.util.lang.StringUtil;
 import consulo.xml.psi.xml.*;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -170,7 +169,6 @@ public class JSReferenceSet {
             return element;
         }
 
-        @Nonnull
         @Override
         @RequiredReadAction
         public TextRange getRangeInElement() {
@@ -185,7 +183,6 @@ public class JSReferenceSet {
             return resolveResults.length == 1 ? resolveResults[0].getElement() : null;
         }
 
-        @Nonnull
         @Override
         @RequiredReadAction
         public String getCanonicalText() {
@@ -204,7 +201,7 @@ public class JSReferenceSet {
 
         @Override
         @RequiredWriteAction
-        public PsiElement bindToElement(@Nonnull PsiElement element) throws IncorrectOperationException {
+        public PsiElement bindToElement(PsiElement element) throws IncorrectOperationException {
             String qName = JSPsiImplUtils.getQNameForMove(getElement(), element);
             if (qName != null) {
                 handleContentChange(
@@ -223,7 +220,6 @@ public class JSReferenceSet {
                 && JSResolveUtil.isReferenceTo(this, myText, element);
         }
 
-        @Nonnull
         @Override
         @RequiredReadAction
         public Object[] getVariants() {
@@ -307,7 +303,6 @@ public class JSReferenceSet {
         }
 
         @Override
-        @Nonnull
         @RequiredReadAction
         public ResolveResult[] multiResolve(boolean incompleteCode) {
             PsiFile containingFile = element.getContainingFile();
@@ -489,9 +484,8 @@ public class JSReferenceSet {
             return processor.getResults();
         }
 
-        @Nonnull
         @Override
-        public LocalizeValue buildUnresolvedMessage(@Nonnull String text) {
+        public LocalizeValue buildUnresolvedMessage(String text) {
             text = "'" + text.replace("'", "''") + "'";
             return JavaScriptLocalize.javascriptUnresolvedVariableOrTypeNameMessage2(text);
         }
@@ -500,10 +494,9 @@ public class JSReferenceSet {
     static class MyResolver implements ResolveCache.PolyVariantContextResolver<MyPsiReference> {
         private static final MyResolver INSTANCE = new MyResolver();
 
-        @Nonnull
         @Override
         @RequiredReadAction
-        public ResolveResult[] resolve(@Nonnull MyPsiReference ref, @Nonnull PsiFile containingFile, boolean incompleteCode) {
+        public ResolveResult[] resolve(MyPsiReference ref, PsiFile containingFile, boolean incompleteCode) {
             return ref.doResolve(containingFile);
         }
     }

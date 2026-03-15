@@ -26,7 +26,6 @@ import consulo.language.psi.PsiElement;
 import consulo.language.util.IncorrectOperationException;
 import consulo.localize.LocalizeValue;
 import consulo.util.lang.StringEscapeUtil;
-import jakarta.annotation.Nonnull;
 import org.intellij.idea.lang.javascript.intention.JSElementPredicate;
 import org.intellij.idea.lang.javascript.intention.JSIntention;
 import org.intellij.idea.lang.javascript.psiutil.ErrorUtil;
@@ -40,20 +39,18 @@ import org.intellij.idea.lang.javascript.psiutil.JSElementFactory;
     fileExtensions = "js"
 )
 public class JSConstantExpressionIntention extends JSIntention {
-    @Nonnull
     @Override
     public LocalizeValue getText() {
         return JSIntentionLocalize.constantComputeExpression();
     }
 
-    @Nonnull
     @Override
     protected JSElementPredicate getElementPredicate() {
         return new ConstantExpressionPredicate();
     }
 
     @Override
-    public void processIntention(@Nonnull PsiElement element) throws IncorrectOperationException {
+    public void processIntention(PsiElement element) throws IncorrectOperationException {
         JSExpression expression = (JSExpression) element;
         Object value = ExpressionUtil.computeConstantExpression(expression);
         String newExpression = value instanceof String strValue
@@ -64,7 +61,7 @@ public class JSConstantExpressionIntention extends JSIntention {
 
     private static class ConstantExpressionPredicate implements JSElementPredicate {
         @Override
-        public boolean satisfiedBy(@Nonnull PsiElement element) {
+        public boolean satisfiedBy(PsiElement element) {
             return element instanceof JSExpression expression
                 && !ErrorUtil.containsError(element)
                 && !(element instanceof JSLiteralExpression)

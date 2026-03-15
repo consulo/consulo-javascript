@@ -26,8 +26,7 @@ import consulo.language.editor.surroundWith.Surrounder;
 import consulo.language.psi.PsiElement;
 import consulo.language.util.IncorrectOperationException;
 import consulo.project.Project;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author yole
@@ -35,14 +34,14 @@ import jakarta.annotation.Nullable;
  */
 public abstract class JSStatementSurrounder implements Surrounder {
     @Override
-    public boolean isApplicable(@Nonnull PsiElement[] elements) {
+    public boolean isApplicable(PsiElement[] elements) {
         return true;
     }
 
     @Override
     @Nullable
     @RequiredReadAction
-    public TextRange surroundElements(@Nonnull Project project, @Nonnull Editor editor, @Nonnull PsiElement[] elements)
+    public TextRange surroundElements(Project project, Editor editor, PsiElement[] elements)
         throws IncorrectOperationException {
         ASTNode node = JSChangeUtil.createStatementFromText(project, getStatementTemplate(project, elements[0]));
 

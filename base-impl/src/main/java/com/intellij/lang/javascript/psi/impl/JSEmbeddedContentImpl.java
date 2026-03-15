@@ -31,7 +31,6 @@ import consulo.language.util.IncorrectOperationException;
 import consulo.xml.psi.xml.XmlTag;
 import consulo.xml.psi.xml.XmlTagChild;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * @author max
@@ -43,7 +42,7 @@ public class JSEmbeddedContentImpl extends JSElementImpl implements XmlTagChild 
     }
 
     @Override
-    protected void accept(@Nonnull JSElementVisitor visitor) {
+    protected void accept(JSElementVisitor visitor) {
         visitor.visitJSElement(this);
     }
 
@@ -75,10 +74,10 @@ public class JSEmbeddedContentImpl extends JSElementImpl implements XmlTagChild 
 
     @Override
     public boolean processDeclarations(
-        @Nonnull PsiScopeProcessor processor,
-        @Nonnull ResolveState state,
+        PsiScopeProcessor processor,
+        ResolveState state,
         PsiElement lastParent,
-        @Nonnull PsiElement place
+        PsiElement place
     ) {
         return JSResolveUtil.processDeclarationsInScope(this, processor, state, lastParent, place);
     }

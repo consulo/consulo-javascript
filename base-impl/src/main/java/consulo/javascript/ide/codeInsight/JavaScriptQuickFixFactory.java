@@ -24,7 +24,6 @@ import consulo.javascript.language.JavaScriptLanguageVersion;
 import consulo.language.psi.PsiElement;
 import consulo.language.version.LanguageVersion;
 
-import jakarta.annotation.Nonnull;
 
 import java.util.List;
 
@@ -36,12 +35,11 @@ import java.util.List;
 public abstract class JavaScriptQuickFixFactory {
     private static final JavaScriptQuickFixFactory ourDefaultImpl = new JavaScriptQuickFixFactory() {
         @Override
-        public boolean isMyVersion(@Nonnull JavaScriptLanguageVersion version) {
+        public boolean isMyVersion(JavaScriptLanguageVersion version) {
             return true;
         }
     };
 
-    @Nonnull
     public static JavaScriptQuickFixFactory byElement(PsiElement element) {
         LanguageVersion languageVersion = element.getLanguageVersion();
         if (languageVersion instanceof BaseJavaScriptLanguageVersion jsVersion) {
@@ -61,5 +59,5 @@ public abstract class JavaScriptQuickFixFactory {
         return new CreateJSFunctionOrMethodFix(referenceName, isMethod);
     }
 
-    public abstract boolean isMyVersion(@Nonnull JavaScriptLanguageVersion version);
+    public abstract boolean isMyVersion(JavaScriptLanguageVersion version);
 }

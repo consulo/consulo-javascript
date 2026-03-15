@@ -20,7 +20,6 @@ import com.intellij.lang.javascript.psi.impl.JSIncludeDirectiveImpl;
 import consulo.annotation.component.ExtensionImpl;
 import consulo.project.Project;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * @author peter
@@ -32,7 +31,6 @@ public class JSIncludeDirectiveManipulator extends JSAbstractElementManipulator<
         return (JSIncludeDirectiveImpl)JSChangeUtil.createStatementFromText(project, newText).getPsi();
     }
 
-    @Nonnull
     @Override
     public Class<JSIncludeDirectiveImpl> getElementClass() {
         return JSIncludeDirectiveImpl.class;

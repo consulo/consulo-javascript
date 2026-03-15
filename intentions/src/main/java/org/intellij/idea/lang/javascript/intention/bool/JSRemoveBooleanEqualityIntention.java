@@ -26,7 +26,6 @@ import consulo.language.editor.intention.IntentionMetaData;
 import consulo.language.psi.PsiElement;
 import consulo.language.util.IncorrectOperationException;
 import consulo.localize.LocalizeValue;
-import jakarta.annotation.Nonnull;
 import org.intellij.idea.lang.javascript.intention.JSElementPredicate;
 import org.intellij.idea.lang.javascript.intention.JSMutablyNamedIntention;
 import org.intellij.idea.lang.javascript.psiutil.BinaryOperatorUtils;
@@ -41,7 +40,6 @@ import org.intellij.idea.lang.javascript.psiutil.JSElementFactory;
     fileExtensions = "js"
 )
 public class JSRemoveBooleanEqualityIntention extends JSMutablyNamedIntention {
-    @Nonnull
     @Override
     protected LocalizeValue getBasicText() {
         return JSIntentionLocalize.boolRemoveBooleanEquality();
@@ -58,13 +56,12 @@ public class JSRemoveBooleanEqualityIntention extends JSMutablyNamedIntention {
     }
 
     @Override
-    @Nonnull
     public JSElementPredicate getElementPredicate() {
         return new BooleanLiteralEqualityPredicate();
     }
 
     @Override
-    public void processIntention(@Nonnull PsiElement element) throws IncorrectOperationException {
+    public void processIntention(PsiElement element) throws IncorrectOperationException {
         JSBinaryExpression exp = (JSBinaryExpression)element;
         boolean isEquals = exp.getOperationSign().equals(JSTokenTypes.EQEQ);
         JSExpression lhs = exp.getLOperand();
@@ -112,7 +109,7 @@ public class JSRemoveBooleanEqualityIntention extends JSMutablyNamedIntention {
 
     private static class BooleanLiteralEqualityPredicate implements JSElementPredicate {
         @Override
-        public boolean satisfiedBy(@Nonnull PsiElement element) {
+        public boolean satisfiedBy(PsiElement element) {
             if (!(element instanceof JSBinaryExpression) || ErrorUtil.containsError(element)) {
                 return false;
             }

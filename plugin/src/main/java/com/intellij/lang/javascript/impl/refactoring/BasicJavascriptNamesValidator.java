@@ -23,7 +23,6 @@ import com.intellij.lang.javascript.DialectOptionHolder;
 import consulo.annotation.component.ExtensionImpl;
 import consulo.javascript.language.JavaScriptLanguage;
 import consulo.language.Language;
-import jakarta.annotation.Nonnull;
 
 @ExtensionImpl
 public class BasicJavascriptNamesValidator extends JSNamesValidator {
@@ -31,7 +30,6 @@ public class BasicJavascriptNamesValidator extends JSNamesValidator {
         super(DialectOptionHolder.dummy());
     }
 
-    @Nonnull
     @Override
     public Language getLanguage() {
         return JavaScriptLanguage.INSTANCE;

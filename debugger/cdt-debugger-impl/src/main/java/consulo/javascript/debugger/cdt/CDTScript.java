@@ -12,8 +12,7 @@ import consulo.ui.image.Image;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.VirtualFileManager;
 import consulo.virtualFileSystem.util.VirtualFileUtil;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author VISTALL
@@ -40,13 +39,11 @@ public class CDTScript implements JavaScriptFileInfo {
         return VirtualFileManager.getInstance().findFileByUrl(myUrl);
     }
 
-    @Nonnull
     @Override
     public String getPath() {
         return/* myId + ":" +*/ VirtualFileUtil.urlToPath(myUrl);
     }
 
-    @Nonnull
     @Override
     public Image getIcon() {
         return switch (myScriptLanguage) {

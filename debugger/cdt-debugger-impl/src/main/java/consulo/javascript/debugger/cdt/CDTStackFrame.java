@@ -13,8 +13,7 @@ import consulo.execution.debug.frame.XStackFrame;
 import consulo.execution.debug.frame.XValueChildrenList;
 import consulo.ui.ex.ColoredTextContainer;
 import consulo.ui.ex.SimpleTextAttributes;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.List;
 
@@ -85,7 +84,7 @@ public class CDTStackFrame extends XStackFrame {
     }
 
     @Override
-    public void computeChildren(@Nonnull XCompositeNode node) {
+    public void computeChildren(XCompositeNode node) {
         myProcess.invoke(devTools -> {
             List<Scope> scopeChain = myCallFrame.getScopeChain();
 

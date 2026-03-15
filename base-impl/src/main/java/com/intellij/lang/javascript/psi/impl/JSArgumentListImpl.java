@@ -24,7 +24,6 @@ import consulo.language.psi.PsiElement;
 import consulo.language.util.IncorrectOperationException;
 import consulo.language.ast.ASTNode;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * @author max
@@ -41,7 +40,7 @@ public class JSArgumentListImpl extends JSElementImpl implements JSArgumentList 
     }
 
     @Override
-    protected void accept(@Nonnull JSElementVisitor visitor) {
+    protected void accept(JSElementVisitor visitor) {
         visitor.visitJSArgumentList(this);
     }
 

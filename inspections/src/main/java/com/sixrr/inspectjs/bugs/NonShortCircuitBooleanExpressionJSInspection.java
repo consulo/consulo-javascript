@@ -16,18 +16,15 @@ import consulo.language.psi.PsiElement;
 import consulo.language.util.IncorrectOperationException;
 import consulo.localize.LocalizeValue;
 import consulo.project.Project;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 @ExtensionImpl
 public class NonShortCircuitBooleanExpressionJSInspection extends JavaScriptInspection {
-    @Nonnull
     @Override
         public LocalizeValue getDisplayName() {
         return InspectionJSLocalize.nonShortCircuitBooleanExpressionDisplayName();
     }
 
-    @Nonnull
     @Override
     public LocalizeValue getGroupDisplayName() {
         return JSGroupNames.BUGS_GROUP_NAME;
@@ -46,7 +43,6 @@ public class NonShortCircuitBooleanExpressionJSInspection extends JavaScriptInsp
     }
 
     private static class NonShortCircuitBooleanFix extends InspectionJSFix {
-        @Nonnull
         @Override
         public LocalizeValue getName() {
             return InspectionJSLocalize.replaceWithShortCircuitExpressionFixString();
@@ -75,7 +71,7 @@ public class NonShortCircuitBooleanExpressionJSInspection extends JavaScriptInsp
 
     private static class NonShortCircuitBooleanVisitor extends BaseInspectionVisitor {
         @Override
-        public void visitJSBinaryExpression(@Nonnull JSBinaryExpression expression) {
+        public void visitJSBinaryExpression(JSBinaryExpression expression) {
             super.visitJSBinaryExpression(expression);
             if (!(expression.getROperand() != null)) {
                 return;

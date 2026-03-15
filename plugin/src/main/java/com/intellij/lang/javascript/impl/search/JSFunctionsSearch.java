@@ -25,7 +25,6 @@ import consulo.application.util.query.Query;
 import consulo.application.util.query.QueryExecutor;
 import consulo.application.util.query.QueryFactory;
 import consulo.language.psi.PsiElement;
-import jakarta.annotation.Nonnull;
 
 import java.util.function.Predicate;
 
@@ -73,7 +72,7 @@ public abstract class JSFunctionsSearch implements QueryExecutor<JSFunction, JSF
     }
 
     @Override
-    public boolean execute(SearchParameters queryParameters, final @Nonnull Predicate<? super JSFunction> consumer) {
+    public boolean execute(SearchParameters queryParameters, final Predicate<? super JSFunction> consumer) {
         final JSFunction baseFunction = queryParameters.getBaseFunction();
         PsiElement clazz = JSResolveUtil.findParent(baseFunction);
 

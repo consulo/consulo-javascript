@@ -23,7 +23,6 @@ import consulo.language.editor.intention.IntentionMetaData;
 import consulo.language.psi.PsiElement;
 import consulo.language.util.IncorrectOperationException;
 import consulo.localize.LocalizeValue;
-import jakarta.annotation.Nonnull;
 import org.intellij.idea.lang.javascript.intention.JSElementPredicate;
 import org.intellij.idea.lang.javascript.intention.JSIntention;
 import org.intellij.idea.lang.javascript.psiutil.JSElementFactory;
@@ -37,19 +36,17 @@ import org.intellij.idea.lang.javascript.psiutil.NumberUtil;
 )
 public class JSConvertIntegerToOctalIntention extends JSIntention {
     @Override
-    @Nonnull
     public LocalizeValue getText() {
         return JSIntentionLocalize.numberConvertIntegerToOctal();
     }
 
     @Override
-    @Nonnull
     public JSElementPredicate getElementPredicate() {
         return new ConvertIntegerToOctalPredicate();
     }
 
     @Override
-    public void processIntention(@Nonnull PsiElement element) throws IncorrectOperationException {
+    public void processIntention(PsiElement element) throws IncorrectOperationException {
         JSLiteralExpression exp = (JSLiteralExpression)element;
 
         JSElementFactory.replaceExpression(exp, '0' + NumberUtil.getLiteralNumber(exp).toString(8));
@@ -58,7 +55,7 @@ public class JSConvertIntegerToOctalIntention extends JSIntention {
     private static class ConvertIntegerToOctalPredicate implements JSElementPredicate {
         @Override
         @RequiredReadAction
-        public boolean satisfiedBy(@Nonnull PsiElement element) {
+        public boolean satisfiedBy(PsiElement element) {
             if (!(element instanceof JSLiteralExpression)) {
                 return false;
             }

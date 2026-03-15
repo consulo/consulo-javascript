@@ -30,7 +30,6 @@ import consulo.language.pattern.StandardPatterns;
 import consulo.language.psi.PsiElement;
 import consulo.language.util.ProcessingContext;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
@@ -46,9 +45,9 @@ public class JavaScriptKeywordCompletionContributor extends CompletionContributo
                 @RequiredReadAction
                 @Override
                 public void addCompletions(
-                    @Nonnull CompletionParameters parameters,
+                    CompletionParameters parameters,
                     ProcessingContext context,
-                    @Nonnull CompletionResultSet result
+                    CompletionResultSet result
                 ) {
                     PsiElement position = parameters.getPosition();
                     JSReferenceExpression parent = (JSReferenceExpression)position.getParent();
@@ -85,7 +84,6 @@ public class JavaScriptKeywordCompletionContributor extends CompletionContributo
         );
     }
 
-    @Nonnull
     @Override
     public Language getLanguage() {
         return JavaScriptLanguage.INSTANCE;

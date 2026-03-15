@@ -21,8 +21,7 @@ import consulo.language.Language;
 import consulo.language.file.LanguageFileType;
 import consulo.language.version.LanguageVersion;
 import consulo.localize.LocalizeValue;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -41,7 +40,7 @@ public class JavaScriptLanguage extends Language {
     }
 
     @Nullable
-    public LanguageVersion getVersionById(@Nonnull String id) {
+    public LanguageVersion getVersionById(String id) {
         Map<String, LanguageVersion> oldMap = myVersionsById;
         if (oldMap == null) {
             Map<String, LanguageVersion> newMap = new HashMap<>();
@@ -57,7 +56,6 @@ public class JavaScriptLanguage extends Language {
         return oldMap.get(id);
     }
 
-    @Nonnull
     @Override
     public LocalizeValue getDisplayName() {
         return JavaScriptLocalize.javascriptName();

@@ -27,7 +27,6 @@ import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.awt.DialogWrapper;
 import consulo.undoRedo.CommandProcessor;
-import jakarta.annotation.Nonnull;
 
 /**
  * @author Maxim.Mossienko
@@ -36,7 +35,7 @@ import jakarta.annotation.Nonnull;
 public class JSExtractFunctionHandler implements RefactoringActionHandler {
     @Override
     @RequiredUIAccess
-    public void invoke(@Nonnull Project project, Editor editor, PsiFile file, DataContext dataContext) {
+    public void invoke(Project project, Editor editor, PsiFile file, DataContext dataContext) {
         if (!editor.getSelectionModel().hasSelection()) {
             editor.getSelectionModel().selectLineAtCaret();
         }
@@ -71,7 +70,7 @@ public class JSExtractFunctionHandler implements RefactoringActionHandler {
 
     @Override
     @RequiredUIAccess
-    public void invoke(@Nonnull Project project, @Nonnull PsiElement[] elements, DataContext dataContext) {
+    public void invoke(Project project, PsiElement[] elements, DataContext dataContext) {
         throw new UnsupportedOperationException();
     }
 }

@@ -17,12 +17,11 @@ import consulo.ui.annotation.RequiredUIAccess;
 import consulo.virtualFileSystem.ReadonlyStatusHandler;
 import consulo.virtualFileSystem.VirtualFile;
 
-import jakarta.annotation.Nonnull;
 
 public abstract class InspectionJSFix implements LocalQuickFix {
     @Override
     @RequiredUIAccess
-    public void applyFix(@Nonnull Project project, @Nonnull ProblemDescriptor descriptor) {
+    public void applyFix(Project project, ProblemDescriptor descriptor) {
         PsiElement problemElement = descriptor.getPsiElement();
         if (problemElement == null || !problemElement.isValid()) {
             return;
@@ -43,7 +42,7 @@ public abstract class InspectionJSFix implements LocalQuickFix {
 
     protected abstract void doFix(Project project, ProblemDescriptor descriptor) throws IncorrectOperationException;
 
-    protected static void deleteElement(@Nonnull PsiElement element)
+    protected static void deleteElement(PsiElement element)
         throws IncorrectOperationException {
         ASTNode node = element.getNode();
         ASTNode parent = element.getParent().getNode();

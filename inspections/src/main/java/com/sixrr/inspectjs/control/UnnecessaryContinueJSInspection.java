@@ -14,19 +14,16 @@ import consulo.language.psi.PsiElement;
 import consulo.language.util.IncorrectOperationException;
 import consulo.localize.LocalizeValue;
 import consulo.project.Project;
-import jakarta.annotation.Nonnull;
 
 @ExtensionImpl
 public class UnnecessaryContinueJSInspection extends JavaScriptInspection {
     private final UnnecessaryContinueFix fix = new UnnecessaryContinueFix();
 
-    @Nonnull
     @Override
     public LocalizeValue getDisplayName() {
         return InspectionJSLocalize.unnecessaryContinueStatementDisplayName();
     }
 
-    @Nonnull
     @Override
     public LocalizeValue getGroupDisplayName() {
         return JSGroupNames.CONTROL_FLOW_GROUP_NAME;
@@ -49,7 +46,6 @@ public class UnnecessaryContinueJSInspection extends JavaScriptInspection {
     }
 
     private static class UnnecessaryContinueFix extends InspectionJSFix {
-        @Nonnull
         @Override
         public LocalizeValue getName() {
             return InspectionJSLocalize.removeUnnecessaryContinueFix();
@@ -66,7 +62,7 @@ public class UnnecessaryContinueJSInspection extends JavaScriptInspection {
 
     private static class Visitor extends BaseInspectionVisitor {
         @Override
-        public void visitJSContinueStatement(@Nonnull JSContinueStatement statement) {
+        public void visitJSContinueStatement(JSContinueStatement statement) {
             JSStatement continuedStatement = statement.getStatementToContinue();
             if (continuedStatement == null) {
                 return;

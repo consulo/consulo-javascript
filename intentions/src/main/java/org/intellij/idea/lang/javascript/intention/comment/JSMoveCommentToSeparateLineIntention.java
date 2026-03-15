@@ -26,7 +26,6 @@ import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiWhiteSpace;
 import consulo.language.util.IncorrectOperationException;
 import consulo.localize.LocalizeValue;
-import jakarta.annotation.Nonnull;
 import org.intellij.idea.lang.javascript.intention.JSElementPredicate;
 import org.intellij.idea.lang.javascript.intention.JSIntention;
 import org.intellij.idea.lang.javascript.psiutil.JSElementFactory;
@@ -40,20 +39,18 @@ import org.intellij.idea.lang.javascript.psiutil.TreeUtil;
 )
 public class JSMoveCommentToSeparateLineIntention extends JSIntention {
     @Override
-    @Nonnull
     public LocalizeValue getText() {
         return JSIntentionLocalize.commentMoveCommentToSeparateLine();
     }
 
     @Override
-    @Nonnull
     protected JSElementPredicate getElementPredicate() {
         return new CommentOnLineWithSourcePredicate();
     }
 
     @Override
     @RequiredReadAction
-    public void processIntention(@Nonnull PsiElement element) throws IncorrectOperationException {
+    public void processIntention(PsiElement element) throws IncorrectOperationException {
         PsiComment selectedComment = (PsiComment)element;
         PsiElement elementToCheck = selectedComment;
         PsiWhiteSpace whiteSpace;
@@ -87,7 +84,7 @@ public class JSMoveCommentToSeparateLineIntention extends JSIntention {
     private static class CommentOnLineWithSourcePredicate implements JSElementPredicate {
         @Override
         @RequiredReadAction
-        public boolean satisfiedBy(@Nonnull PsiElement element) {
+        public boolean satisfiedBy(PsiElement element) {
             if (!(element instanceof PsiComment)) {
                 return false;
             }

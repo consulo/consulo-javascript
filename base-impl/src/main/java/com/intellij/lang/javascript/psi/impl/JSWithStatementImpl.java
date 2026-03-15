@@ -21,7 +21,6 @@ import com.intellij.lang.javascript.psi.JSElementVisitor;
 import com.intellij.lang.javascript.psi.JSExpression;
 import com.intellij.lang.javascript.psi.JSStatement;
 import com.intellij.lang.javascript.psi.JSWithStatement;
-import jakarta.annotation.Nonnull;
 
 /**
  * @author max
@@ -43,7 +42,7 @@ public class JSWithStatementImpl extends JSStatementImpl implements JSWithStatem
     }
 
     @Override
-    protected void accept(@Nonnull JSElementVisitor visitor) {
+    protected void accept(JSElementVisitor visitor) {
         visitor.visitJSWithStatement(this);
     }
 }

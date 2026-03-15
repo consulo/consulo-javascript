@@ -15,9 +15,8 @@ import consulo.language.psi.resolve.BaseScopeProcessor;
 import consulo.language.psi.resolve.ResolveState;
 import consulo.language.psi.util.PsiTreeUtil;
 import consulo.util.lang.Comparing;
-import jakarta.annotation.Nonnull;
 
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author VISTALL
@@ -35,7 +34,7 @@ public class EcmaScript6ResolveHelper extends ResolveHelper {
         }
 
         @Override
-        public boolean execute(@Nonnull PsiElement psiElement, ResolveState resolveState) {
+        public boolean execute(PsiElement psiElement, ResolveState resolveState) {
             if (psiElement instanceof ES6ImportedBinding es6ImportedBinding && myReferencedName.equals(es6ImportedBinding.getName())) {
                 myResult = new JSImportedElementResolveResult(
                     myReferencedName,
@@ -50,7 +49,7 @@ public class EcmaScript6ResolveHelper extends ResolveHelper {
 
     @Nullable
     @Override
-    public JSImportedElementResolveResult resolveTypeNameUsingImports(@Nonnull String referencedName, PsiNamedElement parent) {
+    public JSImportedElementResolveResult resolveTypeNameUsingImports(String referencedName, PsiNamedElement parent) {
         ImportProcessor processor = new ImportProcessor(referencedName);
 
         PsiFile containingFile = parent.getContainingFile();

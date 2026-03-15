@@ -11,23 +11,19 @@ import consulo.annotation.component.ExtensionImpl;
 import consulo.language.editor.inspection.InspectionToolState;
 import consulo.language.psi.PsiElement;
 import consulo.localize.LocalizeValue;
-import jakarta.annotation.Nonnull;
 
 @ExtensionImpl
 public class IfStatementWithTooManyBranchesJSInspection extends JavaScriptInspection {
-    @Nonnull
     @Override
     public LocalizeValue getDisplayName() {
         return InspectionJSLocalize.ifStatementWithTooManyBranchesDisplayName();
     }
 
-    @Nonnull
     @Override
     public LocalizeValue getGroupDisplayName() {
         return JSGroupNames.CONTROL_FLOW_GROUP_NAME;
     }
 
-    @Nonnull
     @Override
     public InspectionToolState<?> createStateProvider() {
         return new IfStatementWithTooManyBranchesJSInspectionState();
@@ -59,7 +55,7 @@ public class IfStatementWithTooManyBranchesJSInspection extends JavaScriptInspec
 
     private class Visitor extends BaseInspectionVisitor<IfStatementWithTooManyBranchesJSInspectionState> {
         @Override
-        public void visitJSIfStatement(@Nonnull JSIfStatement statement) {
+        public void visitJSIfStatement(JSIfStatement statement) {
             super.visitJSIfStatement(statement);
             PsiElement parent = statement.getParent();
             if (parent instanceof JSIfStatement) {

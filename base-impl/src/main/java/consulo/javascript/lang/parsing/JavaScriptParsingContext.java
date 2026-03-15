@@ -3,7 +3,6 @@ package consulo.javascript.lang.parsing;
 import com.intellij.lang.javascript.JSTokenTypes;
 import consulo.language.ast.IElementType;
 import consulo.language.parser.PsiBuilder;
-import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
@@ -36,32 +35,26 @@ public class JavaScriptParsingContext {
         return JSTokenTypes.IDENTIFIER_TOKENS_SET.contains(tokenType);
     }
 
-    @Nonnull
     protected FunctionParsing createFunctionParsing() {
         return new FunctionParsing(this);
     }
 
-    @Nonnull
     protected StatementParsing createStatementParsing() {
         return new StatementParsing(this);
     }
 
-    @Nonnull
     protected ExpressionParsing createExpressionParsing() {
         return new ExpressionParsing(this);
     }
 
-    @Nonnull
     public FunctionParsing getFunctionParsing() {
         return myFunctionParsing;
     }
 
-    @Nonnull
     public ExpressionParsing getExpressionParsing() {
         return myExpressionParsing;
     }
 
-    @Nonnull
     public StatementParsing getStatementParsing() {
         return myStatementParsing;
     }

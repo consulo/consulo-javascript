@@ -11,17 +11,14 @@ import com.sixrr.inspectjs.utils.ControlFlowUtils;
 import consulo.annotation.access.RequiredReadAction;
 import consulo.annotation.component.ExtensionImpl;
 import consulo.localize.LocalizeValue;
-import jakarta.annotation.Nonnull;
 
 @ExtensionImpl
 public class ContinueOrBreakFromFinallyBlockJSInspection extends JavaScriptInspection {
-    @Nonnull
     @Override
     public LocalizeValue getDisplayName() {
         return InspectionJSLocalize.continueOrBreakInsideFinallyBlockDisplayName();
     }
 
-    @Nonnull
     @Override
     public LocalizeValue getGroupDisplayName() {
         return JSGroupNames.ERRORHANDLING_GROUP_NAME;
@@ -40,7 +37,7 @@ public class ContinueOrBreakFromFinallyBlockJSInspection extends JavaScriptInspe
 
     private static class Visitor extends BaseInspectionVisitor {
         @Override
-        public void visitJSContinueStatement(@Nonnull JSContinueStatement statement) {
+        public void visitJSContinueStatement(JSContinueStatement statement) {
             super.visitJSContinueStatement(statement);
             if (!ControlFlowUtils.isInFinallyBlock(statement)) {
                 return;
@@ -56,7 +53,7 @@ public class ContinueOrBreakFromFinallyBlockJSInspection extends JavaScriptInspe
         }
 
         @Override
-        public void visitJSBreakStatement(@Nonnull JSBreakStatement statement) {
+        public void visitJSBreakStatement(JSBreakStatement statement) {
             super.visitJSBreakStatement(statement);
             if (!ControlFlowUtils.isInFinallyBlock(statement)) {
                 return;

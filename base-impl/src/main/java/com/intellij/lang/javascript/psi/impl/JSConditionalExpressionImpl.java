@@ -25,7 +25,6 @@ import com.intellij.lang.javascript.psi.JSElementVisitor;
 import com.intellij.lang.javascript.psi.JSExpression;
 import consulo.language.ast.IElementType;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * @author max
@@ -99,7 +98,7 @@ public class JSConditionalExpressionImpl extends JSExpressionImpl implements JSC
     }
 
     @Override
-    protected void accept(@Nonnull JSElementVisitor visitor) {
+    protected void accept(JSElementVisitor visitor) {
         visitor.visitJSConditionalExpression(this);
     }
 }

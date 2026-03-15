@@ -26,7 +26,6 @@ import consulo.javascript.impl.language.psi.stub.JSFileStubImpl;
 import consulo.language.Language;
 import consulo.language.psi.PsiFile;
 
-import jakarta.annotation.Nonnull;
 
 import java.io.IOException;
 
@@ -39,17 +38,16 @@ public class JSFileElementType extends IStubFileElementType<JSFileStub> {
     }
 
     @Override
-    public void indexStub(@Nonnull JSFileStub stub, @Nonnull IndexSink sink) {
+    public void indexStub(JSFileStub stub, IndexSink sink) {
         JavaScriptIndexer.EP_NAME.forEachExtensionSafe(it -> it.indexFile(stub, sink));
     }
 
     @Override
     public StubBuilder getBuilder() {
         return new DefaultStubBuilder() {
-            @Nonnull
             @Override
             @RequiredReadAction
-            protected StubElement createStubForFile(@Nonnull PsiFile file) {
+            protected StubElement createStubForFile(PsiFile file) {
                 return file instanceof JSFile jsFile
                     ? new JSFileStubImpl(jsFile, file.getName())
                     : super.createStubForFile(file);
@@ -58,18 +56,16 @@ public class JSFileElementType extends IStubFileElementType<JSFileStub> {
     }
 
     @Override
-    public void serialize(@Nonnull JSFileStub stub, @Nonnull StubOutputStream dataStream) throws IOException {
+    public void serialize(JSFileStub stub, StubOutputStream dataStream) throws IOException {
         dataStream.writeName(stub.getName());
     }
 
-    @Nonnull
     @Override
-    public JSFileStub deserialize(@Nonnull StubInputStream dataStream, StubElement parentStub) throws IOException {
+    public JSFileStub deserialize(StubInputStream dataStream, StubElement parentStub) throws IOException {
         StringRef name = dataStream.readName();
         return new JSFileStubImpl(null, name);
     }
 
-    @Nonnull
     @Override
     public String getExternalId() {
         return getLanguage() + ":" + toString();

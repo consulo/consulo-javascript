@@ -27,8 +27,7 @@ import com.intellij.lang.javascript.psi.JSTryStatement;
 import consulo.language.ast.IElementType;
 import consulo.language.ast.TokenSet;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author max
@@ -69,7 +68,6 @@ public class JSTryStatementImpl extends JSStatementImpl implements JSTryStatemen
         return (JSCatchBlock)catchChild.getPsi();
     }
 
-    @Nonnull
     @Override
     @RequiredReadAction
     public JSCatchBlock[] getAllCatchBlocks() {
@@ -95,7 +93,7 @@ public class JSTryStatementImpl extends JSStatementImpl implements JSTryStatemen
     }
 
     @Override
-    protected void accept(@Nonnull JSElementVisitor visitor) {
+    protected void accept(JSElementVisitor visitor) {
         visitor.visitJSTryStatement(this);
     }
 }

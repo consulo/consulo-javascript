@@ -22,7 +22,6 @@ import com.intellij.lang.javascript.psi.resolve.JSResolveUtil;
 import consulo.annotation.component.ExtensionImpl;
 import consulo.application.AllIcons;
 import consulo.usage.UsageGroup;
-import jakarta.annotation.Nonnull;
 
 /**
  * @author Maxim.Mossienko
@@ -45,7 +44,7 @@ public class JavaScriptClassGroupRuleProvider extends JavaScriptGroupRuleProvide
     }
 
     private static class ClassUsageGroup extends JavaScriptGroupRuleProviderBase.PsiNamedElementUsageGroupBase<JSClass> {
-        public ClassUsageGroup(@Nonnull JSClass clazz) {
+        public ClassUsageGroup(JSClass clazz) {
             super(clazz, AllIcons.Nodes.Class);
         }
     }

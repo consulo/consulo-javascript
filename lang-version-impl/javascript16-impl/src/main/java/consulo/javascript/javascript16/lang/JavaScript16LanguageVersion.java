@@ -25,7 +25,6 @@ import consulo.javascript.language.StandardJavaScriptVersion;
 import consulo.language.editor.highlight.SyntaxHighlighter;
 import consulo.language.lexer.Lexer;
 
-import jakarta.annotation.Nonnull;
 
 import java.util.function.Supplier;
 
@@ -37,7 +36,6 @@ import java.util.function.Supplier;
 public class JavaScript16LanguageVersion extends BaseJavaScriptLanguageVersion implements StandardJavaScriptVersion {
     private static final Supplier<Lexer> ourLexerFactory = () -> new JavaScript16Lexer();
 
-    @Nonnull
     public static JavaScript16LanguageVersion getInstance() {
         return JavaScriptLanguage.INSTANCE.findVersionByClass(JavaScript16LanguageVersion.class);
     }
@@ -46,19 +44,16 @@ public class JavaScript16LanguageVersion extends BaseJavaScriptLanguageVersion i
         super("JAVASCRIPT_1_6");
     }
 
-    @Nonnull
     @Override
     public String getPresentableName() {
         return "JavaScript 1.6";
     }
 
-    @Nonnull
     @Override
     public Lexer createLexer() {
         return ourLexerFactory.get();
     }
 
-    @Nonnull
     @Override
     public SyntaxHighlighter getSyntaxHighlighter() {
         return new JavaScriptHighlighter(ourLexerFactory);

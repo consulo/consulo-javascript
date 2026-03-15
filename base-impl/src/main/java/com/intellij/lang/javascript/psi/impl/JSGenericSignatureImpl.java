@@ -20,7 +20,6 @@ import com.intellij.lang.javascript.psi.JSElementVisitor;
 import com.intellij.lang.javascript.psi.JSGenericSignature;
 import consulo.language.ast.ASTNode;
 
-import jakarta.annotation.Nonnull;
 
 public class JSGenericSignatureImpl extends JSElementImpl implements JSGenericSignature {
     public JSGenericSignatureImpl(ASTNode node) {
@@ -28,7 +27,7 @@ public class JSGenericSignatureImpl extends JSElementImpl implements JSGenericSi
     }
 
     @Override
-    protected void accept(@Nonnull JSElementVisitor visitor) {
+    protected void accept(JSElementVisitor visitor) {
         visitor.visitJSGenericSignature(this);
     }
 }

@@ -8,8 +8,7 @@ import consulo.content.base.SourcesOrderRootType;
 import consulo.content.bundle.SdkType;
 import consulo.javascript.icon.JavaScriptIconGroup;
 import consulo.localize.LocalizeValue;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author VISTALL
@@ -17,7 +16,6 @@ import jakarta.annotation.Nullable;
  */
 @ExtensionImpl
 public class ClientJavaScriptSdkType extends SdkType {
-    @Nonnull
     public static ClientJavaScriptSdkType getInstance() {
         return Application.get().getExtensionPoint(SdkType.class).findExtensionOrFail(ClientJavaScriptSdkType.class);
     }
@@ -47,7 +45,6 @@ public class ClientJavaScriptSdkType extends SdkType {
         return "1";
     }
 
-    @Nonnull
     @Override
     public String suggestSdkName(String currentSdkName, String sdkHome) {
         return currentSdkName;

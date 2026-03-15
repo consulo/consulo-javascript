@@ -2,7 +2,6 @@ package consulo.javascript.ecmascript.lang;
 
 import consulo.annotation.component.ExtensionImpl;
 import consulo.javascript.language.JavaScriptFeature;
-import jakarta.annotation.Nonnull;
 import jakarta.inject.Inject;
 
 /**
@@ -20,7 +19,6 @@ public class EcmaScript9JavaScriptVersion extends EcmaScript6JavaScriptVersion
 		addFeature(JavaScriptFeature.SPREAD_OPERATOR);
 	}
 
-	@Nonnull
 	@Override
 	public String getPresentableName()
 	{

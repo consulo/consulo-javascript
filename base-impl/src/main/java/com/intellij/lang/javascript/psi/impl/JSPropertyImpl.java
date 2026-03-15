@@ -36,8 +36,7 @@ import consulo.language.psi.util.LanguageCachedValueUtil;
 import consulo.language.util.IncorrectOperationException;
 import consulo.util.lang.StringUtil;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author max
@@ -51,7 +50,6 @@ public class JSPropertyImpl extends JSElementImpl implements JSProperty {
     }
 
     @Override
-    @Nonnull
     public PsiReference[] getReferences() {
         return LanguageCachedValueUtil.getCachedValue(this, new CachedValueProvider<PsiReference[]>() {
             @Nullable
@@ -67,7 +65,6 @@ public class JSPropertyImpl extends JSElementImpl implements JSProperty {
         });
     }
 
-    @Nonnull
     @RequiredReadAction
     private PsiReference[] buildReferences() {
         PsiElement nameIdentifier = getNameIdentifier();
@@ -90,7 +87,7 @@ public class JSPropertyImpl extends JSElementImpl implements JSProperty {
 
     @Override
     @RequiredWriteAction
-    public PsiElement setName(@Nonnull String name) throws IncorrectOperationException {
+    public PsiElement setName(String name) throws IncorrectOperationException {
         PsiElement nameNode = getNameIdentifier();
         assert nameNode != null;
         ASTNode nameElement = JSChangeUtil.createNameIdentifier(getProject(), name, nameNode.getNode().getElementType());
@@ -99,7 +96,6 @@ public class JSPropertyImpl extends JSElementImpl implements JSProperty {
     }
 
     @RequiredReadAction
-    @Nonnull
     @Override
     public JavaScriptType getType() {
         JSExpression value = getValue();
@@ -130,7 +126,7 @@ public class JSPropertyImpl extends JSElementImpl implements JSProperty {
     }
 
     @Override
-    protected void accept(@Nonnull JSElementVisitor visitor) {
+    protected void accept(JSElementVisitor visitor) {
         visitor.visitJSProperty(this);
     }
 

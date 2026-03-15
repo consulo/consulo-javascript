@@ -19,13 +19,12 @@ import com.intellij.lang.javascript.JSTokenTypes;
 import com.intellij.lang.javascript.psi.JSBinaryExpression;
 import consulo.language.ast.IElementType;
 import consulo.language.psi.PsiElement;
-import jakarta.annotation.Nonnull;
 import org.intellij.idea.lang.javascript.intention.JSElementPredicate;
 import org.intellij.idea.lang.javascript.psiutil.ErrorUtil;
 
 class ConjunctionPredicate implements JSElementPredicate {
     @Override
-    public boolean satisfiedBy(@Nonnull PsiElement element) {
+    public boolean satisfiedBy(PsiElement element) {
         if (!(element instanceof JSBinaryExpression)) {
             return false;
         }

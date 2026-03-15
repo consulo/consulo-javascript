@@ -23,7 +23,6 @@ import consulo.language.editor.intention.IntentionMetaData;
 import consulo.language.psi.PsiElement;
 import consulo.language.util.IncorrectOperationException;
 import consulo.localize.LocalizeValue;
-import jakarta.annotation.Nonnull;
 import org.intellij.idea.lang.javascript.intention.JSElementPredicate;
 import org.intellij.idea.lang.javascript.intention.JSIntention;
 import org.intellij.idea.lang.javascript.psiutil.JSElementFactory;
@@ -36,20 +35,18 @@ import org.intellij.idea.lang.javascript.psiutil.JSElementFactory;
 )
 public class JSSingleToDoubleQuotedStringIntention extends JSIntention {
     @Override
-    @Nonnull
     public LocalizeValue getText() {
         return JSIntentionLocalize.stringSingleToDoubleQuotedString();
     }
 
     @Override
-    @Nonnull
     protected JSElementPredicate getElementPredicate() {
         return new SingleToDoubleQuotedStringPredicate();
     }
 
     @Override
     @RequiredReadAction
-    public void processIntention(@Nonnull PsiElement element) throws IncorrectOperationException {
+    public void processIntention(PsiElement element) throws IncorrectOperationException {
         JSLiteralExpression charLiteral = (JSLiteralExpression)element;
 
         JSElementFactory.replaceExpression(charLiteral, changeQuotes(charLiteral.getText()));
@@ -82,7 +79,7 @@ public class JSSingleToDoubleQuotedStringIntention extends JSIntention {
 
     private static class SingleToDoubleQuotedStringPredicate implements JSElementPredicate {
         @Override
-        public boolean satisfiedBy(@Nonnull PsiElement element) {
+        public boolean satisfiedBy(PsiElement element) {
             return element instanceof JSLiteralExpression expression && StringUtil.isSimpleQuoteStringLiteral(expression);
         }
     }

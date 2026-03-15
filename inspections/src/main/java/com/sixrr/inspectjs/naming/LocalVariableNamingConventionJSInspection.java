@@ -12,7 +12,6 @@ import consulo.annotation.component.ExtensionImpl;
 import consulo.language.editor.inspection.InspectionToolState;
 import consulo.language.psi.PsiElement;
 import consulo.localize.LocalizeValue;
-import jakarta.annotation.Nonnull;
 
 @ExtensionImpl
 public class LocalVariableNamingConventionJSInspection extends ConventionInspection {
@@ -23,13 +22,11 @@ public class LocalVariableNamingConventionJSInspection extends ConventionInspect
         return false;
     }
 
-    @Nonnull
     @Override
     public LocalizeValue getDisplayName() {
         return InspectionJSLocalize.localVariableNamingConventionDisplayName();
     }
 
-    @Nonnull
     @Override
     public LocalizeValue getGroupDisplayName() {
         return JSGroupNames.NAMING_CONVENTIONS_GROUP_NAME;
@@ -62,7 +59,6 @@ public class LocalVariableNamingConventionJSInspection extends ConventionInspect
         return InspectionJSLocalize.variableNameDoesntMatchRegexErrorString(inspectionState.m_regex).get();
     }
 
-    @Nonnull
     @Override
     public InspectionToolState<?> createStateProvider() {
         return new LocalVariableNamingConventionJSInspectionState();

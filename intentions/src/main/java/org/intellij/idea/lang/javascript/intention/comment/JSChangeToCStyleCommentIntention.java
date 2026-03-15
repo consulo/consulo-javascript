@@ -25,7 +25,6 @@ import consulo.language.psi.PsiElement;
 import consulo.language.util.IncorrectOperationException;
 import consulo.localize.LocalizeValue;
 import consulo.util.lang.StringUtil;
-import jakarta.annotation.Nonnull;
 import org.intellij.idea.lang.javascript.intention.JSElementPredicate;
 import org.intellij.idea.lang.javascript.intention.JSIntention;
 import org.intellij.idea.lang.javascript.psiutil.JSElementFactory;
@@ -41,20 +40,18 @@ import java.util.List;
 )
 public class JSChangeToCStyleCommentIntention extends JSIntention {
     @Override
-    @Nonnull
     public LocalizeValue getText() {
         return JSIntentionLocalize.commentChangeToCstyleComment();
     }
 
     @Override
-    @Nonnull
     protected JSElementPredicate getElementPredicate() {
         return new EndOfLineCommentPredicate();
     }
 
     @Override
     @RequiredReadAction
-    public void processIntention(@Nonnull PsiElement element) throws IncorrectOperationException {
+    public void processIntention(PsiElement element) throws IncorrectOperationException {
         PsiComment firstComment = (PsiComment)element;
 
         while (true) {
@@ -112,7 +109,7 @@ public class JSChangeToCStyleCommentIntention extends JSIntention {
     private static class EndOfLineCommentPredicate implements JSElementPredicate {
 
         @Override
-        public boolean satisfiedBy(@Nonnull PsiElement element) {
+        public boolean satisfiedBy(PsiElement element) {
             return element instanceof PsiComment comment && JSTokenTypes.END_OF_LINE_COMMENT.equals(comment.getTokenType());
         }
     }

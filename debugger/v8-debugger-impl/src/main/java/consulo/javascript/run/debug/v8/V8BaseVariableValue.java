@@ -20,8 +20,7 @@ import consulo.execution.debug.frame.*;
 import consulo.execution.debug.frame.presentation.XValuePresentation;
 import consulo.execution.debug.icon.ExecutionDebugIconGroup;
 import consulo.ui.image.Image;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import org.chromium.sdk.*;
 
 import java.util.Collection;
@@ -31,19 +30,17 @@ import java.util.Collection;
  * @since 20.03.14
  */
 public abstract class V8BaseVariableValue extends XNamedValue {
-    @Nonnull
     protected final JsEvaluateContext myEvaluateContext;
 
-    protected V8BaseVariableValue(@Nonnull JsEvaluateContext evaluateContext, @Nonnull String name) {
+    protected V8BaseVariableValue(JsEvaluateContext evaluateContext, String name) {
         super(name);
         myEvaluateContext = evaluateContext;
     }
 
-    @Nonnull
     protected abstract JsValue getValue();
 
     @Override
-    public void computeChildren(@Nonnull XCompositeNode node) {
+    public void computeChildren(XCompositeNode node) {
         XValueChildrenList valueChildrenList = new XValueChildrenList();
 
         JsValue value = getValue();
@@ -62,7 +59,6 @@ public abstract class V8BaseVariableValue extends XNamedValue {
         node.addChildren(valueChildrenList, true);
     }
 
-    @Nonnull
     protected Image getIconForValue(JsValue value, JsValue.Type valueType) {
         if (value instanceof JsArray) {
             return ExecutionDebugIconGroup.nodeArray();
@@ -96,7 +92,7 @@ public abstract class V8BaseVariableValue extends XNamedValue {
     }
 
     @Override
-    public void computePresentation(@Nonnull XValueNode valueNode, @Nonnull XValuePlace xValuePlace) {
+    public void computePresentation(XValueNode valueNode, XValuePlace xValuePlace) {
         final JsValue value = getValue();
         final JsValue.Type valueType = value.getType();
 
@@ -125,7 +121,7 @@ public abstract class V8BaseVariableValue extends XNamedValue {
             }
 
             @Override
-            public void renderValue(@Nonnull XValueTextRenderer textRenderer) {
+            public void renderValue(XValueTextRenderer textRenderer) {
                 switch (value.getType()) {
                     case TYPE_NUMBER:
                         textRenderer.renderValue(value.getValueString());

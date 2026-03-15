@@ -8,8 +8,7 @@ import org.intellij.lang.regexp.psi.RegExpChar;
 import org.intellij.lang.regexp.psi.RegExpGroup;
 import org.intellij.lang.regexp.psi.RegExpNamedGroupRef;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author VISTALL
@@ -17,7 +16,6 @@ import jakarta.annotation.Nullable;
  */
 @ExtensionImpl
 public class JavaScriptRegExpLiteralLanguageHost implements RegExpLanguageHost {
-    @Nonnull
     @Override
     public Class getHostClass() {
         return JSRegExpLiteralExpressionImpl.class;
@@ -62,11 +60,10 @@ public class JavaScriptRegExpLiteralLanguageHost implements RegExpLanguageHost {
     }
 
     @Override
-    public boolean isValidCategory(@Nonnull String category) {
+    public boolean isValidCategory(String category) {
         return DefaultRegExpPropertiesProvider.getInstance().isValidCategory(category);
     }
 
-    @Nonnull
     @Override
     public String[][] getAllKnownProperties() {
         return DefaultRegExpPropertiesProvider.getInstance().getAllKnownProperties();
@@ -78,7 +75,6 @@ public class JavaScriptRegExpLiteralLanguageHost implements RegExpLanguageHost {
         return DefaultRegExpPropertiesProvider.getInstance().getPropertyDescription(name);
     }
 
-    @Nonnull
     @Override
     public String[][] getKnownCharacterClasses() {
         return DefaultRegExpPropertiesProvider.getInstance().getKnownCharacterClasses();

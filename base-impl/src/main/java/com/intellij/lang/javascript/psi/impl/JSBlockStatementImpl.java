@@ -26,7 +26,6 @@ import consulo.language.ast.ASTNode;
 import consulo.language.codeStyle.CodeStyleManager;
 import consulo.language.psi.PsiElement;
 import consulo.language.util.IncorrectOperationException;
-import jakarta.annotation.Nonnull;
 
 /**
  * @author max
@@ -47,13 +46,13 @@ public class JSBlockStatementImpl extends JSStatementImpl implements JSBlockStat
     }
 
     @Override
-    protected void accept(@Nonnull JSElementVisitor visitor) {
+    protected void accept(JSElementVisitor visitor) {
         visitor.visitJSBlock(this);
     }
 
     @Override
     @RequiredWriteAction
-    public PsiElement add(@Nonnull PsiElement element) throws IncorrectOperationException {
+    public PsiElement add(PsiElement element) throws IncorrectOperationException {
         if (element instanceof JSStatement statement) {
             ASTNode node = getNode().findChildByType(JSTokenTypes.RBRACE);
             if (node != null) {

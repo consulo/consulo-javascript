@@ -17,39 +17,32 @@ import consulo.language.psi.PsiElement;
 import consulo.language.util.IncorrectOperationException;
 import consulo.localize.LocalizeValue;
 import consulo.project.Project;
-import jakarta.annotation.Nonnull;
 import org.intellij.lang.annotations.Pattern;
-import org.jetbrains.annotations.NonNls;
 
 @ExtensionImpl
 public class ForLoopReplaceableByWhileJSInspection extends JavaScriptInspection {
-    @Nonnull
     @Override
     @Pattern(value = "[a-zA-Z_0-9.-]+")
     public String getID() {
         return "ForLoopReplaceableByWhile";
     }
 
-    @Nonnull
     @Override
     public LocalizeValue getDisplayName() {
         return InspectionJSLocalize.forLoopReplaceableByWhileDisplayName();
     }
 
     @Override
-    @Nonnull
     public LocalizeValue getGroupDisplayName() {
         return JSGroupNames.CONTROL_FLOW_GROUP_NAME;
     }
 
-    @Nonnull
     @Override
     @RequiredReadAction
     protected String buildErrorString(Object state, Object... args) {
         return InspectionJSLocalize.forLoopReplaceableByWhileProblemDescriptor().get();
     }
 
-    @Nonnull
     @Override
     public InspectionToolState<?> createStateProvider() {
         return new ForLoopReplaceableByWhileJSInspectionState();
@@ -61,7 +54,6 @@ public class ForLoopReplaceableByWhileJSInspection extends JavaScriptInspection 
     }
 
     private static class ReplaceForByWhileFix extends InspectionJSFix {
-        @Nonnull
         @Override
         public LocalizeValue getName() {
             return InspectionJSLocalize.forLoopReplaceableByWhileReplaceQuickfix();
@@ -75,7 +67,7 @@ public class ForLoopReplaceableByWhileJSInspection extends JavaScriptInspection 
             JSExpression condition = forStatement.getCondition();
             JSStatement body = forStatement.getBody();
             String bodyText = body == null ? "" : body.getText();
-            @NonNls String whileStatement;
+            String whileStatement;
             if (condition == null) {
                 whileStatement = "while(true)" + bodyText;
             }
@@ -93,7 +85,7 @@ public class ForLoopReplaceableByWhileJSInspection extends JavaScriptInspection 
 
     private class ForLoopReplaceableByWhileVisitor extends BaseInspectionVisitor<ForLoopReplaceableByWhileJSInspectionState> {
         @Override
-        public void visitJSForStatement(@Nonnull JSForStatement statement) {
+        public void visitJSForStatement(JSForStatement statement) {
             super.visitJSForStatement(statement);
             JSVarStatement varStatement = statement.getVarDeclaration();
             if (varStatement != null) {

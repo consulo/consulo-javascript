@@ -18,7 +18,6 @@ package org.intellij.idea.lang.javascript.psiutil;
 import com.intellij.lang.javascript.JSTokenTypes;
 import com.intellij.lang.javascript.psi.*;
 import consulo.language.ast.IElementType;
-import jakarta.annotation.Nonnull;
 
 public class RecursionUtil {
     private RecursionUtil() {
@@ -187,7 +186,7 @@ public class RecursionUtil {
         return endsInImplicitReturn;
     }
 
-    public static boolean functionMayRecurse(@Nonnull JSFunction function) {
+    public static boolean functionMayRecurse(JSFunction function) {
         JSRecursionVisitor recursionVisitor = new JSRecursionVisitor(function);
 
         if (recursionVisitor.isFunctionNamed()) {
@@ -507,7 +506,7 @@ public class RecursionUtil {
         return RecursionUtil.statementDefinitelyRecurses(body, method);
     }
 
-    public static boolean functionDefinitelyRecurses(@Nonnull JSFunction method) {
+    public static boolean functionDefinitelyRecurses(JSFunction method) {
         JSSourceElement[] body = method.getBody();
 
         if (body != null) {

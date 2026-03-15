@@ -10,20 +10,16 @@ import com.sixrr.inspectjs.localize.InspectionJSLocalize;
 import consulo.annotation.access.RequiredReadAction;
 import consulo.annotation.component.ExtensionImpl;
 import consulo.localize.LocalizeValue;
-import jakarta.annotation.Nullable;
-import org.jetbrains.annotations.NonNls;
+import org.jspecify.annotations.Nullable;
 
-import jakarta.annotation.Nonnull;
 
 @ExtensionImpl
 public class DocumentWriteJSInspection extends JavaScriptInspection {
-    @Nonnull
     @Override
     public LocalizeValue getDisplayName() {
         return InspectionJSLocalize.callToDocumentWriteDisplayName();
     }
 
-    @Nonnull
     @Override
     public LocalizeValue getGroupDisplayName() {
         return JSGroupNames.DOM_GROUP_NAME;
@@ -60,11 +56,11 @@ public class DocumentWriteJSInspection extends JavaScriptInspection {
             if (qualifier == null) {
                 return;
             }
-            @NonNls String qualifierText = qualifier.getText();
+            String qualifierText = qualifier.getText();
             if (!"document".equals(qualifierText)) {
                 return;
             }
-            @NonNls String methodName = referenceExpression.getReferencedName();
+            String methodName = referenceExpression.getReferencedName();
             if (!"write".equals(methodName) && !"writeln".equals(methodName)) {
                 return;
             }

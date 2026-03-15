@@ -1,6 +1,5 @@
 package com.sixrr.inspectjs.utils;
 
-import jakarta.annotation.Nonnull;
 
 import com.intellij.lang.javascript.JSTokenTypes;
 import com.intellij.lang.javascript.psi.*;
@@ -12,7 +11,7 @@ public class SideEffectChecker {
         super();
     }
 
-    public static boolean mayHaveSideEffects(@Nonnull JSExpression exp) {
+    public static boolean mayHaveSideEffects(JSExpression exp) {
         SideEffectsVisitor visitJSor = new SideEffectsVisitor();
         exp.accept(visitJSor);
         return visitJSor.mayHaveSideEffects();
@@ -22,14 +21,14 @@ public class SideEffectChecker {
         private boolean mayHaveSideEffects = false;
 
         @Override
-        public void visitJSElement(@Nonnull JSElement element) {
+        public void visitJSElement(JSElement element) {
             if (!mayHaveSideEffects) {
                 super.visitJSElement(element);
             }
         }
 
         @Override
-        public void visitJSAssignmentExpression(@Nonnull JSAssignmentExpression expression) {
+        public void visitJSAssignmentExpression(JSAssignmentExpression expression) {
             if (mayHaveSideEffects) {
                 return;
             }
@@ -38,7 +37,7 @@ public class SideEffectChecker {
         }
 
         @Override
-        public void visitJSCallExpression(@Nonnull JSCallExpression expression) {
+        public void visitJSCallExpression(JSCallExpression expression) {
             if (mayHaveSideEffects) {
                 return;
             }
@@ -47,7 +46,7 @@ public class SideEffectChecker {
         }
 
         @Override
-        public void visitJSNewExpression(@Nonnull JSNewExpression expression) {
+        public void visitJSNewExpression(JSNewExpression expression) {
             if (mayHaveSideEffects) {
                 return;
             }
@@ -56,7 +55,7 @@ public class SideEffectChecker {
         }
 
         @Override
-        public void visitJSPostfixExpression(@Nonnull JSPostfixExpression expression) {
+        public void visitJSPostfixExpression(JSPostfixExpression expression) {
             if (mayHaveSideEffects) {
                 return;
             }
@@ -69,7 +68,7 @@ public class SideEffectChecker {
         }
 
         @Override
-        public void visitJSPrefixExpression(@Nonnull JSPrefixExpression expression) {
+        public void visitJSPrefixExpression(JSPrefixExpression expression) {
             if (mayHaveSideEffects) {
                 return;
             }

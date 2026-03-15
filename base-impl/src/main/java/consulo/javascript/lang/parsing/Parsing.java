@@ -24,8 +24,7 @@ import consulo.language.ast.TokenSet;
 import consulo.language.parser.PsiBuilder;
 import consulo.localize.LocalizeValue;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * User: max
@@ -39,7 +38,7 @@ public class Parsing<C extends JavaScriptParsingContext> {
         myContext = context;
     }
 
-    public boolean isContextKeyword(@Nonnull PsiBuilder builder, @Nonnull IElementType elementType) {
+    public boolean isContextKeyword(PsiBuilder builder, IElementType elementType) {
         if (builder.getTokenType() == JSTokenTypes.IDENTIFIER) {
             IElementType contextKeywordElementType = JavaScriptContextKeywordElementType.getKeywordByText(builder.getTokenText());
             if (contextKeywordElementType == null) {
@@ -53,7 +52,7 @@ public class Parsing<C extends JavaScriptParsingContext> {
     }
 
     @Nullable
-    public IElementType isContextKeyword(@Nonnull PsiBuilder builder, @Nonnull TokenSet tokenSet) {
+    public IElementType isContextKeyword(PsiBuilder builder, TokenSet tokenSet) {
         if (builder.getTokenType() == JSTokenTypes.IDENTIFIER) {
             IElementType contextKeywordElementType = JavaScriptContextKeywordElementType.getKeywordByText(builder.getTokenText());
             if (contextKeywordElementType == null) {
@@ -66,7 +65,7 @@ public class Parsing<C extends JavaScriptParsingContext> {
         return null;
     }
 
-    public void advanceContextKeyword(@Nonnull PsiBuilder builder, @Nonnull IElementType elementType) {
+    public void advanceContextKeyword(PsiBuilder builder, IElementType elementType) {
         if (isContextKeyword(builder, elementType)) {
             if (builder instanceof JavaScriptStrictParserBuilder parserBuilder) {
                 parserBuilder.disableNonStrictRemap(builder.getCurrentOffset());
@@ -76,7 +75,7 @@ public class Parsing<C extends JavaScriptParsingContext> {
         }
     }
 
-    public void advanceContextKeyword(@Nonnull PsiBuilder builder, @Nonnull TokenSet tokenSet) {
+    public void advanceContextKeyword(PsiBuilder builder, TokenSet tokenSet) {
         IElementType elementType = isContextKeyword(builder, tokenSet);
         if (elementType != null) {
             if (builder instanceof JavaScriptStrictParserBuilder strictParserBuilder) {

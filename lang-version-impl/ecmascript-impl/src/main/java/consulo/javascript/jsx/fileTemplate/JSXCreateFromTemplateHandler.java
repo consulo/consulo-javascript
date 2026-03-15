@@ -5,7 +5,6 @@ import consulo.javascript.language.JavaScriptFileType;
 import consulo.fileTemplate.CreateFromTemplateHandler;
 import consulo.fileTemplate.FileTemplate;
 import consulo.javascript.jsx.language.JSXFileType;
-import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
@@ -18,7 +17,6 @@ public class JSXCreateFromTemplateHandler implements CreateFromTemplateHandler {
         return template.getExtension().equals(JavaScriptFileType.INSTANCE.getDefaultExtension());
     }
 
-    @Nonnull
     @Override
     public String checkAppendExtension(String fileName, FileTemplate template) {
         if (fileName.endsWith("." + JSXFileType.INSTANCE.getDefaultExtension())) {

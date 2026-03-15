@@ -19,7 +19,6 @@ package com.intellij.lang.javascript.types;
 
 import java.io.IOException;
 
-import jakarta.annotation.Nonnull;
 
 import consulo.annotation.access.RequiredReadAction;
 import com.intellij.lang.javascript.psi.JSFunction;
@@ -38,7 +37,7 @@ import consulo.javascript.types.JSQualifiedStubElementType;
  * Time: 10:50:34 PM
  */
 public abstract class JSFunctionElementType extends JSQualifiedStubElementType<JSFunctionStub, JSFunction> {
-    public JSFunctionElementType(@Nonnull String name) {
+    public JSFunctionElementType(String name) {
         super(name);
     }
 
@@ -56,7 +55,7 @@ public abstract class JSFunctionElementType extends JSQualifiedStubElementType<J
 
     @RequiredReadAction
     @Override
-    public JSFunctionStub createStub(@Nonnull JSFunction psi, StubElement parentStub) {
+    public JSFunctionStub createStub(JSFunction psi, StubElement parentStub) {
         String name = psi.getName();
         String qualifiedName = psi.getQualifiedName();
         String returnTypeString = psi.getReturnTypeString();
@@ -65,16 +64,15 @@ public abstract class JSFunctionElementType extends JSQualifiedStubElementType<J
     }
 
     @Override
-    public void serialize(@Nonnull JSFunctionStub stub, @Nonnull StubOutputStream dataStream) throws IOException {
+    public void serialize(JSFunctionStub stub, StubOutputStream dataStream) throws IOException {
         dataStream.writeName(stub.getName());
         dataStream.writeName(stub.getQualifiedName());
         dataStream.writeName(stub.getReturnTypeString());
         dataStream.writeVarInt(stub.getFlags());
     }
 
-    @Nonnull
     @Override
-    public JSFunctionStub deserialize(@Nonnull StubInputStream dataStream, StubElement parentStub) throws IOException {
+    public JSFunctionStub deserialize(StubInputStream dataStream, StubElement parentStub) throws IOException {
         StringRef nameRef = dataStream.readName();
         StringRef qualifiedRef = dataStream.readName();
         StringRef returnTypeRef = dataStream.readName();

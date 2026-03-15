@@ -19,8 +19,7 @@ package com.intellij.lang.javascript.psi.impl;
 import consulo.annotation.access.RequiredReadAction;
 import consulo.javascript.language.psi.JavaScriptType;
 import consulo.language.psi.PsiElement;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author VISTALL
@@ -30,13 +29,12 @@ public class JavaScriptSimpleType implements JavaScriptType {
     private String myReferenceName;
     private PsiElement myElement;
 
-    public JavaScriptSimpleType(@Nonnull String referenceName, @Nullable PsiElement element) {
+    public JavaScriptSimpleType(String referenceName, @Nullable PsiElement element) {
         myReferenceName = referenceName;
         myElement = element;
     }
 
     @RequiredReadAction
-    @Nonnull
     @Override
     public String getPresentableText() {
         return myReferenceName;

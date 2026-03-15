@@ -24,7 +24,6 @@ import consulo.ui.ex.awt.JBScrollPane;
 import consulo.ui.ex.awt.SortedListModel;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.util.io.FileUtil;
-import jakarta.annotation.Nonnull;
 
 import javax.swing.*;
 import java.awt.*;
@@ -48,7 +47,7 @@ public class JavaScriptListPanel<T extends JavaScriptFileInfo> extends JPanel {
         final JBList<T> list = new JBList<>(myModel);
         list.setCellRenderer(new ColoredListCellRenderer<T>() {
             @Override
-            protected void customizeCellRenderer(@Nonnull JList<? extends T> list, T value, int index, boolean selected, boolean hasFocus) {
+            protected void customizeCellRenderer(JList<? extends T> list, T value, int index, boolean selected, boolean hasFocus) {
                 append(value.getPath());
 
                 setIcon(value.getIcon());

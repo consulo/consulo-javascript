@@ -16,8 +16,7 @@ import consulo.util.dataholder.Key;
 import consulo.util.lang.ObjectUtil;
 import consulo.virtualFileSystem.FileAttribute;
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
@@ -31,7 +30,6 @@ import java.io.IOException;
 public class JavaScriptLanguageVersionPusher implements FilePropertyPusher<LanguageVersion> {
     private static final FileAttribute ourFileAttribute = new FileAttribute("javascript-version", 2, false);
 
-    @Nonnull
     @Override
     public Key<LanguageVersion> getFileDataKey() {
         return LanguageVersion.KEY;
@@ -42,7 +40,6 @@ public class JavaScriptLanguageVersionPusher implements FilePropertyPusher<Langu
         return false;
     }
 
-    @Nonnull
     @Override
     public LanguageVersion getDefaultValue() {
         return StandardJavaScriptVersions.getInstance().getDefaultVersion();
@@ -51,7 +48,7 @@ public class JavaScriptLanguageVersionPusher implements FilePropertyPusher<Langu
     @Nullable
     @Override
     @RequiredReadAction
-    public LanguageVersion getImmediateValue(@Nonnull Project project, @Nullable VirtualFile virtualFile) {
+    public LanguageVersion getImmediateValue(Project project, @Nullable VirtualFile virtualFile) {
         if (virtualFile == null) {
             return getDefaultValue();
         }
@@ -63,7 +60,7 @@ public class JavaScriptLanguageVersionPusher implements FilePropertyPusher<Langu
     @Nullable
     @Override
     @RequiredReadAction
-    public LanguageVersion getImmediateValue(@Nonnull Module module) {
+    public LanguageVersion getImmediateValue(Module module) {
         JavaScriptModuleExtension<?> extension = ModuleUtilCore.getExtension(module, JavaScriptModuleExtension.class);
         if (extension != null) {
             return extension.getLanguageVersion();
@@ -72,20 +69,20 @@ public class JavaScriptLanguageVersionPusher implements FilePropertyPusher<Langu
     }
 
     @Override
-    public boolean acceptsFile(@Nonnull VirtualFile file, @Nonnull Project project) {
+    public boolean acceptsFile(VirtualFile file, Project project) {
         return file.getFileType() == JavaScriptFileType.INSTANCE;
     }
 
     @Override
-    public boolean acceptsDirectory(@Nonnull VirtualFile virtualFile, @Nonnull Project project) {
+    public boolean acceptsDirectory(VirtualFile virtualFile, Project project) {
         return false;
     }
 
     @Override
     public void persistAttribute(
-        @Nonnull Project project,
-        @Nonnull VirtualFile virtualFile,
-        @Nonnull LanguageVersion newAttribute
+        Project project,
+        VirtualFile virtualFile,
+        LanguageVersion newAttribute
     ) throws IOException {
         DataInputStream inputStream = ourFileAttribute.readAttribute(virtualFile);
         if (inputStream != null) {
@@ -110,11 +107,10 @@ public class JavaScriptLanguageVersionPusher implements FilePropertyPusher<Langu
     }
 
     @Override
-    public void afterRootsChanged(@Nonnull Project project) {
+    public void afterRootsChanged(Project project) {
         PushedFilePropertiesUpdater.getInstance(project).pushAll(this);
     }
 
-    @Nonnull
     private LanguageVersion read(DataInputStream stream) throws IOException {
         String id = stream.readUTF();
         LanguageVersion version = JavaScriptLanguage.INSTANCE.getVersionById(id);

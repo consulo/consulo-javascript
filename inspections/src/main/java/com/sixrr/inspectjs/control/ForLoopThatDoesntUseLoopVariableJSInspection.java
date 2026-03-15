@@ -8,23 +8,19 @@ import consulo.annotation.component.ExtensionImpl;
 import consulo.language.psi.PsiElement;
 
 import consulo.localize.LocalizeValue;
-import jakarta.annotation.Nonnull;
 
 @ExtensionImpl
 public class ForLoopThatDoesntUseLoopVariableJSInspection extends JavaScriptInspection {
-    @Nonnull
     @Override
     public LocalizeValue getDisplayName() {
         return InspectionJSLocalize.forLoopNotUseLoopVariableDisplayName();
     }
 
-    @Nonnull
     @Override
     public LocalizeValue getGroupDisplayName() {
         return JSGroupNames.BUGS_GROUP_NAME;
     }
 
-    @Nonnull
     @Override
     @RequiredReadAction
     public String buildErrorString(Object state, Object... args) {
@@ -48,7 +44,7 @@ public class ForLoopThatDoesntUseLoopVariableJSInspection extends JavaScriptInsp
     //TODO: make it work with an implicit declaration as well
     private static class ForLoopThatDoesntUseLoopVariableVisitor extends BaseInspectionVisitor {
         @Override
-        public void visitJSForStatement(@Nonnull JSForStatement statement) {
+        public void visitJSForStatement(JSForStatement statement) {
             super.visitJSForStatement(statement);
             if (conditionUsesInitializer(statement)) {
                 if (!updateUsesInitializer(statement)) {
@@ -112,14 +108,14 @@ public class ForLoopThatDoesntUseLoopVariableJSInspection extends JavaScriptInsp
             variable = var;
         }
 
-        @Override public void visitElement(@Nonnull PsiElement element) {
+        @Override public void visitElement(PsiElement element) {
             if (!used) {
                 super.visitElement(element);
             }
         }
 
         @Override public void visitJSReferenceExpression(
-                @Nonnull JSReferenceExpression ref) {
+                JSReferenceExpression ref) {
             if (used) {
                 return;
             }

@@ -8,23 +8,19 @@ import com.sixrr.inspectjs.localize.InspectionJSLocalize;
 import consulo.annotation.access.RequiredReadAction;
 import consulo.annotation.component.ExtensionImpl;
 import consulo.localize.LocalizeValue;
-import jakarta.annotation.Nonnull;
 
 @ExtensionImpl
 public class InfiniteRecursionJSInspection extends JavaScriptInspection {
-    @Nonnull
     @Override
     public LocalizeValue getDisplayName() {
         return InspectionJSLocalize.infiniteRecursionDisplayName();
     }
 
-    @Nonnull
     @Override
     public LocalizeValue getGroupDisplayName() {
         return JSGroupNames.BUGS_GROUP_NAME;
     }
 
-    @Nonnull
     @Override
     @RequiredReadAction
     public String buildErrorString(Object state, Object... args) {
@@ -43,7 +39,7 @@ public class InfiniteRecursionJSInspection extends JavaScriptInspection {
 
     private static class InfiniteRecursionVisitor extends BaseInspectionVisitor {
         @Override
-        public void visitJSFunctionDeclaration(@Nonnull JSFunction function) {
+        public void visitJSFunctionDeclaration(JSFunction function) {
             super.visitJSFunctionDeclaration(function);
 
             if (!RecursionUtils.functionMayRecurse(function)

@@ -25,7 +25,6 @@ import consulo.language.ast.StringEscapesTokenTypes;
 import consulo.language.editor.highlight.SyntaxHighlighterBase;
 import consulo.language.lexer.Lexer;
 import consulo.xml.editor.XmlHighlighterColors;
-import jakarta.annotation.Nonnull;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -44,7 +43,6 @@ public class JSHighlighter extends SyntaxHighlighterBase implements JavaScriptSy
         myDialectOptionsHolder = dialectOptionsHolder;
     }
 
-    @Nonnull
     @Override
     public Lexer getHighlightingLexer() {
         return new JavaScriptHighlightingLexer(myDialectOptionsHolder);
@@ -117,9 +115,8 @@ public class JSHighlighter extends SyntaxHighlighterBase implements JavaScriptSy
         KEYS_1.put(JSTokenTypes.XML_TAG_CONTENT, XmlHighlighterColors.XML_TAG_DATA);
     }
 
-    @Nonnull
     @Override
-    public TextAttributesKey[] getTokenHighlights(@Nonnull IElementType tokenType) {
+    public TextAttributesKey[] getTokenHighlights(IElementType tokenType) {
         return pack(KEYS_1.get(tokenType), KEYS_2.get(tokenType));
     }
 }

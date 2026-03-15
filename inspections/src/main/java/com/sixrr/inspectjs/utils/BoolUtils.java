@@ -1,6 +1,5 @@
 package com.sixrr.inspectjs.utils;
 
-import jakarta.annotation.Nonnull;
 
 import com.intellij.lang.javascript.JSTokenTypes;
 import com.intellij.lang.javascript.psi.JSBinaryExpression;
@@ -9,15 +8,14 @@ import com.intellij.lang.javascript.psi.JSParenthesizedExpression;
 import com.intellij.lang.javascript.psi.JSPrefixExpression;
 import consulo.language.ast.IElementType;
 
-import jakarta.annotation.Nullable;
-import org.jetbrains.annotations.NonNls;
+import org.jspecify.annotations.Nullable;
 
 public class BoolUtils {
     private BoolUtils() {
         super();
     }
 
-    public static boolean isNegation(@Nonnull JSExpression exp) {
+    public static boolean isNegation(JSExpression exp) {
         if (!(exp instanceof JSPrefixExpression)) {
             return false;
         }
@@ -31,7 +29,7 @@ public class BoolUtils {
         if (test == null) {
             return false;
         }
-        @NonNls String text = test.getText();
+        String text = test.getText();
         return "true".equals(text);
     }
 
@@ -39,11 +37,11 @@ public class BoolUtils {
         if (test == null) {
             return false;
         }
-        @NonNls String text = test.getText();
+        String text = test.getText();
         return "false".equals(text);
     }
 
-    public static String getNegatedExpressionText(@Nonnull JSExpression condition) {
+    public static String getNegatedExpressionText(JSExpression condition) {
         if (condition instanceof JSParenthesizedExpression) {
             JSExpression contentExpression = ((JSParenthesizedExpression)condition).getInnerExpression();
             return '(' + getNegatedExpressionText(contentExpression) + ')';
@@ -70,7 +68,7 @@ public class BoolUtils {
         }
     }
 
-    private static JSExpression getNegated(@Nonnull JSExpression exp) {
+    private static JSExpression getNegated(JSExpression exp) {
         JSPrefixExpression prefixExp = (JSPrefixExpression)exp;
         JSExpression operand = prefixExp.getExpression();
         return ParenthesesUtils.stripParentheses(operand);

@@ -13,24 +13,20 @@ import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiReference;
 import consulo.language.psi.util.PsiTreeUtil;
 import consulo.localize.LocalizeValue;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 @ExtensionImpl
 public class ReuseOfLocalVariableJSInspection extends JavaScriptInspection {
-    @Nonnull
     @Override
     public LocalizeValue getDisplayName() {
         return InspectionJSLocalize.reuseOfLocalVariableDisplayName();
     }
 
-    @Nonnull
     @Override
     public LocalizeValue getGroupDisplayName() {
         return JSGroupNames.DATA_FLOW_ISSUES;
     }
 
-    @Nonnull
     @Override
     @RequiredReadAction
     public String buildErrorString(Object state, Object... args) {
@@ -44,7 +40,7 @@ public class ReuseOfLocalVariableJSInspection extends JavaScriptInspection {
 
     private static class ReuseOfLocalVariableVisitor extends BaseInspectionVisitor {
         @Override
-        public void visitJSAssignmentExpression(@Nonnull JSAssignmentExpression assignment) {
+        public void visitJSAssignmentExpression(JSAssignmentExpression assignment) {
             super.visitJSAssignmentExpression(assignment);
             if (assignment.getROperand() == null) {
                 return;
@@ -153,7 +149,7 @@ public class ReuseOfLocalVariableJSInspection extends JavaScriptInspection {
          * @noinspection AssignmentToMethodParameter
          */
         @Nullable
-        public static PsiElement getChildWhichContainsElement(@Nonnull JSBlockStatement ancestor, @Nonnull PsiElement descendant) {
+        public static PsiElement getChildWhichContainsElement(JSBlockStatement ancestor, PsiElement descendant) {
             PsiElement element = descendant;
             while (!element.equals(ancestor)) {
                 descendant = element;

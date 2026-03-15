@@ -12,17 +12,14 @@ import consulo.annotation.access.RequiredReadAction;
 import consulo.annotation.component.ExtensionImpl;
 import consulo.language.psi.util.PsiTreeUtil;
 import consulo.localize.LocalizeValue;
-import jakarta.annotation.Nonnull;
 
 @ExtensionImpl
 public class ExceptionCaughtLocallyJSInspection extends JavaScriptInspection {
-    @Nonnull
     @Override
     public LocalizeValue getDisplayName() {
         return InspectionJSLocalize.exceptionUsedForLocalControlFlowDisplayName();
     }
 
-    @Nonnull
     @Override
     public LocalizeValue getGroupDisplayName() {
         return JSGroupNames.ERRORHANDLING_GROUP_NAME;
@@ -41,7 +38,7 @@ public class ExceptionCaughtLocallyJSInspection extends JavaScriptInspection {
 
     private static class Visitor extends BaseInspectionVisitor {
         @Override
-        public void visitJSThrowStatement(@Nonnull JSThrowStatement statement) {
+        public void visitJSThrowStatement(JSThrowStatement statement) {
             super.visitJSThrowStatement(statement);
             if (!isCaughtLocally(statement)) {
                 return;
@@ -50,7 +47,7 @@ public class ExceptionCaughtLocallyJSInspection extends JavaScriptInspection {
         }
     }
 
-    public static boolean isCaughtLocally(@Nonnull JSThrowStatement throwStatement) {
+    public static boolean isCaughtLocally(JSThrowStatement throwStatement) {
         JSElement currentElement = throwStatement;
         while (true) {
             JSTryStatement tryStatement = PsiTreeUtil.getParentOfType(currentElement, JSTryStatement.class);

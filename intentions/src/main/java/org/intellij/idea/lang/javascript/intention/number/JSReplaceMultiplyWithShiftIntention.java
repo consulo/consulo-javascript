@@ -25,7 +25,6 @@ import consulo.language.editor.intention.IntentionMetaData;
 import consulo.language.psi.PsiElement;
 import consulo.language.util.IncorrectOperationException;
 import consulo.localize.LocalizeValue;
-import jakarta.annotation.Nonnull;
 import org.intellij.idea.lang.javascript.intention.JSElementPredicate;
 import org.intellij.idea.lang.javascript.intention.JSMutablyNamedIntention;
 import org.intellij.idea.lang.javascript.psiutil.BinaryOperatorUtils;
@@ -39,7 +38,6 @@ import org.intellij.idea.lang.javascript.psiutil.ParenthesesUtils;
     fileExtensions = "js"
 )
 public class JSReplaceMultiplyWithShiftIntention extends JSMutablyNamedIntention {
-    @Nonnull
     @Override
     protected LocalizeValue getBasicText() {
         return JSIntentionLocalize.numberReplaceMultiplyWithShift();
@@ -62,14 +60,13 @@ public class JSReplaceMultiplyWithShiftIntention extends JSMutablyNamedIntention
     }
 
     @Override
-    @Nonnull
     public JSElementPredicate getElementPredicate() {
         return new MultiplyByPowerOfTwoPredicate();
     }
 
     @Override
     @RequiredReadAction
-    public void processIntention(@Nonnull PsiElement element) throws IncorrectOperationException {
+    public void processIntention(PsiElement element) throws IncorrectOperationException {
         if (element instanceof JSAssignmentExpression assignmentExpression) {
             this.replaceMultiplyOrDivideAssignWithShiftAssign(assignmentExpression);
         }
@@ -117,7 +114,7 @@ public class JSReplaceMultiplyWithShiftIntention extends JSMutablyNamedIntention
     private static class MultiplyByPowerOfTwoPredicate implements JSElementPredicate {
         @Override
         @RequiredReadAction
-        public boolean satisfiedBy(@Nonnull PsiElement element) {
+        public boolean satisfiedBy(PsiElement element) {
             return element instanceof JSAssignmentExpression assignmentExpression
                 ? isMultiplyByPowerOfTwo(assignmentExpression)
                 : element instanceof JSBinaryExpression binaryExpression && isMultiplyByPowerOfTwo(binaryExpression);

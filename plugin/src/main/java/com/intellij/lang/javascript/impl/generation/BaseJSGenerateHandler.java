@@ -38,7 +38,6 @@ import consulo.logging.Logger;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.undoRedo.CommandProcessor;
-import jakarta.annotation.Nonnull;
 
 import javax.swing.*;
 import java.util.ArrayList;
@@ -46,7 +45,6 @@ import java.util.Collection;
 import java.util.List;
 
 abstract class BaseJSGenerateHandler implements LanguageCodeInsightActionHandler {
-    @Nonnull
     @Override
     public Language getLanguage() {
         return JavaScriptLanguage.INSTANCE;
@@ -54,7 +52,7 @@ abstract class BaseJSGenerateHandler implements LanguageCodeInsightActionHandler
 
     @Override
     @RequiredUIAccess
-    public void invoke(@Nonnull Project project, @Nonnull Editor editor, @Nonnull PsiFile file) {
+    public void invoke(Project project, Editor editor, PsiFile file) {
         JSClass clazz = findClass(file, editor);
 
         if (clazz == null) {

@@ -25,7 +25,6 @@ import consulo.javascript.localize.JavaScriptLocalize;
 import consulo.language.editor.colorScheme.setting.ColorSettingsPage;
 import consulo.language.editor.highlight.SyntaxHighlighter;
 import consulo.localize.LocalizeValue;
-import jakarta.annotation.Nonnull;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -99,25 +98,21 @@ public class JavaScriptColorsAndFontsPage implements ColorSettingsPage {
 
 
     @Override
-    @Nonnull
     public LocalizeValue getDisplayName() {
         return JavaScriptLocalize.javascriptName();
     }
 
     @Override
-    @Nonnull
     public AttributesDescriptor[] getAttributeDescriptors() {
         return ATTRS;
     }
 
     @Override
-    @Nonnull
     public SyntaxHighlighter getHighlighter() {
         return JavaScript15LanguageVersion.getInstance().getSyntaxHighlighter();
     }
 
     @Override
-    @Nonnull
     public String getDemoText() {
         return "var <global_variable>globalVar</global_variable>;\n" +
             "/**\n" +

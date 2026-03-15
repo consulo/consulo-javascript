@@ -8,7 +8,6 @@ import consulo.javascript.impl.language.psi.JSStubElementType;
 import consulo.language.ast.ASTNode;
 import consulo.language.psi.PsiElement;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
@@ -17,13 +16,12 @@ import jakarta.annotation.Nonnull;
 public interface JSStubElementTypes {
     JSStubElementType<JSFunctionStub, JSFunction> FUNCTION_DECLARATION = new JSFunctionElementType("FUNCTION_DECLARATION") {
         @Override
-        public JSFunction createPsi(@Nonnull JSFunctionStub stub) {
+        public JSFunction createPsi(JSFunctionStub stub) {
             return new JSFunctionImpl(stub, this);
         }
 
-        @Nonnull
         @Override
-        public PsiElement createElement(@Nonnull ASTNode astNode) {
+        public PsiElement createElement(ASTNode astNode) {
             return new JSFunctionImpl(astNode);
         }
     };

@@ -30,7 +30,6 @@ import consulo.annotation.access.RequiredReadAction;
 import consulo.language.psi.PsiElement;
 import consulo.util.lang.Comparing;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * @author max
@@ -82,7 +81,7 @@ public class JSFunctionImpl extends JSFunctionBaseImpl<JSFunctionStub, JSFunctio
     }
 
     @Override
-    protected void accept(@Nonnull JSElementVisitor visitor) {
+    protected void accept(JSElementVisitor visitor) {
         visitor.visitJSFunctionDeclaration(this);
     }
 
@@ -109,7 +108,6 @@ public class JSFunctionImpl extends JSFunctionBaseImpl<JSFunctionStub, JSFunctio
         }
     }
 
-    @Nonnull
     @Override
     @RequiredReadAction
     public SearchScope getUseScope() {
@@ -119,7 +117,6 @@ public class JSFunctionImpl extends JSFunctionBaseImpl<JSFunctionStub, JSFunctio
         return JSResolveUtil.findUseScope(this);
     }
 
-    @Nonnull
     @Override
     @RequiredReadAction
     public PsiElement getNavigationElement() {
@@ -136,7 +133,7 @@ public class JSFunctionImpl extends JSFunctionBaseImpl<JSFunctionStub, JSFunctio
 
     @Override
     @RequiredWriteAction
-    public PsiElement setName(@Nonnull String name) throws IncorrectOperationException {
+    public PsiElement setName(String name) throws IncorrectOperationException {
         String oldName = getName();
         PsiElement element = super.setName(name);
         if (getParent() instanceof JSPackageStatement) {

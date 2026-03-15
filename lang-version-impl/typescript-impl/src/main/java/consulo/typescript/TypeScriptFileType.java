@@ -29,8 +29,7 @@ import consulo.localize.LocalizeValue;
 import consulo.typescript.version.TypeScriptLanguageVersion;
 import consulo.ui.image.Image;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author VISTALL
@@ -43,19 +42,16 @@ public class TypeScriptFileType extends LanguageFileType implements JavaScriptFi
         super(JavaScriptLanguage.INSTANCE);
     }
 
-    @Nonnull
     @Override
     public String getId() {
         return "TypeScript";
     }
 
-    @Nonnull
     @Override
     public LocalizeValue getDescription() {
         return JavaScriptLocalize.typescriptFiletypeDescription();
     }
 
-    @Nonnull
     @Override
     public String getDefaultExtension() {
         return "ts";
@@ -68,7 +64,6 @@ public class TypeScriptFileType extends LanguageFileType implements JavaScriptFi
     }
 
     @RequiredReadAction
-    @Nonnull
     @Override
     public LanguageVersion getLanguageVersion(@Nullable Module module, @Nullable VirtualFile virtualFile) {
         return TypeScriptLanguageVersion.getInstance();

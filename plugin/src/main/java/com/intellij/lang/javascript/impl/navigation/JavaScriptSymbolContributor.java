@@ -34,8 +34,7 @@ import consulo.navigation.NavigationItem;
 import consulo.project.Project;
 import consulo.util.io.FileUtil;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.Collection;
 
@@ -45,7 +44,7 @@ import java.util.Collection;
 @ExtensionImpl
 public class JavaScriptSymbolContributor implements GotoSymbolContributor {
     @Override
-    public void processNames(@Nonnull Processor<String> processor, @Nonnull SearchScope searchScope, @Nullable IdFilter idFilter) {
+    public void processNames(Processor<String> processor, SearchScope searchScope, @Nullable IdFilter idFilter) {
         StubIndex.getInstance().processAllKeys(JavaScriptIndexKeys.ELEMENTS_BY_NAME, processor, (GlobalSearchScope)searchScope, idFilter);
 
         FileBasedIndex.getInstance().processAllKeys(
@@ -66,9 +65,9 @@ public class JavaScriptSymbolContributor implements GotoSymbolContributor {
 
     @Override
     public void processElementsWithName(
-        @Nonnull String name,
-        @Nonnull Processor<NavigationItem> processor,
-        @Nonnull FindSymbolParameters findSymbolParameters
+        String name,
+        Processor<NavigationItem> processor,
+        FindSymbolParameters findSymbolParameters
     ) {
         Project project = findSymbolParameters.getProject();
 

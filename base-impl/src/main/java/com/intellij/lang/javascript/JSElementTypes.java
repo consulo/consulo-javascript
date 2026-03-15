@@ -47,7 +47,6 @@ import consulo.language.version.LanguageVersion;
 import consulo.language.version.LanguageVersionUtil;
 import consulo.project.Project;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * User: max
@@ -60,7 +59,7 @@ public interface JSElementTypes {
     IElementType EMBEDDED_CONTENT = new ILazyParseableElementType("EMBEDDED_CONTENT", JavaScriptLanguage.INSTANCE) {
         @Override
         @RequiredReadAction
-        protected ASTNode doParseContents(@Nonnull ASTNode chameleon, @Nonnull PsiElement psi) {
+        protected ASTNode doParseContents(ASTNode chameleon, PsiElement psi) {
             LanguageVersion languageVersion = LanguageVersionUtil.findLanguageVersion(getLanguage(), psi);
             Project project = psi.getProject();
             Language languageForParser = getLanguageForParser(psi);
@@ -233,13 +232,12 @@ public interface JSElementTypes {
         new ElementTypeAsPsiFactory("COMMA_EXPRESSION", JavaScriptLanguage.INSTANCE, JSCommaExpressionImpl::new);
     JSStubElementType<JSFunctionStub, JSFunction> FUNCTION_EXPRESSION = new JSFunctionElementType("FUNCTION_EXPRESSION") {
         @Override
-        public JSFunction createPsi(@Nonnull JSFunctionStub stub) {
+        public JSFunction createPsi(JSFunctionStub stub) {
             return new JSFunctionExpressionImpl(stub, this);
         }
 
-        @Nonnull
         @Override
-        public PsiElement createElement(@Nonnull ASTNode astNode) {
+        public PsiElement createElement(ASTNode astNode) {
             return new JSFunctionExpressionImpl(astNode);
         }
     };

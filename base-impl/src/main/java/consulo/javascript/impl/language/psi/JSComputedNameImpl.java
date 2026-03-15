@@ -22,8 +22,7 @@ import com.intellij.lang.javascript.psi.impl.JSElementImpl;
 import consulo.javascript.psi.JSComputedName;
 import consulo.language.ast.ASTNode;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author VISTALL
@@ -35,7 +34,7 @@ public class JSComputedNameImpl extends JSElementImpl implements JSComputedName 
     }
 
     @Override
-    protected void accept(@Nonnull JSElementVisitor visitor) {
+    protected void accept(JSElementVisitor visitor) {
         visitor.visitJSElement(this);
     }
 

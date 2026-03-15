@@ -20,7 +20,6 @@ import com.intellij.lang.javascript.psi.JSElementVisitor;
 import com.intellij.lang.javascript.psi.JSExpression;
 import com.intellij.lang.javascript.psi.JSLetExpression;
 import consulo.language.ast.ASTNode;
-import jakarta.annotation.Nonnull;
 
 /**
  * Created by IntelliJ IDEA.
@@ -38,7 +37,7 @@ public class JSLetExpressionImpl extends JSExpressionImpl implements JSLetExpres
     }
 
     @Override
-    protected void accept(@Nonnull JSElementVisitor visitor) {
+    protected void accept(JSElementVisitor visitor) {
         visitor.visitJSLetExpression(this);
     }
 }

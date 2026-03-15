@@ -40,8 +40,7 @@ import consulo.language.util.IncorrectOperationException;
 import consulo.util.collection.ArrayUtil;
 import consulo.xml.psi.xml.XmlFile;
 import consulo.xml.psi.xml.XmlToken;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.Set;
 
@@ -54,7 +53,6 @@ public class JSReferenceExpressionImpl extends JSExpressionImpl implements JSRef
     }
 
     @RequiredReadAction
-    @Nonnull
     @Override
     public JavaScriptType getType() {
         PsiElement resolvedElement = resolve();
@@ -101,7 +99,6 @@ public class JSReferenceExpressionImpl extends JSExpressionImpl implements JSRef
         return this;
     }
 
-    @Nonnull
     @Override
     @RequiredReadAction
     public TextRange getRangeInElement() {
@@ -130,7 +127,6 @@ public class JSReferenceExpressionImpl extends JSExpressionImpl implements JSRef
         return resolveResults.length == 0 || resolveResults.length > 1 ? null : resolveResults[0].getElement();
     }
 
-    @Nonnull
     @Override
     @RequiredReadAction
     public String getCanonicalText() {
@@ -165,7 +161,7 @@ public class JSReferenceExpressionImpl extends JSExpressionImpl implements JSRef
 
     @Override
     @RequiredReadAction
-    public PsiElement bindToElement(@Nonnull PsiElement element) throws IncorrectOperationException {
+    public PsiElement bindToElement(PsiElement element) throws IncorrectOperationException {
         PsiElement parent = getParent();
 
         if (parent instanceof JSClass || parent instanceof JSNamespaceDeclaration || parent instanceof JSFunction) {
@@ -338,7 +334,6 @@ public class JSReferenceExpressionImpl extends JSExpressionImpl implements JSRef
         return jsClass;
     }
 
-    @Nonnull
     @Override
     @RequiredReadAction
     public Object[] getVariants() {
@@ -389,11 +384,10 @@ public class JSReferenceExpressionImpl extends JSExpressionImpl implements JSRef
     }
 
     @Override
-    protected void accept(@Nonnull JSElementVisitor visitor) {
+    protected void accept(JSElementVisitor visitor) {
         visitor.visitJSReferenceExpression(this);
     }
 
-    @Nonnull
     @Override
     @RequiredReadAction
     public ResolveResult[] multiResolve(boolean incompleteCode) {
@@ -404,10 +398,9 @@ public class JSReferenceExpressionImpl extends JSExpressionImpl implements JSRef
     private static class MyResolver implements ResolveCache.PolyVariantResolver<JSReferenceExpressionImpl> {
         private static final MyResolver INSTANCE = new MyResolver();
 
-        @Nonnull
         @Override
         @RequiredReadAction
-        public ResolveResult[] resolve(@Nonnull JSReferenceExpressionImpl referenceExpression, boolean incompleteCode) {
+        public ResolveResult[] resolve(JSReferenceExpressionImpl referenceExpression, boolean incompleteCode) {
             return referenceExpression.doResolve();
         }
     }
@@ -594,7 +587,7 @@ public class JSReferenceExpressionImpl extends JSExpressionImpl implements JSRef
 
         @Override
         @RequiredReadAction
-        public void process(@Nonnull String type, @Nonnull BaseJSSymbolProcessor.EvaluateContext evaluateContext, PsiElement source) {
+        public void process(String type, BaseJSSymbolProcessor.EvaluateContext evaluateContext, PsiElement source) {
             if (evaluateContext.visitedTypes.contains(type)) {
                 return;
             }
@@ -663,7 +656,7 @@ public class JSReferenceExpressionImpl extends JSExpressionImpl implements JSRef
 
         @Override
         @RequiredReadAction
-        public boolean execute(@Nonnull PsiElement element, ResolveState state) {
+        public boolean execute(PsiElement element, ResolveState state) {
             boolean b = super.execute(element, state);
             if (ecma() && getResult() != null) {
                 resolved = MyTypeProcessor.TypeResolveState.Resolved;
@@ -677,7 +670,7 @@ public class JSReferenceExpressionImpl extends JSExpressionImpl implements JSRef
         }
 
         @Override
-        public void setUnknownElement(@Nonnull PsiElement element) {
+        public void setUnknownElement(PsiElement element) {
             if (!(element instanceof XmlToken)) {
                 boolean currentIsNotResolved =
                     element == BaseJSSymbolProcessor.getOriginalQualifier(((JSReferenceExpression)place).getQualifier());

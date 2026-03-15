@@ -16,7 +16,6 @@
 
 package consulo.javascript.language;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
@@ -39,7 +38,6 @@ public enum JavaScriptFeature {
         myName = name;
     }
 
-    @Nonnull
     public String getName() {
         return myName;
     }

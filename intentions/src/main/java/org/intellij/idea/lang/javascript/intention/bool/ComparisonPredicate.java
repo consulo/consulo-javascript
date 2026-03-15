@@ -22,11 +22,10 @@ import org.intellij.idea.lang.javascript.intention.JSElementPredicate;
 import org.intellij.idea.lang.javascript.psiutil.ComparisonUtils;
 import org.intellij.idea.lang.javascript.psiutil.ErrorUtil;
 
-import jakarta.annotation.Nonnull;
 
 class ComparisonPredicate implements JSElementPredicate {
     @Override
-    public boolean satisfiedBy(@Nonnull PsiElement element) {
+    public boolean satisfiedBy(PsiElement element) {
         if (!(element instanceof JSBinaryExpression)) {
             return false;
         }

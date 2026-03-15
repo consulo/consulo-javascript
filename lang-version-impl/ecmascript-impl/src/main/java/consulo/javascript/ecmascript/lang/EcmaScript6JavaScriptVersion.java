@@ -23,7 +23,6 @@ import consulo.javascript.language.JavaScriptLanguage;
 import consulo.javascript.language.StandardJavaScriptVersion;
 import jakarta.inject.Inject;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
@@ -31,7 +30,6 @@ import jakarta.annotation.Nonnull;
  */
 @ExtensionImpl
 public class EcmaScript6JavaScriptVersion extends BaseEcmaScriptJavaScriptVersion implements StandardJavaScriptVersion, JavaScriptVersionWithHelper {
-    @Nonnull
     public static EcmaScript6JavaScriptVersion getInstance() {
         return JavaScriptLanguage.INSTANCE.findVersionByClass(EcmaScript6JavaScriptVersion.class);
     }
@@ -41,7 +39,7 @@ public class EcmaScript6JavaScriptVersion extends BaseEcmaScriptJavaScriptVersio
         super("ECMASCRIPT_6");
     }
 
-    public EcmaScript6JavaScriptVersion(@Nonnull String id) {
+    public EcmaScript6JavaScriptVersion(String id) {
         super(id);
 
         addFeature(JavaScriptFeature.CLASS);
@@ -52,7 +50,6 @@ public class EcmaScript6JavaScriptVersion extends BaseEcmaScriptJavaScriptVersio
         addFeature(JavaScriptFeature.FUNCTION_PROPERTY);
     }
 
-    @Nonnull
     @Override
     public String getPresentableName() {
         return "ECMAScript 6";

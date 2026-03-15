@@ -2,7 +2,6 @@ package com.sixrr.inspectjs.functionmetrics;
 
 import com.intellij.lang.javascript.psi.*;
 import com.sixrr.inspectjs.JSRecursiveElementVisitor;
-import jakarta.annotation.Nonnull;
 
 class NestingDepthVisitor extends JSRecursiveElementVisitor {
     private int m_maximumDepth = 0;
@@ -26,21 +25,21 @@ class NestingDepthVisitor extends JSRecursiveElementVisitor {
     //}
 
     @Override
-    public void visitJSDoWhileStatement(@Nonnull JSDoWhileStatement statement) {
+    public void visitJSDoWhileStatement(JSDoWhileStatement statement) {
         enterScope();
         super.visitJSDoWhileStatement(statement);
         exitScope();
     }
 
     @Override
-    public void visitJSForStatement(@Nonnull JSForStatement statement) {
+    public void visitJSForStatement(JSForStatement statement) {
         enterScope();
         super.visitJSForStatement(statement);
         exitScope();
     }
 
     @Override
-    public void visitJSIfStatement(@Nonnull JSIfStatement statement) {
+    public void visitJSIfStatement(JSIfStatement statement) {
         boolean isAlreadyCounted = false;
         if (statement.getParent() instanceof JSIfStatement) {
             JSIfStatement parent = (JSIfStatement)statement.getParent();
@@ -60,21 +59,21 @@ class NestingDepthVisitor extends JSRecursiveElementVisitor {
     }
 
     @Override
-    public void visitJSTryStatement(@Nonnull JSTryStatement statement) {
+    public void visitJSTryStatement(JSTryStatement statement) {
         enterScope();
         super.visitJSTryStatement(statement);
         exitScope();
     }
 
     @Override
-    public void visitJSSwitchStatement(@Nonnull JSSwitchStatement statement) {
+    public void visitJSSwitchStatement(JSSwitchStatement statement) {
         enterScope();
         super.visitJSSwitchStatement(statement);
         exitScope();
     }
 
     @Override
-    public void visitJSWhileStatement(@Nonnull JSWhileStatement statement) {
+    public void visitJSWhileStatement(JSWhileStatement statement) {
         enterScope();
         super.visitJSWhileStatement(statement);
         exitScope();

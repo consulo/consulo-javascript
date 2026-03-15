@@ -41,8 +41,7 @@ import consulo.util.lang.Pair;
 import consulo.util.lang.StringUtil;
 import consulo.util.lang.ref.SimpleReference;
 import consulo.xml.psi.xml.XmlToken;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.io.File;
 import java.lang.reflect.Method;
@@ -349,7 +348,7 @@ public class JSDocumentationProvider implements CodeDocumentationProvider, Langu
 
     @Nullable
     @RequiredReadAction
-    private static String generateReferenceTargetList(@Nullable JSReferenceList implementsList, @Nonnull String packageName) {
+    private static String generateReferenceTargetList(@Nullable JSReferenceList implementsList, String packageName) {
         if (implementsList == null) {
             return null;
         }
@@ -641,7 +640,7 @@ public class JSDocumentationProvider implements CodeDocumentationProvider, Langu
     }
 
     @Nullable
-    private static PsiElement getDocumentationElementForLinkStatic(PsiManager psiManager, String link, @Nonnull PsiElement context) {
+    private static PsiElement getDocumentationElementForLinkStatic(PsiManager psiManager, String link, PsiElement context) {
         int delimiterIndex = link.lastIndexOf(':');
 
         String attributeType = null;
@@ -721,7 +720,7 @@ public class JSDocumentationProvider implements CodeDocumentationProvider, Langu
         JSResolveUtil.processMetaAttributesForClass(clazz, new JSResolveUtil.MetaDataProcessor() {
             @Override
             @RequiredReadAction
-            public boolean process(@Nonnull JSAttribute jsAttribute) {
+            public boolean process(JSAttribute jsAttribute) {
                 if (type.equals(jsAttribute.getName())) {
                     JSAttributeNameValuePair jsAttributeNameValuePair = jsAttribute.getValueByName("name");
                     if (jsAttributeNameValuePair != null && name.equals(jsAttributeNameValuePair.getSimpleValue())) {
@@ -764,7 +763,7 @@ public class JSDocumentationProvider implements CodeDocumentationProvider, Langu
 
     @Nullable
     @Override
-    public Pair<PsiElement, PsiComment> parseContext(@Nonnull PsiElement element) {
+    public Pair<PsiElement, PsiComment> parseContext(PsiElement element) {
         return null;
     }
 
@@ -926,7 +925,6 @@ public class JSDocumentationProvider implements CodeDocumentationProvider, Langu
         return null;
     }
 
-    @Nonnull
     @Override
     public Language getLanguage() {
         return JavaScriptLanguage.INSTANCE;

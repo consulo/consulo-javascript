@@ -51,7 +51,6 @@ import consulo.undoRedo.CommandProcessor;
 import consulo.util.collection.Sets;
 import consulo.util.collection.SmartList;
 import consulo.util.lang.StringUtil;
-import jakarta.annotation.Nonnull;
 
 import java.util.Collection;
 import java.util.Collections;
@@ -78,7 +77,7 @@ public class AddImportECMAScriptClassOrFunctionAction implements HintAction, Que
 
     @Override
     @RequiredUIAccess
-    public boolean showHint(@Nonnull Editor editor) {
+    public boolean showHint(Editor editor) {
         myEditor = editor;
         PsiElement element = myReference.getElement();
         TextRange textRange = InjectedLanguageManager.getInstance(element.getProject()).injectedToHost(element, element.getTextRange());
@@ -87,7 +86,6 @@ public class AddImportECMAScriptClassOrFunctionAction implements HintAction, Que
     }
 
     @Override
-    @Nonnull
     public LocalizeValue getText() {
         String className = StringUtil.notNullize(calculatedClass);
         return isFunction
@@ -96,20 +94,19 @@ public class AddImportECMAScriptClassOrFunctionAction implements HintAction, Que
     }
 
     @Override
-    @Nonnull
     public LocalizeValue getName() {
         return getText();
     }
 
     @Override
     @RequiredWriteAction
-    public void applyFix(@Nonnull Project project, @Nonnull ProblemDescriptor descriptor) {
+    public void applyFix(Project project, ProblemDescriptor descriptor) {
         invoke(project, myEditor, descriptor.getPsiElement().getContainingFile());
     }
 
     @Override
     @RequiredReadAction
-    public boolean isAvailable(@Nonnull Project project, Editor editor, PsiFile file) {
+    public boolean isAvailable(Project project, Editor editor, PsiFile file) {
         if (!myReference.getElement().isValid()) {
             return false;
         }
@@ -200,7 +197,7 @@ public class AddImportECMAScriptClassOrFunctionAction implements HintAction, Que
 
     @Override
     @RequiredWriteAction
-    public void invoke(@Nonnull final Project project, final Editor editor, PsiFile file) {
+    public void invoke(final Project project, final Editor editor, PsiFile file) {
         Collection<JSQualifiedNamedElement> candidates = getCandidates(editor, file);
 
         if (candidates.size() > 0) {
@@ -236,7 +233,7 @@ public class AddImportECMAScriptClassOrFunctionAction implements HintAction, Que
                     JavaScriptLocalize.chooseClassTitle().get(),
                     new PsiElementProcessor<>() {
                         @Override
-                        public boolean execute(@Nonnull JSQualifiedNamedElement element) {
+                        public boolean execute(JSQualifiedNamedElement element) {
                             CommandProcessor.getInstance().newCommand()
                                 .project(project)
                                 .name(LocalizeValue.ofNullable(getClass().getName()))

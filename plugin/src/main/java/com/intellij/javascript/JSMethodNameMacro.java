@@ -29,7 +29,6 @@ import consulo.language.editor.template.macro.Macro;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.util.PsiTreeUtil;
 
-import jakarta.annotation.Nonnull;
 
 @ExtensionImpl
 public class JSMethodNameMacro extends Macro {
@@ -49,7 +48,7 @@ public class JSMethodNameMacro extends Macro {
     }
 
     @Override
-    public Result calculateResult(@Nonnull Expression[] params, ExpressionContext context) {
+    public Result calculateResult(Expression[] params, ExpressionContext context) {
         PsiElement elementAtCaret = JSClassNameMacro.findElementAtCaret(context);
         if (elementAtCaret != null) {
             JSFunction function = PsiTreeUtil.getParentOfType(elementAtCaret, JSFunction.class);
@@ -68,12 +67,12 @@ public class JSMethodNameMacro extends Macro {
     }
 
     @Override
-    public Result calculateQuickResult(@Nonnull Expression[] params, ExpressionContext context) {
+    public Result calculateQuickResult(Expression[] params, ExpressionContext context) {
         return null;
     }
 
     @Override
-    public LookupElement[] calculateLookupItems(@Nonnull Expression[] params, ExpressionContext context) {
+    public LookupElement[] calculateLookupItems(Expression[] params, ExpressionContext context) {
         return null;
     }
 }

@@ -8,9 +8,8 @@ import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiNamedElement;
 import consulo.language.psi.resolve.ResolveState;
 import consulo.language.version.LanguageVersion;
-import jakarta.annotation.Nonnull;
 
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author VISTALL
@@ -28,7 +27,7 @@ public abstract class ResolveHelper {
     }
 
     @Nullable
-    public JSImportedElementResolveResult resolveTypeNameUsingImports(@Nonnull String referencedName, PsiNamedElement parent) {
+    public JSImportedElementResolveResult resolveTypeNameUsingImports(String referencedName, PsiNamedElement parent) {
         return null;
     }
 

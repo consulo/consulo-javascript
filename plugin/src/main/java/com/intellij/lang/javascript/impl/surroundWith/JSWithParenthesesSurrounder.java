@@ -29,8 +29,7 @@ import consulo.language.util.IncorrectOperationException;
 import consulo.localize.LocalizeValue;
 import consulo.project.Project;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author yole
@@ -43,14 +42,14 @@ public class JSWithParenthesesSurrounder implements Surrounder {
     }
 
     @Override
-    public boolean isApplicable(@Nonnull PsiElement[] elements) {
+    public boolean isApplicable(PsiElement[] elements) {
         return true;
     }
 
     @Nullable
     @Override
     @RequiredReadAction
-    public TextRange surroundElements(@Nonnull Project project, @Nonnull Editor editor, @Nonnull PsiElement[] elements)
+    public TextRange surroundElements(Project project, Editor editor, PsiElement[] elements)
         throws IncorrectOperationException {
         JSExpression expr = (JSExpression)elements[0];
         ASTNode parenthExprNode = JSChangeUtil.createExpressionFromText(project, "(" + expr.getText() + ")").getNode();

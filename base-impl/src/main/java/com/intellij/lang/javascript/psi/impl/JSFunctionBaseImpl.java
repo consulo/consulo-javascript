@@ -36,7 +36,6 @@ import consulo.javascript.language.psi.JavaScriptType;
 import consulo.javascript.language.psi.JavaScriptTypeElement;
 import consulo.language.ast.ASTNode;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * @author max
@@ -81,7 +80,6 @@ abstract class JSFunctionBaseImpl<T extends JSFunctionStub, T2 extends JSFunctio
         return result;
     }
 
-    @Nonnull
     @Override
     public JavaScriptType getReturnType() {
         return JavaScriptType.UNKNOWN;
@@ -105,7 +103,7 @@ abstract class JSFunctionBaseImpl<T extends JSFunctionStub, T2 extends JSFunctio
 
     @Override
     @RequiredWriteAction
-    public PsiElement setName(@Nonnull String name) throws IncorrectOperationException {
+    public PsiElement setName(String name) throws IncorrectOperationException {
         ASTNode newNameElement = createNameIdentifier(name);
         ASTNode nameIdentifier = getNameIdentifier().getNode();
         nameIdentifier.getTreeParent().replaceChild(nameIdentifier, newNameElement);
@@ -151,10 +149,10 @@ abstract class JSFunctionBaseImpl<T extends JSFunctionStub, T2 extends JSFunctio
     @Override
     @RequiredReadAction
     public boolean processDeclarations(
-        @Nonnull PsiScopeProcessor processor,
-        @Nonnull ResolveState state,
+        PsiScopeProcessor processor,
+        ResolveState state,
         PsiElement lastParent,
-        @Nonnull PsiElement place
+        PsiElement place
     ) {
         if (lastParent != null && lastParent.getParent() == this) {
             if (place instanceof JSReferenceExpression referenceExpression) {
@@ -183,7 +181,7 @@ abstract class JSFunctionBaseImpl<T extends JSFunctionStub, T2 extends JSFunctio
 
     @Override
     @RequiredWriteAction
-    public PsiElement addBefore(@Nonnull PsiElement element, PsiElement anchor) throws IncorrectOperationException {
+    public PsiElement addBefore(PsiElement element, PsiElement anchor) throws IncorrectOperationException {
         if (anchor == getFirstChild() && element instanceof JSAttributeList attributeList
             && anchor.getNode().getElementType() == JSTokenTypes.FUNCTION_KEYWORD) {
             return JSChangeUtil.doDoAddBefore(this, attributeList, anchor);

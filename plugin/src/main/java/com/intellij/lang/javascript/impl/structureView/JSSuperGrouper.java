@@ -27,7 +27,6 @@ import consulo.ide.localize.IdeLocalize;
 import consulo.language.psi.PsiElement;
 import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.project.ui.view.tree.AbstractTreeNode;
-import jakarta.annotation.Nonnull;
 
 import java.util.Collection;
 import java.util.Collections;
@@ -40,7 +39,6 @@ import java.util.Map;
 class JSSuperGrouper implements Grouper {
     private static final String SHOW_CLASSES = "SHOW_CLASSES";
 
-    @Nonnull
     @Override
     @RequiredReadAction
     public Collection<Group> group(Object parent, Collection<TreeElement> children) {
@@ -102,7 +100,6 @@ class JSSuperGrouper implements Grouper {
     }
 
     @Override
-    @Nonnull
     public ActionPresentation getPresentation() {
         return new ActionPresentationData(
             IdeLocalize.actionStructureviewGroupMethodsByDefiningType().get(),
@@ -112,7 +109,6 @@ class JSSuperGrouper implements Grouper {
     }
 
     @Override
-    @Nonnull
     public String getName() {
         return SHOW_CLASSES;
     }

@@ -38,7 +38,6 @@ import consulo.ui.ex.awt.DialogWrapper;
 import consulo.ui.ex.awt.Messages;
 import consulo.ui.ex.awt.util.Alarm;
 import consulo.util.lang.ref.SimpleReference;
-import jakarta.annotation.Nonnull;
 
 import javax.swing.*;
 import java.awt.event.KeyAdapter;
@@ -61,7 +60,7 @@ public abstract class JSBaseIntroduceDialog extends DialogWrapper implements Bas
         Project project,
         JSExpression[] occurrences,
         JSExpression mainOccurrence,
-        @Nonnull LocalizeValue title
+        LocalizeValue title
     ) {
         super(project, false);
 
@@ -222,7 +221,7 @@ public abstract class JSBaseIntroduceDialog extends DialogWrapper implements Bas
         final SimpleReference<JSNamedElement> existing = new SimpleReference<>();
         scope.accept(new JSElementVisitor() {
             @Override
-            public void visitJSElement(@Nonnull JSElement node) {
+            public void visitJSElement(JSElement node) {
                 if (existing.isNull()) {
                     node.acceptChildren(this);
                 }
@@ -230,7 +229,7 @@ public abstract class JSBaseIntroduceDialog extends DialogWrapper implements Bas
 
             @Override
             @RequiredReadAction
-            public void visitJSVariable(@Nonnull JSVariable node) {
+            public void visitJSVariable(JSVariable node) {
                 if (name.equals(node.getName())) {
                     existing.set(node);
                 }
@@ -239,7 +238,7 @@ public abstract class JSBaseIntroduceDialog extends DialogWrapper implements Bas
 
             @Override
             @RequiredReadAction
-            public void visitJSFunctionDeclaration(@Nonnull JSFunction node) {
+            public void visitJSFunctionDeclaration(JSFunction node) {
                 if (name.equals(node.getName())) {
                     existing.set(node);
                 }

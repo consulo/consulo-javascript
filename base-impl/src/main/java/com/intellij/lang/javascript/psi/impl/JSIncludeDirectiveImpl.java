@@ -29,7 +29,6 @@ import consulo.language.psi.PsiReference;
 import consulo.language.psi.path.FileReference;
 import consulo.language.psi.path.FileReferenceSet;
 import consulo.util.lang.StringUtil;
-import jakarta.annotation.Nonnull;
 
 /**
  * @author Maxim.Mossienko
@@ -44,11 +43,10 @@ public class JSIncludeDirectiveImpl extends JSStubbedStatementImpl<JSIncludeDire
     }
 
     @Override
-    protected void accept(@Nonnull JSElementVisitor visitor) {
+    protected void accept(JSElementVisitor visitor) {
         visitor.visitJSIncludeDirective(this);
     }
 
-    @Nonnull
     @Override
     @RequiredReadAction
     public PsiReference[] getReferences() {

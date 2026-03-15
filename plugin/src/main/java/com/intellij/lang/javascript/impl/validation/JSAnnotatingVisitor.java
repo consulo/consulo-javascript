@@ -55,7 +55,6 @@ import consulo.util.lang.ref.SimpleReference;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.xml.psi.xml.XmlAttributeValue;
 import consulo.xml.psi.xml.XmlTagChild;
-import jakarta.annotation.Nonnull;
 
 import java.util.*;
 
@@ -67,7 +66,7 @@ public class JSAnnotatingVisitor extends JSElementVisitor implements Annotator {
     private AnnotationHolder myHolder;
 
     @Override
-    public synchronized void annotate(PsiElement psiElement, @Nonnull AnnotationHolder holder) {
+    public synchronized void annotate(PsiElement psiElement, AnnotationHolder holder) {
         myHolder = holder;
         psiElement.accept(this);
         myHolder = null;
@@ -138,13 +137,13 @@ public class JSAnnotatingVisitor extends JSElementVisitor implements Annotator {
 
     @Override
     @RequiredReadAction
-    public void visitJSDocTagValue(@Nonnull JSDocTagValue tagValue) {
+    public void visitJSDocTagValue(JSDocTagValue tagValue) {
         checkReferences(tagValue, HighlightSeverity.WARNING);
     }
 
     @Override
     @RequiredReadAction
-    public void visitJSDocTag(@Nonnull JSDocTag tagValue) {
+    public void visitJSDocTag(JSDocTag tagValue) {
         checkReferences(tagValue, HighlightSeverity.WARNING);
     }
 
@@ -303,7 +302,7 @@ public class JSAnnotatingVisitor extends JSElementVisitor implements Annotator {
     }
 
     @RequiredReadAction
-    private static ASTNode findElementForAccessModifierError(@Nonnull JSFunction o, JSAttributeList attributeList) {
+    private static ASTNode findElementForAccessModifierError(JSFunction o, JSAttributeList attributeList) {
         if (attributeList != null) {
             PsiElement accessTypeElement = attributeList.findAccessTypeElement();
             if (accessTypeElement != null) {
@@ -810,7 +809,7 @@ public class JSAnnotatingVisitor extends JSElementVisitor implements Annotator {
 
     @Override
     @RequiredReadAction
-    public void visitJSThisExpression(@Nonnull JSThisExpression node) {
+    public void visitJSThisExpression(JSThisExpression node) {
         checkClassReferenceInStaticContext(node, JavaScriptLocalize.javascriptValidationMessageThisReferencedFromStaticContext());
     }
 
@@ -854,7 +853,7 @@ public class JSAnnotatingVisitor extends JSElementVisitor implements Annotator {
 
     @Override
     @RequiredReadAction
-    public void visitJSSuperExpression(@Nonnull JSSuperExpression node) {
+    public void visitJSSuperExpression(JSSuperExpression node) {
         checkClassReferenceInStaticContext(node, JavaScriptLocalize.javascriptValidationMessageSuperReferencedFromStaticContext());
     }
 
@@ -1075,7 +1074,7 @@ public class JSAnnotatingVisitor extends JSElementVisitor implements Annotator {
     @Override
     @RequiredReadAction
     @SuppressWarnings("unchecked")
-    public void visitJSReturnStatement(@Nonnull JSReturnStatement node) {
+    public void visitJSReturnStatement(JSReturnStatement node) {
         PsiElement element = PsiTreeUtil.getParentOfType(
             node,
             JSFunction.class,
@@ -1222,20 +1221,19 @@ public class JSAnnotatingVisitor extends JSElementVisitor implements Annotator {
             myHolder.newAnnotation(HighlightSeverity.ERROR, JavaScriptLocalize.javascriptValidationMessageIncorrectPackageName(s, expected))
                 .range(nameIdentifier != null ? nameIdentifier : packageStatement.getFirstChild())
                 .withFix(new SyntheticIntentionAction() {
-                    @Nonnull
                     @Override
                     public LocalizeValue getText() {
                         return JavaScriptLocalize.javascriptFixPackageName(expected);
                     }
 
                     @Override
-                    public boolean isAvailable(@Nonnull Project project, Editor editor, PsiFile file) {
+                    public boolean isAvailable(Project project, Editor editor, PsiFile file) {
                         return packageStatement.isValid();
                     }
 
                     @Override
                     @RequiredWriteAction
-                    public void invoke(@Nonnull Project project, Editor editor, PsiFile file) throws IncorrectOperationException {
+                    public void invoke(Project project, Editor editor, PsiFile file) throws IncorrectOperationException {
                         JSPackageStatementImpl.doChangeName(project, packageStatement, expected);
                     }
 
@@ -1285,25 +1283,23 @@ public class JSAnnotatingVisitor extends JSElementVisitor implements Annotator {
         }
 
         @Override
-        @Nonnull
         public LocalizeValue getText() {
             return myProp;
         }
 
         @Override
-        @Nonnull
         public LocalizeValue getName() {
             return getText();
         }
 
         @Override
         @RequiredUIAccess
-        public void applyFix(@Nonnull Project project, @Nonnull ProblemDescriptor descriptor) {
+        public void applyFix(Project project, ProblemDescriptor descriptor) {
             invoke(project, null, descriptor.getPsiElement().getContainingFile());
         }
 
         @Override
-        public boolean isAvailable(@Nonnull Project project, Editor editor, PsiFile file) {
+        public boolean isAvailable(Project project, Editor editor, PsiFile file) {
             for (ASTNode astNode : myAstNodes) {
                 if (!astNode.getPsi().isValid()) {
                     return false;
@@ -1315,7 +1311,7 @@ public class JSAnnotatingVisitor extends JSElementVisitor implements Annotator {
 
         @Override
         @RequiredUIAccess
-        public void invoke(@Nonnull Project project, Editor editor, PsiFile file) throws IncorrectOperationException {
+        public void invoke(Project project, Editor editor, PsiFile file) throws IncorrectOperationException {
             if (!FileModificationService.getInstance().prepareFileForWrite(file)) {
                 return;
             }
@@ -1340,19 +1336,18 @@ public class JSAnnotatingVisitor extends JSElementVisitor implements Annotator {
         }
 
         @Override
-        @Nonnull
         public LocalizeValue getText() {
             return JavaScriptLocalize.javascriptFixAddOverrideModifier();
         }
 
         @Override
-        public boolean isAvailable(@Nonnull Project project, Editor editor, PsiFile file) {
+        public boolean isAvailable(Project project, Editor editor, PsiFile file) {
             return myNode.isValid();
         }
 
         @Override
         @RequiredUIAccess
-        public void invoke(@Nonnull Project project, Editor editor, PsiFile file) throws IncorrectOperationException {
+        public void invoke(Project project, Editor editor, PsiFile file) throws IncorrectOperationException {
             if (!FileModificationService.getInstance().prepareFileForWrite(file)) {
                 return;
             }
@@ -1384,19 +1379,18 @@ public class JSAnnotatingVisitor extends JSElementVisitor implements Annotator {
         }
 
         @Override
-        @Nonnull
         public LocalizeValue getText() {
             return JavaScriptLocalize.javascriptFixCreateInvokeSuper();
         }
 
         @Override
-        public boolean isAvailable(@Nonnull Project project, Editor editor, PsiFile file) {
+        public boolean isAvailable(Project project, Editor editor, PsiFile file) {
             return superConstructor.isValid() && node.isValid();
         }
 
         @Override
         @RequiredUIAccess
-        public void invoke(@Nonnull Project project, Editor editor, PsiFile file) throws IncorrectOperationException {
+        public void invoke(Project project, Editor editor, PsiFile file) throws IncorrectOperationException {
             if (!FileModificationService.getInstance().prepareFileForWrite(file)) {
                 return;
             }
@@ -1448,19 +1442,18 @@ public class JSAnnotatingVisitor extends JSElementVisitor implements Annotator {
         }
 
         @Override
-        @Nonnull
         public LocalizeValue getText() {
             return JavaScriptLocalize.javascriptFixCreateConstructorInvokeSuper();
         }
 
         @Override
-        public boolean isAvailable(@Nonnull Project project, Editor editor, PsiFile file) {
+        public boolean isAvailable(Project project, Editor editor, PsiFile file) {
             return node.isValid() && superConstructor.isValid();
         }
 
         @Override
         @RequiredUIAccess
-        public void invoke(@Nonnull Project project, Editor editor, PsiFile file) throws IncorrectOperationException {
+        public void invoke(Project project, Editor editor, PsiFile file) throws IncorrectOperationException {
             if (!FileModificationService.getInstance().prepareFileForWrite(file)) {
                 return;
             }

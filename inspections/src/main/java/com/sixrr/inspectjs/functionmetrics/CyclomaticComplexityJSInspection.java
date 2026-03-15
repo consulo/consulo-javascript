@@ -11,31 +11,26 @@ import consulo.annotation.component.ExtensionImpl;
 import consulo.language.editor.inspection.InspectionToolState;
 import consulo.language.psi.PsiElement;
 import consulo.localize.LocalizeValue;
-import jakarta.annotation.Nonnull;
 import org.intellij.lang.annotations.Pattern;
 
 @ExtensionImpl
 public class CyclomaticComplexityJSInspection extends JavaScriptInspection {
-    @Nonnull
     @Override
     @Pattern(value = "[a-zA-Z_0-9.-]+")
     public String getID() {
         return "OverlyComplexFunctionJS";
     }
 
-    @Nonnull
     @Override
     public LocalizeValue getDisplayName() {
         return InspectionJSLocalize.overlyComplexFunctionDisplayName();
     }
 
-    @Nonnull
     @Override
     public LocalizeValue getGroupDisplayName() {
         return JSGroupNames.FUNCTIONMETRICS_GROUP_NAME;
     }
 
-    @Nonnull
     @Override
     public InspectionToolState<?> createStateProvider() {
         return new CyclomaticComplexityJSInspectionState();
@@ -63,7 +58,7 @@ public class CyclomaticComplexityJSInspection extends JavaScriptInspection {
 
     private class Visitor extends BaseInspectionVisitor<CyclomaticComplexityJSInspectionState> {
         @Override
-        public void visitJSFunctionDeclaration(@Nonnull JSFunction function) {
+        public void visitJSFunctionDeclaration(JSFunction function) {
             PsiElement lastChild = function.getLastChild();
             if (!(lastChild instanceof JSBlockStatement)) {
                 return;

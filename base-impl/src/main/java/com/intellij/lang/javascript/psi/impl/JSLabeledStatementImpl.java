@@ -27,7 +27,6 @@ import consulo.language.util.IncorrectOperationException;
 import consulo.language.ast.ASTNode;
 import consulo.language.psi.PsiElement;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * @author max
@@ -65,7 +64,7 @@ public class JSLabeledStatementImpl extends JSStatementImpl implements JSLabeled
     }
 
     @Override
-    protected void accept(@Nonnull JSElementVisitor visitor) {
+    protected void accept(JSElementVisitor visitor) {
         visitor.visitJSLabeledStatement(this);
     }
 
@@ -77,7 +76,7 @@ public class JSLabeledStatementImpl extends JSStatementImpl implements JSLabeled
 
     @Override
     @RequiredWriteAction
-    public PsiElement setName(@Nonnull String name) throws IncorrectOperationException {
+    public PsiElement setName(String name) throws IncorrectOperationException {
         JSChangeUtil.doIdentifierReplacement(this, getLabelIdentifier(), name);
         return this;
     }

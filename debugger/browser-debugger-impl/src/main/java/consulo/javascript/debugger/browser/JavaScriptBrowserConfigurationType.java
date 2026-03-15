@@ -10,7 +10,6 @@ import consulo.javascript.module.extension.JavaScriptModuleExtension;
 import consulo.localize.LocalizeValue;
 import consulo.module.extension.ModuleExtensionHelper;
 import consulo.project.Project;
-import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
@@ -28,7 +27,7 @@ public class JavaScriptBrowserConfigurationType extends ConfigurationTypeBase {
             }
 
             @Override
-            public boolean isApplicable(@Nonnull Project project) {
+            public boolean isApplicable(Project project) {
                 return ModuleExtensionHelper.getInstance(project).hasModuleExtension(JavaScriptModuleExtension.class);
             }
         });

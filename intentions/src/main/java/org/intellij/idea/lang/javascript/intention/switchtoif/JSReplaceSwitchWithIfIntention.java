@@ -27,11 +27,9 @@ import consulo.language.psi.PsiManager;
 import consulo.language.psi.PsiWhiteSpace;
 import consulo.language.util.IncorrectOperationException;
 import consulo.localize.LocalizeValue;
-import jakarta.annotation.Nonnull;
 import org.intellij.idea.lang.javascript.intention.JSElementPredicate;
 import org.intellij.idea.lang.javascript.intention.JSIntention;
 import org.intellij.idea.lang.javascript.psiutil.*;
-import org.jetbrains.annotations.NonNls;
 
 import java.util.*;
 
@@ -42,36 +40,27 @@ import java.util.*;
     fileExtensions = "js"
 )
 public class JSReplaceSwitchWithIfIntention extends JSIntention {
-    @NonNls
     private static final String IF_PREFIX = "if (";
-    @NonNls
     private static final String IF_SUFFIX = ") {";
-    @NonNls
     private static final String ELSE = "} else {";
-    @NonNls
     private static final String ELSE_KEYWORD = "else ";
-    @NonNls
     private static final String VAR_PREFIX = "var ";
-    @NonNls
     private static final String BREAK_KEYWORD = "break ";
-    @NonNls
     private static final String DEFAULT_LABEL_NAME = "Label";
 
     @Override
-    @Nonnull
     public LocalizeValue getText() {
         return JSIntentionLocalize.switchtoifReplaceSwitchWithIf();
     }
 
     @Override
-    @Nonnull
     public JSElementPredicate getElementPredicate() {
         return new SwitchPredicate();
     }
 
     @Override
     @RequiredReadAction
-    public void processIntention(@Nonnull PsiElement element) throws IncorrectOperationException {
+    public void processIntention(PsiElement element) throws IncorrectOperationException {
         JSSwitchStatement switchStatement = (JSSwitchStatement)element.getParent();
 
         assert (switchStatement != null);
@@ -379,7 +368,7 @@ public class JSReplaceSwitchWithIfIntention extends JSIntention {
 
     private static class SwitchPredicate implements JSElementPredicate {
         @Override
-        public boolean satisfiedBy(@Nonnull PsiElement element) {
+        public boolean satisfiedBy(PsiElement element) {
             PsiElement parent = element.getParent();
 
             if (parent instanceof JSSwitchStatement switchStatement) {

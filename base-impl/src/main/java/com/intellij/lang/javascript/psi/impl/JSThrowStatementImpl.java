@@ -20,7 +20,6 @@ import consulo.language.ast.ASTNode;
 import com.intellij.lang.javascript.psi.JSElementVisitor;
 import com.intellij.lang.javascript.psi.JSExpression;
 import com.intellij.lang.javascript.psi.JSThrowStatement;
-import jakarta.annotation.Nonnull;
 
 /**
  * @author max
@@ -37,7 +36,7 @@ public class JSThrowStatementImpl extends JSStatementImpl implements JSThrowStat
     }
 
     @Override
-    protected void accept(@Nonnull JSElementVisitor visitor) {
+    protected void accept(JSElementVisitor visitor) {
         visitor.visitJSThrowStatement(this);
     }
 }

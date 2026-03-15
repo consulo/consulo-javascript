@@ -18,8 +18,7 @@ package consulo.javascript.language.psi;
 
 import consulo.annotation.access.RequiredReadAction;
 import consulo.language.psi.PsiElement;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author VISTALL
@@ -38,7 +37,6 @@ public class JavaScriptPrimitiveType implements JavaScriptType {
         myName = name;
     }
 
-    @Nonnull
     @Override
     @RequiredReadAction
     public String getPresentableText() {

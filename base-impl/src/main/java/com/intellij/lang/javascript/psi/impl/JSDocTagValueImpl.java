@@ -25,7 +25,6 @@ import consulo.language.psi.PsiNamedElement;
 import consulo.language.psi.PsiReference;
 import consulo.util.collection.ArrayUtil;
 import consulo.util.lang.text.StringTokenizer;
-import jakarta.annotation.Nonnull;
 
 public class JSDocTagValueImpl extends JSElementImpl implements JSDocTagValue {
     private volatile PsiReference[] myRefs;
@@ -35,7 +34,6 @@ public class JSDocTagValueImpl extends JSElementImpl implements JSDocTagValue {
         super(node);
     }
 
-    @Nonnull
     @Override
     @RequiredReadAction
     public PsiReference[] getReferences() {
@@ -109,7 +107,7 @@ public class JSDocTagValueImpl extends JSElementImpl implements JSDocTagValue {
     }
 
     @Override
-    protected void accept(@Nonnull JSElementVisitor visitor) {
+    protected void accept(JSElementVisitor visitor) {
         visitor.visitJSDocTagValue(this);
     }
 }

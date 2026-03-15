@@ -32,8 +32,7 @@ import consulo.language.editor.refactoring.RefactoringSupportProvider;
 import consulo.language.editor.refactoring.action.RefactoringActionHandler;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.scope.LocalSearchScope;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 @ExtensionImpl
 public class JavascriptRefactoringSupportProvider extends RefactoringSupportProvider {
@@ -76,7 +75,6 @@ public class JavascriptRefactoringSupportProvider extends RefactoringSupportProv
         return element instanceof JSNamedElement namedElement && namedElement.getUseScope() instanceof LocalSearchScope;
     }
 
-    @Nonnull
     @Override
     public Language getLanguage() {
         return JavaScriptLanguage.INSTANCE;

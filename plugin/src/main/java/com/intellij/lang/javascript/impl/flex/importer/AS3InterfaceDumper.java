@@ -17,8 +17,7 @@
 package com.intellij.lang.javascript.impl.flex.importer;
 
 import consulo.util.lang.StringEscapeUtil;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.Set;
 
@@ -31,20 +30,20 @@ class AS3InterfaceDumper extends AbstractDumpProcessor {
     private boolean isInterface;
 
     @Override
-    public void dumpStat(@Nonnull String stat) {
+    public void dumpStat(String stat) {
     }
 
     @Override
-    public void dumpToplevelAnonymousMethod(@Nonnull Abc abc, @Nonnull MethodInfo m) {
+    public void dumpToplevelAnonymousMethod(Abc abc, MethodInfo m) {
     }
 
     @Override
-    public void dumpTopLevelTraits(@Nonnull Abc abc, @Nonnull Traits t, String indent) {
+    public void dumpTopLevelTraits(Abc abc, Traits t, String indent) {
         t.dump(abc, indent, "", this);
     }
 
     @Override
-    public boolean doDumpMember(@Nonnull MemberInfo memberInfo) {
+    public boolean doDumpMember(MemberInfo memberInfo) {
         return memberInfo.name != null && (memberInfo.name.name == null || !memberInfo.name.name.contains(Abc.$CINIT));
     }
 
@@ -112,13 +111,13 @@ class AS3InterfaceDumper extends AbstractDumpProcessor {
     }
 
     @Override
-    public boolean doDumpMetaData(@Nonnull MetaData md) {
+    public boolean doDumpMetaData(MetaData md) {
         return !md.name.contains("__");
     }
 
     @Override
     public void processParameter(
-        @Nonnull String name,
+        String name,
         @Nullable Multiname type,
         String parentName,
         @Nullable Multiname value,
@@ -154,12 +153,12 @@ class AS3InterfaceDumper extends AbstractDumpProcessor {
     }
 
     @Override
-    public void hasError(@Nonnull String error) {
+    public void hasError(String error) {
         sb.append("/*").append(error).append("*/");
     }
 
     @Override
-    public void processMultinameAsPackageName(@Nonnull Multiname name, String parentName, boolean verbose) {
+    public void processMultinameAsPackageName(Multiname name, String parentName, boolean verbose) {
         append(getMultinameAsPackageName(name, parentName, verbose));
     }
 

@@ -21,7 +21,6 @@ import consulo.javascript.language.StandardJavaScriptVersions;
 import consulo.javascript.module.extension.JavaScriptMutableModuleExtension;
 import consulo.language.version.LanguageVersion;
 import consulo.ui.ex.awt.*;
-import jakarta.annotation.Nonnull;
 
 import javax.swing.*;
 import java.awt.event.ItemEvent;
@@ -48,7 +47,7 @@ public class ClientJavaScriptModuleExtensionPanel extends JPanel {
         languageVersionComboBox.setRenderer(new ColoredListCellRenderer<>() {
             @Override
             protected void customizeCellRenderer(
-                @Nonnull JList list,
+                JList list,
                 JavaScriptLanguageVersion value,
                 int index,
                 boolean selected,

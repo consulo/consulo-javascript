@@ -22,7 +22,6 @@ import com.intellij.lang.javascript.psi.JSExpression;
 import com.intellij.lang.javascript.psi.JSLetStatement;
 import consulo.language.ast.ASTNode;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * @author maxim
@@ -33,7 +32,7 @@ public class JSLetStatementImpl extends JSStatementImpl implements JSLetStatemen
     }
 
     @Override
-    protected void accept(@Nonnull JSElementVisitor visitor) {
+    protected void accept(JSElementVisitor visitor) {
         visitor.visitJSLetStatement(this);
     }
 

@@ -29,8 +29,7 @@ import consulo.language.util.IncorrectOperationException;
 import consulo.language.ast.ASTNode;
 import consulo.util.collection.ArrayUtil;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -53,7 +52,6 @@ abstract class JSStatementWithLabelReferenceImpl extends JSStatementImpl {
         return label != null ? label.getText() : null;
     }
 
-    @Nonnull
     @Override
     @RequiredReadAction
     public PsiReference[] getReferences() {
@@ -85,7 +83,6 @@ abstract class JSStatementWithLabelReferenceImpl extends JSStatementImpl {
             return JSStatementWithLabelReferenceImpl.this;
         }
 
-        @Nonnull
         @Override
         @RequiredReadAction
         public TextRange getRangeInElement() {
@@ -104,7 +101,7 @@ abstract class JSStatementWithLabelReferenceImpl extends JSStatementImpl {
 
                 @Override
                 @RequiredReadAction
-                public boolean execute(@Nonnull JSLabeledStatement element) {
+                public boolean execute(JSLabeledStatement element) {
                     if (label.equals(element.getLabel())) {
                         result[0] = element;
                         return false;
@@ -116,7 +113,6 @@ abstract class JSStatementWithLabelReferenceImpl extends JSStatementImpl {
             return result[0];
         }
 
-        @Nonnull
         @Override
         @RequiredReadAction
         public String getCanonicalText() {
@@ -132,7 +128,7 @@ abstract class JSStatementWithLabelReferenceImpl extends JSStatementImpl {
 
         @Override
         @RequiredWriteAction
-        public PsiElement bindToElement(@Nonnull PsiElement element) throws IncorrectOperationException {
+        public PsiElement bindToElement(PsiElement element) throws IncorrectOperationException {
             return null;
         }
 
@@ -142,7 +138,6 @@ abstract class JSStatementWithLabelReferenceImpl extends JSStatementImpl {
             return getManager().areElementsEquivalent(resolve(), element);
         }
 
-        @Nonnull
         @Override
         @RequiredReadAction
         public Object[] getVariants() {

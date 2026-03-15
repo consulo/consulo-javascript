@@ -4,7 +4,6 @@ import consulo.annotation.component.ExtensionImpl;
 import consulo.language.psi.PsiElement;
 import consulo.xml.psi.xml.XmlAttributeValue;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
@@ -12,7 +11,6 @@ import jakarta.annotation.Nonnull;
  */
 @ExtensionImpl
 public class XmlAttributeValueJSInjector extends JSLanguageInjector {
-    @Nonnull
     @Override
     public Class<? extends PsiElement> getElementClass() {
         return XmlAttributeValue.class;

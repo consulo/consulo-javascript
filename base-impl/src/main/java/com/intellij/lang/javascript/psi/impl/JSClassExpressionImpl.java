@@ -8,7 +8,6 @@ import consulo.annotation.access.RequiredReadAction;
 import consulo.javascript.language.psi.JavaScriptType;
 import consulo.javascript.lang.psi.impl.JavaScriptClassType;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
@@ -20,18 +19,16 @@ public class JSClassExpressionImpl extends JSExpressionImpl implements JSClassEx
     }
 
     @Override
-    protected void accept(@Nonnull JSElementVisitor visitor) {
+    protected void accept(JSElementVisitor visitor) {
         visitor.visitJSExpression(this);
     }
 
-    @Nonnull
     @Override
     @RequiredReadAction
     public JSClass getClassElement() {
         return findNotNullChildByClass(JSClass.class);
     }
 
-    @Nonnull
     @Override
     @RequiredReadAction
     public JavaScriptType getType() {

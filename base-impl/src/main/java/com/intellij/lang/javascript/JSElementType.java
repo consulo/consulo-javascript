@@ -18,8 +18,6 @@ package com.intellij.lang.javascript;
 
 import consulo.javascript.language.JavaScriptLanguage;
 import consulo.language.ast.IElementType;
-import jakarta.annotation.Nonnull;
-import org.jetbrains.annotations.NonNls;
 
 /**
  * Created by IntelliJ IDEA.
@@ -28,7 +26,7 @@ import org.jetbrains.annotations.NonNls;
  * Time: 6:38:56 PM
  */
 public class JSElementType extends IElementType {
-    public JSElementType(@NonNls @Nonnull String debugName) {
+    public JSElementType(String debugName) {
         super(debugName, JavaScriptLanguage.INSTANCE);
     }
 }

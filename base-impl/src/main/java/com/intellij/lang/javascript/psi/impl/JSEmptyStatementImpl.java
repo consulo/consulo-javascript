@@ -19,7 +19,6 @@ package com.intellij.lang.javascript.psi.impl;
 import consulo.language.ast.ASTNode;
 import com.intellij.lang.javascript.psi.JSElementVisitor;
 import com.intellij.lang.javascript.psi.JSEmptyStatement;
-import jakarta.annotation.Nonnull;
 
 /**
  * @author max
@@ -31,7 +30,7 @@ public class JSEmptyStatementImpl extends JSStatementImpl implements JSEmptyStat
     }
 
     @Override
-    protected void accept(@Nonnull JSElementVisitor visitor) {
+    protected void accept(JSElementVisitor visitor) {
         visitor.visitJSEmptyStatement(this);
     }
 }

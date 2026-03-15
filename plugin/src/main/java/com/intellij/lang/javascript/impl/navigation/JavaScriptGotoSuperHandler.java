@@ -36,7 +36,6 @@ import consulo.navigation.NavigationItem;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.popup.JBPopup;
-import jakarta.annotation.Nonnull;
 
 @ExtensionImpl
 public class JavaScriptGotoSuperHandler implements GotoSuperActionHander {
@@ -124,7 +123,6 @@ public class JavaScriptGotoSuperHandler implements GotoSuperActionHander {
         return true;
     }
 
-    @Nonnull
     @Override
     public Language getLanguage() {
         return JavaScriptLanguage.INSTANCE;

@@ -29,7 +29,6 @@ import consulo.language.psi.scope.GlobalSearchScope;
 import consulo.language.psi.stub.StubIndex;
 import consulo.language.psi.stub.StubIndexKey;
 import consulo.project.Project;
-import jakarta.annotation.Nonnull;
 
 import java.util.Collection;
 import java.util.HashSet;
@@ -95,7 +94,7 @@ public abstract class JSClassSearch implements QueryExecutor<JSClass, JSClassSea
 
             @Override
             @RequiredReadAction
-            public boolean execute(@Nonnull SearchParameters queryParameters, @Nonnull Predicate<? super JSClass> consumer) {
+            public boolean execute(SearchParameters queryParameters, Predicate<? super JSClass> consumer) {
                 Set<JSClass> visited = new HashSet<>();         // no abstract classes in ActionScript !
 
                 if (queryParameters.isCheckDeepInheritance()) {
@@ -175,7 +174,7 @@ public abstract class JSClassSearch implements QueryExecutor<JSClass, JSClassSea
 
     @Override
     @RequiredReadAction
-    public boolean execute(@Nonnull SearchParameters queryParameters, @Nonnull Predicate<? super JSClass> consumer) {
+    public boolean execute(SearchParameters queryParameters, Predicate<? super JSClass> consumer) {
         return processDirectInheritors(
             queryParameters.getTargetClass(),
             consumer,

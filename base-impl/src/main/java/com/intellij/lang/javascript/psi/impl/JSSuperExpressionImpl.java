@@ -31,8 +31,7 @@ import consulo.language.psi.ResolveResult;
 import consulo.language.psi.resolve.ResolveState;
 import consulo.util.collection.ArrayUtil;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author max
@@ -44,7 +43,7 @@ public class JSSuperExpressionImpl extends JSExpressionImpl implements JSSuperEx
     }
 
     @Override
-    protected void accept(@Nonnull JSElementVisitor visitor) {
+    protected void accept(JSElementVisitor visitor) {
         visitor.visitJSSuperExpression(this);
     }
 
@@ -54,7 +53,6 @@ public class JSSuperExpressionImpl extends JSExpressionImpl implements JSSuperEx
     }
 
     @Override
-    @Nonnull
     public PsiReference[] getReferences() {
         PsiReference[] refs = {
             new PsiReference() {
@@ -64,7 +62,6 @@ public class JSSuperExpressionImpl extends JSExpressionImpl implements JSSuperEx
                     return JSSuperExpressionImpl.this;
                 }
 
-                @Nonnull
                 @Override
                 @RequiredReadAction
                 public TextRange getRangeInElement() {
@@ -112,7 +109,6 @@ public class JSSuperExpressionImpl extends JSExpressionImpl implements JSSuperEx
                     return null;
                 }
 
-                @Nonnull
                 @Override
                 @RequiredReadAction
                 public String getCanonicalText() {
@@ -127,7 +123,7 @@ public class JSSuperExpressionImpl extends JSExpressionImpl implements JSSuperEx
 
                 @Override
                 @RequiredWriteAction
-                public PsiElement bindToElement(@Nonnull PsiElement element) throws IncorrectOperationException {
+                public PsiElement bindToElement(PsiElement element) throws IncorrectOperationException {
                     return null;
                 }
 
@@ -137,7 +133,6 @@ public class JSSuperExpressionImpl extends JSExpressionImpl implements JSSuperEx
                     return false;
                 }
 
-                @Nonnull
                 @Override
                 @RequiredReadAction
                 public Object[] getVariants() {

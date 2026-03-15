@@ -25,8 +25,7 @@ import consulo.language.Language;
 import consulo.language.codeStyle.CodeStyleSettings;
 import consulo.language.codeStyle.CustomCodeStyleSettings;
 import consulo.language.codeStyle.setting.CodeStyleSettingsProvider;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author Maxim.Mossienko
@@ -46,7 +45,6 @@ public class JSCodeStyleSettingsProvider extends CodeStyleSettingsProvider {
     }
 
     @Override
-    @Nonnull
     public Configurable createSettingsPage(CodeStyleSettings settings, CodeStyleSettings originalSettings) {
         return new JavaScriptCodeStyleConfigurable(settings, originalSettings);
     }

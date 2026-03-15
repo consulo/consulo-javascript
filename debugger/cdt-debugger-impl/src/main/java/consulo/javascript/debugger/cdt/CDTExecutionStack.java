@@ -3,7 +3,7 @@ package consulo.javascript.debugger.cdt;
 import com.github.kklisura.cdt.protocol.types.debugger.CallFrame;
 import consulo.execution.debug.frame.XExecutionStack;
 import consulo.execution.debug.frame.XStackFrame;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;

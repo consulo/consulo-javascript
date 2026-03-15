@@ -23,7 +23,6 @@ import consulo.javascript.lang.psi.impl.JavaScriptClassType;
 import consulo.javascript.language.psi.JavaScriptType;
 import consulo.language.ast.ASTNode;
 import consulo.language.psi.PsiElement;
-import jakarta.annotation.Nonnull;
 
 /**
  * @author max
@@ -34,7 +33,6 @@ public class JSNewExpressionImpl extends JSExpressionImpl implements JSNewExpres
         super(node);
     }
 
-    @Nonnull
     @Override
     @RequiredReadAction
     public JavaScriptType getType() {
@@ -66,7 +64,7 @@ public class JSNewExpressionImpl extends JSExpressionImpl implements JSNewExpres
     }
 
     @Override
-    protected void accept(@Nonnull JSElementVisitor visitor) {
+    protected void accept(JSElementVisitor visitor) {
         visitor.visitJSNewExpression(this);
     }
 }

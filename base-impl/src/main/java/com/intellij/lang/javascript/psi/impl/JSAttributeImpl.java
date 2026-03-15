@@ -32,7 +32,6 @@ import consulo.language.psi.PsiReference;
 import consulo.language.util.IncorrectOperationException;
 import consulo.localize.LocalizeValue;
 import consulo.util.collection.ArrayUtil;
-import jakarta.annotation.Nonnull;
 
 /**
  * @author Maxim.Mossienko
@@ -71,7 +70,7 @@ public class JSAttributeImpl extends JSStubElementImpl<JSAttributeStub> implemen
     }
 
     @Override
-    protected void accept(@Nonnull JSElementVisitor visitor) {
+    protected void accept(JSElementVisitor visitor) {
         visitor.visitJSAttribute(this);
     }
 
@@ -88,7 +87,7 @@ public class JSAttributeImpl extends JSStubElementImpl<JSAttributeStub> implemen
 
     @Override
     @RequiredWriteAction
-    public PsiElement setName(@Nonnull String name) throws IncorrectOperationException {
+    public PsiElement setName(String name) throws IncorrectOperationException {
         throw new IncorrectOperationException();
     }
 
@@ -109,7 +108,6 @@ public class JSAttributeImpl extends JSStubElementImpl<JSAttributeStub> implemen
         return null;
     }
 
-    @Nonnull
     @Override
     @RequiredReadAction
     public PsiReference[] getReferences() {
@@ -143,7 +141,6 @@ public class JSAttributeImpl extends JSStubElementImpl<JSAttributeStub> implemen
             return JSAttributeImpl.this;
         }
 
-        @Nonnull
         @Override
         @RequiredReadAction
         public TextRange getRangeInElement() {
@@ -157,7 +154,6 @@ public class JSAttributeImpl extends JSStubElementImpl<JSAttributeStub> implemen
             return ArrayUtil.indexOf(POSSIBLE_META_DATA, s) >= 0 ? JSAttributeImpl.this : null;
         }
 
-        @Nonnull
         @Override
         @RequiredReadAction
         public String getCanonicalText() {
@@ -172,7 +168,7 @@ public class JSAttributeImpl extends JSStubElementImpl<JSAttributeStub> implemen
 
         @Override
         @RequiredWriteAction
-        public PsiElement bindToElement(@Nonnull PsiElement element) throws IncorrectOperationException {
+        public PsiElement bindToElement(PsiElement element) throws IncorrectOperationException {
             return null;
         }
 
@@ -186,7 +182,6 @@ public class JSAttributeImpl extends JSStubElementImpl<JSAttributeStub> implemen
             return false;
         }
 
-        @Nonnull
         @Override
         @RequiredReadAction
         public Object[] getVariants() {
@@ -199,9 +194,8 @@ public class JSAttributeImpl extends JSStubElementImpl<JSAttributeStub> implemen
             return true;
         }
 
-        @Nonnull
         @Override
-        public LocalizeValue buildUnresolvedMessage(@Nonnull String referenceText) {
+        public LocalizeValue buildUnresolvedMessage(String referenceText) {
             return LocalizeValue.localizeTODO("Unknown metadata tag");
         }
     }

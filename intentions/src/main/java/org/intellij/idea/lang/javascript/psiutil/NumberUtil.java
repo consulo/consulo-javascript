@@ -16,7 +16,6 @@
 package org.intellij.idea.lang.javascript.psiutil;
 
 import com.intellij.lang.javascript.psi.JSLiteralExpression;
-import org.jetbrains.annotations.NonNls;
 
 import java.math.BigInteger;
 import java.util.regex.Pattern;
@@ -28,11 +27,8 @@ public class NumberUtil {
     private NumberUtil() {
     }
 
-    @NonNls
     public static final Pattern decimalPattern = Pattern.compile("[0-9]+");
-    @NonNls
     public static final Pattern octalPattern = Pattern.compile("0[0-7]+");
-    @NonNls
     public static final Pattern hexPattern = Pattern.compile("0[xX][0-9a-fA-F]+");
 
     public static BigInteger getLiteralNumber(JSLiteralExpression expression) {

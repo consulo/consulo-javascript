@@ -16,27 +16,26 @@
 
 package com.intellij.lang.javascript.impl.flex.importer;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author Maxim.Mossienko
  * @since 2008-10-20
  */
 interface FlexByteCodeInformationProcessor {
-    void dumpStat(@Nonnull String stat);
+    void dumpStat(String stat);
 
-    void hasError(@Nonnull String error);
+    void hasError(String error);
 
-    void append(@Nonnull String str);
+    void append(String str);
 
-    void processMultinameAsPackageName(@Nonnull Multiname name, @Nullable String parentName, boolean referenceNameRequested);
+    void processMultinameAsPackageName(Multiname name, @Nullable String parentName, boolean referenceNameRequested);
 
-    void dumpToplevelAnonymousMethod(@Nonnull Abc abc, @Nonnull MethodInfo m);
+    void dumpToplevelAnonymousMethod(Abc abc, MethodInfo m);
 
-    void dumpTopLevelTraits(@Nonnull Abc abc, @Nonnull Traits t, String indent);
+    void dumpTopLevelTraits(Abc abc, Traits t, String indent);
 
-    boolean doDumpMember(@Nonnull MemberInfo memberInfo);
+    boolean doDumpMember(MemberInfo memberInfo);
 
     void appendMethodSeparator();
 
@@ -44,11 +43,11 @@ interface FlexByteCodeInformationProcessor {
 
     String getAbcInSwfIndent();
 
-    boolean doDumpMetaData(@Nonnull MetaData md);
+    boolean doDumpMetaData(MetaData md);
 
     String REST_PARAMETER_TYPE = "...";
 
-    void processParameter(@Nonnull String name, @Nullable Multiname type, String parentName, @Nullable Multiname value, boolean rest);
+    void processParameter(String name, @Nullable Multiname type, String parentName, @Nullable Multiname value, boolean rest);
 
     boolean doStarTypeDumpInExtends();
 

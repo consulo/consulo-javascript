@@ -6,9 +6,8 @@ import com.intellij.lang.javascript.psi.JSDestructuringObject;
 import com.intellij.lang.javascript.psi.JSElementVisitor;
 import com.intellij.lang.javascript.psi.impl.JSElementImpl;
 import consulo.annotation.access.RequiredReadAction;
-import jakarta.annotation.Nonnull;
 
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author VISTALL
@@ -20,7 +19,7 @@ public class JavaSciptDestructuringElementImpl extends JSElementImpl implements 
     }
 
     @Override
-    protected void accept(@Nonnull JSElementVisitor visitor) {
+    protected void accept(JSElementVisitor visitor) {
         visitor.visitJSElement(this);
     }
 

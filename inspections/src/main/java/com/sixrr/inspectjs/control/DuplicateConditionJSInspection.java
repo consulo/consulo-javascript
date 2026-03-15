@@ -12,7 +12,6 @@ import consulo.annotation.component.ExtensionImpl;
 import consulo.language.ast.IElementType;
 import consulo.language.psi.PsiElement;
 import consulo.localize.LocalizeValue;
-import jakarta.annotation.Nonnull;
 
 import java.util.Arrays;
 import java.util.HashSet;
@@ -20,13 +19,11 @@ import java.util.Set;
 
 @ExtensionImpl
 public class DuplicateConditionJSInspection extends JavaScriptInspection {
-    @Nonnull
     @Override
     public LocalizeValue getDisplayName() {
         return InspectionJSLocalize.duplicateConditionInIfStatementDisplayName();
     }
 
-    @Nonnull
     @Override
     public LocalizeValue getGroupDisplayName() {
         return JSGroupNames.CONTROL_FLOW_GROUP_NAME;
@@ -45,7 +42,7 @@ public class DuplicateConditionJSInspection extends JavaScriptInspection {
 
     private static class DuplicateConditionVisitor extends BaseInspectionVisitor {
         @Override
-        public void visitJSIfStatement(@Nonnull JSIfStatement statement) {
+        public void visitJSIfStatement(JSIfStatement statement) {
             super.visitJSIfStatement(statement);
             PsiElement parent = statement.getParent();
             if (parent instanceof JSIfStatement) {

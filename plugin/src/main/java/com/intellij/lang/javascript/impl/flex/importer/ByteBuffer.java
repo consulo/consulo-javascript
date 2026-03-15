@@ -22,7 +22,6 @@ import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
 import java.util.zip.InflaterInputStream;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * @author Maxim.Mossienko
@@ -33,7 +32,7 @@ class ByteBuffer {
     private int position;
     private boolean littleEndian;
 
-    void read(@Nonnull InputStream inputStream) throws IOException {
+    void read(InputStream inputStream) throws IOException {
         try {
             bytes = readStream(inputStream);
         }

@@ -32,8 +32,7 @@ import consulo.annotation.access.RequiredReadAction;
 import consulo.language.psi.resolve.ResolveState;
 import consulo.language.util.IncorrectOperationException;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author max
@@ -79,7 +78,7 @@ public class JSParameterImpl extends JSVariableBaseImpl<JSParameterStub, JSParam
     }
 
     @Override
-    protected void accept(@Nonnull JSElementVisitor visitor) {
+    protected void accept(JSElementVisitor visitor) {
         visitor.visitJSParameter(this);
     }
 
@@ -123,10 +122,10 @@ public class JSParameterImpl extends JSVariableBaseImpl<JSParameterStub, JSParam
 
     @Override
     public boolean processDeclarations(
-        @Nonnull PsiScopeProcessor processor,
-        @Nonnull ResolveState state,
+        PsiScopeProcessor processor,
+        ResolveState state,
         PsiElement lastParent,
-        @Nonnull PsiElement place
+        PsiElement place
     ) {
         return processor.execute(this, state);
     }

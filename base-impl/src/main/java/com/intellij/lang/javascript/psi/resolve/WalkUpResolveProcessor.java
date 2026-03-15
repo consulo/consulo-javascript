@@ -31,7 +31,6 @@ import consulo.language.psi.util.PsiTreeUtil;
 import consulo.util.collection.ArrayUtil;
 import consulo.xml.psi.xml.XmlAttributeValue;
 
-import jakarta.annotation.Nonnull;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -147,7 +146,7 @@ public class WalkUpResolveProcessor extends BaseJSSymbolProcessor {
                         }
 
                         @Override
-                        public void process(@Nonnull String type, @Nonnull EvaluateContext context, PsiElement source) {
+                        public void process(String type, EvaluateContext context, PsiElement source) {
                             if (context.visitedTypes.contains(type)) {
                                 return;
                             }
@@ -169,7 +168,7 @@ public class WalkUpResolveProcessor extends BaseJSSymbolProcessor {
                         }
 
                         @Override
-                        public void setUnknownElement(@Nonnull PsiElement element) {
+                        public void setUnknownElement(PsiElement element) {
                         }
 
                         @Override
@@ -349,7 +348,7 @@ public class WalkUpResolveProcessor extends BaseJSSymbolProcessor {
 
     @Override
     @RequiredReadAction
-    public boolean execute(@Nonnull PsiElement element, ResolveState state) {
+    public boolean execute(PsiElement element, ResolveState state) {
         if ((element instanceof JSNamedElement namedElement && myReferenceName.equals(namedElement.getName())) || element == myContext) {
             addCompleteResult(element);
         }

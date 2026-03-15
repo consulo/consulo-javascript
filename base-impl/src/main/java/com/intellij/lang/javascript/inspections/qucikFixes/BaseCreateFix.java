@@ -46,8 +46,7 @@ import consulo.xml.psi.xml.XmlAttributeValue;
 import consulo.xml.psi.xml.XmlFile;
 import consulo.xml.psi.xml.XmlTag;
 import consulo.xml.psi.xml.XmlText;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.Collections;
 import java.util.Set;
@@ -61,7 +60,7 @@ public abstract class BaseCreateFix implements LocalQuickFix {
 
     @Override
     @RequiredReadAction
-    public void applyFix(@Nonnull Project project, @Nonnull ProblemDescriptor descriptor) {
+    public void applyFix(Project project, ProblemDescriptor descriptor) {
         PsiElement psiElement = descriptor.getPsiElement();
         PsiFile file = psiElement.getContainingFile();
         PsiFile realFile = file.getContext() != null ? file.getContext().getContainingFile() : file;

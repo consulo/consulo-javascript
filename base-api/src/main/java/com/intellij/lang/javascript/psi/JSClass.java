@@ -16,7 +16,7 @@
 
 package com.intellij.lang.javascript.psi;
 
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import com.intellij.lang.javascript.psi.stubs.JSClassStub;
 import consulo.language.psi.StubBasedPsiElement;
 import consulo.navigation.Navigatable;

@@ -10,8 +10,7 @@ import consulo.language.ast.ASTNode;
 import consulo.language.psi.PsiElement;
 import consulo.language.util.IncorrectOperationException;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author VISTALL
@@ -23,7 +22,7 @@ public class ES6ImportSpecifierImpl extends JSElementImpl implements ES6ImportSp
     }
 
     @Override
-    protected void accept(@Nonnull JSElementVisitor visitor) {
+    protected void accept(JSElementVisitor visitor) {
         visitor.visitJSElement(this);
     }
 
@@ -36,7 +35,7 @@ public class ES6ImportSpecifierImpl extends JSElementImpl implements ES6ImportSp
 
     @RequiredWriteAction
     @Override
-    public PsiElement setName(@Nonnull String s) throws IncorrectOperationException {
+    public PsiElement setName(String s) throws IncorrectOperationException {
         return null;
     }
 }

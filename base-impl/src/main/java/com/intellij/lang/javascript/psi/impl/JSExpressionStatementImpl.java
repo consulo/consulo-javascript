@@ -28,7 +28,6 @@ import consulo.language.psi.resolve.ResolveState;
 import consulo.navigation.ItemPresentation;
 import consulo.ui.image.Image;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * @author max
@@ -46,17 +45,17 @@ public class JSExpressionStatementImpl extends JSStatementImpl implements JSExpr
     }
 
     @Override
-    protected void accept(@Nonnull JSElementVisitor visitor) {
+    protected void accept(JSElementVisitor visitor) {
         visitor.visitJSExpressionStatement(this);
     }
 
     @Override
     @RequiredReadAction
     public boolean processDeclarations(
-        @Nonnull PsiScopeProcessor processor,
-        @Nonnull ResolveState state,
+        PsiScopeProcessor processor,
+        ResolveState state,
         PsiElement lastParent,
-        @Nonnull PsiElement place
+        PsiElement place
     ) {
         if (lastParent == null) {
             JSExpression expression = getExpression();

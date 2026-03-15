@@ -15,27 +15,23 @@ import consulo.language.psi.util.PsiTreeUtil;
 import consulo.language.util.IncorrectOperationException;
 import consulo.localize.LocalizeValue;
 import consulo.project.Project;
-import jakarta.annotation.Nonnull;
 import org.intellij.lang.annotations.Pattern;
 
 @ExtensionImpl
 public class  UnnecessaryReturnJSInspection extends JavaScriptInspection {
     private final UnnecessaryReturnFix fix = new UnnecessaryReturnFix();
 
-    @Nonnull
     @Override
     @Pattern(value = "[a-zA-Z_0-9.-]+")
     public String getID() {
         return "UnnecessaryReturnStatementJS";
     }
 
-    @Nonnull
     @Override
     public LocalizeValue getDisplayName() {
         return InspectionJSLocalize.unnecessaryReturnStatementDisplayName();
     }
 
-    @Nonnull
     @Override
     public LocalizeValue getGroupDisplayName() {
         return JSGroupNames.CONTROL_FLOW_GROUP_NAME;
@@ -63,7 +59,6 @@ public class  UnnecessaryReturnJSInspection extends JavaScriptInspection {
     }
 
     private static class UnnecessaryReturnFix extends InspectionJSFix {
-        @Nonnull
         @Override
         public LocalizeValue getName() {
             return InspectionJSLocalize.removeUnnecessaryReturnFix();
@@ -80,7 +75,7 @@ public class  UnnecessaryReturnJSInspection extends JavaScriptInspection {
 
     private static class UnnecessaryReturnVisitor extends BaseInspectionVisitor {
         @Override
-        public void visitJSReturnStatement(@Nonnull JSReturnStatement statement) {
+        public void visitJSReturnStatement(JSReturnStatement statement) {
             super.visitJSReturnStatement(statement);
 
             JSExpression returnValue = statement.getExpression();

@@ -28,8 +28,7 @@ import consulo.annotation.access.RequiredReadAction;
 import consulo.language.icon.IconDescriptorUpdaters;
 import consulo.javascript.language.psi.JavaScriptType;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 public class JSLookupUtil {
     public static enum LookupPriority {
@@ -41,7 +40,7 @@ public class JSLookupUtil {
 
     @Nullable
     @RequiredReadAction
-    public static LookupElement createLookupItem(@Nonnull PsiElement value, @Nonnull String name, @Nonnull LookupPriority priority) {
+    public static LookupElement createLookupItem(PsiElement value, String name, LookupPriority priority) {
         LookupElementBuilder builder = LookupElementBuilder.create(name);
         builder = builder.withIcon(IconDescriptorUpdaters.getIcon(value, Iconable.ICON_FLAG_VISIBILITY));
 

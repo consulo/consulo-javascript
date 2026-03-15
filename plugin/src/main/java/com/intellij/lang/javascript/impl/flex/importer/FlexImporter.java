@@ -17,7 +17,6 @@
 package com.intellij.lang.javascript.impl.flex.importer;
 
 import consulo.language.psi.stub.StubElement;
-import jakarta.annotation.Nonnull;
 
 import java.io.*;
 
@@ -79,8 +78,8 @@ public class FlexImporter {
     }
 
     private static void processFlexByteCode(
-        @Nonnull InputStream in,
-        @Nonnull FlexByteCodeInformationProcessor processor
+        InputStream in,
+        FlexByteCodeInformationProcessor processor
     ) throws IOException {
         ByteBuffer data = new ByteBuffer();
         data.read(in);

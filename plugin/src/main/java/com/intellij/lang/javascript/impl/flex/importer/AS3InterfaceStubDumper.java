@@ -21,8 +21,7 @@ import com.intellij.lang.javascript.psi.stubs.impl.JSAttributeNameValuePairStubI
 import com.intellij.lang.javascript.psi.stubs.impl.JSReferenceListStubImpl;
 import consulo.language.psi.stub.StubElement;
 import consulo.util.lang.StringUtil;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.LinkedList;
 
@@ -59,7 +58,7 @@ class AS3InterfaceStubDumper extends AS3InterfaceDumper {
 
     @Override
     public void processParameter(
-        @Nonnull String name,
+        String name,
         @Nullable Multiname type,
         String parentName,
         @Nullable Multiname value,
@@ -75,7 +74,7 @@ class AS3InterfaceStubDumper extends AS3InterfaceDumper {
     }
 
     @Override
-    public void append(@Nonnull String str) {
+    public void append(String str) {
     }
 
     @Override

@@ -31,7 +31,6 @@ import consulo.localize.LocalizeValue;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.util.lang.ref.SimpleReference;
-import jakarta.annotation.Nonnull;
 
 /**
  * @author Maxim.Mossienko
@@ -98,7 +97,7 @@ public class JSIntroduceConstantHandler extends JSBaseIntroduceHandler<JSElement
         expression.accept(new JSElementVisitor() {
             @Override
             @RequiredReadAction
-            public void visitJSReferenceExpression(@Nonnull JSReferenceExpression node) {
+            public void visitJSReferenceExpression(JSReferenceExpression node) {
                 if (node.getQualifier() == null) {
                     PsiElement element = node.resolve();
 
@@ -116,7 +115,7 @@ public class JSIntroduceConstantHandler extends JSBaseIntroduceHandler<JSElement
             }
 
             @Override
-            public void visitJSElement(@Nonnull JSElement node) {
+            public void visitJSElement(JSElement node) {
                 node.acceptChildren(this);
             }
         });

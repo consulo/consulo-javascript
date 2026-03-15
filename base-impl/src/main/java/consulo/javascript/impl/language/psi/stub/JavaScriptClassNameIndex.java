@@ -25,14 +25,12 @@ import consulo.javascript.language.psi.stub.JavaScriptIndexKeys;
 import consulo.language.psi.stub.StringStubIndexExtension;
 import consulo.language.psi.stub.StubIndexKey;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
  */
 @ExtensionImpl
 public class JavaScriptClassNameIndex extends StringStubIndexExtension<JSClass> {
-    @Nonnull
     @Override
     public StubIndexKey<String, JSClass> getKey() {
         return JavaScriptIndexKeys.CLASSES_BY_NAME;

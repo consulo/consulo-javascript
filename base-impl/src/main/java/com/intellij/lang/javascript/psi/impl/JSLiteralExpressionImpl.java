@@ -31,7 +31,6 @@ import consulo.language.psi.LiteralTextEscaper;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiLanguageInjectionHost;
 import consulo.language.psi.PsiReference;
-import jakarta.annotation.Nonnull;
 
 /**
  * @author max
@@ -46,7 +45,6 @@ public class JSLiteralExpressionImpl extends JSExpressionImpl implements JSSimpl
     }
 
     @RequiredReadAction
-    @Nonnull
     @Override
     public IElementType getLiteralElementType() {
         PsiElement firstChild = getFirstChild();
@@ -55,7 +53,6 @@ public class JSLiteralExpressionImpl extends JSExpressionImpl implements JSSimpl
     }
 
     @RequiredReadAction
-    @Nonnull
     @Override
     public JavaScriptType getType() {
         IElementType literalElementType = getLiteralElementType();
@@ -77,7 +74,6 @@ public class JSLiteralExpressionImpl extends JSExpressionImpl implements JSSimpl
         return super.getType();
     }
 
-    @Nonnull
     @Override
     @RequiredReadAction
     public PsiReference[] getReferences() {
@@ -110,7 +106,7 @@ public class JSLiteralExpressionImpl extends JSExpressionImpl implements JSSimpl
     }
 
     @Override
-    protected void accept(@Nonnull JSElementVisitor visitor) {
+    protected void accept(JSElementVisitor visitor) {
         visitor.visitJSLiteralExpression(this);
     }
 
@@ -121,12 +117,11 @@ public class JSLiteralExpressionImpl extends JSExpressionImpl implements JSSimpl
 
     @Override
     @RequiredWriteAction
-    public PsiLanguageInjectionHost updateText(@Nonnull String text) {
+    public PsiLanguageInjectionHost updateText(String text) {
         JSExpression expressionFromText = JSChangeUtil.createExpressionFromText(getProject(), text);
         return (PsiLanguageInjectionHost)replace(expressionFromText);
     }
 
-    @Nonnull
     @Override
     public LiteralTextEscaper<? extends PsiLanguageInjectionHost> createLiteralTextEscaper() {
         return LiteralTextEscaper.createSimple(this);

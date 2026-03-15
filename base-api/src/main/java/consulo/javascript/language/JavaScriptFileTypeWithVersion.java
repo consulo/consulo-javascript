@@ -21,15 +21,13 @@ import consulo.language.version.LanguageVersion;
 import consulo.module.Module;
 import consulo.virtualFileSystem.VirtualFile;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author VISTALL
  * @since 2015-12-11
  */
 public interface JavaScriptFileTypeWithVersion {
-    @Nonnull
     @RequiredReadAction
     LanguageVersion getLanguageVersion(@Nullable Module module, @Nullable VirtualFile virtualFile);
 }

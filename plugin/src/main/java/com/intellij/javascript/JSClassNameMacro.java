@@ -31,14 +31,11 @@ import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
 import consulo.language.psi.util.PsiTreeUtil;
 import consulo.project.Project;
-import org.jetbrains.annotations.NonNls;
 
-import jakarta.annotation.Nonnull;
 
 @ExtensionImpl
 public class JSClassNameMacro extends Macro {
     @Override
-    @NonNls
     public String getName() {
         return "jsClassName";
     }
@@ -49,13 +46,12 @@ public class JSClassNameMacro extends Macro {
     }
 
     @Override
-    @NonNls
     public String getDefaultValue() {
         return "";
     }
 
     @Override
-    public Result calculateResult(@Nonnull Expression[] params, ExpressionContext context) {
+    public Result calculateResult(Expression[] params, ExpressionContext context) {
         PsiElement elementAtCaret = findElementAtCaret(context);
         JSResolveUtil.ContextResolver resolver = new JSResolveUtil.ContextResolver(elementAtCaret);
 
@@ -87,12 +83,12 @@ public class JSClassNameMacro extends Macro {
     }
 
     @Override
-    public Result calculateQuickResult(@Nonnull Expression[] params, ExpressionContext context) {
+    public Result calculateQuickResult(Expression[] params, ExpressionContext context) {
         return null;
     }
 
     @Override
-    public LookupElement[] calculateLookupItems(@Nonnull Expression[] params, ExpressionContext context) {
+    public LookupElement[] calculateLookupItems(Expression[] params, ExpressionContext context) {
         return null;
     }
 }

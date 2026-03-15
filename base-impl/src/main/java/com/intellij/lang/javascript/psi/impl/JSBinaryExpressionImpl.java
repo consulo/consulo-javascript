@@ -30,8 +30,7 @@ import consulo.language.ast.TokenSet;
 import consulo.annotation.access.RequiredReadAction;
 import consulo.language.psi.util.PsiTreeUtil;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author max
@@ -73,17 +72,17 @@ public class JSBinaryExpressionImpl extends JSExpressionImpl implements JSBinary
     }
 
     @Override
-    protected void accept(@Nonnull JSElementVisitor visitor) {
+    protected void accept(JSElementVisitor visitor) {
         visitor.visitJSBinaryExpression(this);
     }
 
     @Override
     @RequiredReadAction
     public boolean processDeclarations(
-        @Nonnull PsiScopeProcessor processor,
-        @Nonnull ResolveState state,
+        PsiScopeProcessor processor,
+        ResolveState state,
         PsiElement lastParent,
-        @Nonnull PsiElement place
+        PsiElement place
     ) {
         IElementType operationType = getOperationSign();
 

@@ -20,14 +20,12 @@ package consulo.javascript.psi;
 import com.intellij.lang.javascript.psi.JSLiteralExpression;
 import consulo.annotation.access.RequiredReadAction;
 import consulo.language.ast.IElementType;
-import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
  * @since 2015-12-11
  */
 public interface JSSimpleLiteralExpression extends JSLiteralExpression {
-    @Nonnull
     @RequiredReadAction
     IElementType getLiteralElementType();
 }

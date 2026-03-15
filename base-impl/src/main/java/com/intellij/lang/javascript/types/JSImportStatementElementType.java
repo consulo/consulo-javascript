@@ -19,7 +19,6 @@ package com.intellij.lang.javascript.types;
 
 import java.io.IOException;
 
-import jakarta.annotation.Nonnull;
 
 import consulo.annotation.access.RequiredReadAction;
 import com.intellij.lang.javascript.psi.JSImportStatement;
@@ -44,32 +43,30 @@ public class JSImportStatementElementType extends JSStubElementType<JSImportStat
         super("IMPORT_STATEMENT");
     }
 
-    @Nonnull
     @Override
-    public PsiElement createElement(@Nonnull ASTNode astNode) {
+    public PsiElement createElement(ASTNode astNode) {
         return new JSImportStatementImpl(astNode);
     }
 
     @Override
-    public JSImportStatement createPsi(@Nonnull JSImportStatementStub stub) {
+    public JSImportStatement createPsi(JSImportStatementStub stub) {
         return new JSImportStatementImpl(stub);
     }
 
     @RequiredReadAction
     @Override
-    public JSImportStatementStub createStub(@Nonnull JSImportStatement psi, StubElement parentStub) {
+    public JSImportStatementStub createStub(JSImportStatement psi, StubElement parentStub) {
         String importText = psi.getImportText();
         return new JSImportStatementStubImpl(importText, parentStub, this);
     }
 
     @Override
-    public void serialize(@Nonnull JSImportStatementStub stub, @Nonnull StubOutputStream dataStream) throws IOException {
+    public void serialize(JSImportStatementStub stub, StubOutputStream dataStream) throws IOException {
         dataStream.writeName(stub.getImportText());
     }
 
-    @Nonnull
     @Override
-    public JSImportStatementStub deserialize(@Nonnull StubInputStream dataStream, StubElement parentStub) throws IOException {
+    public JSImportStatementStub deserialize(StubInputStream dataStream, StubElement parentStub) throws IOException {
         StringRef importText = dataStream.readName();
         return new JSImportStatementStubImpl(StringRef.toString(importText), parentStub, this);
     }

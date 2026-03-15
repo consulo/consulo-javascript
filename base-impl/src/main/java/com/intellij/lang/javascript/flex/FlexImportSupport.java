@@ -25,7 +25,6 @@ import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiNamedElement;
 import consulo.util.collection.ArrayUtil;
 
-import jakarta.annotation.Nonnull;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -117,7 +116,7 @@ public class FlexImportSupport {
         }
     }
 
-    public static JSImportedElementResolveResult resolveTypeNameUsingImplicitImports(@Nonnull String referenceName, @Nonnull JSFile file) {
+    public static JSImportedElementResolveResult resolveTypeNameUsingImplicitImports(String referenceName, JSFile file) {
         PsiElement context = file.getContext();
 
         if (context != null) {

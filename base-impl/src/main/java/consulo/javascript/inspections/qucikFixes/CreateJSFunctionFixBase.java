@@ -26,7 +26,6 @@ import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
 import consulo.localize.LocalizeValue;
 
-import jakarta.annotation.Nonnull;
 
 import java.util.Set;
 
@@ -35,15 +34,13 @@ import java.util.Set;
  * @since 2016-02-24
  */
 public abstract class CreateJSFunctionFixBase extends BaseCreateFix {
-    @Nonnull
     private final LocalizeValue myMessage;
 
-    public CreateJSFunctionFixBase(@Nonnull LocalizeValue message) {
+    public CreateJSFunctionFixBase(LocalizeValue message) {
         myMessage = message;
     }
 
     @Override
-    @Nonnull
     public LocalizeValue getName() {
         return myMessage;
     }

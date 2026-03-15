@@ -11,7 +11,6 @@ import consulo.javascript.psi.JSSimpleLiteralExpression;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.util.PsiTreeUtil;
 import consulo.localize.LocalizeValue;
-import jakarta.annotation.Nonnull;
 
 import java.util.Set;
 
@@ -30,19 +29,16 @@ public class MagicNumberJSInspection extends JavaScriptInspection {
         return false;
     }
 
-    @Nonnull
     @Override
     public LocalizeValue getDisplayName() {
         return InspectionJSLocalize.magicNumberDisplayName();
     }
 
-    @Nonnull
     @Override
     public LocalizeValue getGroupDisplayName() {
         return JSGroupNames.CONFUSING_GROUP_NAME;
     }
 
-    @Nonnull
     @Override
     @RequiredReadAction
     public String buildErrorString(Object state, Object... args) {
@@ -61,7 +57,7 @@ public class MagicNumberJSInspection extends JavaScriptInspection {
     private static class MagicNumberVisitor extends BaseInspectionVisitor {
         @Override
         @RequiredReadAction
-        public void visitJSLiteralExpression(@Nonnull JSSimpleLiteralExpression expression) {
+        public void visitJSLiteralExpression(JSSimpleLiteralExpression expression) {
             super.visitJSLiteralExpression(expression);
 
             String text = expression.getText();

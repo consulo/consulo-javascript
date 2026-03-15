@@ -19,8 +19,7 @@ package com.intellij.lang.javascript.impl.formatter.blocks;
 import consulo.document.util.TextRange;
 import consulo.language.ast.ASTNode;
 import consulo.language.codeStyle.*;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -42,13 +41,11 @@ public class JSDocCommentBlock implements Block {
         myIndent = indent;
     }
 
-    @Nonnull
     @Override
     public TextRange getTextRange() {
         return new TextRange(myNode.getStartOffset() + myStartOffset, myNode.getStartOffset() + myEndOffset);
     }
 
-    @Nonnull
     @Override
     public List<Block> getSubBlocks() {
         return EMPTY_BLOCK_LIST;
@@ -60,7 +57,6 @@ public class JSDocCommentBlock implements Block {
         return null;
     }
 
-    @Nonnull
     @Override
     public Indent getIndent() {
         return myIndent;
@@ -74,11 +70,10 @@ public class JSDocCommentBlock implements Block {
 
     @Nullable
     @Override
-    public Spacing getSpacing(Block child1, @Nonnull Block child2) {
+    public Spacing getSpacing(Block child1, Block child2) {
         return null;
     }
 
-    @Nonnull
     @Override
     public ChildAttributes getChildAttributes(int newChildIndex) {
         return new ChildAttributes(null, null);

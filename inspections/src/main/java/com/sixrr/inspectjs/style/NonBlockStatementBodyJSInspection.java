@@ -13,20 +13,17 @@ import consulo.language.psi.PsiElement;
 import consulo.language.util.IncorrectOperationException;
 import consulo.localize.LocalizeValue;
 import consulo.project.Project;
-import jakarta.annotation.Nonnull;
 
 @ExtensionImpl
 public class NonBlockStatementBodyJSInspection extends JavaScriptInspection {
     private InspectionJSFix fix = new WrapBodyFix();
 
     @Override
-    @Nonnull
     public LocalizeValue getDisplayName() {
         return InspectionJSLocalize.nonBlockStatementBodyDisplayName();
     }
 
     @Override
-    @Nonnull
     public LocalizeValue getGroupDisplayName() {
         return JSGroupNames.STYLE_GROUP_NAME;
     }
@@ -51,7 +48,6 @@ public class NonBlockStatementBodyJSInspection extends JavaScriptInspection {
 
     private static class WrapBodyFix extends InspectionJSFix {
         @Override
-        @Nonnull
         public LocalizeValue getName() {
             return InspectionJSLocalize.wrapStatementBodyFix();
         }
@@ -89,7 +85,7 @@ public class NonBlockStatementBodyJSInspection extends JavaScriptInspection {
 
     private static class Visitor extends BaseInspectionVisitor {
         @Override
-        public void visitJSDoWhileStatement(@Nonnull JSDoWhileStatement statement) {
+        public void visitJSDoWhileStatement(JSDoWhileStatement statement) {
             super.visitJSDoWhileStatement(statement);
 
             JSStatement body = statement.getBody();
@@ -104,7 +100,7 @@ public class NonBlockStatementBodyJSInspection extends JavaScriptInspection {
         }
 
         @Override
-        public void visitJSWhileStatement(@Nonnull JSWhileStatement statement) {
+        public void visitJSWhileStatement(JSWhileStatement statement) {
             super.visitJSWhileStatement(statement);
 
             JSStatement body = statement.getBody();
@@ -119,7 +115,7 @@ public class NonBlockStatementBodyJSInspection extends JavaScriptInspection {
         }
 
         @Override
-        public void visitJSForStatement(@Nonnull JSForStatement statement) {
+        public void visitJSForStatement(JSForStatement statement) {
             super.visitJSForStatement(statement);
 
             JSStatement body = statement.getBody();
@@ -134,7 +130,7 @@ public class NonBlockStatementBodyJSInspection extends JavaScriptInspection {
         }
 
         @Override
-        public void visitJSForInStatement(@Nonnull JSForInStatement statement) {
+        public void visitJSForInStatement(JSForInStatement statement) {
             super.visitJSForInStatement(statement);
 
             JSStatement body = statement.getBody();
@@ -149,7 +145,7 @@ public class NonBlockStatementBodyJSInspection extends JavaScriptInspection {
         }
 
         @Override
-        public void visitJSIfStatement(@Nonnull JSIfStatement statement) {
+        public void visitJSIfStatement(JSIfStatement statement) {
             super.visitJSIfStatement(statement);
 
             JSStatement thenBranch = statement.getThen();
