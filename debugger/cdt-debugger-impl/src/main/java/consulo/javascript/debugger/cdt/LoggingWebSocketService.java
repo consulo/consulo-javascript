@@ -11,6 +11,8 @@ import java.util.function.Consumer;
  * @since 2026-02-16
  */
 public class LoggingWebSocketService implements WebSocketService {
+    public static final Boolean DEBUG = false;
+
     private final WebSocketService myDelegate;
 
     public LoggingWebSocketService(WebSocketService delegate) {
@@ -24,14 +26,19 @@ public class LoggingWebSocketService implements WebSocketService {
 
     @Override
     public void send(String s) throws WebSocketServiceException {
-        System.out.println("send " + s);
+        if (DEBUG) {
+            System.out.println("send " + s);
+        }
+
         myDelegate.send(s);
     }
 
     @Override
     public void addMessageHandler(Consumer<String> consumer) throws WebSocketServiceException {
         myDelegate.addMessageHandler(s -> {
-            System.out.println("rec: " + s);
+            if (DEBUG) {
+                System.out.println("rec: " + s);
+            }
             consumer.accept(s);
         });
     }

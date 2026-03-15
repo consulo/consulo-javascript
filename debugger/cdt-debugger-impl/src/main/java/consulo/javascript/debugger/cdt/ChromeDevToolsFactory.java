@@ -27,11 +27,10 @@ public class ChromeDevToolsFactory {
 
             @Override
             public void shutdown() {
-
             }
         });
 
-        if (Boolean.FALSE) {
+        if (LoggingWebSocketService.DEBUG) {
             webSocketService = new LoggingWebSocketService(webSocketService);
         }
 
