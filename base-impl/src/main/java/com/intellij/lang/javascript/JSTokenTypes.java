@@ -29,7 +29,6 @@ import consulo.javascript.localize.JavaScriptLocalize;
 import consulo.language.Language;
 import consulo.language.ast.*;
 import consulo.language.lexer.FlexAdapter;
-import consulo.language.lexer.Lexer;
 import consulo.language.lexer.MergingLexerAdapter;
 import consulo.language.parser.ParserDefinition;
 import consulo.language.parser.PsiBuilder;
@@ -38,8 +37,6 @@ import consulo.language.psi.PsiElement;
 import consulo.language.version.LanguageVersion;
 import consulo.project.Project;
 import consulo.xml.psi.xml.XmlTokenType;
-
-import org.jspecify.annotations.Nullable;
 
 /**
  * @author max, maxim.mossienko
@@ -61,16 +58,19 @@ public interface JSTokenTypes {
     @DeprecationInfo("old xml parsing, es4")
     IElementType XML_STYLE_COMMENT_START = new JSElementType("XML_STYLE_COMMENT_START");
 
-    IElementType DOC_COMMENT = new JSChameleonElementType("DOC_COMMENT") {
+    IElementType DOC_COMMENT = new ILazyParseableElementType("DOC_COMMENT", JavaScriptLanguage.INSTANCE) {
         @Override
-        protected void doParse(JavaScriptParsingContext context, PsiBuilder builder) {
+        @RequiredReadAction
+        protected ASTNode doParseContents(ASTNode chameleon, PsiElement psi) {
+            Project project = psi.getProject();
+            Language languageForParser = getLanguageForParser(psi);
+            LanguageVersion tempLanguageVersion = chameleon.getUserData(LanguageVersion.KEY);
+            LanguageVersion languageVersion = tempLanguageVersion == null ? psi.getLanguageVersion() : tempLanguageVersion;
+            MergingLexerAdapter lexer = new MergingLexerAdapter(new FlexAdapter(new _JSDocLexer(false)), JSDocTokenTypes.TOKENS_TO_MERGE);
+            PsiBuilder builder = PsiBuilderFactory.getInstance()
+                .createBuilder(project, chameleon, lexer, languageForParser, languageVersion, chameleon.getChars());
             JSDocParsing.parseJSDoc(builder);
-        }
-
-        @Override
-        @Nullable
-        protected Lexer createLexer() {
-            return new MergingLexerAdapter(new FlexAdapter(new _JSDocLexer(false)), JSDocTokenTypes.TOKENS_TO_MERGE);
+            return builder.getTreeBuilt();
         }
     };
 
@@ -149,10 +149,21 @@ public interface JSTokenTypes {
     IElementType XML_ATTR_VALUE = XmlTokenType.XML_ATTRIBUTE_VALUE_TOKEN;
     IElementType XML_ATTR_VALUE_START = XmlTokenType.XML_ATTRIBUTE_VALUE_START_DELIMITER;
     IElementType XML_ATTR_VALUE_END = XmlTokenType.XML_ATTRIBUTE_VALUE_END_DELIMITER;
-    IElementType XML_JS_SCRIPT = new JSChameleonElementType("XML_JS_SCRIPT") {
+    IElementType XML_JS_SCRIPT = new ILazyParseableElementType("XML_JS_SCRIPT") {
         @Override
-        protected void doParse(JavaScriptParsingContext context, PsiBuilder builder) {
-            parseScriptExpression(context, builder);
+        @RequiredReadAction
+        protected ASTNode doParseContents(ASTNode chameleon, PsiElement psi) {
+            Project project = psi.getProject();
+            Language languageForParser = getLanguageForParser(psi);
+            LanguageVersion tempLanguageVersion = chameleon.getUserData(LanguageVersion.KEY);
+            LanguageVersion languageVersion = tempLanguageVersion == null ? psi.getLanguageVersion() : tempLanguageVersion;
+            PsiBuilder builder = PsiBuilderFactory.getInstance()
+                .createBuilder(project, chameleon, null, languageForParser, languageVersion, chameleon.getChars());
+            JavaScriptParser parser = (JavaScriptParser) ParserDefinition.forLanguage(languageForParser).createParser(languageVersion);
+
+            JavaScriptParsingContext parsingContext = parser.createParsingContext();
+            parseScriptExpression(parsingContext, builder);
+            return builder.getTreeBuilt();
         }
 
         public void parseScriptExpression(JavaScriptParsingContext context, PsiBuilder builder) {
@@ -437,32 +448,4 @@ public interface JSTokenTypes {
 
     @Deprecated
     TokenSet IDENTIFIER_TOKENS_SET = TokenSet.create(IDENTIFIER);
-
-    abstract class JSChameleonElementType extends ILazyParseableElementType {
-        public JSChameleonElementType(String name) {
-            super(name, JavaScriptLanguage.INSTANCE);
-        }
-
-        protected abstract void doParse(JavaScriptParsingContext context, PsiBuilder builder);
-
-        @Override
-        @RequiredReadAction
-        protected ASTNode doParseContents(ASTNode chameleon, PsiElement psi) {
-            Project project = psi.getProject();
-            Language languageForParser = getLanguageForParser(psi);
-            LanguageVersion tempLanguageVersion = chameleon.getUserData(LanguageVersion.KEY);
-            LanguageVersion languageVersion = tempLanguageVersion == null ? psi.getLanguageVersion() : tempLanguageVersion;
-            PsiBuilder builder = PsiBuilderFactory.getInstance()
-                .createBuilder(project, chameleon, createLexer(), languageForParser, languageVersion, chameleon.getChars());
-            JavaScriptParser parser = (JavaScriptParser)ParserDefinition.forLanguage(languageForParser).createParser(languageVersion);
-
-            JavaScriptParsingContext parsingContext = parser.createParsingContext();
-            doParse(parsingContext, builder);
-            return builder.getTreeBuilt();
-        }
-
-        protected Lexer createLexer() {
-            return null;
-        }
-    }
 }

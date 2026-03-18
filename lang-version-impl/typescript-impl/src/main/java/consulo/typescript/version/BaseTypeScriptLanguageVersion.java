@@ -1,9 +1,9 @@
 package consulo.typescript.version;
 
 import consulo.javascript.ecmascript.lang.BaseEcmaScriptJavaScriptVersion;
+import consulo.javascript.ide.hightlight.JavaScriptHighlighter;
 import consulo.javascript.language.JavaScriptFeature;
 import consulo.javascript.language.StandardJavaScriptVersion;
-import consulo.javascript.ide.hightlight.JavaScriptHighlighter;
 import consulo.language.editor.highlight.SyntaxHighlighter;
 import consulo.language.lexer.Lexer;
 import consulo.language.parser.PsiParser;
