@@ -31,6 +31,7 @@ public final class TypeScriptTokenTypeFactory {
         TOKEN_MAP.put("IDENTIFIER", JSTokenTypes.IDENTIFIER);
         TOKEN_MAP.put("NUMERIC_LITERAL", JSTokenTypes.NUMERIC_LITERAL);
         TOKEN_MAP.put("STRING_LITERAL", JSTokenTypes.STRING_LITERAL);
+        TOKEN_MAP.put("SINGLE_QUOTE_STRING_LITERAL", JSTokenTypes.SINGLE_QUOTE_STRING_LITERAL);
         TOKEN_MAP.put("REGEXP_LITERAL", JSTokenTypes.REGEXP_LITERAL);
 
         // Template literals (TypeScript-specific tokens)
