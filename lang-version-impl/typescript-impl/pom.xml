@@ -15,42 +15,89 @@
   - limitations under the License.
   -->
 <project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://maven.apache.org/POM/4.0.0"
-		 xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-	<modelVersion>4.0.0</modelVersion>
-	<parent>
-		<groupId>consulo</groupId>
-		<artifactId>arch.ide-api-provided</artifactId>
-		<version>3-SNAPSHOT</version>
-		<relativePath/>
-	</parent>
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>consulo</groupId>
+        <artifactId>arch.ide-api-provided</artifactId>
+        <version>3-SNAPSHOT</version>
+        <relativePath/>
+    </parent>
 
-	<groupId>consulo.plugin</groupId>
-	<artifactId>consulo.javascript-typescript.impl</artifactId>
-	<version>3-SNAPSHOT</version>
-	<packaging>jar</packaging>
+    <groupId>consulo.plugin</groupId>
+    <artifactId>consulo.javascript-typescript.impl</artifactId>
+    <version>3-SNAPSHOT</version>
+    <packaging>jar</packaging>
 
-	<repositories>
-		<repository>
-			<id>consulo</id>
-			<url>https://maven.consulo.dev/repository/snapshots/</url>
-			<snapshots>
-				<enabled>true</enabled>
-				<updatePolicy>interval:60</updatePolicy>
-			</snapshots>
-		</repository>
-	</repositories>
+    <repositories>
+        <repository>
+            <id>consulo</id>
+            <url>https://maven.consulo.dev/repository/snapshots/</url>
+            <snapshots>
+                <enabled>true</enabled>
+                <updatePolicy>interval:60</updatePolicy>
+            </snapshots>
+        </repository>
+    </repositories>
 
-	<dependencies>
-		<dependency>
-			<groupId>${project.groupId}</groupId>
-			<artifactId>consulo.javascript-base.impl</artifactId>
-			<version>${project.version}</version>
-		</dependency>
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>consulo.maven</groupId>
+                <artifactId>maven-consulo-plugin</artifactId>
+                <extensions>true</extensions>
+                <executions>
+                    <execution>
+                        <id>gen</id>
+                        <phase>generate-sources</phase>
+                        <goals>
+                            <goal>generate-parsers</goal>
+                            <goal>generate-lexers</goal>
+                            <goal>generate-localize</goal>
+                        </goals>
+                        <configuration>
+                            <externalGrammars>
+                                <externalGrammar>
+                                    ${project.basedir}/src/main/grammar/consulo/typescript/language/grammar/TypeScript.bnf
+                                </externalGrammar>
+                            </externalGrammars>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
 
-		<dependency>
-			<groupId>${project.groupId}</groupId>
-			<artifactId>consulo.javascript-ecmascript.impl</artifactId>
-			<version>${project.version}</version>
-		</dependency>
-	</dependencies>
+    <dependencies>
+        <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>consulo.javascript-base.impl</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>consulo.javascript-ecmascript.impl</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>consulo</groupId>
+            <artifactId>consulo-test-junit-impl</artifactId>
+            <version>${project.version}</version>
+            <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter-api</artifactId>
+            <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter-engine</artifactId>
+            <scope>test</scope>
+        </dependency>
+    </dependencies>
 </project>

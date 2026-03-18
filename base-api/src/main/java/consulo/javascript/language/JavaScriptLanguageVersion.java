@@ -21,4 +21,8 @@ public abstract class JavaScriptLanguageVersion extends LanguageVersion implemen
     public String getPresentableName() {
         return getName();
     }
+
+    public boolean supportsDefaultCompletion() {
+        return true;
+    }
 }

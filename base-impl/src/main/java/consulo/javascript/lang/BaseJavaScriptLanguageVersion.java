@@ -5,6 +5,7 @@ import consulo.javascript.lang.parsing.JavaScriptParser;
 import consulo.javascript.language.JavaScriptFeature;
 import consulo.javascript.language.JavaScriptLanguage;
 import consulo.javascript.language.JavaScriptLanguageVersion;
+import consulo.language.Language;
 import consulo.language.ast.TokenSet;
 import consulo.language.editor.highlight.SyntaxHighlighter;
 import consulo.language.parser.PsiParser;
@@ -27,10 +28,15 @@ public abstract class BaseJavaScriptLanguageVersion extends JavaScriptLanguageVe
         super(name, name, JavaScriptLanguage.INSTANCE, mimeTypes);
     }
 
+    public BaseJavaScriptLanguageVersion(String name, Language language, String... mimeTypes) {
+        super(name, name, language, mimeTypes);
+    }
+
     protected void addFeature(JavaScriptFeature feature) {
         myFeatures.add(feature);
     }
 
+    @Override
     public Set<JavaScriptFeature> getFeatures() {
         return myFeatures;
     }

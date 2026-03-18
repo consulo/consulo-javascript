@@ -1,0 +1,764 @@
+{
+  parserClass            = "consulo.typescript.language.impl.syntax.TypeScriptSyntaxParser"
+  extends                = "consulo.typescript.language.impl.psi.TypeScriptElementImpl"
+
+  psiClassPrefix         = "TypeScript"
+  psiImplClassSuffix     = "Impl"
+  psiPackage             = "consulo.typescript.language.psi"
+  psiImplPackage         = "consulo.typescript.language.impl.psi"
+  psiVisitorName         = "TypeScriptVisitor"
+  
+  elementTypeHolderClass = "consulo.typescript.language.psi.TypeScriptTypes"
+  elementTypeClass       = "consulo.typescript.language.TypeScriptElementType"
+  tokenTypeClass         = "consulo.typescript.language.TypeScriptTokenType"
+  tokenTypeFactory       = "consulo.typescript.language.TypeScriptTokenTypeFactory.getTokenType"
+  parserUtilClass        = "consulo.typescript.language.impl.syntax.TypeScriptParserUtil"
+
+  // === implements: JS base type hierarchy ===
+  // TypeScriptExpression extends JSExpression, TypeScriptStatement extends JSStatement
+  // This enables covariant return types in generated getter methods
+  implements("expression")                                = "com.intellij.lang.javascript.psi.JSExpression"
+  implements("statement")                                 = "com.intellij.lang.javascript.psi.JSStatement"
+
+  // TS-only declarations extend TypeScriptElement (which extends JSElement)
+  implements("interface_declaration|enum_declaration|type_alias_declaration|namespace_declaration") = "consulo.typescript.language.psi.TypeScriptElement"
+
+  // Type elements
+  implements("type_annotation|type_reference|union_type|intersection_type|array_type|tuple_type|function_type|object_type|conditional_type|mapped_type|indexed_access_type|literal_type|typeof_type|keyof_type|infer_type|template_literal_type|parenthesized_type|predefined_type") = "consulo.javascript.language.psi.JavaScriptTypeElement"
+
+  // Individual JS interface conformance — declarations
+  implements("class_declaration|interface_declaration")    = "com.intellij.lang.javascript.psi.JSClass"
+  implements("function_declaration")                     = "com.intellij.lang.javascript.psi.JSFunction"
+  implements("variable_declaration")                     = "com.intellij.lang.javascript.psi.JSVariable"
+  implements("parameter")                                = "com.intellij.lang.javascript.psi.JSParameter"
+  implements("var_statement")                            = "com.intellij.lang.javascript.psi.JSVarStatement"
+  implements("block_statement")                          = "com.intellij.lang.javascript.psi.JSBlockStatement"
+  implements("attribute_list")                           = "com.intellij.lang.javascript.psi.JSAttributeList"
+  implements("parameter_list")                           = "com.intellij.lang.javascript.psi.JSParameterList"
+  implements("property|property_signature_member")        = "com.intellij.lang.javascript.psi.JSProperty"
+  implements("argument_list")                            = "com.intellij.lang.javascript.psi.JSArgumentList"
+  implements("extends_list|implements_list")             = "com.intellij.lang.javascript.psi.JSReferenceList"
+  implements("type_parameter_list")                      = "com.intellij.lang.javascript.psi.JSGenericSignature"
+  implements("import_declaration")                       = "consulo.javascript.psi.JavaScriptImportStatementBase"
+
+  // Individual JS interface conformance — statements
+  implements("if_statement")                             = "com.intellij.lang.javascript.psi.JSIfStatement"
+  implements("for_statement")                            = "com.intellij.lang.javascript.psi.JSForStatement"
+  implements("for_in_statement")                         = "com.intellij.lang.javascript.psi.JSForInStatement"
+  implements("while_statement")                          = "com.intellij.lang.javascript.psi.JSWhileStatement"
+  implements("do_while_statement")                       = "com.intellij.lang.javascript.psi.JSDoWhileStatement"
+  implements("switch_statement")                         = "com.intellij.lang.javascript.psi.JSSwitchStatement"
+  implements("case_clause")                              = "com.intellij.lang.javascript.psi.JSCaseClause"
+  implements("try_statement")                            = "com.intellij.lang.javascript.psi.JSTryStatement"
+  implements("catch_clause")                             = "com.intellij.lang.javascript.psi.JSCatchBlock"
+  implements("return_statement")                         = "com.intellij.lang.javascript.psi.JSReturnStatement"
+  implements("throw_statement")                          = "com.intellij.lang.javascript.psi.JSThrowStatement"
+  implements("break_statement")                          = "com.intellij.lang.javascript.psi.JSBreakStatement"
+  implements("continue_statement")                       = "com.intellij.lang.javascript.psi.JSContinueStatement"
+  implements("labeled_statement")                        = "com.intellij.lang.javascript.psi.JSLabeledStatement"
+  implements("empty_statement")                          = "com.intellij.lang.javascript.psi.JSEmptyStatement"
+  implements("expression_statement")                     = "com.intellij.lang.javascript.psi.JSExpressionStatement"
+
+  // Individual JS interface conformance — expressions
+  implements("reference_expression")                     = "com.intellij.lang.javascript.psi.JSReferenceExpression"
+  implements("binary_expression")                        = "com.intellij.lang.javascript.psi.JSBinaryExpression"
+  implements("assignment_expression")                    = "com.intellij.lang.javascript.psi.JSAssignmentExpression"
+  implements("comma_expression")                         = "com.intellij.lang.javascript.psi.JSCommaExpression"
+  implements("call_expression")                          = "com.intellij.lang.javascript.psi.JSCallExpression"
+  implements("new_expression")                           = "com.intellij.lang.javascript.psi.JSNewExpression"
+  implements("conditional_expression")                   = "com.intellij.lang.javascript.psi.JSConditionalExpression"
+  implements("prefix_expression")                        = "com.intellij.lang.javascript.psi.JSPrefixExpression"
+  implements("postfix_expression")                       = "com.intellij.lang.javascript.psi.JSPostfixExpression"
+  implements("literal_expression")                       = "com.intellij.lang.javascript.psi.JSLiteralExpression"
+  implements("array_literal_expression")                 = "com.intellij.lang.javascript.psi.JSArrayLiteralExpression"
+  implements("object_literal_expression")                = "com.intellij.lang.javascript.psi.JSObjectLiteralExpression"
+  implements("parenthesized_expression")                 = "com.intellij.lang.javascript.psi.JSParenthesizedExpression"
+  implements("this_expression")                          = "com.intellij.lang.javascript.psi.JSThisExpression"
+  implements("spread_expression")                        = "com.intellij.lang.javascript.psi.JSSpreadExpression"
+  implements("indexed_property_access_expression")       = "com.intellij.lang.javascript.psi.JSIndexedPropertyAccessExpression"
+  implements("arrow_function")                           = "consulo.javascript.psi.JavaScriptLambdaExpression"
+  implements("function_expression")                      = "com.intellij.lang.javascript.psi.JSFunctionExpression"
+
+  // === mixins ===
+  // Base rules get their own mixins for the generated Impl
+  mixin("expression")                                   = "consulo.typescript.language.impl.psi.mixin.TypeScriptExpressionMixin"
+  mixin("statement")                                    = "consulo.typescript.language.impl.psi.mixin.TypeScriptStatementMixin"
+
+  // Declaration mixins
+  mixin("class_declaration")                            = "consulo.typescript.language.impl.psi.mixin.TypeScriptClassMixin"
+  mixin("interface_declaration")                        = "consulo.typescript.language.impl.psi.mixin.TypeScriptInterfaceMixin"
+  mixin("function_declaration")                         = "consulo.typescript.language.impl.psi.mixin.TypeScriptFunctionMixin"
+  mixin("variable_declaration")                         = "consulo.typescript.language.impl.psi.mixin.TypeScriptVariableMixin"
+  mixin("parameter")                                    = "consulo.typescript.language.impl.psi.mixin.TypeScriptParameterMixin"
+  mixin("var_statement")                                = "consulo.typescript.language.impl.psi.mixin.TypeScriptVarStatementMixin"
+  mixin("block_statement")                              = "consulo.typescript.language.impl.psi.mixin.TypeScriptBlockStatementMixin"
+  mixin("reference_expression")                         = "consulo.typescript.language.impl.psi.mixin.TypeScriptReferenceExpressionMixin"
+  mixin("binary_expression|assignment_expression|comma_expression") = "consulo.typescript.language.impl.psi.mixin.TypeScriptBinaryExpressionMixin"
+  mixin("attribute_list")                               = "consulo.typescript.language.impl.psi.mixin.TypeScriptAttributeListMixin"
+  mixin("parameter_list")                               = "consulo.typescript.language.impl.psi.mixin.TypeScriptParameterListMixin"
+  mixin("property|property_signature_member")             = "consulo.typescript.language.impl.psi.mixin.TypeScriptPropertyMixin"
+  mixin("argument_list")                                = "consulo.typescript.language.impl.psi.mixin.TypeScriptArgumentListMixin"
+  mixin("extends_list|implements_list")                  = "consulo.typescript.language.impl.psi.mixin.TypeScriptReferenceListMixin"
+
+  // Statement mixins
+  mixin("if_statement")                                 = "consulo.typescript.language.impl.psi.mixin.TypeScriptIfStatementMixin"
+  mixin("for_statement")                                = "consulo.typescript.language.impl.psi.mixin.TypeScriptForStatementMixin"
+  mixin("for_in_statement")                             = "consulo.typescript.language.impl.psi.mixin.TypeScriptForInStatementMixin"
+  mixin("while_statement")                              = "consulo.typescript.language.impl.psi.mixin.TypeScriptWhileStatementMixin"
+  mixin("do_while_statement")                           = "consulo.typescript.language.impl.psi.mixin.TypeScriptDoWhileStatementMixin"
+  mixin("switch_statement")                             = "consulo.typescript.language.impl.psi.mixin.TypeScriptSwitchStatementMixin"
+  mixin("case_clause")                                  = "consulo.typescript.language.impl.psi.mixin.TypeScriptCaseClauseMixin"
+  mixin("try_statement")                                = "consulo.typescript.language.impl.psi.mixin.TypeScriptTryStatementMixin"
+  mixin("catch_clause")                                 = "consulo.typescript.language.impl.psi.mixin.TypeScriptCatchBlockMixin"
+  mixin("return_statement")                             = "consulo.typescript.language.impl.psi.mixin.TypeScriptReturnStatementMixin"
+  mixin("throw_statement")                              = "consulo.typescript.language.impl.psi.mixin.TypeScriptThrowStatementMixin"
+  mixin("break_statement")                              = "consulo.typescript.language.impl.psi.mixin.TypeScriptBreakStatementMixin"
+  mixin("continue_statement")                           = "consulo.typescript.language.impl.psi.mixin.TypeScriptContinueStatementMixin"
+  mixin("labeled_statement")                            = "consulo.typescript.language.impl.psi.mixin.TypeScriptLabeledStatementMixin"
+  mixin("expression_statement")                         = "consulo.typescript.language.impl.psi.mixin.TypeScriptExpressionStatementMixin"
+
+  // Statements that stay on generic TypeScriptStatementMixin (no specific JS interface methods)
+  mixin("for_of_statement|empty_statement|debugger_statement|with_statement|import_declaration") = "consulo.typescript.language.impl.psi.mixin.TypeScriptStatementMixin"
+
+  // Expression mixins
+  mixin("call_expression|new_expression")               = "consulo.typescript.language.impl.psi.mixin.TypeScriptCallExpressionMixin"
+  mixin("conditional_expression")                       = "consulo.typescript.language.impl.psi.mixin.TypeScriptConditionalExpressionMixin"
+  mixin("prefix_expression")                            = "consulo.typescript.language.impl.psi.mixin.TypeScriptPrefixExpressionMixin"
+  mixin("postfix_expression")                           = "consulo.typescript.language.impl.psi.mixin.TypeScriptPostfixExpressionMixin"
+  mixin("array_literal_expression")                     = "consulo.typescript.language.impl.psi.mixin.TypeScriptArrayLiteralExpressionMixin"
+  mixin("object_literal_expression")                    = "consulo.typescript.language.impl.psi.mixin.TypeScriptObjectLiteralExpressionMixin"
+  mixin("parenthesized_expression")                     = "consulo.typescript.language.impl.psi.mixin.TypeScriptParenthesizedExpressionMixin"
+  mixin("spread_expression")                            = "consulo.typescript.language.impl.psi.mixin.TypeScriptSpreadExpressionMixin"
+  mixin("indexed_property_access_expression")           = "consulo.typescript.language.impl.psi.mixin.TypeScriptIndexedPropertyAccessExpressionMixin"
+  mixin("arrow_function|function_expression")           = "consulo.typescript.language.impl.psi.mixin.TypeScriptFunctionExpressionMixin"
+
+  // Expressions that stay on generic TypeScriptExpressionMixin (no specific JS interface methods or marker interfaces)
+  mixin("literal_expression|this_expression|template_literal_expression|as_expression|satisfies_expression|non_null_expression|type_assertion_expression|super_expression|class_expression|yield_expression|await_expression|nullish_coalescing_expression|logical_or_expression|logical_and_expression|bitwise_or_expression|bitwise_xor_expression|bitwise_and_expression|equality_expression|relational_expression|shift_expression|additive_expression|multiplicative_expression|exponentiation_expression") = "consulo.typescript.language.impl.psi.mixin.TypeScriptExpressionMixin"
+
+  // === rule hierarchy ===
+  extends(".*_expression|arrow_function|template_literal_expression") = expression
+  extends(".*_statement")                               = statement
+
+  tokens = [
+    WHITE_SPACE
+    END_OF_LINE_COMMENT
+    C_STYLE_COMMENT
+    DOC_COMMENT
+
+    // Keywords
+    BREAK_KEYWORD       = 'break'
+    CASE_KEYWORD        = 'case'
+    CATCH_KEYWORD       = 'catch'
+    CONST_KEYWORD       = 'const'
+    CONTINUE_KEYWORD    = 'continue'
+    DEBUGGER_KEYWORD    = 'debugger'
+    DEFAULT_KEYWORD     = 'default'
+    DELETE_KEYWORD      = 'delete'
+    DO_KEYWORD          = 'do'
+    ELSE_KEYWORD        = 'else'
+    EXPORT_KEYWORD      = 'export'
+    EXTENDS_KEYWORD     = 'extends'
+    FALSE_KEYWORD       = 'false'
+    FINALLY_KEYWORD     = 'finally'
+    FOR_KEYWORD         = 'for'
+    FUNCTION_KEYWORD    = 'function'
+    IF_KEYWORD          = 'if'
+    IMPORT_KEYWORD      = 'import'
+    IN_KEYWORD          = 'in'
+    INSTANCEOF_KEYWORD  = 'instanceof'
+    LET_KEYWORD         = 'let'
+    NEW_KEYWORD         = 'new'
+    NULL_KEYWORD        = 'null'
+    RETURN_KEYWORD      = 'return'
+    SUPER_KEYWORD       = 'super'
+    SWITCH_KEYWORD      = 'switch'
+    THIS_KEYWORD        = 'this'
+    THROW_KEYWORD       = 'throw'
+    TRUE_KEYWORD        = 'true'
+    TRY_KEYWORD         = 'try'
+    TYPEOF_KEYWORD      = 'typeof'
+    VAR_KEYWORD         = 'var'
+    VOID_KEYWORD        = 'void'
+    WHILE_KEYWORD       = 'while'
+    WITH_KEYWORD        = 'with'
+    YIELD_KEYWORD       = 'yield'
+    CLASS_KEYWORD       = 'class'
+    ENUM_KEYWORD        = 'enum'
+    AWAIT_KEYWORD       = 'await'
+
+    // TS contextual keywords: IDENTIFIER in lexer, remapped by TypeScriptParserUtil
+    INTERFACE_KEYWORD
+    TYPE_KEYWORD
+    NAMESPACE_KEYWORD
+    MODULE_KEYWORD
+    DECLARE_KEYWORD
+    ABSTRACT_KEYWORD
+    ASYNC_KEYWORD
+    FROM_KEYWORD
+    AS_KEYWORD
+    SATISFIES_KEYWORD
+    KEYOF_KEYWORD
+    INFER_KEYWORD
+    READONLY_KEYWORD
+    GET_KEYWORD
+    SET_KEYWORD
+    OF_KEYWORD
+    CONSTRUCTOR_KEYWORD
+    GLOBAL_KEYWORD
+    OVERRIDE_KEYWORD
+    PUBLIC_KEYWORD
+    PRIVATE_KEYWORD
+    PROTECTED_KEYWORD
+    STATIC_KEYWORD
+    IMPLEMENTS_KEYWORD
+
+    // Literals
+    NUMERIC_LITERAL
+    STRING_LITERAL
+    REGEXP_LITERAL
+    NO_SUBSTITUTION_TEMPLATE
+    TEMPLATE_HEAD
+    TEMPLATE_MIDDLE
+    TEMPLATE_TAIL
+
+    // Identifier
+    IDENTIFIER
+
+    // Punctuators
+    LBRACE      = '{'
+    RBRACE      = '}'
+    LPAR        = '('
+    RPAR        = ')'
+    LBRACKET    = '['
+    RBRACKET    = ']'
+    DOT         = '.'
+    DOT_DOT_DOT = '...'
+    SEMICOLON   = ';'
+    COMMA       = ','
+    LT          = '<'
+    GT          = '>'
+    LE          = '<='
+    GE          = '>='
+    EQEQ        = '=='
+    NE          = '!='
+    EQEQEQ      = '==='
+    NEQEQ       = '!=='
+    PLUS        = '+'
+    MINUS       = '-'
+    MULT        = '*'
+    MULTMULT    = '**'
+    PERC        = '%'
+    PLUSPLUS     = '++'
+    MINUSMINUS  = '--'
+    LTLT        = '<<'
+    GTGT        = '>>'
+    GTGTGT      = '>>>'
+    AND         = '&'
+    OR          = '|'
+    XOR         = '^'
+    EXCL        = '!'
+    TILDE       = '~'
+    ANDAND      = '&&'
+    OROR        = '||'
+    QUEST       = '?'
+    QUEST_DOT   = '?.'
+    QUEST_QUEST = '??'
+    COLON       = ':'
+    EQ          = '='
+    PLUSEQ      = '+='
+    MINUSEQ     = '-='
+    MULTEQ      = '*='
+    MULTMULTEQ  = '**='
+    PERCEQ      = '%='
+    LTLTEQ      = '<<='
+    GTGTEQ      = '>>='
+    GTGTGTEQ    = '>>>='
+    ANDEQ       = '&='
+    OREQ        = '|='
+    XOREQ       = '^='
+    DIVEQ       = '/='
+    OROR_EQ     = '||='
+    ANDAND_EQ   = '&&='
+    QUEST_QUEST_EQ = '??='
+    DARROW      = '=>'
+    DIV         = '/'
+    AT          = '@'
+    HASH        = '#'
+  ]
+}
+
+// ==================== Root ====================
+
+typescript_file ::= statement_list
+
+private statement_list ::= statement*
+
+statement ::=
+    block_statement
+  | var_statement
+  | empty_statement
+  | if_statement
+  | for_statement
+  | for_in_statement
+  | for_of_statement
+  | while_statement
+  | do_while_statement
+  | continue_statement
+  | break_statement
+  | return_statement
+  | with_statement
+  | switch_statement
+  | throw_statement
+  | try_statement
+  | labeled_statement
+  | debugger_statement
+  | function_declaration
+  | class_declaration
+  | interface_declaration
+  | enum_declaration
+  | type_alias_declaration
+  | namespace_declaration
+  | import_declaration
+  | export_declaration
+  | ambient_declaration
+  | expression_statement
+  {recoverWhile = statement_recover_}
+
+private statement_recover_ ::= !(
+    IDENTIFIER | LBRACE | RBRACE | SEMICOLON |
+    VAR_KEYWORD | LET_KEYWORD | CONST_KEYWORD |
+    FUNCTION_KEYWORD | CLASS_KEYWORD | IF_KEYWORD |
+    FOR_KEYWORD | WHILE_KEYWORD | DO_KEYWORD |
+    SWITCH_KEYWORD | TRY_KEYWORD | RETURN_KEYWORD |
+    THROW_KEYWORD | BREAK_KEYWORD | CONTINUE_KEYWORD |
+    IMPORT_KEYWORD | EXPORT_KEYWORD | ENUM_KEYWORD | AT |
+    NUMERIC_LITERAL | STRING_LITERAL |
+    LPAR | LBRACKET | PLUS | MINUS | EXCL | TILDE |
+    PLUSPLUS | MINUSMINUS | THIS_KEYWORD | NEW_KEYWORD |
+    DELETE_KEYWORD | TYPEOF_KEYWORD | VOID_KEYWORD |
+    YIELD_KEYWORD | AWAIT_KEYWORD | SUPER_KEYWORD |
+    TRUE_KEYWORD | FALSE_KEYWORD | NULL_KEYWORD |
+    NO_SUBSTITUTION_TEMPLATE | TEMPLATE_HEAD
+)
+
+// ==================== Statements ====================
+
+block_statement ::= '{' statement_list '}' {pin=1}
+
+var_statement ::= var_keyword variable_declaration_list semicolon {pin=1}
+
+private var_keyword ::= VAR_KEYWORD | LET_KEYWORD | CONST_KEYWORD
+
+private variable_declaration_list ::= variable_declaration (',' variable_declaration)*
+
+variable_declaration ::= binding_pattern type_annotation? initializer?
+
+private initializer ::= '=' expression
+
+if_statement ::= 'if' '(' expression ')' statement ('else' statement)? {pin=1}
+
+for_statement ::= 'for' '(' for_init? ';' expression? ';' expression? ')' statement {pin=1}
+
+private for_init ::= var_keyword variable_declaration_list | expression
+
+for_in_statement ::= 'for' '(' for_in_target 'in' expression ')' statement {pin=1}
+
+for_of_statement ::= 'for' 'await'? '(' for_in_target OF_KEYWORD expression ')' statement {pin=1}
+
+private for_in_target ::= var_keyword binding_pattern type_annotation? | expression
+
+while_statement ::= 'while' '(' expression ')' statement {pin=1}
+
+do_while_statement ::= 'do' statement 'while' '(' expression ')' semicolon {pin=1}
+
+switch_statement ::= 'switch' '(' expression ')' '{' case_clause* '}' {pin=1}
+
+case_clause ::= ('case' expression ':' | 'default' ':') statement_list
+
+try_statement ::= 'try' block_statement (catch_clause finally_clause? | finally_clause) {pin=1}
+
+catch_clause ::= 'catch' ('(' parameter ')')? block_statement {pin=1}
+
+private finally_clause ::= 'finally' block_statement
+
+return_statement ::= 'return' expression? semicolon {pin=1}
+
+throw_statement ::= 'throw' expression semicolon {pin=1}
+
+break_statement ::= 'break' IDENTIFIER? semicolon {pin=1}
+
+continue_statement ::= 'continue' IDENTIFIER? semicolon {pin=1}
+
+labeled_statement ::= IDENTIFIER ':' statement
+
+expression_statement ::= expression semicolon
+
+empty_statement ::= ';'
+
+debugger_statement ::= 'debugger' semicolon {pin=1}
+
+with_statement ::= 'with' '(' expression ')' statement {pin=1}
+
+private semicolon ::= ';'?
+
+// ==================== Declarations ====================
+
+// --- Class ---
+class_declaration ::= decorator_list? attribute_list? ABSTRACT_KEYWORD? 'class' IDENTIFIER type_parameter_list? extends_clause? implements_clause? class_body {pin="CLASS_KEYWORD"}
+
+class_expression ::= ABSTRACT_KEYWORD? 'class' IDENTIFIER? type_parameter_list? extends_clause? class_body
+
+private extends_clause ::= 'extends' expression_list
+
+private implements_clause ::= IMPLEMENTS_KEYWORD expression_list
+
+extends_list ::= 'extends' type_reference_list
+
+implements_list ::= IMPLEMENTS_KEYWORD type_reference_list
+
+private type_reference_list ::= type_reference (',' type_reference)*
+
+class_body ::= '{' class_member* '}'
+
+private class_member ::= decorator_list? attribute_list? class_member_declaration | ';'
+
+private class_member_declaration ::=
+    index_signature_declaration
+  | constructor_declaration
+  | method_declaration
+  | accessor_declaration
+  | property_declaration
+
+constructor_declaration ::= CONSTRUCTOR_KEYWORD parameter_list block_statement?
+
+method_declaration ::= '*'? property_name '?'? type_parameter_list? parameter_list type_annotation? block_statement?
+
+accessor_declaration ::= (GET_KEYWORD | SET_KEYWORD) property_name parameter_list type_annotation? block_statement?
+
+property_declaration ::= property_name '?'? '!'? type_annotation? initializer? semicolon
+
+index_signature_declaration ::= '[' parameter ':' type_expression ']' type_annotation semicolon
+
+// --- Function ---
+function_declaration ::= attribute_list? ASYNC_KEYWORD? 'function' '*'? IDENTIFIER type_parameter_list? parameter_list type_annotation? block_statement? {pin="FUNCTION_KEYWORD"}
+
+function_expression ::= ASYNC_KEYWORD? 'function' '*'? IDENTIFIER? type_parameter_list? parameter_list type_annotation? block_statement
+
+// --- Arrow function ---
+arrow_function ::= ASYNC_KEYWORD? type_parameter_list? (IDENTIFIER | parameter_list) type_annotation? '=>' (expression | block_statement)
+
+// --- Interface ---
+interface_declaration ::= INTERFACE_KEYWORD IDENTIFIER type_parameter_list? extends_list? interface_body {pin=1}
+
+private interface_body ::= '{' interface_member* '}'
+
+private interface_member ::= (call_signature_member | construct_signature_member | method_signature_member | property_signature_member | index_signature_declaration) semicolon?
+
+call_signature_member ::= type_parameter_list? parameter_list type_annotation?
+
+construct_signature_member ::= 'new' type_parameter_list? parameter_list type_annotation?
+
+method_signature_member ::= property_name '?'? type_parameter_list? parameter_list type_annotation
+
+property_signature_member ::= READONLY_KEYWORD? property_name '?'? type_annotation
+
+// --- Enum ---
+enum_declaration ::= 'const'? 'enum' IDENTIFIER enum_body {pin="ENUM_KEYWORD"}
+
+private enum_body ::= '{' (enum_member (',' enum_member)* ','?)? '}'
+
+enum_member ::= property_name ('=' expression)?
+
+// --- Type alias ---
+type_alias_declaration ::= TYPE_KEYWORD IDENTIFIER type_parameter_list? '=' type_expression semicolon {pin=1}
+
+// --- Namespace ---
+namespace_declaration ::= (NAMESPACE_KEYWORD | MODULE_KEYWORD) qualified_name block_statement {pin=1}
+
+// --- Ambient declaration ---
+ambient_declaration ::= DECLARE_KEYWORD (var_statement | function_declaration | class_declaration | enum_declaration | namespace_declaration | interface_declaration | type_alias_declaration | GLOBAL_KEYWORD block_statement) {pin=1}
+
+// --- Import ---
+import_declaration ::= 'import' TYPE_KEYWORD? import_clause from_clause import_attributes? semicolon
+  | 'import' TYPE_KEYWORD? module_specifier semicolon
+  | 'import' IDENTIFIER '=' (IDENTIFIER '(' module_specifier ')' | qualified_name) semicolon
+  {pin=1}
+
+private import_clause ::= IDENTIFIER (',' (namespace_import | named_imports))?
+  | namespace_import
+  | named_imports
+
+namespace_import ::= '*' AS_KEYWORD IDENTIFIER
+
+named_imports ::= '{' (import_specifier (',' import_specifier)* ','?)? '}'
+
+import_specifier ::= TYPE_KEYWORD? IDENTIFIER (AS_KEYWORD IDENTIFIER)?
+
+private from_clause ::= FROM_KEYWORD module_specifier
+
+private module_specifier ::= STRING_LITERAL
+
+import_attributes ::= (IDENTIFIER | AS_KEYWORD) '{' (import_attribute (',' import_attribute)* ','?)? '}'
+
+import_attribute ::= (IDENTIFIER | STRING_LITERAL) ':' (STRING_LITERAL | IDENTIFIER)
+
+// --- Export ---
+export_declaration ::= 'export' (
+    'default'? (function_declaration | class_declaration | interface_declaration | enum_declaration | type_alias_declaration)
+  | 'default' expression semicolon
+  | var_statement
+  | named_exports from_clause? semicolon
+  | '*' (AS_KEYWORD IDENTIFIER)? from_clause semicolon
+  | '=' IDENTIFIER semicolon
+  | TYPE_KEYWORD? named_exports from_clause? semicolon
+  | TYPE_KEYWORD? '*' (AS_KEYWORD IDENTIFIER)? from_clause semicolon
+) {pin=1}
+
+named_exports ::= '{' (export_specifier (',' export_specifier)* ','?)? '}'
+
+export_specifier ::= TYPE_KEYWORD? IDENTIFIER (AS_KEYWORD IDENTIFIER)?
+
+// ==================== Expressions ====================
+
+expression ::= assignment_expression
+
+assignment_expression ::= conditional_expression (assignment_operator assignment_expression)?
+
+private assignment_operator ::= '=' | '+=' | '-=' | '*=' | '**=' | '/=' | '%='
+  | '<<=' | '>>=' | '>>>=' | '&=' | '|=' | '^=' | '||=' | '&&=' | '??='
+
+conditional_expression ::= nullish_coalescing_expression ('?' assignment_expression ':' assignment_expression)?
+
+nullish_coalescing_expression ::= logical_or_expression ('??' logical_or_expression)*
+
+logical_or_expression ::= logical_and_expression ('||' logical_and_expression)*
+
+logical_and_expression ::= bitwise_or_expression ('&&' bitwise_or_expression)*
+
+bitwise_or_expression ::= bitwise_xor_expression ('|' bitwise_xor_expression)*
+
+bitwise_xor_expression ::= bitwise_and_expression ('^' bitwise_and_expression)*
+
+bitwise_and_expression ::= equality_expression ('&' equality_expression)*
+
+equality_expression ::= relational_expression (('==' | '!=' | '===' | '!==') relational_expression)*
+
+relational_expression ::= shift_expression (('<' | '>' | '<=' | '>=' | 'instanceof' | 'in') shift_expression)*
+
+shift_expression ::= additive_expression (('<<' | '>>' | '>>>') additive_expression)*
+
+additive_expression ::= multiplicative_expression (('+' | '-') multiplicative_expression)*
+
+multiplicative_expression ::= exponentiation_expression (('*' | '/' | '%') exponentiation_expression)*
+
+exponentiation_expression ::= unary_expression ('**' exponentiation_expression)?
+
+private unary_expression ::= prefix_expression | postfix_or_higher
+
+prefix_expression ::= ('+' | '-' | '~' | '!' | 'typeof' | 'void' | 'delete' | '++' | '--') unary_expression
+
+private postfix_or_higher ::= call_or_member_expression postfix_operator?
+
+postfix_expression ::= call_or_member_expression ('++' | '--')
+
+private postfix_operator ::= '++' | '--'
+
+private call_or_member_expression ::= primary_expression member_or_call_tail*
+
+private member_or_call_tail ::=
+    '.' IDENTIFIER
+  | '?.' IDENTIFIER
+  | '[' expression ']'
+  | type_arguments? argument_list
+  | template_literal_expression
+  | '!'
+  | AS_KEYWORD type_expression
+  | SATISFIES_KEYWORD type_expression
+
+call_expression ::= primary_expression member_or_call_tail* type_arguments? argument_list
+
+new_expression ::= 'new' primary_expression type_arguments? argument_list?
+
+indexed_property_access_expression ::= primary_expression member_or_call_tail* '[' expression ']'
+
+as_expression ::= expression AS_KEYWORD type_expression
+
+satisfies_expression ::= expression SATISFIES_KEYWORD type_expression
+
+non_null_expression ::= expression '!'
+
+type_assertion_expression ::= '<' type_expression '>' unary_expression
+
+private primary_expression ::=
+    this_expression
+  | super_expression
+  | literal_expression
+  | array_literal_expression
+  | object_literal_expression
+  | function_expression
+  | arrow_function
+  | class_expression
+  | new_expression
+  | template_literal_expression
+  | parenthesized_expression
+  | reference_expression
+  | type_assertion_expression
+  | yield_expression
+  | await_expression
+
+this_expression ::= 'this'
+super_expression ::= 'super'
+reference_expression ::= IDENTIFIER
+literal_expression ::= NUMERIC_LITERAL | STRING_LITERAL | TRUE_KEYWORD | FALSE_KEYWORD | NULL_KEYWORD | REGEXP_LITERAL
+
+yield_expression ::= 'yield' '*'? expression?
+
+await_expression ::= 'await' unary_expression
+
+array_literal_expression ::= '[' expression_list_opt ']'
+
+private expression_list_opt ::= (expression (',' expression)* ','?)?
+
+object_literal_expression ::= '{' (property (',' property)* ','?)? '}'
+
+property ::= property_name ':' expression
+  | IDENTIFIER
+  | '...' expression
+  | '*'? property_name type_parameter_list? parameter_list type_annotation? block_statement
+  | (GET_KEYWORD | SET_KEYWORD) property_name parameter_list type_annotation? block_statement
+
+computed_property_name ::= '[' expression ']'
+
+parenthesized_expression ::= '(' expression ')'
+
+template_literal_expression ::= NO_SUBSTITUTION_TEMPLATE
+  | TEMPLATE_HEAD expression (TEMPLATE_MIDDLE expression)* TEMPLATE_TAIL
+
+spread_expression ::= '...' expression
+
+comma_expression ::= expression ',' expression
+
+binary_expression ::= expression binary_operator expression
+
+private binary_operator ::= '+' | '-' | '*' | '/' | '%' | '**'
+  | '==' | '!=' | '===' | '!=='
+  | '<' | '>' | '<=' | '>='
+  | '<<' | '>>' | '>>>'
+  | '&' | '|' | '^'
+  | '&&' | '||' | '??'
+  | 'instanceof' | 'in'
+
+parameter_list ::= '(' (parameter (',' parameter)*)? ')' {pin=1}
+
+parameter ::= decorator_list? attribute_list? '...'? binding_pattern '?'? type_annotation? initializer?
+
+argument_list ::= '(' (expression (',' expression)*)? ')' {pin=1}
+
+private expression_list ::= expression (',' expression)*
+
+// ==================== Type Expressions ====================
+
+private type_expression ::= conditional_type | union_or_intersection_type
+
+type_annotation ::= ':' type_expression
+
+conditional_type ::= union_or_intersection_type 'extends' union_or_intersection_type '?' type_expression ':' type_expression
+
+private union_or_intersection_type ::= union_type | intersection_type | primary_type_or_array
+
+union_type ::= '|'? primary_type_or_array ('|' primary_type_or_array)+
+
+intersection_type ::= '&'? primary_type_or_array ('&' primary_type_or_array)+
+
+private primary_type_or_array ::= primary_type array_type_suffix*
+
+private array_type_suffix ::= '[' ']'
+
+array_type ::= primary_type '[' ']'
+
+private primary_type ::=
+    parenthesized_type
+  | type_reference
+  | tuple_type
+  | function_type
+  | object_type
+  | mapped_type
+  | literal_type
+  | typeof_type
+  | keyof_type
+  | infer_type
+  | template_literal_type
+  | predefined_type
+
+parenthesized_type ::= '(' type_expression ')'
+
+type_reference ::= qualified_name type_arguments?
+
+tuple_type ::= '[' (tuple_element (',' tuple_element)* ','?)? ']'
+
+tuple_element ::= '...'? (IDENTIFIER ':')? type_expression '?'?
+
+function_type ::= type_parameter_list? '(' parameter_type_list? ')' '=>' type_expression
+
+private parameter_type_list ::= parameter_type (',' parameter_type)*
+
+parameter_type ::= '...'? IDENTIFIER '?'? ':' type_expression
+
+object_type ::= '{' (object_type_member (';' | ',')?)*  '}'
+
+private object_type_member ::=
+    property_signature_member
+  | call_signature_member
+  | construct_signature_member
+  | index_signature_member
+  | method_signature_member
+
+index_signature_member ::= READONLY_KEYWORD? '[' IDENTIFIER ':' type_expression ']' type_annotation
+
+mapped_type ::= '{' ('+' | '-')? READONLY_KEYWORD? '[' IDENTIFIER 'in' type_expression (AS_KEYWORD type_expression)? ']' ('+' | '-')? '?'? type_annotation ';'? '}'
+
+indexed_access_type ::= primary_type '[' type_expression ']'
+
+literal_type ::= NUMERIC_LITERAL | STRING_LITERAL | TRUE_KEYWORD | FALSE_KEYWORD | NULL_KEYWORD
+
+typeof_type ::= 'typeof' reference_expression
+
+keyof_type ::= KEYOF_KEYWORD type_expression
+
+infer_type ::= INFER_KEYWORD IDENTIFIER ('extends' type_expression)?
+
+template_literal_type ::= NO_SUBSTITUTION_TEMPLATE | TEMPLATE_HEAD type_expression (TEMPLATE_MIDDLE type_expression)* TEMPLATE_TAIL
+
+predefined_type ::= IDENTIFIER
+
+type_parameter_list ::= '<' type_parameter (',' type_parameter)* '>' {pin=1}
+
+type_parameter ::= IDENTIFIER? IDENTIFIER ('extends' type_expression)? ('=' type_expression)?
+
+type_arguments ::= '<' type_expression (',' type_expression)* '>'
+
+// ==================== Decorators & Modifiers ====================
+
+private decorator_list ::= decorator+
+
+decorator ::= '@' expression
+
+attribute_list ::= (access_modifier | STATIC_KEYWORD | ABSTRACT_KEYWORD | READONLY_KEYWORD | OVERRIDE_KEYWORD | ASYNC_KEYWORD)*
+
+private access_modifier ::= PUBLIC_KEYWORD | PRIVATE_KEYWORD | PROTECTED_KEYWORD
+
+// ==================== Utility Rules ====================
+
+private property_name ::= IDENTIFIER | STRING_LITERAL | NUMERIC_LITERAL | computed_property_name
+
+qualified_name ::= IDENTIFIER ('.' IDENTIFIER)*
+
+binding_pattern ::= IDENTIFIER | array_binding_pattern | object_binding_pattern
+
+array_binding_pattern ::= '[' (binding_element (',' binding_element)* ','?)? ']'
+
+object_binding_pattern ::= '{' (binding_property (',' binding_property)* ','?)? '}'
+
+private binding_element ::= '...'? binding_pattern type_annotation? initializer?
+
+private binding_property ::= (property_name ':')? binding_pattern initializer?

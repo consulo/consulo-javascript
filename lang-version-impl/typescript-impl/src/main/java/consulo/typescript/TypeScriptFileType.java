@@ -21,12 +21,12 @@ import consulo.virtualFileSystem.VirtualFile;
 import consulo.annotation.access.RequiredReadAction;
 import consulo.javascript.icon.JavaScriptIconGroup;
 import consulo.javascript.language.JavaScriptFileTypeWithVersion;
-import consulo.javascript.language.JavaScriptLanguage;
 import consulo.javascript.localize.JavaScriptLocalize;
 import consulo.language.version.LanguageVersion;
 import consulo.language.file.LanguageFileType;
 import consulo.localize.LocalizeValue;
-import consulo.typescript.version.TypeScriptLanguageVersion;
+import consulo.typescript.language.TypeScriptLanguage;
+import consulo.typescript.version.BaseTypeScriptLanguageVersion;
 import consulo.ui.image.Image;
 
 import org.jspecify.annotations.Nullable;
@@ -39,7 +39,7 @@ public class TypeScriptFileType extends LanguageFileType implements JavaScriptFi
     public static final TypeScriptFileType INSTANCE = new TypeScriptFileType();
 
     private TypeScriptFileType() {
-        super(JavaScriptLanguage.INSTANCE);
+        super(TypeScriptLanguage.INSTANCE);
     }
 
     @Override
@@ -66,6 +66,6 @@ public class TypeScriptFileType extends LanguageFileType implements JavaScriptFi
     @RequiredReadAction
     @Override
     public LanguageVersion getLanguageVersion(@Nullable Module module, @Nullable VirtualFile virtualFile) {
-        return TypeScriptLanguageVersion.getInstance();
+        return BaseTypeScriptLanguageVersion.getLatest();
     }
 }

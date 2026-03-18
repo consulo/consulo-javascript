@@ -29,6 +29,7 @@ import consulo.javascript.language.JavaScriptVersionUtil;
 import consulo.javascript.localize.JavaScriptLocalize;
 import consulo.javascript.psi.JSSimpleLiteralExpression;
 import consulo.language.ast.IElementType;
+import consulo.language.editor.annotation.HighlightSeverity;
 import consulo.language.editor.rawHighlight.HighlightInfo;
 import consulo.language.editor.rawHighlight.HighlightInfoHolder;
 import consulo.language.editor.rawHighlight.HighlightInfoType;
@@ -77,10 +78,11 @@ public class JavaScriptHighlightVisitor extends JSElementVisitor implements High
         else if (elementType == JSTokenTypes.IDENTIFIER) {
             addElementHighlight(parent, element);
         }
-        else if (JavaScriptContextKeywordElementType.containsKeyword(elementType)) {
+        else if (elementType instanceof JavaScriptContextKeywordElementType) {
             myHighlightInfoHolder.add(
                 HighlightInfo.newHighlightInfo(HighlightInfoType.INFORMATION)
                     .textAttributes(JavaScriptSyntaxHighlightKeys.JS_KEYWORD)
+                    .severity(HighlightSeverity.TEXT_ATTRIBUTES)
                     .range(element)
                     .create()
             );

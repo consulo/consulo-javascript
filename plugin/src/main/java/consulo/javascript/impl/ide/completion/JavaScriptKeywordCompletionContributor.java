@@ -21,6 +21,7 @@ import com.intellij.lang.javascript.psi.JSReferenceExpression;
 import consulo.annotation.access.RequiredReadAction;
 import consulo.annotation.component.ExtensionImpl;
 import consulo.javascript.ide.completion.JavaScriptKeywordCompletionExtender;
+import consulo.javascript.lang.BaseJavaScriptLanguageVersion;
 import consulo.javascript.language.JavaScriptLanguage;
 import consulo.language.Language;
 import consulo.language.editor.completion.*;
@@ -29,6 +30,7 @@ import consulo.language.editor.completion.lookup.ParenthesesInsertHandler;
 import consulo.language.pattern.StandardPatterns;
 import consulo.language.psi.PsiElement;
 import consulo.language.util.ProcessingContext;
+import consulo.language.version.LanguageVersion;
 
 
 /**
@@ -52,6 +54,11 @@ public class JavaScriptKeywordCompletionContributor extends CompletionContributo
                     PsiElement position = parameters.getPosition();
                     JSReferenceExpression parent = (JSReferenceExpression)position.getParent();
                     if (parent.getQualifier() != null) {
+                        return;
+                    }
+
+                    LanguageVersion languageVersion = parent.getLanguageVersion();
+                    if (languageVersion instanceof BaseJavaScriptLanguageVersion ver && !ver.supportsDefaultCompletion()) {
                         return;
                     }
 

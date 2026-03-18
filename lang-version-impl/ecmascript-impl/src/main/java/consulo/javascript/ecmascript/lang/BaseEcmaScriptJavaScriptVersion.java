@@ -30,6 +30,10 @@ public abstract class BaseEcmaScriptJavaScriptVersion extends BaseJavaScriptLang
         super(name, mimeTypes);
     }
 
+    protected BaseEcmaScriptJavaScriptVersion(String name, consulo.language.Language language, String... mimeTypes) {
+        super(name, language, mimeTypes);
+    }
+
     @Override
     public Lexer createLexer() {
         return createLexer(false);

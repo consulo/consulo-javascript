@@ -1,0 +1,109 @@
+# TypeScript Feature Display Names
+feature.interface:
+    text: Interfaces
+feature.enum:
+    text: Enums
+feature.generic:
+    text: Generics
+feature.type.annotation:
+    text: Type annotations
+feature.access.modifier:
+    text: Access modifiers
+feature.namespace:
+    text: Namespaces
+feature.type.alias:
+    text: Type aliases
+feature.union.type:
+    text: Union types
+feature.intersection.type:
+    text: Intersection types
+feature.decorator:
+    text: Decorators
+feature.abstract.class:
+    text: Abstract classes
+feature.computed.property:
+    text: Computed properties
+feature.readonly.modifier:
+    text: Readonly modifier
+feature.never.type:
+    text: Never type
+feature.non.null.assertion:
+    text: Non-null assertion
+feature.mapped.type:
+    text: Mapped types
+feature.keyof.operator:
+    text: keyof operator
+feature.indexed.access.type:
+    text: Indexed access types
+feature.object.spread:
+    text: Object spread
+feature.conditional.type:
+    text: Conditional types
+feature.infer.keyword:
+    text: infer keyword
+feature.unknown.type:
+    text: unknown type
+feature.rest.tuple:
+    text: Rest elements in tuples
+feature.labeled.tuple:
+    text: Labeled tuple elements
+feature.variadic.tuple:
+    text: Variadic tuple types
+feature.template.literal.type:
+    text: Template literal types
+feature.key.remapping:
+    text: Key remapping in mapped types
+feature.override.modifier:
+    text: override modifier
+feature.type.only.import.specifier:
+    text: Type-only import specifiers
+feature.satisfies.operator:
+    text: satisfies operator
+feature.const.type.parameter:
+    text: const type parameters
+feature.decorator.metadata:
+    text: Decorator metadata
+feature.import.attributes:
+    text: Import attributes
+feature.import.defer:
+    text: Deferred imports
+feature.subpath.imports:
+    text: Subpath imports
+
+# Error Messages
+feature.not.supported.by.current.version:
+    text: "''{0}'' requires TypeScript {1} or later"
+
+# Version Names
+version.1.0:
+    text: TypeScript 1.0
+version.1.5:
+    text: TypeScript 1.5
+version.2.0:
+    text: TypeScript 2.0
+version.2.1:
+    text: TypeScript 2.1
+version.2.8:
+    text: TypeScript 2.8
+version.3.0:
+    text: TypeScript 3.0
+version.4.0:
+    text: TypeScript 4.0
+version.4.1:
+    text: TypeScript 4.1
+version.4.3:
+    text: TypeScript 4.3
+version.4.5:
+    text: TypeScript 4.5
+version.4.9:
+    text: TypeScript 4.9
+version.5.0:
+    text: TypeScript 5.0
+version.5.3:
+    text: TypeScript 5.3
+version.5.5:
+    text: TypeScript 5.5
+version.5.9:
+    text: TypeScript 5.9
+version.6.0:
+    text: TypeScript 6.0
