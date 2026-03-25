@@ -154,12 +154,12 @@ public interface JSTokenTypes {
         @RequiredReadAction
         protected ASTNode doParseContents(ASTNode chameleon, PsiElement psi) {
             Project project = psi.getProject();
-            Language languageForParser = getLanguageForParser(psi);
             LanguageVersion tempLanguageVersion = chameleon.getUserData(LanguageVersion.KEY);
             LanguageVersion languageVersion = tempLanguageVersion == null ? psi.getLanguageVersion() : tempLanguageVersion;
             PsiBuilder builder = PsiBuilderFactory.getInstance()
-                .createBuilder(project, chameleon, null, languageForParser, languageVersion, chameleon.getChars());
-            JavaScriptParser parser = (JavaScriptParser) ParserDefinition.forLanguage(languageForParser).createParser(languageVersion);
+                .createBuilder(project, chameleon, null, languageVersion.getLanguage(), languageVersion, chameleon.getChars());
+            JavaScriptParser parser = (JavaScriptParser) ParserDefinition.forLanguage(languageVersion.getLanguage())
+                .createParser(languageVersion);
 
             JavaScriptParsingContext parsingContext = parser.createParsingContext();
             parseScriptExpression(parsingContext, builder);
