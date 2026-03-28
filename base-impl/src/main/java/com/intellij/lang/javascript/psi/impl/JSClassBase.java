@@ -47,12 +47,10 @@ import java.util.*;
  * @author Maxim.Mossienko
  */
 public abstract class JSClassBase extends JSStubElementImpl<JSClassStub> implements JSClass {
-    private static final Key<ParameterizedCachedValue<List<JSClass>, Object>> IMPLEMENTS_LIST_CACHE_KEY = Key.create("implements.list.cache");
-    private static final Key<ParameterizedCachedValue<List<JSClass>, Object>> EXTENDS_LIST_CACHE_KEY = Key.create("implements.list.cache");
     private static final UserDataCache<ParameterizedCachedValue<List<JSClass>, Object>, JSClassBase, Object> IMPLEMENTS_LIST_CACHE =
-        new ClassesUserDataCache();
+        new ClassesUserDataCache("implements.list.cache");
     private static final UserDataCache<ParameterizedCachedValue<List<JSClass>, Object>, JSClassBase, Object> EXTENDS_LIST_CACHE =
-        new ExtendsClassesUserDataCache();
+        new ExtendsClassesUserDataCache("extends.list.cache");
 
     private volatile Map<String, Object> myName2FunctionMap;
     private volatile Map<String, JSVariable> myName2FieldsMap;
@@ -281,10 +279,10 @@ public abstract class JSClassBase extends JSStubElementImpl<JSClassStub> impleme
         PsiElement element = extendsList != null ? extendsList : this;
 
         if (type == JSElementTypes.EXTENDS_LIST) {
-            return EXTENDS_LIST_CACHE.get(EXTENDS_LIST_CACHE_KEY, this, extendsList).getValue(element);
+            return EXTENDS_LIST_CACHE.get(this, extendsList).getValue(element);
         }
         else {
-            return IMPLEMENTS_LIST_CACHE.get(IMPLEMENTS_LIST_CACHE_KEY, this, extendsList).getValue(element);
+            return IMPLEMENTS_LIST_CACHE.get(this, extendsList).getValue(element);
         }
     }
 
@@ -366,6 +364,10 @@ public abstract class JSClassBase extends JSStubElementImpl<JSClassStub> impleme
     }
 
     private static class ExtendsClassesUserDataCache extends ClassesUserDataCache {
+        private ExtendsClassesUserDataCache(String keyName) {
+            super(keyName);
+        }
+
         @Override
         @RequiredReadAction
         protected List<JSClass> doCompute(Object extendsList) {
@@ -385,6 +387,10 @@ public abstract class JSClassBase extends JSStubElementImpl<JSClassStub> impleme
     }
 
     private static class ClassesUserDataCache extends UserDataCache<ParameterizedCachedValue<List<JSClass>, Object>, JSClassBase, Object> {
+        private ClassesUserDataCache(String keyName) {
+            super(keyName);
+        }
+
         @Override
         protected ParameterizedCachedValue<List<JSClass>, Object> compute(JSClassBase jsClassBase, Object p) {
             return CachedValuesManager.getManager(jsClassBase.getProject()).createParameterizedCachedValue(

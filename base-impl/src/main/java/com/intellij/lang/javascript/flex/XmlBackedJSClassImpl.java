@@ -41,7 +41,6 @@ import consulo.language.psi.resolve.PsiScopeProcessor;
 import consulo.language.psi.resolve.ResolveState;
 import consulo.language.psi.util.PsiTreeUtil;
 import consulo.language.util.IncorrectOperationException;
-import consulo.util.dataholder.Key;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.xml.psi.XmlRecursiveElementVisitor;
 import consulo.xml.psi.xml.*;
@@ -193,7 +192,7 @@ public class XmlBackedJSClassImpl extends JSClassBase implements JSClass {
         PsiElement lastParent,
         PsiElement place
     ) {
-        for (JSFile file : CACHED_SCRIPTS.get(CACHED_SCRIPTS_KEY, getParent(), null).getValue()) {
+        for (JSFile file : CACHED_SCRIPTS.get(getParent(), null).getValue()) {
             if (!file.processDeclarations(processor, ResolveState.initial(), null, place)) {
                 return false;
             }
@@ -241,7 +240,7 @@ public class XmlBackedJSClassImpl extends JSClassBase implements JSClass {
             boolean adequatePlace = false;
 
             XmlTag parent = getParent();
-            JSFile[] files = CACHED_SCRIPTS.get(CACHED_SCRIPTS_KEY, parent, null).getValue();
+            JSFile[] files = CACHED_SCRIPTS.get(parent, null).getValue();
             for (JSFile file : files) {
                 if (JSImportHandlingUtil.isAdequatePlaceForImport(file, place)) {
                     if (useImports && JSImportHandlingUtil.importClass(processor, file)) {
@@ -263,8 +262,7 @@ public class XmlBackedJSClassImpl extends JSClassBase implements JSClass {
     @RequiredReadAction
     public boolean processComponentNames(ResolveProcessor processor) {
         String s = processor.getName();
-        Map<String, String> value =
-            CACHED_COMPONENT_IMPORTS_CACHE.get(CACHED_SHORT_COMPONENTS_REF_KEY, (XmlFile)getContainingFile(), null).getValue();
+        Map<String, String> value = CACHED_COMPONENT_IMPORTS_CACHE.get((XmlFile)getContainingFile(), null).getValue();
 
         if (s != null) {
             String qName = value.get(s);
@@ -286,12 +284,10 @@ public class XmlBackedJSClassImpl extends JSClassBase implements JSClass {
         return true;
     }
 
-    private static final Key<CachedValue<JSFile[]>> CACHED_SCRIPTS_KEY = Key.create("cached.scripts");
-    private static final Key<CachedValue<Map<String, String>>> CACHED_SHORT_COMPONENTS_REF_KEY = Key.create("cached.component.refs");
-
     private static final String SCRIPT_TAG_NAME = "Script";
 
-    private static final UserDataCache<CachedValue<JSFile[]>, XmlTag, Object> CACHED_SCRIPTS = new UserDataCache<>() {
+    private static final UserDataCache<CachedValue<JSFile[]>, XmlTag, Object> CACHED_SCRIPTS =
+        new UserDataCache<CachedValue<JSFile[]>, XmlTag, Object>("cached.scripts") {
             @Override
             protected CachedValue<JSFile[]> compute(XmlTag tag, Object p) {
                 return CachedValuesManager.getManager(tag.getProject()).createCachedValue(
@@ -320,7 +316,7 @@ public class XmlBackedJSClassImpl extends JSClassBase implements JSClass {
         };
 
     private static final UserDataCache<CachedValue<Map<String, String>>, XmlFile, Object> CACHED_COMPONENT_IMPORTS_CACHE =
-        new UserDataCache<>() {
+        new UserDataCache<CachedValue<Map<String, String>>, XmlFile, Object>("cached.component.refs") {
             @Override
             protected CachedValue<Map<String, String>> compute(final XmlFile file, Object p) {
                 return CachedValuesManager.getManager(file.getProject()).createCachedValue(
@@ -371,8 +367,6 @@ public class XmlBackedJSClassImpl extends JSClassBase implements JSClass {
         return getNode().getPsi().isValid();
     }
 
-    private static Key<ParameterizedCachedValue<XmlBackedJSClassImpl, XmlTag>> ourArtificialPsiKey = Key.create("xml.backed.class");
-
     @Nullable
     public static JSClass getXmlBackedClass(XmlFile xmlFile) {
         XmlTag rootTag = getRootTag(xmlFile);
@@ -386,7 +380,7 @@ public class XmlBackedJSClassImpl extends JSClassBase implements JSClass {
     }
 
     public static XmlBackedJSClassImpl getXmlBackedClass(XmlTag tag) {
-        return myCachedClassCache.get(ourArtificialPsiKey, tag, null).getValue(tag);
+        return CACHED_CLASS_CACHE.get(tag, null).getValue(tag);
     }
 
     public static Collection<JSClass> getClasses(XmlFile file) {
@@ -415,8 +409,8 @@ public class XmlBackedJSClassImpl extends JSClassBase implements JSClass {
         return getXmlBackedClass((XmlTag)element);
     }
 
-    private static final UserDataCache<ParameterizedCachedValue<XmlBackedJSClassImpl, XmlTag>, XmlTag, Object> myCachedClassCache =
-        new UserDataCache<>() {
+    private static final UserDataCache<ParameterizedCachedValue<XmlBackedJSClassImpl, XmlTag>, XmlTag, Object> CACHED_CLASS_CACHE =
+        new UserDataCache<ParameterizedCachedValue<XmlBackedJSClassImpl, XmlTag>, XmlTag, Object>("xml.backed.class") {
             @Override
             protected ParameterizedCachedValue<XmlBackedJSClassImpl, XmlTag> compute(XmlTag tag, Object p) {
                 return CachedValuesManager.getManager(tag.getProject()).createParameterizedCachedValue(
@@ -518,7 +512,7 @@ public class XmlBackedJSClassImpl extends JSClassBase implements JSClass {
     @Nullable
     @RequiredReadAction
     public JSFile findFirstScriptTag() {
-        JSFile[] value = CACHED_SCRIPTS.get(CACHED_SCRIPTS_KEY, getParent(), null).getValue();
+        JSFile[] value = CACHED_SCRIPTS.get(getParent(), null).getValue();
         if (value.length > 0) {
             return value[0];
         }
