@@ -57,13 +57,9 @@ import java.util.concurrent.ConcurrentHashMap;
  * @since 2008-07-29
  */
 public class JSImportHandlingUtil {
-    public static final Key<CachedValue<Map<String, Object>>> IMPORT_LIST_CACHE_KEY = Key.create("js.import.list.cache");
-    public static final UserDataCache<CachedValue<Map<String, Object>>, PsiElement, Object> IMPORT_LIST_CACHE = new ImportListDataCache();
-    public static final Key<CachedValue<Map<String, JSImportedElementResolveResult>>> IMPORT_RESOLVE_CACHE_KEY =
-        Key.create("js.import.resolve");
-    public static final UserDataCache<CachedValue<Map<String, JSImportedElementResolveResult>>, PsiElement, Object>
-        IMPORT_RESOLVE_CACHE =
-        new UserDataCache<>() {
+    public static final UserDataCache<CachedValue<Map<String, Object>>, PsiElement, Object> IMPORT_LIST_CACHE = new ImportListDataCache("js.import.list.cache");
+    public static final UserDataCache<CachedValue<Map<String, JSImportedElementResolveResult>>, PsiElement, Object> IMPORT_RESOLVE_CACHE =
+        new UserDataCache<CachedValue<Map<String, JSImportedElementResolveResult>>, PsiElement, Object>("js.import.resolve") {
             @Override
             protected CachedValue<Map<String, JSImportedElementResolveResult>> compute(PsiElement psiElement, Object p) {
                 return CachedValuesManager.getManager(psiElement.getProject()).createCachedValue(
@@ -237,7 +233,7 @@ public class JSImportHandlingUtil {
             }
         }
 
-        Map<String, JSImportedElementResolveResult> map = IMPORT_RESOLVE_CACHE.get(IMPORT_RESOLVE_CACHE_KEY, parent, null).getValue();
+        Map<String, JSImportedElementResolveResult> map = IMPORT_RESOLVE_CACHE.get(parent, null).getValue();
         JSImportedElementResolveResult result = map.get(referencedName);
 
         if (result == null) {
@@ -252,7 +248,7 @@ public class JSImportHandlingUtil {
         String referencedName,
         PsiNamedElement parent
     ) {
-        Map<String, Object> value = IMPORT_LIST_CACHE.get(IMPORT_LIST_CACHE_KEY, parent, null).getValue();
+        Map<String, Object> value = IMPORT_LIST_CACHE.get(parent, null).getValue();
         JSImportedElementResolveResult expression = FlexImportSupport.tryFindInMap(referencedName, parent, value);
         if (expression != null) {
             return expression;
@@ -358,7 +354,7 @@ public class JSImportHandlingUtil {
 
         if (s != null) {
             if (resolveProcessor.specificallyAskingToResolveQualifiedNames()) {
-                Map<String, Object> value = IMPORT_LIST_CACHE.get(IMPORT_LIST_CACHE_KEY, parent, null).getValue();
+                Map<String, Object> value = IMPORT_LIST_CACHE.get(parent, null).getValue();
                 JSImportedElementResolveResult resolveResult =
                     FlexImportSupport.tryFindInMap(s, parent, value, resolveProcessor.getQualifiedNameToImport());
                 if (dispatchResult(resolveResult, processor)) {
@@ -441,6 +437,10 @@ public class JSImportHandlingUtil {
     }
 
     private static class ImportListDataCache extends UserDataCache<CachedValue<Map<String, Object>>, PsiElement, Object> {
+        private ImportListDataCache(String keyName) {
+            super(keyName);
+        }
+
         @Override
         protected final CachedValue<Map<String, Object>> compute(PsiElement owner, Object o) {
             return CachedValuesManager.getManager(owner.getProject()).createCachedValue(
@@ -474,8 +474,7 @@ public class JSImportHandlingUtil {
             }
 
             for (PsiElement c : children) {
-                if (c instanceof JSImportStatement) {
-                    JSImportStatement s = ((JSImportStatement)c);
+                if (c instanceof JSImportStatement s) {
 
                     if (s.getImportText() != null) {
                         FlexImportSupport.appendToMap(result, s);

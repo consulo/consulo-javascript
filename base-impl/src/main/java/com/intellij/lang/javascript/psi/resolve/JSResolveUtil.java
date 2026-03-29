@@ -90,9 +90,8 @@ import java.util.*;
  * @author max, maxim.mossienko
  */
 public class JSResolveUtil {
-    private static final Key<CachedValue<IntObjectMap<Object>>> CACHED_STATEMENTS = Key.create("JS.RelevantStatements");
     private static final UserDataCache<CachedValue<IntObjectMap<Object>>, JSElement, Object> CACHED_DEFS_CACHE =
-        new RelevantDefsUserDataCache();
+        new RelevantDefsUserDataCache("JS.RelevantStatements");
     public static final String PROTOTYPE_FIELD_NAME = "prototype";
 
     private static final String ARRAY_TYPE_NAME = "Array";
@@ -679,10 +678,8 @@ public class JSResolveUtil {
         return true;
     }
 
-    private static final Key<ParameterizedCachedValue<Set<String>, JSElement>> ourCachedOpenedNsesKey = Key.create("opened.nses");
-
-    private static final UserDataCache<ParameterizedCachedValue<Set<String>, JSElement>, JSElement, Object> ourCachedOpenedNsesCache =
-        new UserDataCache<>() {
+    private static final UserDataCache<ParameterizedCachedValue<Set<String>, JSElement>, JSElement, Object> CACHED_OPENED_NSES_CACHE =
+        new UserDataCache<ParameterizedCachedValue<Set<String>, JSElement>, JSElement, Object>("opened.nses") {
             @Override
             protected ParameterizedCachedValue<Set<String>, JSElement> compute(JSElement jsElement, Object p) {
                 return CachedValuesManager.getManager(jsElement.getProject()).createParameterizedCachedValue(
@@ -737,7 +734,7 @@ public class JSResolveUtil {
             place,
             psiNamedElement -> {
                 if (psiNamedElement instanceof JSElement element) {
-                    result.set(ourCachedOpenedNsesCache.get(ourCachedOpenedNsesKey, element, null).getValue(element));
+                    result.set(CACHED_OPENED_NSES_CACHE.get(element, null).getValue(element));
                 }
                 return false;
             }
@@ -944,7 +941,7 @@ public class JSResolveUtil {
 
                     while (tag != null) {
                         if (XmlBackedJSClassImpl.isInlineComponentTag(tag)) {
-                            for (JSVariable var : ourCachedPredefinedVars.get(ourCachedPredefinedVarsKey, (XmlFile)containingFile, null)
+                            for (JSVariable var : CACHED_PREDEFINED_VARS.get((XmlFile)containingFile, null)
                                 .getValue()) {
                                 if (!processor.execute(var, ResolveState.initial())) {
                                     return;
@@ -974,8 +971,8 @@ public class JSResolveUtil {
         treeWalkUp(processor, parentElement, elt, place, terminatingParent, currentScope);
     }
 
-    private static UserDataCache<CachedValue<List<JSVariable>>, XmlFile, Object> ourCachedPredefinedVars =
-        new UserDataCache<>() {
+    private static final UserDataCache<CachedValue<List<JSVariable>>, XmlFile, Object> CACHED_PREDEFINED_VARS =
+        new UserDataCache<CachedValue<List<JSVariable>>, XmlFile, Object>("ourCachedPredefinedVarsKey") {
             @Override
             @RequiredReadAction
             protected CachedValue<List<JSVariable>> compute(final XmlFile xmlFile, Object p) {
@@ -991,8 +988,6 @@ public class JSResolveUtil {
                 );
             }
         };
-
-    private static Key<CachedValue<List<JSVariable>>> ourCachedPredefinedVarsKey = Key.create("ourCachedPredefinedVarsKey");
 
     public static boolean processXmlFile(PsiScopeProcessor processor, XmlFile xmlFile, PsiElement place) {
         JSClass clazz = XmlBackedJSClassImpl.getXmlBackedClass(xmlFile);
@@ -1809,7 +1804,7 @@ public class JSResolveUtil {
         }
 
         boolean result = true;
-        IntObjectMap<Object> defsMap = CACHED_DEFS_CACHE.get(CACHED_STATEMENTS, scope, null).getValue();
+        IntObjectMap<Object> defsMap = CACHED_DEFS_CACHE.get(scope, null).getValue();
 
         if (requiredName == null) {
             for (Object value : defsMap.values()) {
@@ -1907,6 +1902,9 @@ public class JSResolveUtil {
     public static Key<PsiElement> contextKey = Key.create("context.key"); // JSElement or XmlElement
 
     public static class RelevantDefsUserDataCache extends UserDataCache<CachedValue<IntObjectMap<Object>>, JSElement, Object> {
+        public RelevantDefsUserDataCache(String keyName) {
+            super(keyName);
+        }
 
         @Override
         protected CachedValue<IntObjectMap<Object>> compute(final JSElement jsElement, final Object o) {
