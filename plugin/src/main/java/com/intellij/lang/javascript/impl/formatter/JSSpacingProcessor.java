@@ -33,7 +33,7 @@ import consulo.language.codeStyle.Spacing;
 import consulo.language.psi.PsiUtilCore;
 import consulo.language.psi.PsiWhiteSpace;
 import consulo.language.psi.util.PsiTreeUtil;
-import consulo.xml.psi.xml.XmlText;
+import consulo.xml.language.psi.XmlText;
 
 /**
  * @author ven

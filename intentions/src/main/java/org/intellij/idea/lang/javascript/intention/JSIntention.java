@@ -24,7 +24,7 @@ import consulo.language.psi.PsiFile;
 import consulo.language.util.IncorrectOperationException;
 import consulo.localize.LocalizeValue;
 import consulo.project.Project;
-import consulo.xml.psi.xml.XmlElement;
+import consulo.xml.language.psi.XmlElement;
 import org.jspecify.annotations.Nullable;
 
 public abstract class JSIntention extends PsiElementBaseIntentionAction {

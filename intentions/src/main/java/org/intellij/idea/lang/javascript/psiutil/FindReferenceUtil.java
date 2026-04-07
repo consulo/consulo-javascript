@@ -21,7 +21,7 @@ import com.intellij.lang.javascript.psi.JSReferenceExpression;
 import com.intellij.lang.javascript.psi.JSVariable;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.util.PsiTreeUtil;
-import consulo.xml.psi.xml.XmlFile;
+import consulo.xml.language.psi.XmlFile;
 import org.jspecify.annotations.Nullable;
 import org.intellij.idea.lang.javascript.intention.JSElementIterator;
 import org.intellij.idea.lang.javascript.intention.JSFunctionVisitor;

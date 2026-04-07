@@ -23,7 +23,6 @@ import com.intellij.lang.javascript.flex.XmlBackedJSClassImpl;
 import com.intellij.lang.javascript.psi.*;
 import com.intellij.lang.javascript.psi.impl.JSClassBase;
 import com.intellij.lang.javascript.psi.impl.JSStubElementImpl;
-import com.intellij.xml.XmlElementDescriptor;
 import consulo.application.util.CachedValue;
 import consulo.application.util.CachedValueProvider;
 import consulo.application.util.CachedValuesManager;
@@ -41,9 +40,9 @@ import consulo.language.psi.resolve.ResolveState;
 import consulo.language.version.LanguageVersion;
 import consulo.util.dataholder.Key;
 import consulo.util.lang.ref.Ref;
-import consulo.xml.psi.xml.XmlFile;
-import consulo.xml.psi.xml.XmlTag;
-
+import consulo.xml.descriptor.XmlElementDescriptor;
+import consulo.xml.language.psi.XmlFile;
+import consulo.xml.language.psi.XmlTag;
 import org.jspecify.annotations.Nullable;
 
 import java.util.HashMap;

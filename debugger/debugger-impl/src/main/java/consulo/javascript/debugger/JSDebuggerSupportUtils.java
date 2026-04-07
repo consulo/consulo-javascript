@@ -29,8 +29,8 @@ import consulo.language.psi.util.PsiTreeUtil;
 import consulo.project.Project;
 import consulo.util.lang.ref.Ref;
 import consulo.virtualFileSystem.VirtualFile;
-import consulo.xml.lang.xml.XMLLanguage;
 
+import consulo.xml.language.XMLLanguage;
 import org.jspecify.annotations.Nullable;
 import java.util.List;
 

@@ -18,7 +18,7 @@ package consulo.javascript.language;
 
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ServiceAPI;
-import consulo.ide.ServiceManager;
+import consulo.application.Application;
 
 import org.jspecify.annotations.Nullable;
 
@@ -32,7 +32,7 @@ import java.util.List;
 public abstract class StandardJavaScriptVersions {
 
     public static StandardJavaScriptVersions getInstance() {
-        return ServiceManager.getService(StandardJavaScriptVersions.class);
+        return Application.get().getService(StandardJavaScriptVersions.class);
     }
 
     public abstract JavaScriptLanguageVersion getDefaultVersion();

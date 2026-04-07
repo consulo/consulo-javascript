@@ -17,7 +17,7 @@ package org.intellij.idea.lang.javascript.intention;
 
 import com.intellij.lang.javascript.psi.JSElement;
 import consulo.language.psi.PsiElement;
-import consulo.xml.psi.xml.XmlFile;
+import consulo.xml.language.psi.XmlFile;
 import org.intellij.idea.lang.javascript.psiutil.ArrayStack;
 
 import java.util.Iterator;

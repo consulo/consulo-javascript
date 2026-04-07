@@ -36,7 +36,7 @@ import consulo.language.parser.PsiBuilderFactory;
 import consulo.language.psi.PsiElement;
 import consulo.language.version.LanguageVersion;
 import consulo.project.Project;
-import consulo.xml.psi.xml.XmlTokenType;
+import consulo.xml.language.psi.XmlTokenType;
 
 /**
  * @author max, maxim.mossienko

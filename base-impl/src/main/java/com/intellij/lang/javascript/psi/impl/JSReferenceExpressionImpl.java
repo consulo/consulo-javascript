@@ -38,8 +38,8 @@ import consulo.language.psi.resolve.ResolveState;
 import consulo.language.psi.util.PsiTreeUtil;
 import consulo.language.util.IncorrectOperationException;
 import consulo.util.collection.ArrayUtil;
-import consulo.xml.psi.xml.XmlFile;
-import consulo.xml.psi.xml.XmlToken;
+import consulo.xml.language.psi.XmlFile;
+import consulo.xml.language.psi.XmlToken;
 import org.jspecify.annotations.Nullable;
 
 import java.util.Set;

@@ -9,8 +9,8 @@ import consulo.language.ast.TokenType;
 import consulo.language.parser.PsiBuilder;
 import consulo.localize.LocalizeValue;
 import consulo.xml.impl.localize.XmlErrorLocalize;
-import consulo.xml.psi.xml.XmlElementType;
-import consulo.xml.psi.xml.XmlTokenType;
+import consulo.xml.language.psi.XmlElementType;
+import consulo.xml.language.psi.XmlTokenType;
 import org.jspecify.annotations.Nullable;
 
 import java.util.Stack;

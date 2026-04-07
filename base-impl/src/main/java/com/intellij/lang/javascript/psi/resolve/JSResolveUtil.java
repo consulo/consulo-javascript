@@ -31,7 +31,6 @@ import com.intellij.lang.javascript.psi.impl.JSChangeUtil;
 import com.intellij.lang.javascript.psi.impl.JSFileImpl;
 import com.intellij.lang.javascript.psi.impl.JSReferenceExpressionImpl;
 import com.intellij.lang.javascript.psi.impl.JSStubElementImpl;
-import com.intellij.xml.XmlElementDescriptor;
 import consulo.annotation.access.RequiredReadAction;
 import consulo.annotation.access.RequiredWriteAction;
 import consulo.application.util.*;
@@ -80,8 +79,9 @@ import consulo.util.lang.StringUtil;
 import consulo.util.lang.ref.SimpleReference;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.util.VirtualFileUtil;
+import consulo.xml.descriptor.XmlElementDescriptor;
 import consulo.xml.ide.highlighter.XmlFileType;
-import consulo.xml.psi.xml.*;
+import consulo.xml.language.psi.*;
 import org.jspecify.annotations.Nullable;
 
 import java.util.*;

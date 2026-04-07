@@ -17,7 +17,6 @@
 package com.intellij.lang.javascript;
 
 import com.intellij.lang.javascript.flex.AnnotationBackedDescriptor;
-import com.intellij.xml.XmlElementDescriptorWithCDataContent;
 import consulo.component.util.pointer.NamedPointer;
 import consulo.document.util.TextRange;
 import consulo.javascript.language.JavaScriptLanguage;
@@ -31,9 +30,8 @@ import consulo.language.psi.PsiFile;
 import consulo.language.psi.PsiLanguageInjectionHost;
 import consulo.language.psi.meta.PsiMetaData;
 import consulo.util.lang.StringUtil;
+import consulo.xml.language.psi.*;
 import consulo.xml.psi.html.HtmlTag;
-import consulo.xml.psi.xml.*;
-
 
 /**
  * @author Maxim.Mossienko

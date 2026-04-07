@@ -33,7 +33,7 @@ import consulo.localize.LocalizeValue;
 import consulo.project.Project;
 import consulo.util.collection.ArrayUtil;
 import consulo.util.lang.StringUtil;
-import consulo.xml.psi.xml.*;
+import consulo.xml.language.psi.*;
 import org.jspecify.annotations.Nullable;
 
 import java.util.ArrayList;

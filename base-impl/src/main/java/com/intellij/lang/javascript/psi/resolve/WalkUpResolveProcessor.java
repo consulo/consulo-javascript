@@ -29,8 +29,7 @@ import consulo.language.psi.ResolveResult;
 import consulo.language.psi.resolve.ResolveState;
 import consulo.language.psi.util.PsiTreeUtil;
 import consulo.util.collection.ArrayUtil;
-import consulo.xml.psi.xml.XmlAttributeValue;
-
+import consulo.xml.language.psi.XmlAttributeValue;
 
 import java.util.ArrayList;
 import java.util.List;

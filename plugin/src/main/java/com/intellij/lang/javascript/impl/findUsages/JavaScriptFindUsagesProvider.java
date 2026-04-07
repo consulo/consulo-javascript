@@ -25,9 +25,8 @@ import consulo.language.cacheBuilder.WordsScanner;
 import consulo.language.findUsage.FindUsagesProvider;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiNamedElement;
-import consulo.xml.psi.xml.XmlTag;
-import consulo.xml.psi.xml.XmlToken;
-
+import consulo.xml.language.psi.XmlTag;
+import consulo.xml.language.psi.XmlToken;
 
 /**
  * @author max

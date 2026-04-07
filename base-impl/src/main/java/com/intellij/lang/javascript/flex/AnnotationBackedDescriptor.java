@@ -16,9 +16,9 @@
 
 package com.intellij.lang.javascript.flex;
 
-import com.intellij.xml.XmlAttributeDescriptor;
-import com.intellij.xml.XmlElementDescriptor;
-import com.intellij.xml.XmlElementDescriptorWithCDataContent;
+import consulo.xml.descriptor.XmlAttributeDescriptor;
+import consulo.xml.descriptor.XmlElementDescriptor;
+import consulo.xml.descriptor.XmlElementDescriptorWithCDataContent;
 
 /**
  * @author Maxim.Mossienko

@@ -44,7 +44,7 @@ import consulo.project.Project;
 import consulo.util.collection.HashingStrategy;
 import consulo.util.lang.StringUtil;
 import consulo.virtualFileSystem.VirtualFile;
-import consulo.xml.psi.xml.XmlFile;
+import consulo.xml.language.psi.XmlFile;
 import org.jspecify.annotations.Nullable;
 
 import java.io.IOException;

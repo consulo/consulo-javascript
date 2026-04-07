@@ -40,7 +40,7 @@ import consulo.project.Project;
 import consulo.util.lang.Pair;
 import consulo.util.lang.StringUtil;
 import consulo.util.lang.ref.SimpleReference;
-import consulo.xml.psi.xml.XmlToken;
+import consulo.xml.language.psi.XmlToken;
 import org.jspecify.annotations.Nullable;
 
 import java.io.File;

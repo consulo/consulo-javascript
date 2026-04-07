@@ -2,8 +2,7 @@ package com.intellij.lang.javascript;
 
 import consulo.annotation.component.ExtensionImpl;
 import consulo.language.psi.PsiElement;
-import consulo.xml.psi.xml.XmlText;
-
+import consulo.xml.language.psi.XmlText;
 
 /**
  * @author VISTALL
