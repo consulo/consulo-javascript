@@ -16,10 +16,10 @@
 
 package com.intellij.lang.javascript;
 
+import consulo.html.language.HTMLLanguage;
 import consulo.language.ast.IElementType;
 import consulo.language.editor.highlight.SyntaxHighlighterFactory;
 import consulo.language.lexer.*;
-import consulo.xml.lang.html.HTMLLanguage;
 
 /**
  * Created by IntelliJ IDEA.

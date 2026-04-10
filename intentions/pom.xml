@@ -67,7 +67,7 @@
 
         <dependency>
             <groupId>${project.groupId}</groupId>
-            <artifactId>com.intellij.xml</artifactId>
+            <artifactId>com.intellij.xml.api</artifactId>
             <version>${project.version}</version>
             <scope>provided</scope>
         </dependency>

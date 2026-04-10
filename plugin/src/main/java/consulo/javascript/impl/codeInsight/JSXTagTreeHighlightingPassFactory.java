@@ -1,4 +1,4 @@
-package consulo.javascript.jsx.codeInsight;
+package consulo.javascript.impl.codeInsight;
 
 import consulo.annotation.component.ExtensionImpl;
 import consulo.codeEditor.Editor;

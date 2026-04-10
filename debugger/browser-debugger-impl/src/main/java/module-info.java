@@ -11,5 +11,11 @@ module consulo.javascript.browser.debugger.impl {
 
     requires consulo.javascript.cdt.debugger.impl;
 
+    requires consulo.builtin.web.server.api;
+
+    requires consulo.compiler.api;
+
+    requires consulo.web.browser.api;
+
     opens consulo.javascript.debugger.browser to consulo.util.xml.serializer;
 }

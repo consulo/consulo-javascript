@@ -8,11 +8,18 @@ open module consulo.javascript {
 
     requires consulo.language.editor.impl;
 
+    requires com.intellij.xml.api;
+    requires com.intellij.xml.editor.api;
+    requires com.intellij.xml.html.api;
+
+    // JSXTagTreeHighlightingPassFactory
     requires com.intellij.xml;
 
     // TODO remove in future
     requires java.desktop;
     requires forms.rt;
+
+    requires consulo.javascript.ecmascript.impl;
 
     exports com.intellij.javascript;
     exports com.intellij.javascript.manipulators;

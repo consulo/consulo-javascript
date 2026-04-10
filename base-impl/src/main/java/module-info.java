@@ -5,8 +5,13 @@
 open module consulo.javascript.base.impl {
     requires transitive consulo.javascript.base.api;
 
+    requires consulo.language.impl;
+    requires consulo.language.editor.refactoring.api;
+
     requires com.google.common;
-    requires com.intellij.xml;
+    requires com.intellij.xml.api;
+    requires com.intellij.xml.editor.api;
+    requires com.intellij.xml.html.api;
 
     exports com.intellij.javascript.documentation;
     exports com.intellij.lang.javascript;

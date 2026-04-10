@@ -2,12 +2,12 @@ package consulo.javascript.impl.html;
 
 import com.intellij.lang.javascript.JSElementTypes;
 import consulo.annotation.component.ExtensionImpl;
+import consulo.html.language.HtmlScriptContentProvider;
 import consulo.javascript.lang.lexer.JavaScript15Lexer;
 import consulo.javascript.language.JavaScriptLanguage;
 import consulo.language.Language;
 import consulo.language.ast.IElementType;
 import consulo.language.lexer.Lexer;
-import consulo.xml.lang.HtmlScriptContentProvider;
 
 import org.jspecify.annotations.Nullable;
 

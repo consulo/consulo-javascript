@@ -20,10 +20,10 @@ package com.intellij.lang.javascript.highlighting;
 import com.intellij.lang.javascript.JSDocTokenTypes;
 import com.intellij.lang.javascript.JSTokenTypes;
 import com.intellij.lang.javascript._JSDocLexer;
+import consulo.html.language.HTMLLanguage;
 import consulo.language.ast.IElementType;
 import consulo.language.editor.highlight.SyntaxHighlighterFactory;
 import consulo.language.lexer.*;
-import consulo.xml.lang.html.HTMLLanguage;
 
 import java.util.function.Supplier;
 

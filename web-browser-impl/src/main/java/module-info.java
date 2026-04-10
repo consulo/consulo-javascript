@@ -8,4 +8,6 @@ module consulo.javascript.web.browser.impl
     requires java.desktop;
 
     requires consulo.javascript.base.impl;
+
+    requires consulo.ui.ex.awt.api;
 }

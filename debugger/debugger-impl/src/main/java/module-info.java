@@ -13,7 +13,7 @@ module consulo.javascript.debugger.impl
 
 	requires transitive consulo.execution.debug.api;
 
-	requires com.intellij.xml;
+	requires com.intellij.xml.api;
 
 	exports consulo.javascript.debugger;
 }

@@ -9,5 +9,5 @@ module consulo.javascript.intentions
 
     requires consulo.javascript.base.impl;
 
-    requires com.intellij.xml;
+    requires com.intellij.xml.api;
 }

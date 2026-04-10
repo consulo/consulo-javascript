@@ -6,6 +6,8 @@ module consulo.javascript.typescript.impl {
     requires consulo.javascript.base.impl;
     requires consulo.javascript.ecmascript.impl;
 
+    requires consulo.language.impl;
+
     exports consulo.typescript;
     exports consulo.typescript.version;
 }
