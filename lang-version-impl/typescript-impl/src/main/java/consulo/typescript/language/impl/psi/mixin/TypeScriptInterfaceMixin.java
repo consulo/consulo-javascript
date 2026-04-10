@@ -34,6 +34,11 @@ public class TypeScriptInterfaceMixin extends StubBasedPsiElementBase<JSClassStu
     }
 
     @Override
+    public String toString() {
+        return getClass().getSimpleName() + ":" + getNode().getElementType();
+    }
+
+    @Override
     public void accept(@Nonnull PsiElementVisitor visitor) {
         if (visitor instanceof JSElementVisitor jsVisitor) {
             jsVisitor.visitJSClass(this);

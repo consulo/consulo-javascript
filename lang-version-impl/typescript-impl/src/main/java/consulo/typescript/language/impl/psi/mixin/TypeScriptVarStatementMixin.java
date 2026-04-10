@@ -37,6 +37,11 @@ public class TypeScriptVarStatementMixin extends StubBasedPsiElementBase<JSVarSt
     }
 
     @Override
+    public String toString() {
+        return getClass().getSimpleName() + ":" + getNode().getElementType();
+    }
+
+    @Override
     public void accept(@Nonnull PsiElementVisitor visitor) {
         if (visitor instanceof JSElementVisitor jsVisitor) {
             jsVisitor.visitJSVarStatement(this);

@@ -19,6 +19,66 @@ public class TypeScriptParserTest extends SimpleParsingTest<Object> {
         doTest(context, null);
     }
 
+    @Test
+    public void testVarDeclaration(Context context) throws Exception {
+        doTest(context, null);
+    }
+
+    @Test
+    public void testFunctionDeclaration(Context context) throws Exception {
+        doTest(context, null);
+    }
+
+    @Test
+    public void testClassDeclaration(Context context) throws Exception {
+        doTest(context, null);
+    }
+
+    @Test
+    public void testInterfaceDeclaration(Context context) throws Exception {
+        doTest(context, null);
+    }
+
+    @Test
+    public void testEnumDeclaration(Context context) throws Exception {
+        doTest(context, null);
+    }
+
+    @Test
+    public void testTypeAlias(Context context) throws Exception {
+        doTest(context, null);
+    }
+
+    @Test
+    public void testImportExport(Context context) throws Exception {
+        doTest(context, null);
+    }
+
+    @Test
+    public void testImportMeta(Context context) throws Exception {
+        doTest(context, null);
+    }
+
+    @Test
+    public void testAmbientDeclaration(Context context) throws Exception {
+        doTest(context, null);
+    }
+
+    @Test
+    public void testArrowFunction(Context context) throws Exception {
+        doTest(context, null);
+    }
+
+    @Test
+    public void testGenericTypes(Context context) throws Exception {
+        doTest(context, null);
+    }
+
+    @Test
+    public void testStringLiterals(Context context) throws Exception {
+        doTest(context, null);
+    }
+
     @Override
     protected LanguageFileType getFileType(Context context, Object o) {
         return TypeScriptFileType.INSTANCE;
