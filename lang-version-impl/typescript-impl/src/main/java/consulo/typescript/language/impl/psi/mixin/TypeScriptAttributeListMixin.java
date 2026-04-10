@@ -87,4 +87,9 @@ public class TypeScriptAttributeListMixin extends StubBasedPsiElementBase<JSAttr
     public boolean hasModifier(ModifierType modifier) {
         return false;
     }
+
+    @Override
+    public String toString() {
+        return getClass().getSimpleName();
+    }
 }

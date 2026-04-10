@@ -147,4 +147,9 @@ public class TypeScriptClassMixin extends StubBasedPsiElementBase<JSClassStub> i
     public JSAttributeList getAttributeList() {
         return null;
     }
+
+    @Override
+    public String toString() {
+        return getClass().getSimpleName() + ": " + getName();
+    }
 }
