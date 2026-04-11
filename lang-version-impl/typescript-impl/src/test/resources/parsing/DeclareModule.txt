@@ -1,0 +1,52 @@
+JSFile:DeclareModule.ts
+  TypeScriptStatementImpl(STATEMENT)
+    TypeScriptAmbientDeclarationImpl(AMBIENT_DECLARATION)
+      PsiElement(DECLARE_KEYWORD)('declare')
+      PsiWhiteSpace(' ')
+      TypeScriptNamespaceDeclarationImpl(NAMESPACE_DECLARATION)
+        PsiElement(MODULE_KEYWORD)('module')
+        PsiWhiteSpace(' ')
+        PsiElement(STRING_LITERAL)('"orion/editor/textModel"')
+        PsiWhiteSpace(' ')
+        TypeScriptBlockStatementImpl(BLOCK_STATEMENT)
+          PsiElement(LBRACE)('{')
+          PsiWhiteSpace('\n    ')
+          TypeScriptStatementImpl(STATEMENT)
+            TypeScriptExportDeclarationImpl(EXPORT_DECLARATION)
+              PsiElement(EXPORT_KEYWORD)('export')
+              PsiWhiteSpace(' ')
+              TypeScriptClassDeclarationImpl: TextModel
+                TypeScriptAttributeListImpl
+                  <empty list>
+                PsiElement(CLASS_KEYWORD)('class')
+                PsiWhiteSpace(' ')
+                PsiElement(IDENTIFIER)('TextModel')
+                PsiWhiteSpace(' ')
+                TypeScriptClassBodyImpl(CLASS_BODY)
+                  PsiElement(LBRACE)('{')
+                  PsiWhiteSpace('\n        ')
+                  TypeScriptAttributeListImpl
+                    <empty list>
+                  TypeScriptConstructorDeclarationImpl(CONSTRUCTOR_DECLARATION)
+                    PsiElement(CONSTRUCTOR_KEYWORD)('constructor')
+                    TypeScriptParameterListImpl:PARAMETER_LIST
+                      PsiElement(LPAR)('(')
+                      TypeScriptParameterImpl(PARAMETER)
+                        TypeScriptAttributeListImpl
+                          <empty list>
+                        TypeScriptBindingPatternImpl(BINDING_PATTERN)
+                          PsiElement(IDENTIFIER)('text')
+                        PsiElement(QUEST)('?')
+                        TypeScriptTypeAnnotationImpl(TYPE_ANNOTATION)
+                          PsiElement(COLON)(':')
+                          PsiWhiteSpace(' ')
+                          TypeScriptTypeReferenceImpl(TYPE_REFERENCE)
+                            TypeScriptQualifiedNameImpl(QUALIFIED_NAME)
+                              PsiElement(IDENTIFIER)('string')
+                      PsiElement(RPAR)(')')
+                  PsiElement(SEMICOLON)(';')
+                  PsiWhiteSpace('\n    ')
+                  PsiElement(RBRACE)('}')
+          PsiWhiteSpace('\n')
+          PsiElement(RBRACE)('}')
+  PsiWhiteSpace('\n')

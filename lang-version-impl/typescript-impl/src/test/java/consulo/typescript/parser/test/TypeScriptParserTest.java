@@ -79,6 +79,26 @@ public class TypeScriptParserTest extends SimpleParsingTest<Object> {
         doTest(context, null);
     }
 
+    @Test
+    public void testIfElse(Context context) throws Exception {
+        doTest(context, null);
+    }
+
+    @Test
+    public void testObjectLiteralMethod(Context context) throws Exception {
+        doTest(context, null);
+    }
+
+    @Test
+    public void testExportType(Context context) throws Exception {
+        doTest(context, null);
+    }
+
+    @Test
+    public void testDeclareModule(Context context) throws Exception {
+        doTest(context, null);
+    }
+
     @Override
     protected LanguageFileType getFileType(Context context, Object o) {
         return TypeScriptFileType.INSTANCE;

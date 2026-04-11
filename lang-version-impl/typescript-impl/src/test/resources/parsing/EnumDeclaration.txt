@@ -20,13 +20,10 @@ JSFile:EnumDeclaration.ts
       PsiWhiteSpace('\n')
       PsiElement(RBRACE)('}')
   PsiWhiteSpace('\n\n')
-  TypeScriptVarStatementImpl:VAR_STATEMENT
-    PsiElement(CONST_KEYWORD)('const')
-    PsiErrorElement:<binding pattern> expected, got 'enum'
-      <empty list>
-  PsiWhiteSpace(' ')
   TypeScriptStatementImpl(STATEMENT)
     TypeScriptEnumDeclarationImpl(ENUM_DECLARATION)
+      PsiElement(CONST_KEYWORD)('const')
+      PsiWhiteSpace(' ')
       PsiElement(ENUM_KEYWORD)('enum')
       PsiWhiteSpace(' ')
       PsiElement(IDENTIFIER)('Direction')

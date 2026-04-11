@@ -296,6 +296,7 @@ private statement_list ::= statement*
 
 statement ::=
     block_statement
+  | enum_declaration
   | var_statement
   | empty_statement
   | if_statement
@@ -316,7 +317,6 @@ statement ::=
   | function_declaration
   | class_declaration
   | interface_declaration
-  | enum_declaration
   | type_alias_declaration
   | namespace_declaration
   | import_declaration
@@ -328,7 +328,7 @@ statement ::=
 private statement_recover_ ::= !(
     IDENTIFIER | LBRACE | RBRACE | SEMICOLON |
     VAR_KEYWORD | LET_KEYWORD | CONST_KEYWORD |
-    FUNCTION_KEYWORD | CLASS_KEYWORD | IF_KEYWORD |
+    FUNCTION_KEYWORD | CLASS_KEYWORD | IF_KEYWORD | ELSE_KEYWORD |
     FOR_KEYWORD | WHILE_KEYWORD | DO_KEYWORD |
     SWITCH_KEYWORD | TRY_KEYWORD | RETURN_KEYWORD |
     THROW_KEYWORD | BREAK_KEYWORD | CONTINUE_KEYWORD |
@@ -474,7 +474,7 @@ enum_member ::= property_name ('=' expression)?
 type_alias_declaration ::= TYPE_KEYWORD IDENTIFIER type_parameter_list? '=' type_expression semicolon {pin=1}
 
 // --- Namespace ---
-namespace_declaration ::= (NAMESPACE_KEYWORD | MODULE_KEYWORD) qualified_name block_statement {pin=1}
+namespace_declaration ::= (NAMESPACE_KEYWORD | MODULE_KEYWORD) (qualified_name | STRING_LITERAL | SINGLE_QUOTE_STRING_LITERAL) block_statement {pin=1}
 
 // --- Ambient declaration ---
 ambient_declaration ::= DECLARE_KEYWORD (var_statement | function_declaration | class_declaration | enum_declaration | namespace_declaration | interface_declaration | type_alias_declaration | GLOBAL_KEYWORD block_statement) {pin=1}
@@ -505,15 +505,19 @@ import_attribute ::= (IDENTIFIER | STRING_LITERAL | SINGLE_QUOTE_STRING_LITERAL)
 
 // --- Export ---
 export_declaration ::= 'export' (
-    'default'? (function_declaration | class_declaration | interface_declaration | enum_declaration | type_alias_declaration)
-  | 'default' expression semicolon
+    'default' (function_declaration | class_declaration | expression semicolon)
   | ambient_declaration
+  | function_declaration
+  | class_declaration
+  | interface_declaration
+  | enum_declaration
   | var_statement
+  | TYPE_KEYWORD named_exports from_clause? semicolon
+  | TYPE_KEYWORD '*' (AS_KEYWORD IDENTIFIER)? from_clause semicolon
+  | type_alias_declaration
   | named_exports from_clause? semicolon
   | '*' (AS_KEYWORD IDENTIFIER)? from_clause semicolon
   | '=' IDENTIFIER semicolon
-  | TYPE_KEYWORD? named_exports from_clause? semicolon
-  | TYPE_KEYWORD? '*' (AS_KEYWORD IDENTIFIER)? from_clause semicolon
 ) {pin=1}
 
 named_exports ::= '{' (export_specifier (',' export_specifier)* ','?)? '}'
@@ -626,17 +630,19 @@ private expression_list_opt ::= (expression (',' expression)* ','?)?
 object_literal_expression ::= '{' (property (',' property)* ','?)? '}'
 
 property ::= property_name ':' expression
-  | IDENTIFIER
   | '...' expression
   | '*'? property_name type_parameter_list? parameter_list type_annotation? block_statement
   | (GET_KEYWORD | SET_KEYWORD) property_name parameter_list type_annotation? block_statement
+  | IDENTIFIER
 
 computed_property_name ::= '[' expression ']'
 
 parenthesized_expression ::= '(' expression ')'
 
-template_literal_expression ::= NO_SUBSTITUTION_TEMPLATE
-  | TEMPLATE_HEAD expression (TEMPLATE_MIDDLE expression)* TEMPLATE_TAIL
+template_literal_expression ::= TEMPLATE_HEAD template_literal_content* TEMPLATE_TAIL
+
+private template_literal_content ::= NO_SUBSTITUTION_TEMPLATE
+  | TEMPLATE_HEAD expression TEMPLATE_MIDDLE
 
 spread_expression ::= '...' expression
 
@@ -737,7 +743,7 @@ predefined_type ::= IDENTIFIER | VOID_KEYWORD
 
 type_parameter_list ::= '<' type_parameter (',' type_parameter)* '>' {pin=1}
 
-type_parameter ::= IDENTIFIER? IDENTIFIER ('extends' type_expression)? ('=' type_expression)?
+type_parameter ::= IDENTIFIER ('extends' type_expression)? ('=' type_expression)?
 
 type_arguments ::= '<' type_expression (',' type_expression)* '>'
 
