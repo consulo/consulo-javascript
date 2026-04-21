@@ -13,11 +13,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package com.intellij.javascript;
 
 import com.intellij.lang.javascript.psi.JSFunction;
 import com.intellij.lang.javascript.psi.JSFunctionExpression;
+import consulo.annotation.access.RequiredReadAction;
 import consulo.annotation.component.ExtensionImpl;
 import consulo.javascript.localize.JavaScriptLocalize;
 import consulo.language.editor.completion.lookup.LookupElement;
@@ -28,7 +28,7 @@ import consulo.language.editor.template.TextResult;
 import consulo.language.editor.template.macro.Macro;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.util.PsiTreeUtil;
-
+import consulo.localize.LocalizeValue;
 
 @ExtensionImpl
 public class JSMethodNameMacro extends Macro {
@@ -38,8 +38,8 @@ public class JSMethodNameMacro extends Macro {
     }
 
     @Override
-    public String getPresentableName() {
-        return JavaScriptLocalize.jsMethodnameMacroDescription().get();
+    public LocalizeValue getPresentableName() {
+        return JavaScriptLocalize.jsMethodnameMacroDescription();
     }
 
     @Override
@@ -48,6 +48,7 @@ public class JSMethodNameMacro extends Macro {
     }
 
     @Override
+    @RequiredReadAction
     public Result calculateResult(Expression[] params, ExpressionContext context) {
         PsiElement elementAtCaret = JSClassNameMacro.findElementAtCaret(context);
         if (elementAtCaret != null) {
