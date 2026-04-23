@@ -5,6 +5,7 @@ import com.github.kklisura.cdt.protocol.types.debugger.ScopeType;
 import com.github.kklisura.cdt.protocol.types.runtime.RemoteObject;
 import consulo.execution.debug.frame.XCompositeNode;
 import consulo.execution.debug.frame.XValueGroup;
+import consulo.localize.LocalizeValue;
 import consulo.util.lang.StringUtil;
 
 import java.util.Locale;
@@ -18,10 +19,8 @@ public class CDTScopeValue extends XValueGroup {
     private final RemoteObject myRemoteObject;
     private final CDTProcessBase myProcess;
 
-    public CDTScopeValue(Scope scope,
-                         RemoteObject remoteObject,
-                         CDTProcessBase process) {
-        super(StringUtil.capitalize(scope.getType().name().toLowerCase(Locale.ROOT)));
+    public CDTScopeValue(Scope scope, RemoteObject remoteObject, CDTProcessBase process) {
+        super(LocalizeValue.localizeTODO(StringUtil.capitalize(scope.getType().name().toLowerCase(Locale.ROOT))));
         myScope = scope;
         myRemoteObject = remoteObject;
         myProcess = process;
