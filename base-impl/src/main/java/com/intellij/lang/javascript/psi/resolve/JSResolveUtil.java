@@ -2332,7 +2332,7 @@ public class JSResolveUtil {
     public static void processGlobalSymbols(PsiElement target, PsiScopeProcessor processor) {
         Sdk sdk = ModuleUtilCore.getSdk(target, JavaScriptModuleExtension.class);
         if (sdk != null) {
-            VirtualFile[] files = sdk.getRootProvider().getFiles(BinariesOrderRootType.getInstance());
+            VirtualFile[] files = sdk.getRootProvider().getFiles(BinariesOrderRootType.ID);
 
             for (VirtualFile file : files) {
                 PsiFile psiFile = PsiManager.getInstance(target.getProject()).findFile(file);

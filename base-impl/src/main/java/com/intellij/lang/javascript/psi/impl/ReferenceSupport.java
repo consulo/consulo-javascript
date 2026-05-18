@@ -155,7 +155,7 @@ public class ReferenceSupport {
             OrderEntry[] orderEntries = ModuleRootManager.getInstance(module).getOrderEntries();
             for (OrderEntry orderEntry : orderEntries) {
                 if (orderEntry instanceof OrderEntryWithTracking) {
-                    dirs.addAll(Arrays.asList(orderEntry.getFiles(BinariesOrderRootType.getInstance())));
+                    dirs.addAll(Arrays.asList(orderEntry.getFiles(BinariesOrderRootType.ID)));
                 }
             }
         }

@@ -273,7 +273,7 @@ public class JSPsiImplUtils {
         relativeFilePath += ".as";
 
         for (OrderEntry orderEntry : orderEntries) {
-            VirtualFile[] files = orderEntry.getFiles(SourcesOrderRootType.getInstance());
+            VirtualFile[] files = orderEntry.getFiles(SourcesOrderRootType.ID);
 
             for (VirtualFile file : files) {
                 VirtualFile source = file.findFileByRelativePath(relativeFilePath);

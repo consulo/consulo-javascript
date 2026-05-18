@@ -46,8 +46,8 @@ public class ClientJavaScriptPredefinedBundlesProvider extends PredefinedBundles
             modificator.setHomePath(fileByIoFile.getPath());
             modificator.setVersionString("1");
             for (VirtualFile child : fileByIoFile.getChildren()) {
-                modificator.addRoot(child, BinariesOrderRootType.getInstance());
-                modificator.addRoot(child, SourcesOrderRootType.getInstance());
+                modificator.addRoot(child, BinariesOrderRootType.ID);
+                modificator.addRoot(child, SourcesOrderRootType.ID);
             }
             modificator.commitChanges();
         }

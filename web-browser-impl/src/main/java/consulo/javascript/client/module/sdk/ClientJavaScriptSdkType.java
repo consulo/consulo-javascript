@@ -8,7 +8,10 @@ import consulo.content.base.SourcesOrderRootType;
 import consulo.content.bundle.SdkType;
 import consulo.javascript.icon.JavaScriptIconGroup;
 import consulo.localize.LocalizeValue;
+import jakarta.inject.Inject;
 import org.jspecify.annotations.Nullable;
+
+import java.util.Set;
 
 /**
  * @author VISTALL
@@ -16,12 +19,19 @@ import org.jspecify.annotations.Nullable;
  */
 @ExtensionImpl
 public class ClientJavaScriptSdkType extends SdkType {
+
     public static ClientJavaScriptSdkType getInstance() {
         return Application.get().getExtensionPoint(SdkType.class).findExtensionOrFail(ClientJavaScriptSdkType.class);
     }
 
-    public ClientJavaScriptSdkType() {
+    private static final Set<String> ourAcceptedRootTypeIds = Set.of(BinariesOrderRootType.ID, SourcesOrderRootType.ID);
+
+    private final Application myApplication;
+
+    @Inject
+    public ClientJavaScriptSdkType(Application application) {
         super("CLIENT_JAVASCRIPT_SDK_TYPE", LocalizeValue.localizeTODO("Client JavaScript"), JavaScriptIconGroup.javascriptmodule());
+        myApplication = application;
     }
 
     @Override
@@ -30,8 +40,8 @@ public class ClientJavaScriptSdkType extends SdkType {
     }
 
     @Override
-    public boolean isRootTypeApplicable(OrderRootType type) {
-        return type == BinariesOrderRootType.getInstance() || type == SourcesOrderRootType.getInstance();
+    public boolean isRootTypeApplicable(String type) {
+        return ourAcceptedRootTypeIds.contains(type);
     }
 
     @Override
@@ -42,7 +52,7 @@ public class ClientJavaScriptSdkType extends SdkType {
     @Nullable
     @Override
     public String getVersionString(String sdkHome) {
-        return "1";
+        return myApplication.getBuildNumber().asString();
     }
 
     @Override
