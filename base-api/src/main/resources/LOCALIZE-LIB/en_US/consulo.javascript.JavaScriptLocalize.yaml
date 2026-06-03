@@ -105,7 +105,7 @@ javascript.fix.implement.methods:
 javascript.fix.optimize.imports:
     text: Optimize imports
 javascript.fix.package.name:
-    text: Set package name to ''{0}''
+    text: "Set package name to ''{0}''"
 javascript.fix.remove.access.modifier:
     text: Remove access modifier
 javascript.fix.remove.circular.dependency:
@@ -245,11 +245,11 @@ javascript.parser.message.expected.equal:
 javascript.parser.message.expected.expression:
     text: expression expected
 javascript.parser.message.expected.forloop.in.of.or.semicolon:
-    text: '''in'', ''of'' or ; expected'
+    text: "'in', 'of' or ; expected"
 javascript.parser.message.expected.forloop.in.or.semicolon:
-    text: '''in'' or ; expected'
+    text: "'in' or ; expected"
 javascript.parser.message.expected.forloop.left.hand.side.expression.or.variable.declaration:
-    text: left hand side expression or variable declaration expected before 'in'
+    text: "left hand side expression or variable declaration expected before 'in'"
 javascript.parser.message.expected.formal.parameter.name:
     text: formal parameter name expected
 javascript.parser.message.expected.function.name:
@@ -265,9 +265,9 @@ javascript.parser.message.expected.identifier.string.literal.or.numeric.literal:
 javascript.parser.message.expected.instanceof:
     text: Expected instanceof
 javascript.parser.message.expected.lbrace:
-    text: '''{'' expected'
+    text: "'{' expected"
 javascript.parser.message.expected.lbrace.or.lbracket:
-    text: '''{'' or ''['' expected'
+    text: "'{' or '[' expected"
 javascript.parser.message.expected.lparen:
     text: ( expected
 javascript.parser.message.expected.lt:
@@ -275,13 +275,13 @@ javascript.parser.message.expected.lt:
 javascript.parser.message.expected.name:
     text: name expected
 javascript.parser.message.expected.name.or.lbrace:
-    text: Expected package name or '{'
+    text: "Expected package name or '{'"
 javascript.parser.message.expected.namespace:
     text: Namespace keyword expected
 javascript.parser.message.expected.parameter.name:
     text: parameter name expected
 javascript.parser.message.expected.rbrace:
-    text: '''}'' expected'
+    text: "'}' expected"
 javascript.parser.message.expected.rbracket:
     text: '] expected'
 javascript.parser.message.expected.rparen:
@@ -377,23 +377,23 @@ javascript.validation.message.access.modifier.allowed.only.for.package.members:
 javascript.validation.message.arguments.out.of.function:
     text: Using function arguments object outside function
 javascript.validation.message.arguments.with.rest.parameter:
-    text: '''arguments'' object is not available when using rest parameter'
+    text: "'arguments' object is not available when using rest parameter"
 javascript.validation.message.assignment.to.const:
     text: Attempt to assign to const variable
 javascript.validation.message.break.without.target:
-    text: Cannot determine target for 'break'
+    text: "Cannot determine target for 'break'"
 javascript.validation.message.circular.dependency:
     text: Circular dependency
 javascript.validation.message.class.name.expected.here:
     text: Class name expected here
 javascript.validation.message.class.should.be.in.file:
-    text: Class ''{0}'' should be defined in file ''{1}''
+    text: "Class ''{0}'' should be defined in file ''{1}''"
 javascript.validation.message.const.variable.without.initializer.:
-    text: const variable without initializer. It won't be possible to assign meaningful value later.
+    text: "const variable without initializer. It won't be possible to assign meaningful value later."
 javascript.validation.message.constructor.in.mxml.is.not.allowed:
     text: Constructor is not allowed for MXML class
 javascript.validation.message.continue.without.target:
-    text: Cannot determine target for 'continue'
+    text: "Cannot determine target for 'continue'"
 javascript.validation.message.duplicate.declaration:
     text: Duplicate declaration
 javascript.validation.message.duplicate.label:
@@ -407,17 +407,17 @@ javascript.validation.message.file.should.be.under.source.root:
 javascript.validation.message.function.override.for.object.method:
     text: Method inherited from Object does not need override
 javascript.validation.message.function.override.incompatible.access.modifier:
-    text: Incompatible override, should have ''{0}'' access modifier
+    text: "Incompatible override, should have ''{0}'' access modifier"
 javascript.validation.message.function.override.incompatible.signature:
-    text: Incompatible override, should have signature ''{0}''
+    text: "Incompatible override, should have signature ''{0}''"
 javascript.validation.message.function.override.incompatible.signature2:
-    text: Incompatible override, should have return type ''{0}''
+    text: "Incompatible override, should have return type ''{0}''"
 javascript.validation.message.function.override.without.override.modifier:
     text: Method overrides method in superclass {0} without override keyword
 javascript.validation.message.function.override.without.parent.method:
     text: Method does not override method from super class
 javascript.validation.message.function.should.be.in.file:
-    text: Function ''{0}'' should be defined in file ''{1}''
+    text: "Function ''{0}'' should be defined in file ''{1}''"
 javascript.validation.message.get.method.should.be.valid.type:
     text: Return type of a getter definition should not be {0}
 javascript.validation.message.get.method.should.have.no.parameter:
@@ -425,7 +425,7 @@ javascript.validation.message.get.method.should.have.no.parameter:
 javascript.validation.message.implements.for.interface.not.allowed:
     text: Implements list is not allowed for interface
 javascript.validation.message.incorrect.package.name:
-    text: Package name ''{0}'' does not correspond to file path ''{1}''
+    text: "Package name ''{0}'' does not correspond to file path ''{1}''"
 javascript.validation.message.incorrect.parameter.name:
     text: Incorrect parameter name
 javascript.validation.message.incorrect.tag.value:
@@ -433,17 +433,17 @@ javascript.validation.message.incorrect.tag.value:
 javascript.validation.message.interface.members.cannot.have.access.modifiers:
     text: Interface members cannot have access modifiers
 javascript.validation.message.interface.method.invalid.access.modifier:
-    text: Incompatible implementation, should have 'public' access modifier
+    text: "Incompatible implementation, should have 'public' access modifier"
 javascript.validation.message.interface.method.invalid.signature:
-    text: Incompatible implementation, should have signature ''{0}''
+    text: "Incompatible implementation, should have signature ''{0}''"
 javascript.validation.message.interface.method.invalid.signature2:
-    text: Incompatible implementation, should have return type ''{0}''
+    text: "Incompatible implementation, should have return type ''{0}''"
 javascript.validation.message.interface.method.not.implemented:
     text: Method {0} from interface {1} is not implemented
 javascript.validation.message.interface.name.expected.here:
     text: Interface name expected here
 javascript.validation.message.missed.super.constructor.call:
-    text: Missed superclass's constructor invokation
+    text: "Missed superclass's constructor invokation"
 javascript.validation.message.more.than.one.externally.visible.symbol:
     text: More than one externally visible symbol defined in file
 javascript.validation.message.must.be.lvalue:
@@ -451,7 +451,7 @@ javascript.validation.message.must.be.lvalue:
 javascript.validation.message.namespace.allowed.only.for.class.members:
     text: Namespace allowed for class members only
 javascript.validation.message.namespace.should.be.in.file:
-    text: Namespace ''{0}'' should be defined in file ''{1}''
+    text: "Namespace ''{0}'' should be defined in file ''{1}''"
 javascript.validation.message.nested.classes.are.not.allowed:
     text: Nested classes are not allowed
 javascript.validation.message.package.shouldbe.first.statement:
@@ -465,7 +465,7 @@ javascript.validation.message.remove.unneeded.comma.fix:
 javascript.validation.message.rest.parameter.should.not.be.initialized:
     text: Rest parameter should not be initialized
 javascript.validation.message.return.outside.function.definition:
-    text: '''return'' outside function definition'
+    text: "'return' outside function definition"
 javascript.validation.message.return.value.of.type.is.required:
     text: Return value of type {0} is required
 javascript.validation.message.set.method.should.be.void.or.without.type:
@@ -473,11 +473,11 @@ javascript.validation.message.set.method.should.be.void.or.without.type:
 javascript.validation.message.set.method.should.have.one.parameter:
     text: A setter definition must have exactly one parameter
 javascript.validation.message.super.referenced.from.static.context:
-    text: '''super'' referenced in static context'
+    text: "'super' referenced in static context"
 javascript.validation.message.super.referenced.without.class.instance.context:
-    text: '''super'' referenced without class instance context'
+    text: "'super' referenced without class instance context"
 javascript.validation.message.this.referenced.from.static.context:
-    text: '''this'' referenced in static context'
+    text: "'this' referenced in static context"
 javascript.validation.message.unexpected.type.for.rest.parameter:
     text: Rest parameter should have no type
 javascript.validation.message.unneeded.comma:
@@ -485,7 +485,7 @@ javascript.validation.message.unneeded.comma:
 javascript.validation.message.use.namespace.reference.or.access.modifier:
     text: Use namespace OR access modifier
 javascript.validation.message.variable.should.be.in.file:
-    text: Variable ''{0}'' should be defined in file ''{1}''
+    text: "Variable ''{0}'' should be defined in file ''{1}''"
 javascript.validation.unused.import:
     text: Unused import
 js.classname.macro.description:
@@ -535,7 +535,7 @@ methods.to.override.chooser.title:
 preview.panel.title:
     text: Preview
 this.feature.is.not.supported.by.current.language:
-    text: '''''{0}'''' is not supported by current language version'
+    text: "''{0}'' is not supported by current language version"
 to.indent.package.statement.children:
     text: '&Indent package statement children'
 typescript.filetype.description:

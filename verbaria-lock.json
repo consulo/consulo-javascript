@@ -1,0 +1,65 @@
+{
+  "lockVersion" : 1,
+  "server" : "https://i.verbaria.org/",
+  "project" : "consulo-javascript",
+  "projectVersion" : "master",
+  "generatedAt" : "2026-06-03T18:35:06.070307908Z",
+  "documents" : {
+    "com.sixrr.inspectjs.InspectionJSLocalize" : {
+      "source" : {
+        "revision" : 1,
+        "sig" : "67f2239a8c6400e6e1fd434c6ae43a28"
+      },
+      "translations" : {
+        "en-US" : {
+          "sig" : "9f88e5ce830a83d5d85a2e2b7a8b4d5a",
+          "state" : "Approved",
+          "total" : 278,
+          "translators" : [ "Valery Semenchuk <vistall.valeriy@gmail.com>" ]
+        }
+      }
+    },
+    "consulo.javascript.JavaScriptLocalize" : {
+      "source" : {
+        "revision" : 1,
+        "sig" : "13560c8c98b51abcba569b52b62f114a"
+      },
+      "translations" : {
+        "en-US" : {
+          "sig" : "f14568fd04ac9e74fe69015bee27de4a",
+          "state" : "Approved",
+          "total" : 268,
+          "translators" : [ "Valery Semenchuk <vistall.valeriy@gmail.com>" ]
+        }
+      }
+    },
+    "consulo.javascript.intention.JSIntentionLocalize" : {
+      "source" : {
+        "revision" : 1,
+        "sig" : "a0c1e71d2a5c5fe0ddb17c26fe7ba399"
+      },
+      "translations" : {
+        "en-US" : {
+          "sig" : "d5a581014b4308f8358c23413ba4b41c",
+          "state" : "Approved",
+          "total" : 59,
+          "translators" : [ "Valery Semenchuk <vistall.valeriy@gmail.com>" ]
+        }
+      }
+    },
+    "consulo.typescript.TypeScriptLocalize" : {
+      "source" : {
+        "revision" : 1,
+        "sig" : "65415d82fbab433950bdf9e6658f7767"
+      },
+      "translations" : {
+        "en-US" : {
+          "sig" : "4c793fe4689911ea5d198fcac5a0ec4c",
+          "state" : "Approved",
+          "total" : 52,
+          "translators" : [ "Valery Semenchuk <vistall.valeriy@gmail.com>" ]
+        }
+      }
+    }
+  }
+}

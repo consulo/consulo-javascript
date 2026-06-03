@@ -1,80 +1,75 @@
-# TypeScript Feature Display Names
-feature.interface:
-    text: Interfaces
+feature.abstract.class:
+    text: Abstract classes
+feature.access.modifier:
+    text: Access modifiers
+feature.computed.property:
+    text: Computed properties
+feature.conditional.type:
+    text: Conditional types
+feature.const.type.parameter:
+    text: const type parameters
+feature.decorator:
+    text: Decorators
+feature.decorator.metadata:
+    text: Decorator metadata
 feature.enum:
     text: Enums
 feature.generic:
     text: Generics
-feature.type.annotation:
-    text: Type annotations
-feature.access.modifier:
-    text: Access modifiers
-feature.namespace:
-    text: Namespaces
-feature.type.alias:
-    text: Type aliases
-feature.union.type:
-    text: Union types
-feature.intersection.type:
-    text: Intersection types
-feature.decorator:
-    text: Decorators
-feature.abstract.class:
-    text: Abstract classes
-feature.computed.property:
-    text: Computed properties
-feature.readonly.modifier:
-    text: Readonly modifier
-feature.never.type:
-    text: Never type
-feature.non.null.assertion:
-    text: Non-null assertion
-feature.mapped.type:
-    text: Mapped types
-feature.keyof.operator:
-    text: keyof operator
-feature.indexed.access.type:
-    text: Indexed access types
-feature.object.spread:
-    text: Object spread
-feature.conditional.type:
-    text: Conditional types
-feature.infer.keyword:
-    text: infer keyword
-feature.unknown.type:
-    text: unknown type
-feature.rest.tuple:
-    text: Rest elements in tuples
-feature.labeled.tuple:
-    text: Labeled tuple elements
-feature.variadic.tuple:
-    text: Variadic tuple types
-feature.template.literal.type:
-    text: Template literal types
-feature.key.remapping:
-    text: Key remapping in mapped types
-feature.override.modifier:
-    text: override modifier
-feature.type.only.import.specifier:
-    text: Type-only import specifiers
-feature.satisfies.operator:
-    text: satisfies operator
-feature.const.type.parameter:
-    text: const type parameters
-feature.decorator.metadata:
-    text: Decorator metadata
 feature.import.attributes:
     text: Import attributes
 feature.import.defer:
     text: Deferred imports
-feature.subpath.imports:
-    text: Subpath imports
-
-# Error Messages
+feature.indexed.access.type:
+    text: Indexed access types
+feature.infer.keyword:
+    text: infer keyword
+feature.interface:
+    text: Interfaces
+feature.intersection.type:
+    text: Intersection types
+feature.key.remapping:
+    text: Key remapping in mapped types
+feature.keyof.operator:
+    text: keyof operator
+feature.labeled.tuple:
+    text: Labeled tuple elements
+feature.mapped.type:
+    text: Mapped types
+feature.namespace:
+    text: Namespaces
+feature.never.type:
+    text: Never type
+feature.non.null.assertion:
+    text: Non-null assertion
 feature.not.supported.by.current.version:
     text: "''{0}'' requires TypeScript {1} or later"
-
-# Version Names
+feature.object.spread:
+    text: Object spread
+feature.override.modifier:
+    text: override modifier
+feature.readonly.modifier:
+    text: Readonly modifier
+feature.rest.tuple:
+    text: Rest elements in tuples
+feature.satisfies.operator:
+    text: satisfies operator
+feature.subpath.imports:
+    text: Subpath imports
+feature.template.literal.type:
+    text: Template literal types
+feature.type.alias:
+    text: Type aliases
+feature.type.annotation:
+    text: Type annotations
+feature.type.only.import.specifier:
+    text: Type-only import specifiers
+feature.union.type:
+    text: Union types
+feature.unknown.type:
+    text: unknown type
+feature.variadic.tuple:
+    text: Variadic tuple types
 version.1.0:
     text: TypeScript 1.0
 version.1.5:
