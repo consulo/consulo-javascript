@@ -22,7 +22,7 @@ import consulo.document.util.TextRange;
 import consulo.html.language.psi.HtmlTag;
 import consulo.javascript.language.JavaScriptLanguage;
 import consulo.language.Language;
-import consulo.language.LanguagePointerUtil;
+import consulo.language.LanguageRegistry;
 import consulo.language.inject.MultiHostInjector;
 import consulo.language.inject.MultiHostRegistrar;
 import consulo.language.psi.OuterLanguageElement;
@@ -42,7 +42,11 @@ public abstract class JSLanguageInjector implements MultiHostInjector {
     private static final String JAVASCRIPT_PREFIX = "javascript:";
     public static final String JSP_URI = "http://java.sun.com/JSP/Page";
 
-    private static final NamedPointer<Language> CSS_LANGUAGE = LanguagePointerUtil.createPointer("CSS");
+    private final NamedPointer<Language> myCSSLanguagePointer;
+
+    public JSLanguageInjector(LanguageRegistry languageRegistry) {
+        myCSSLanguagePointer = languageRegistry.createLanguagePointer("CSS");
+    }
 
     @Override
     public void injectLanguages(MultiHostRegistrar registrar, PsiElement host) {
@@ -76,8 +80,8 @@ public abstract class JSLanguageInjector implements MultiHostInjector {
                         checkMxmlInjection(registrar, attributeValue, attribute, tag);
                     }
                 }
-                else if ("style".equals(attrName) && isMozillaXulOrXblNs(xmlTag.getNamespace()) && CSS_LANGUAGE.get() != null) {
-                    registrar.startInjecting(CSS_LANGUAGE.get())
+                else if ("style".equals(attrName) && isMozillaXulOrXblNs(xmlTag.getNamespace()) && myCSSLanguagePointer.get() != null) {
+                    registrar.startInjecting(myCSSLanguagePointer.get())
                         .addPlace(
                             "inline.style {",
                             "}",
@@ -119,8 +123,8 @@ public abstract class JSLanguageInjector implements MultiHostInjector {
                     injectToXmlText(registrar, host, language, null, null);
                 }
             }
-            else if ("Style".equals(localName) && JavaScriptSupportLoader.isMxmlNs(tag.getNamespace()) && CSS_LANGUAGE.get() != null) {
-                injectToXmlText(registrar, host, CSS_LANGUAGE.get(), null, null);
+            else if ("Style".equals(localName) && JavaScriptSupportLoader.isMxmlNs(tag.getNamespace()) && myCSSLanguagePointer.get() != null) {
+                injectToXmlText(registrar, host, myCSSLanguagePointer.get(), null, null);
             }
             else if ((("script".equals(localName) && ((tag.getNamespacePrefix().length() > 0 && doInjectTo(tag))
                 || isMozillaXulOrXblNs(tag.getNamespace()))) || "Script".equals(localName) || "Metadata".equals(localName))
