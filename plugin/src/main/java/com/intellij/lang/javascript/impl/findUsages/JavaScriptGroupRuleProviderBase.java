@@ -19,27 +19,27 @@ package com.intellij.lang.javascript.impl.findUsages;
 import com.intellij.lang.javascript.psi.JSNamedElement;
 import consulo.annotation.access.RequiredReadAction;
 import consulo.dataContext.DataSink;
-import consulo.dataContext.TypeSafeDataProvider;
+import consulo.dataContext.UiDataProvider;
+import consulo.javascript.language.JavaScriptLanguage;
 import consulo.language.editor.LangDataKeys;
 import consulo.language.psi.PsiElement;
-import consulo.language.psi.SmartPointerManager;
-import consulo.language.psi.util.PsiTreeUtil;
-import consulo.project.Project;
-import consulo.usage.*;
-import consulo.usage.rule.PsiElementUsage;
-import consulo.usage.rule.UsageGroupingRule;
-import consulo.virtualFileSystem.status.FileStatusManager;
 import consulo.language.psi.PsiNamedElement;
+import consulo.language.psi.SmartPointerManager;
 import consulo.language.psi.SmartPsiElementPointer;
+import consulo.language.psi.util.PsiTreeUtil;
+import consulo.navigation.NavigationItem;
+import consulo.project.Project;
+import consulo.ui.image.Image;
+import consulo.usage.Usage;
 import consulo.usage.UsageGroup;
+import consulo.usage.UsageInfo;
 import consulo.usage.UsageView;
 import consulo.usage.rule.FileStructureGroupRuleProvider;
-import consulo.javascript.language.JavaScriptLanguage;
-import consulo.navigation.NavigationItem;
-import consulo.ui.image.Image;
-import consulo.util.dataholder.Key;
+import consulo.usage.rule.PsiElementUsage;
+import consulo.usage.rule.UsageGroupingRule;
 import consulo.util.lang.Comparing;
 import consulo.virtualFileSystem.status.FileStatus;
+import consulo.virtualFileSystem.status.FileStatusManager;
 import org.jspecify.annotations.Nullable;
 
 /**
@@ -64,7 +64,7 @@ abstract class JavaScriptGroupRuleProviderBase<T extends JSNamedElement> impleme
                     JSNamedElement element = PsiTreeUtil.getParentOfType(psiElement, getUsageClass());
 
                     if (isAcceptableElement(element)) {
-                        return createUsageGroup((T)element);
+                        return createUsageGroup((T) element);
                     }
                 }
                 return null;
@@ -84,7 +84,7 @@ abstract class JavaScriptGroupRuleProviderBase<T extends JSNamedElement> impleme
      * @author Maxim.Mossienko
      */
     abstract static class PsiNamedElementUsageGroupBase<T extends PsiNamedElement & NavigationItem>
-        implements UsageGroup, TypeSafeDataProvider {
+        implements UsageGroup, UiDataProvider {
 
         private SmartPsiElementPointer myElementPointer;
         private String myName;
@@ -97,7 +97,7 @@ abstract class JavaScriptGroupRuleProviderBase<T extends JSNamedElement> impleme
             if (myName == null) {
                 myName = "<anonymous>";
             }
-            myElementPointer = SmartPointerManager.getInstance(element.getProject()).createLazyPointer(element);
+            myElementPointer = SmartPointerManager.getInstance(element.getProject()).createSmartPsiElementPointer(element);
         }
 
         @Override
@@ -106,7 +106,7 @@ abstract class JavaScriptGroupRuleProviderBase<T extends JSNamedElement> impleme
         }
 
         public T getElement() {
-            return (T)myElementPointer.getElement();
+            return (T) myElementPointer.getElement();
         }
 
         @Override
@@ -149,7 +149,7 @@ abstract class JavaScriptGroupRuleProviderBase<T extends JSNamedElement> impleme
 
         @Override
         public int compareTo(UsageGroup o) {
-            return myName.compareTo(((PsiNamedElementUsageGroupBase)o).myName);
+            return myName.compareTo(((PsiNamedElementUsageGroupBase) o).myName);
         }
 
         @Override
@@ -169,19 +169,12 @@ abstract class JavaScriptGroupRuleProviderBase<T extends JSNamedElement> impleme
         }
 
         @Override
-        public void calcData(Key<?> key, DataSink sink) {
-            if (!isValid()) {
-                return;
-            }
-            if (LangDataKeys.PSI_ELEMENT == key) {
-                sink.put(LangDataKeys.PSI_ELEMENT, getElement());
-            }
-            if (UsageView.USAGE_INFO_KEY == key) {
+        public void uiDataSnapshot(DataSink sink) {
+            sink.lazy(LangDataKeys.PSI_ELEMENT, this::getElement);
+            sink.lazy(UsageView.USAGE_INFO_KEY, () -> {
                 T element = getElement();
-                if (element != null) {
-                    sink.put(UsageView.USAGE_INFO_KEY, new UsageInfo(element));
-                }
-            }
+                return element == null ? null : new UsageInfo(element);
+            });
         }
     }
 }
