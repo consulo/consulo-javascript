@@ -16,11 +16,12 @@ import java.util.List;
 
 /**
  * @author VISTALL
- * @since 23-Dec-17
+ * @since 2017-12-23
  */
 @Singleton
 @ServiceImpl
 public class StandardJavaScriptVersionsImpl extends StandardJavaScriptVersions {
+    @Override
     public JavaScriptLanguageVersion getDefaultVersion() {
         LanguageVersion[] versions = JavaScriptLanguage.INSTANCE.getVersions();
         for (LanguageVersion version : versions) {
@@ -31,6 +32,7 @@ public class StandardJavaScriptVersionsImpl extends StandardJavaScriptVersions {
         return JavaScript15LanguageVersion.getInstance();
     }
 
+    @Override
     public List<JavaScriptLanguageVersion> getValidLanguageVersions() {
         List<JavaScriptLanguageVersion> list = new ArrayList<>();
         LanguageVersion[] versions = JavaScriptLanguage.INSTANCE.getVersions();
@@ -44,6 +46,7 @@ public class StandardJavaScriptVersionsImpl extends StandardJavaScriptVersions {
         return list;
     }
 
+    @Override
     public JavaScriptLanguageVersion findVersionById(@Nullable String id) {
         if (StringUtil.isEmpty(id)) {
             return getDefaultVersion();

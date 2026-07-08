@@ -16,6 +16,7 @@
 
 package consulo.javascript.impl.copyright;
 
+import consulo.annotation.access.RequiredReadAction;
 import consulo.language.copyright.UpdatePsiFileCopyright;
 import consulo.language.copyright.config.CopyrightFileConfig;
 import consulo.language.copyright.config.CopyrightProfile;
@@ -29,6 +30,8 @@ public class UpdateJavaScriptFileCopyright extends UpdatePsiFileCopyright<Copyri
         super(psiFile, copyrightProfile);
     }
 
+    @Override
+    @RequiredReadAction
     protected void scanFile() {
         PsiElement first = getFile().getFirstChild();
         if (first != null) {
