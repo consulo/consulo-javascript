@@ -23,6 +23,8 @@ import com.intellij.lang.javascript.psi.resolve.ResolveProcessor;
 import com.intellij.lang.javascript.search.JSClassSearch;
 import consulo.annotation.access.RequiredReadAction;
 import consulo.annotation.component.ExtensionImpl;
+import consulo.application.Application;
+import consulo.application.ReadAction;
 import consulo.application.progress.ProgressManager;
 import consulo.application.util.function.Processor;
 import consulo.application.util.query.CollectionQuery;
@@ -33,20 +35,19 @@ import consulo.language.editor.Pass;
 import consulo.language.editor.gutter.GutterIconNavigationHandler;
 import consulo.language.editor.gutter.LineMarkerInfo;
 import consulo.language.editor.gutter.LineMarkerProvider;
-import consulo.language.editor.ui.DefaultPsiElementCellRenderer;
-import consulo.language.editor.ui.PopupNavigationUtil;
-import consulo.language.editor.ui.PsiElementListNavigator;
+import consulo.language.editor.ui.navigation.PsiTargetNavigationService;
 import consulo.language.psi.NavigatablePsiElement;
 import consulo.language.psi.PsiElement;
+import consulo.localize.LocalizeValue;
 import consulo.navigation.NavigationItem;
 import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.ui.annotation.RequiredUIAccess;
-import consulo.ui.ex.RelativePoint;
+import consulo.ui.event.ComponentEvent;
+import consulo.util.concurrent.coroutine.step.CodeExecution;
 import consulo.util.dataholder.Key;
 import consulo.util.lang.ref.SimpleReference;
 import org.jspecify.annotations.Nullable;
 
-import java.awt.event.MouseEvent;
 import java.util.*;
 import java.util.function.Function;
 
@@ -70,8 +71,8 @@ public class JavaScriptLineMarkerProvider implements LineMarkerProvider {
         new BasicGutterIconNavigationHandler<>() {
             @Override
             @RequiredReadAction
-            protected String getTitle(JSClass elt) {
-                return "Choose Subclass of " + elt.getName();
+            protected LocalizeValue getTitle(JSClass elt) {
+                return LocalizeValue.localizeTODO("Choose Subclass of " + elt.getName());
             }
 
             @Override
@@ -84,8 +85,8 @@ public class JavaScriptLineMarkerProvider implements LineMarkerProvider {
         new BasicGutterIconNavigationHandler<>() {
             @Override
             @RequiredReadAction
-            protected String getTitle(JSClass elt) {
-                return "Choose Implementation of " + elt.getName();
+            protected LocalizeValue getTitle(JSClass elt) {
+                return LocalizeValue.localizeTODO("Choose Implementation of " + elt.getName());
             }
 
             @Override
@@ -98,8 +99,8 @@ public class JavaScriptLineMarkerProvider implements LineMarkerProvider {
         new BasicGutterIconNavigationHandler<>() {
             @Override
             @RequiredReadAction
-            protected String getTitle(JSFunction elt) {
-                return "Choose Overriden Function of " + elt.getName();
+            protected LocalizeValue getTitle(JSFunction elt) {
+                return LocalizeValue.localizeTODO("Choose Overriden Function of " + elt.getName());
             }
 
             @Override
@@ -129,8 +130,8 @@ public class JavaScriptLineMarkerProvider implements LineMarkerProvider {
         new BasicGutterIconNavigationHandler<>() {
             @Override
             @RequiredReadAction
-            protected String getTitle(JSFunction elt) {
-                return "Choose Implementation of " + elt.getName();
+            protected LocalizeValue getTitle(JSFunction elt) {
+                return LocalizeValue.localizeTODO("Choose Implementation of " + elt.getName());
             }
 
             @Override
@@ -178,30 +179,22 @@ public class JavaScriptLineMarkerProvider implements LineMarkerProvider {
                         PlatformIconGroup.gutterOverridingmethod(),
                         Pass.UPDATE_ALL,
                         psiElement -> OVERRIDES_METHOD_IN + overrideHandler.className,
-                        (e, elt) -> {
-                            Set<NavigationItem> results = new HashSet<>();
-                            JSResolveUtil.iterateType(
-                                function,
-                                parentNode1,
-                                typeName,
-                                (processor, scope, className) -> {
-                                    for (PsiElement e1 : processor.getResults()) {
-                                        results.add((NavigationItem)e1);
+                        (e, elt) -> Application.get().getInstance(PsiTargetNavigationService.class)
+                            .<PsiElement>newNavigator(() -> {
+                                Set<PsiElement> results = new HashSet<>();
+                                JSResolveUtil.iterateType(
+                                    function,
+                                    parentNode1,
+                                    typeName,
+                                    (processor, scope, className) -> {
+                                        results.addAll(processor.getResults());
+                                        return true;
                                     }
-                                    return true;
-                                }
-                            );
-
-                            if (results.size() == 1) {
-                                results.iterator().next().navigate(true);
-                            }
-                            else if (results.size() > 1) {
-                                PopupNavigationUtil.getPsiElementPopup(
-                                    results.toArray(new PsiElement[results.size()]),
-                                    "Choose super class or interface"
-                                ).show(new RelativePoint(e));
-                            }
-                        }
+                                );
+                                return results;
+                            })
+                            .title(LocalizeValue.localizeTODO("Choose super class or interface"))
+                            .navigate(e, function.getProject())
                     );
                 }
             }
@@ -427,25 +420,34 @@ public class JavaScriptLineMarkerProvider implements LineMarkerProvider {
     private abstract static class BasicGutterIconNavigationHandler<T extends PsiElement> implements GutterIconNavigationHandler<T> {
         @Override
         @RequiredUIAccess
-        public void navigate(MouseEvent e, T elt) {
-            List<NavigatablePsiElement> navElements = new ArrayList<>();
-            Query<T> elementQuery = search(elt);
-            if (elementQuery == null) {
-                return;
-            }
-            elementQuery.forEach(psiElement -> {
-                if (psiElement instanceof NavigatablePsiElement navigatablePsiElement) {
-                    navElements.add(navigatablePsiElement);
-                }
-                return true;
-            });
-            NavigatablePsiElement[] methods = navElements.toArray(new NavigatablePsiElement[navElements.size()]);
-            PsiElementListNavigator.openTargets(e, methods, getTitle(elt), "", new DefaultPsiElementCellRenderer());
+        public void navigate(ComponentEvent<?> e, T elt) {
+            LocalizeValue title = getTitle(elt);
+
+            Application.get().getInstance(PsiTargetNavigationService.class)
+                .<NavigatablePsiElement>newNavigator(CodeExecution.supply(() -> {
+                    Query<T> elementQuery = ReadAction.compute(() -> search(elt));
+                    if (elementQuery == null) {
+                        return List.of();
+                    }
+
+                    List<NavigatablePsiElement> targets = new ArrayList<>();
+                    elementQuery.forEach(psiElement -> {
+                        if (psiElement instanceof NavigatablePsiElement navigatablePsiElement) {
+                            targets.add(navigatablePsiElement);
+                        }
+                        return true;
+                    });
+                    return targets;
+                }))
+                .title(title)
+                .navigate(e, elt.getProject());
         }
 
-        protected abstract String getTitle(T elt);
+        @RequiredReadAction
+        protected abstract LocalizeValue getTitle(T elt);
 
         @Nullable
+        @RequiredReadAction
         protected abstract Query<T> search(T elt);
     }
 

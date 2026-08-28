@@ -17,6 +17,7 @@ open module consulo.javascript {
     requires consulo.find.api;
     requires consulo.ide.api;
     requires consulo.language.code.style.ui.api;
+    requires consulo.util.concurrent.coroutine;
 
     requires com.intellij.xml.api;
     requires com.intellij.xml.editor.api;
