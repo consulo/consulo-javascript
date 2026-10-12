@@ -27,6 +27,7 @@ import com.intellij.lang.javascript.psi.*;
 import consulo.annotation.access.RequiredReadAction;
 import consulo.language.editor.localize.CodeInsightLocalize;
 import consulo.language.psi.PsiElement;
+import consulo.localize.LocalizeValue;
 import consulo.util.io.URLUtil;
 import consulo.util.lang.StringUtil;
 import org.jspecify.annotations.Nullable;
@@ -235,7 +236,7 @@ class JSDocumentationBuilder implements JSDocumentationProcessor {
                     null,
                     getSeeAlsoLink(remainingLineContent),
                     result,
-                    remainingLineContent,
+                    LocalizeValue.of(remainingLineContent),
                     null
                 );
                 return true;

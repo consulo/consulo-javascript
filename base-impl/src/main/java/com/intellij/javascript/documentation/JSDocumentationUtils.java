@@ -34,6 +34,7 @@ import consulo.language.ast.TokenType;
 import consulo.language.editor.documentation.DocumentationManagerUtil;
 import consulo.language.psi.*;
 import consulo.language.psi.util.PsiTreeUtil;
+import consulo.localize.LocalizeValue;
 import consulo.util.lang.StringUtil;
 import consulo.util.lang.ref.SimpleReference;
 import org.jspecify.annotations.Nullable;
@@ -689,7 +690,7 @@ public class JSDocumentationUtils {
         @Nullable PsiElement element,
         String elementName,
         StringBuilder buffer,
-        String presentableName,
+        LocalizeValue presentableName,
         @Nullable String presentableFileName
     ) {
         PsiFile containingFile = element != null ? element.getContainingFile() : null;
@@ -701,9 +702,8 @@ public class JSDocumentationUtils {
 
         DocumentationManagerUtil.createHyperlink(
             buffer,
-            (fileName != null ? fileName + ":" : "") + elementName + (element != null ? ":" + element
-                .getTextOffset() : ""),
-            presentableName + (presentableFileName != null ? " in " + presentableFileName : ""),
+            (fileName != null ? fileName + ":" : "") + elementName + (element != null ? ":" + element.getTextOffset() : ""),
+            presentableName.get() + (presentableFileName != null ? " in " + presentableFileName : ""),
             true
         );
     }
