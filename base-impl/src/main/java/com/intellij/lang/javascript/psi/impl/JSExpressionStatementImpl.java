@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package com.intellij.lang.javascript.psi.impl;
 
 import com.intellij.lang.javascript.psi.JSElementVisitor;
@@ -25,9 +24,9 @@ import consulo.language.icon.IconDescriptorUpdaters;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.resolve.PsiScopeProcessor;
 import consulo.language.psi.resolve.ResolveState;
+import consulo.localize.LocalizeValue;
 import consulo.navigation.ItemPresentation;
 import consulo.ui.image.Image;
-
 
 /**
  * @author max
@@ -51,12 +50,7 @@ public class JSExpressionStatementImpl extends JSStatementImpl implements JSExpr
 
     @Override
     @RequiredReadAction
-    public boolean processDeclarations(
-        PsiScopeProcessor processor,
-        ResolveState state,
-        PsiElement lastParent,
-        PsiElement place
-    ) {
+    public boolean processDeclarations(PsiScopeProcessor processor, ResolveState state, PsiElement lastParent, PsiElement place) {
         if (lastParent == null) {
             JSExpression expression = getExpression();
             if (expression != null) {
@@ -72,8 +66,8 @@ public class JSExpressionStatementImpl extends JSStatementImpl implements JSExpr
         return new ItemPresentation() {
             @Override
             @RequiredReadAction
-            public String getPresentableText() {
-                return getText();
+            public LocalizeValue getPresentableText() {
+                return LocalizeValue.of(getText());
             }
 
             @Override

@@ -25,6 +25,7 @@ import consulo.annotation.access.RequiredReadAction;
 import consulo.component.util.Iconable;
 import consulo.language.icon.IconDescriptorUpdaters;
 import consulo.language.psi.PsiFile;
+import consulo.localize.LocalizeValue;
 import consulo.navigation.ItemPresentation;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.image.Image;
@@ -42,8 +43,9 @@ public class JSItemPresentation implements ItemPresentation {
     }
 
     @Override
-    public String getPresentableText() {
-        return myElement.getName();
+    @RequiredReadAction
+    public LocalizeValue getPresentableText() {
+        return LocalizeValue.ofNullable(myElement.getName());
     }
 
     @Nullable
