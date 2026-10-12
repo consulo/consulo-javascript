@@ -1,9 +1,9 @@
 package consulo.javascript.impl.ide.navigationToolbar;
 
 import consulo.annotation.component.ExtensionImpl;
-import consulo.ide.navigationToolbar.StructureAwareNavBarModelExtension;
 import consulo.language.Language;
 import com.intellij.lang.javascript.impl.structureView.JSStructureItemPresentation;
+import consulo.language.editor.ui.navigationBar.StructureAwareNavBarModelExtension;
 import consulo.language.psi.PsiElement;
 import consulo.annotation.access.RequiredReadAction;
 import consulo.javascript.language.JavaScriptLanguage;
@@ -25,6 +25,6 @@ public class JavaScriptNavBarModelExtension extends StructureAwareNavBarModelExt
     @Override
     @RequiredReadAction
     public String getPresentableText(Object object) {
-        return object instanceof PsiElement ? JSStructureItemPresentation.getName((PsiElement)object) : null;
+        return object instanceof PsiElement ? JSStructureItemPresentation.getName((PsiElement)object).get() : null;
     }
 }

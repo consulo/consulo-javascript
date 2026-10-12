@@ -23,6 +23,7 @@ import consulo.javascript.localize.JavaScriptLocalize;
 import consulo.language.icon.IconDescriptorUpdaters;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiNamedElement;
+import consulo.localize.LocalizeValue;
 import consulo.ui.image.Image;
 
 /**
@@ -36,24 +37,24 @@ public class JSStructureItemPresentation extends JSStructureViewElement.JSStruct
 
     @Override
     @RequiredReadAction
-    public String getPresentableText() {
+    public LocalizeValue getPresentableText() {
         PsiElement psiElement = element.getUpToDateElement();
         if (psiElement == null || !psiElement.isValid()) {
-            return "*invalid*";
+            return LocalizeValue.ofNullable("*invalid*");
         }
 
         return getName(psiElement);
     }
 
     @RequiredReadAction
-    public static String getName(PsiElement psiElement) {
+    public static LocalizeValue getName(PsiElement psiElement) {
         if (psiElement instanceof JSObjectLiteralExpression objectLiteral) {
             if (objectLiteral.getParent() instanceof JSAssignmentExpression assignment) {
                 JSDefinitionExpression lOperand = (JSDefinitionExpression)assignment.getLOperand();
-                return JSResolveUtil.findClassIdentifier(lOperand.getExpression()).getText();
+                return LocalizeValue.ofNullable(JSResolveUtil.findClassIdentifier(lOperand.getExpression()).getText());
             }
             else {
-                return JavaScriptLocalize.javascriptLanguageTermPrototype().get();
+                return JavaScriptLocalize.javascriptLanguageTermPrototype();
             }
         }
 
@@ -68,11 +69,11 @@ public class JSStructureItemPresentation extends JSStructureViewElement.JSStruct
                 && refExpr.getQualifier() instanceof JSReferenceExpression qualifierRefExpr) {
                 s = qualifierRefExpr.getReferencedName();
             }
-            return s;
+            return LocalizeValue.ofNullable(s);
         }
 
         if (!(psiElement instanceof PsiNamedElement)) {
-            return psiElement.getText();
+            return LocalizeValue.ofNullable(psiElement.getText());
         }
 
         String name = ((PsiNamedElement)psiElement).getName();
@@ -111,11 +112,11 @@ public class JSStructureItemPresentation extends JSStructureViewElement.JSStruct
             JSExpression lOperand = ((JSDefinitionExpression)assignment.getLOperand()).getExpression();
             lOperand = JSResolveUtil.findClassIdentifier(lOperand);
             if (lOperand instanceof JSReferenceExpression lOperandRefExpr) {
-                return lOperandRefExpr.getReferencedName();
+                return LocalizeValue.ofNullable(lOperandRefExpr.getReferencedName());
             }
-            return lOperand.getText();
+            return LocalizeValue.ofNullable(lOperand.getText());
         }
-        return name;
+        return LocalizeValue.ofNullable(name);
     }
 
     @Override

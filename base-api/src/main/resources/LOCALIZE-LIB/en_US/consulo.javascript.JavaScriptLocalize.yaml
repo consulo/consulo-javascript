@@ -8,6 +8,8 @@ building.index.message:
     text: Building JavaScript indices
 choose.class.title:
     text: Choose Class
+client.module.extension.default.version.label:
+    text: 'Default Version:'
 create.class.dialog.title:
     text: Create Class
 create.interface.dialog.title:

@@ -21,6 +21,7 @@ import java.util.Collection;
 import java.util.List;
 
 import consulo.fileEditor.structureView.tree.Group;
+import consulo.localize.LocalizeValue;
 import consulo.navigation.ItemPresentation;
 import consulo.fileEditor.structureView.tree.TreeElement;
 import consulo.platform.base.icon.PlatformIconGroup;
@@ -50,8 +51,8 @@ public class JSSuperGroup implements Group, ItemPresentation {
     }
 
     @Override
-    public String getPresentableText() {
-        return myName;
+    public LocalizeValue getPresentableText() {
+        return LocalizeValue.ofNullable(myName);
     }
 
     @Override
