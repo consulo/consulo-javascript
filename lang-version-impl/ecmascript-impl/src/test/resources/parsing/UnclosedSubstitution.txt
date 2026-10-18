@@ -1,0 +1,20 @@
+JSFile:UnclosedSubstitution.js
+  JSVarStatementImpl(js.VAR_STATEMENT)
+    PsiElement(CONST_KEYWORD)('const')
+    PsiWhiteSpace(' ')
+    JSVariableImpl(js.VARIABLE)
+      PsiElement(IDENTIFIER)('a')
+      PsiWhiteSpace(' ')
+      PsiElement(EQ)('=')
+      PsiWhiteSpace(' ')
+      ES6StringTemplateExpressionImpl(STRING_TEMPLATE_EXPRESSION)
+        PsiElement(BACKQUOTE)('`')
+        PsiElement(STRING_TEMPLATE_PART)('abc ')
+        PsiElement(DOLLAR)('$')
+        PsiElement(LBRACE)('{')
+        JSReferenceExpressionImpl(REFERENCE_EXPRESSION)
+          PsiElement(IDENTIFIER)('x')
+        PsiErrorElement:[consulo.javascript.JavaScriptLocalize@javascript.parser.message.expected.rbrace]
+          <empty list>
+        PsiErrorElement:[consulo.javascript.JavaScriptLocalize@javascript.parser.message.unclosed.string.literal]
+          <empty list>

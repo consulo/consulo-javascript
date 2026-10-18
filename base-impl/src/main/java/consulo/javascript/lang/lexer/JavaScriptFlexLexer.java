@@ -10,4 +10,8 @@ public interface JavaScriptFlexLexer extends FlexLexer {
     void setTagCount(int count);
 
     int getTagCount();
+
+    void setTemplateDepth(int depth);
+
+    int getTemplateDepth();
 }

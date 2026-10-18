@@ -47,7 +47,7 @@ public abstract class BaseEcmaScriptJavaScriptVersion extends BaseJavaScriptLang
     private Lexer createLexer(boolean hightlight) {
         return new MergingLexerAdapter(
             new JavaScriptFlexAdapter(new _EcmaScript6Lexer(hightlight)),
-            TokenSet.create(JSTokenTypes.XML_JS_SCRIPT)
+            TokenSet.create(JSTokenTypes.XML_JS_SCRIPT, JSTokenTypes.STRING_TEMPLATE_PART)
         );
     }
 

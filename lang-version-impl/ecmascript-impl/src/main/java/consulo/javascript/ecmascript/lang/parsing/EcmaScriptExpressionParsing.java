@@ -18,10 +18,12 @@ package consulo.javascript.ecmascript.lang.parsing;
 
 import com.intellij.lang.javascript.JSElementTypes;
 import com.intellij.lang.javascript.JSTokenTypes;
+import consulo.javascript.ecmascript.psi.impl.EcmaScript6ElementTypes;
 import consulo.javascript.lang.parsing.ExpressionParsing;
 import consulo.javascript.localize.JavaScriptLocalize;
 import consulo.language.ast.IElementType;
 import consulo.language.parser.PsiBuilder;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author VISTALL
@@ -59,10 +61,63 @@ public class EcmaScriptExpressionParsing extends ExpressionParsing<EcmaScriptPar
             return true;
         }
 
+        else if (builder.getTokenType() == JSTokenTypes.BACKQUOTE) {
+            parseStringTemplate(builder);
+            return true;
+        }
+
         if (canParseLambdaExpression(builder)) {
             return parseLambdaExpression(builder);
         }
         return super.parsePrimaryExpression(builder);
+    }
+
+    @Override
+    protected @Nullable IElementType parseMemberExpressionTail(PsiBuilder builder) {
+        if (builder.getTokenType() == JSTokenTypes.BACKQUOTE) {
+            parseStringTemplate(builder);
+            return EcmaScript6ElementTypes.TAGGED_TEMPLATE_EXPRESSION;
+        }
+        return super.parseMemberExpressionTail(builder);
+    }
+
+    private void parseStringTemplate(PsiBuilder builder) {
+        PsiBuilder.Marker marker = builder.mark();
+        builder.advanceLexer();
+
+        while (true) {
+            IElementType tokenType = builder.getTokenType();
+            if (tokenType == JSTokenTypes.STRING_TEMPLATE_PART) {
+                builder.advanceLexer();
+            }
+            else if (tokenType == JSTokenTypes.DOLLAR) {
+                builder.advanceLexer();
+                checkMatches(builder, JSTokenTypes.LBRACE, JavaScriptLocalize.javascriptParserMessageExpectedLbrace());
+                if (!parseExpressionOptional(builder)) {
+                    builder.error(JavaScriptLocalize.javascriptParserMessageExpectedExpression());
+                }
+                if (builder.getTokenType() != JSTokenTypes.RBRACE) {
+                    PsiBuilder.Marker error = builder.mark();
+                    while (!builder.eof() && builder.getTokenType() != JSTokenTypes.RBRACE) {
+                        builder.advanceLexer();
+                    }
+                    error.error(JavaScriptLocalize.javascriptParserMessageExpectedRbrace());
+                }
+                if (builder.getTokenType() == JSTokenTypes.RBRACE) {
+                    builder.advanceLexer();
+                }
+            }
+            else if (tokenType == JSTokenTypes.BACKQUOTE) {
+                builder.advanceLexer();
+                break;
+            }
+            else {
+                builder.error(JavaScriptLocalize.javascriptParserMessageUnclosedStringLiteral());
+                break;
+            }
+        }
+
+        marker.done(EcmaScript6ElementTypes.STRING_TEMPLATE_EXPRESSION);
     }
 
     private boolean parseLambdaExpression(PsiBuilder builder) {

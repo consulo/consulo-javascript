@@ -67,6 +67,8 @@
   implements("call_expression")                          = "com.intellij.lang.javascript.psi.JSCallExpression"
   implements("new_expression")                           = "com.intellij.lang.javascript.psi.JSNewExpression"
   implements("conditional_expression")                   = "com.intellij.lang.javascript.psi.JSConditionalExpression"
+  implements("template_literal_expression")              = "consulo.javascript.ecmascript.psi.ES6StringTemplateExpression"
+  implements("tagged_template_expression")               = "consulo.javascript.ecmascript.psi.ES6TaggedTemplateExpression"
   implements("prefix_expression")                        = "com.intellij.lang.javascript.psi.JSPrefixExpression"
   implements("postfix_expression")                       = "com.intellij.lang.javascript.psi.JSPostfixExpression"
   implements("literal_expression")                       = "com.intellij.lang.javascript.psi.JSLiteralExpression"
@@ -133,7 +135,10 @@
   mixin("arrow_function|function_expression")           = "consulo.typescript.language.impl.psi.mixin.TypeScriptFunctionExpressionMixin"
 
   // Expressions that stay on generic TypeScriptExpressionMixin (no specific JS interface methods or marker interfaces)
-  mixin("literal_expression|this_expression|template_literal_expression|as_expression|satisfies_expression|non_null_expression|type_assertion_expression|super_expression|class_expression|yield_expression|await_expression|nullish_coalescing_expression|logical_or_expression|logical_and_expression|bitwise_or_expression|bitwise_xor_expression|bitwise_and_expression|equality_expression|relational_expression|shift_expression|additive_expression|multiplicative_expression|exponentiation_expression") = "consulo.typescript.language.impl.psi.mixin.TypeScriptExpressionMixin"
+  mixin("template_literal_expression")                  = "consulo.typescript.language.impl.psi.mixin.TypeScriptTemplateLiteralExpressionMixin"
+  mixin("tagged_template_expression")                   = "consulo.typescript.language.impl.psi.mixin.TypeScriptTaggedTemplateExpressionMixin"
+
+  mixin("literal_expression|this_expression|as_expression|satisfies_expression|non_null_expression|type_assertion_expression|super_expression|class_expression|yield_expression|await_expression|nullish_coalescing_expression|logical_or_expression|logical_and_expression|bitwise_or_expression|bitwise_xor_expression|bitwise_and_expression|equality_expression|relational_expression|shift_expression|additive_expression|multiplicative_expression|exponentiation_expression") = "consulo.typescript.language.impl.psi.mixin.TypeScriptExpressionMixin"
 
   // === rule hierarchy ===
   extends(".*_expression|arrow_function|template_literal_expression") = expression
@@ -217,10 +222,9 @@
     STRING_LITERAL
     SINGLE_QUOTE_STRING_LITERAL
     REGEXP_LITERAL
-    NO_SUBSTITUTION_TEMPLATE
-    TEMPLATE_HEAD
-    TEMPLATE_MIDDLE
-    TEMPLATE_TAIL
+    BACKQUOTE
+    STRING_TEMPLATE_PART
+    DOLLAR
 
     // Identifier
     IDENTIFIER
@@ -339,7 +343,7 @@ private statement_recover_ ::= !(
     DELETE_KEYWORD | TYPEOF_KEYWORD | VOID_KEYWORD |
     YIELD_KEYWORD | AWAIT_KEYWORD | SUPER_KEYWORD |
     TRUE_KEYWORD | FALSE_KEYWORD | NULL_KEYWORD |
-    NO_SUBSTITUTION_TEMPLATE | TEMPLATE_HEAD
+    BACKQUOTE
 )
 
 // ==================== Statements ====================
@@ -576,7 +580,7 @@ private member_or_call_tail ::=
   | '?.' IDENTIFIER
   | '[' expression ']'
   | type_arguments? argument_list
-  | template_literal_expression
+  | tagged_template_expression
   | '!'
   | AS_KEYWORD type_expression
   | SATISFIES_KEYWORD type_expression
@@ -639,10 +643,12 @@ computed_property_name ::= '[' expression ']'
 
 parenthesized_expression ::= '(' expression ')'
 
-template_literal_expression ::= TEMPLATE_HEAD template_literal_content* TEMPLATE_TAIL
+template_literal_expression ::= BACKQUOTE template_literal_content* BACKQUOTE
 
-private template_literal_content ::= NO_SUBSTITUTION_TEMPLATE
-  | TEMPLATE_HEAD expression TEMPLATE_MIDDLE
+private template_literal_content ::= STRING_TEMPLATE_PART
+  | DOLLAR '{' expression '}'
+
+left tagged_template_expression ::= template_literal_expression
 
 spread_expression ::= '...' expression
 
@@ -737,7 +743,7 @@ keyof_type ::= KEYOF_KEYWORD type_expression
 
 infer_type ::= INFER_KEYWORD IDENTIFIER ('extends' type_expression)?
 
-template_literal_type ::= NO_SUBSTITUTION_TEMPLATE | TEMPLATE_HEAD type_expression (TEMPLATE_MIDDLE type_expression)* TEMPLATE_TAIL
+template_literal_type ::= BACKQUOTE (STRING_TEMPLATE_PART | DOLLAR '{' type_expression '}')* BACKQUOTE
 
 predefined_type ::= IDENTIFIER | VOID_KEYWORD
 

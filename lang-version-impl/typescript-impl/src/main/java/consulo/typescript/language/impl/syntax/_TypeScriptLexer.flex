@@ -8,8 +8,18 @@ import consulo.typescript.language.TypeScriptTokens;
 %%
 
 %{
-    private int templateDepth = 0;
-    private consulo.util.collection.primitive.ints.IntStack templateBraceCount = new consulo.util.collection.primitive.ints.IntStack();
+    private consulo.util.collection.primitive.ints.IntStack templateBraces = new consulo.util.collection.primitive.ints.IntStack();
+
+    public final int getTemplateDepth() {
+        return templateBraces.size();
+    }
+
+    public final void setTemplateDepth(int depth) {
+        templateBraces.clear();
+        for (int i = 0; i < depth; i++) {
+            templateBraces.push(1);
+        }
+    }
 %}
 
 %public
@@ -74,37 +84,24 @@ REGEXP_LITERAL="/"([^\*\\/\r\n]|{ESCAPE_SEQUENCE}|{GROUP})([^\\/\r\n]|{ESCAPE_SE
 <YYINITIAL,DIV_OR_GT> {DOUBLE_QUOTED_LITERAL} { yybegin(DIV_OR_GT); return JSTokenTypes.STRING_LITERAL; }
 
 // === Template literals ===
-// Opening backtick — enters template string scanning mode
-// Token type: TEMPLATE_HEAD (opening delimiter of template literal)
 <YYINITIAL,DIV_OR_GT> "`" {
     yybegin(TEMPLATE_STRING);
-    return TypeScriptTokens.TEMPLATE_HEAD;
+    return JSTokenTypes.BACKQUOTE;
 }
 
-// Template string state: scans text content between template delimiters
 <TEMPLATE_STRING> {
-    // Interpolation start: ${ — returns TEMPLATE_HEAD and enters expression mode
-    "${"  {
-        templateDepth++;
-        templateBraceCount.push(0);
-        yybegin(YYINITIAL);
-        return TypeScriptTokens.TEMPLATE_HEAD;
-    }
-    // Closing backtick — returns TEMPLATE_TAIL and exits template
-    "`"   {
+    "`" {
         yybegin(DIV_OR_GT);
-        return TypeScriptTokens.TEMPLATE_TAIL;
+        return JSTokenTypes.BACKQUOTE;
     }
-    // Text content: any chars except backtick, dollar, backslash
-    [^`$\\]+      { return TypeScriptTokens.NO_SUBSTITUTION_TEMPLATE; }
-    // Escape sequence: backslash + any char (including newline for line continuation)
-    "\\" [^]      { return TypeScriptTokens.NO_SUBSTITUTION_TEMPLATE; }
-    // Dollar followed by non-brace, non-backtick, non-backslash char (not interpolation start)
-    "$" [^{`\\]   { return TypeScriptTokens.NO_SUBSTITUTION_TEMPLATE; }
-    // Dollar followed by escape sequence
-    "$" "\\" [^]  { return TypeScriptTokens.NO_SUBSTITUTION_TEMPLATE; }
-    // Standalone dollar (before ` or ${, or at EOF)
-    "$"           { return TypeScriptTokens.NO_SUBSTITUTION_TEMPLATE; }
+    "$" / "{" {
+        templateBraces.push(0);
+        yybegin(YYINITIAL);
+        return JSTokenTypes.DOLLAR;
+    }
+    [^`$\\]+ { return JSTokenTypes.STRING_TEMPLATE_PART; }
+    "\\" [^] { return JSTokenTypes.STRING_TEMPLATE_PART; }
+    [^]       { return JSTokenTypes.STRING_TEMPLATE_PART; }
 }
 
 // === Keywords (true keywords - always keyword tokens) ===
@@ -195,29 +192,21 @@ REGEXP_LITERAL="/"([^\*\\/\r\n]|{ESCAPE_SEQUENCE}|{GROUP})([^\\/\r\n]|{ESCAPE_SE
 // === Single-char operators ===
 <YYINITIAL,DIV_OR_GT> "("     { yybegin(YYINITIAL); return JSTokenTypes.LPAR; }
 <YYINITIAL,DIV_OR_GT> ")"     { yybegin(DIV_OR_GT); return JSTokenTypes.RPAR; }
-// Brace handling with template depth tracking
 <YYINITIAL,DIV_OR_GT> "{"     {
-    if (templateDepth > 0) {
-        templateBraceCount.push(templateBraceCount.pop() + 1);
+    if (!templateBraces.isEmpty()) {
+        templateBraces.push(templateBraces.pop() + 1);
     }
     yybegin(YYINITIAL);
     return JSTokenTypes.LBRACE;
 }
 <YYINITIAL,DIV_OR_GT> "}"     {
-    if (templateDepth > 0) {
-        int count = templateBraceCount.peek();
-        if (count > 0) {
-            // Nested brace inside template expression — just decrement count
-            templateBraceCount.push(templateBraceCount.pop() - 1);
-            yybegin(YYINITIAL);
-            return JSTokenTypes.RBRACE;
-        } else {
-            // Closing brace of template interpolation — return to template text scanning
-            templateDepth--;
-            templateBraceCount.pop();
+    if (!templateBraces.isEmpty()) {
+        int count = templateBraces.pop() - 1;
+        if (count <= 0) {
             yybegin(TEMPLATE_STRING);
-            return TypeScriptTokens.TEMPLATE_MIDDLE;
+            return JSTokenTypes.RBRACE;
         }
+        templateBraces.push(count);
     }
     yybegin(YYINITIAL);
     return JSTokenTypes.RBRACE;

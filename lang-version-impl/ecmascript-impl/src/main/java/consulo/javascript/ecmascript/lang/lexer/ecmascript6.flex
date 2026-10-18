@@ -26,6 +26,19 @@ import consulo.javascript.lang.lexer.JavaScriptFlexLexer;
     public final void setTagCount(int _tagCount) {
       tagCount = _tagCount;
     }
+
+    private consulo.util.collection.primitive.ints.IntStack templateBraces = new consulo.util.collection.primitive.ints.IntStack();
+
+    public final int getTemplateDepth() {
+      return templateBraces.size();
+    }
+
+    public final void setTemplateDepth(int depth) {
+      templateBraces.clear();
+      for (int i = 0; i < depth; i++) {
+        templateBraces.push(1);
+      }
+    }
 %}
 
 %public
@@ -68,7 +81,6 @@ ESCAPE_SEQUENCE=\\[^\r\n]
 GROUP = "[" [^\]]* "]"
 
 REGEXP_LITERAL="/"([^\*\\/\r\n]|{ESCAPE_SEQUENCE}|{GROUP})([^\\/\r\n]|{ESCAPE_SEQUENCE}|{GROUP})*("/"[gimsuy]*)?
-INTERPOLATION_STRING_LITERAL="`" [^"`"]* "`"
 
 ALPHA=[:letter:]
 DIGIT=[0-9]
@@ -84,6 +96,7 @@ FIELD_OR_METHOD={IDENTIFIER} ("(" [^ \\)]* ")"? )?
 %state TAG_ATTR_SQ
 %state TAG_ATTR_DQ
 %state TAG_JS_SCRIPT
+%state TEMPLATE_STRING
 %state LAST_STATE
 
 %%
@@ -210,7 +223,27 @@ FIELD_OR_METHOD={IDENTIFIER} ("(" [^ \\)]* ")"? )?
                       }
 
 <YYINITIAL,DIV_OR_GT> {DOUBLE_QUOTED_LITERAL}      { yybegin(DIV_OR_GT); return JSTokenTypes.STRING_LITERAL; }
-<YYINITIAL,DIV_OR_GT> {INTERPOLATION_STRING_LITERAL}      { yybegin(DIV_OR_GT); return JSTokenTypes.INTERPOLATION_STRING_LITERAL; }
+<YYINITIAL,DIV_OR_GT> "`"                   { yybegin(TEMPLATE_STRING); return JSTokenTypes.BACKQUOTE; }
+
+<TEMPLATE_STRING>
+{
+	"`"
+	{
+		yybegin(DIV_OR_GT);
+		return JSTokenTypes.BACKQUOTE;
+	}
+
+	"$" / "{"
+	{
+		templateBraces.push(0);
+		yybegin(YYINITIAL);
+		return JSTokenTypes.DOLLAR;
+	}
+
+	[^`$\\]+ { return JSTokenTypes.STRING_TEMPLATE_PART; }
+	"\\" [^] { return JSTokenTypes.STRING_TEMPLATE_PART; }
+	[^]       { return JSTokenTypes.STRING_TEMPLATE_PART; }
+}
 
 <YYINITIAL,DIV_OR_GT> "true"                { yybegin(DIV_OR_GT); return JSTokenTypes.TRUE_KEYWORD; }
 <YYINITIAL,DIV_OR_GT> "false"               { yybegin(DIV_OR_GT); return JSTokenTypes.FALSE_KEYWORD; }
@@ -341,8 +374,25 @@ FIELD_OR_METHOD={IDENTIFIER} ("(" [^ \\)]* ")"? )?
 
 <YYINITIAL,DIV_OR_GT> "("                   { yybegin(YYINITIAL); return JSTokenTypes.LPAR; }
 <YYINITIAL,DIV_OR_GT> ")"                   { yybegin(DIV_OR_GT);       return JSTokenTypes.RPAR; }
-<YYINITIAL,DIV_OR_GT> "{"                   { yybegin(YYINITIAL); return JSTokenTypes.LBRACE; }
-<YYINITIAL,DIV_OR_GT> "}"                   { yybegin(YYINITIAL); return JSTokenTypes.RBRACE; }
+<YYINITIAL,DIV_OR_GT> "{"                   {
+                          if (!templateBraces.isEmpty()) {
+                            templateBraces.push(templateBraces.pop() + 1);
+                          }
+                          yybegin(YYINITIAL);
+                          return JSTokenTypes.LBRACE;
+                       }
+<YYINITIAL,DIV_OR_GT> "}"                   {
+                          if (!templateBraces.isEmpty()) {
+                            int count = templateBraces.pop() - 1;
+                            if (count <= 0) {
+                              yybegin(TEMPLATE_STRING);
+                              return JSTokenTypes.RBRACE;
+                            }
+                            templateBraces.push(count);
+                          }
+                          yybegin(YYINITIAL);
+                          return JSTokenTypes.RBRACE;
+                       }
 <YYINITIAL,DIV_OR_GT> "["                   { yybegin(YYINITIAL); return JSTokenTypes.LBRACKET; }
 <YYINITIAL,DIV_OR_GT> "]"                   { yybegin(DIV_OR_GT);       return JSTokenTypes.RBRACKET; }
 <YYINITIAL,DIV_OR_GT> ";"                   { yybegin(YYINITIAL); return JSTokenTypes.SEMICOLON; }

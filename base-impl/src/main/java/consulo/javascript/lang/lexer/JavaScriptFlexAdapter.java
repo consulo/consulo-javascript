@@ -23,8 +23,10 @@ import consulo.language.lexer.FlexLexer;
  * @author Maxim.Mossienko
  */
 public class JavaScriptFlexAdapter extends FlexAdapter {
-    private static final int BASE_STATE_MASK = 0xF;
-    private static final int TAG_COUNT_SHIFT = 4;
+    private static final int BASE_STATE_MASK = 0x1F;
+    private static final int TEMPLATE_DEPTH_SHIFT = 5;
+    private static final int TEMPLATE_DEPTH_MASK = 0xF;
+    private static final int TAG_COUNT_SHIFT = 9;
 
     public JavaScriptFlexAdapter(FlexLexer lexer) {
         super(lexer);
@@ -33,12 +35,16 @@ public class JavaScriptFlexAdapter extends FlexAdapter {
     @Override
     public void start(CharSequence buffer, int startOffset, int endOffset, int initialState) {
         super.start(buffer, startOffset, endOffset, initialState & BASE_STATE_MASK);
-        ((JavaScriptFlexLexer)getFlex()).setTagCount(initialState >> TAG_COUNT_SHIFT);
+        JavaScriptFlexLexer flex = (JavaScriptFlexLexer)getFlex();
+        flex.setTemplateDepth((initialState >> TEMPLATE_DEPTH_SHIFT) & TEMPLATE_DEPTH_MASK);
+        flex.setTagCount(initialState >> TAG_COUNT_SHIFT);
     }
 
     @Override
     public int getState() {
-        return getStateInternal() + (((JavaScriptFlexLexer)getFlex()).getTagCount() << TAG_COUNT_SHIFT);
+        JavaScriptFlexLexer flex = (JavaScriptFlexLexer)getFlex();
+        int templateDepth = Math.min(flex.getTemplateDepth(), TEMPLATE_DEPTH_MASK);
+        return getStateInternal() + (templateDepth << TEMPLATE_DEPTH_SHIFT) + (flex.getTagCount() << TAG_COUNT_SHIFT);
     }
 
     protected int getStateInternal() {

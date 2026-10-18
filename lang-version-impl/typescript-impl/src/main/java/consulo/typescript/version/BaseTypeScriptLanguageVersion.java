@@ -1,16 +1,19 @@
 package consulo.typescript.version;
 
+import com.intellij.lang.javascript.JSTokenTypes;
 import consulo.javascript.ecmascript.lang.BaseEcmaScriptJavaScriptVersion;
 import consulo.javascript.ide.hightlight.JavaScriptHighlighter;
 import consulo.javascript.language.JavaScriptFeature;
 import consulo.javascript.language.StandardJavaScriptVersion;
+import consulo.language.ast.TokenSet;
 import consulo.language.editor.highlight.SyntaxHighlighter;
 import consulo.language.lexer.Lexer;
+import consulo.language.lexer.MergingLexerAdapter;
 import consulo.language.parser.PsiParser;
 import consulo.typescript.language.TypeScriptFeature;
 import consulo.typescript.language.TypeScriptLanguage;
 import consulo.typescript.language.impl.syntax.TypeScriptSyntaxParser;
-import consulo.typescript.language.impl.syntax._TypeScriptLexer;
+import consulo.typescript.language.impl.syntax.TypeScriptLexer;
 
 import java.util.Collections;
 import java.util.EnumSet;
@@ -64,11 +67,15 @@ public abstract class BaseTypeScriptLanguageVersion extends BaseEcmaScriptJavaSc
 
     @Override
     public Lexer createLexer() {
-        return new _TypeScriptLexer();
+        return createLexerImpl();
     }
 
     @Override
     public SyntaxHighlighter getSyntaxHighlighter() {
-        return new JavaScriptHighlighter(_TypeScriptLexer::new);
+        return new JavaScriptHighlighter(BaseTypeScriptLanguageVersion::createLexerImpl);
+    }
+
+    private static Lexer createLexerImpl() {
+        return new MergingLexerAdapter(new TypeScriptLexer(), TokenSet.create(JSTokenTypes.STRING_TEMPLATE_PART));
     }
 }

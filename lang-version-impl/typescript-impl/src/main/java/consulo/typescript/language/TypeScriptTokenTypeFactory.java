@@ -34,11 +34,10 @@ public final class TypeScriptTokenTypeFactory {
         TOKEN_MAP.put("SINGLE_QUOTE_STRING_LITERAL", JSTokenTypes.SINGLE_QUOTE_STRING_LITERAL);
         TOKEN_MAP.put("REGEXP_LITERAL", JSTokenTypes.REGEXP_LITERAL);
 
-        // Template literals (TypeScript-specific tokens)
-        TOKEN_MAP.put("NO_SUBSTITUTION_TEMPLATE", TypeScriptTokens.NO_SUBSTITUTION_TEMPLATE);
-        TOKEN_MAP.put("TEMPLATE_HEAD", TypeScriptTokens.TEMPLATE_HEAD);
-        TOKEN_MAP.put("TEMPLATE_MIDDLE", TypeScriptTokens.TEMPLATE_MIDDLE);
-        TOKEN_MAP.put("TEMPLATE_TAIL", TypeScriptTokens.TEMPLATE_TAIL);
+        // Template literals
+        TOKEN_MAP.put("BACKQUOTE", JSTokenTypes.BACKQUOTE);
+        TOKEN_MAP.put("STRING_TEMPLATE_PART", JSTokenTypes.STRING_TEMPLATE_PART);
+        TOKEN_MAP.put("DOLLAR", JSTokenTypes.DOLLAR);
 
         // JS Keywords (by their string value - Grammar-Kit passes the 'xxx' value)
         TOKEN_MAP.put("break", JSTokenTypes.BREAK_KEYWORD);

@@ -20,6 +20,16 @@ public class TypeScriptParserTest extends SimpleParsingTest<Object> {
     }
 
     @Test
+    public void testTemplateLiterals(Context context) throws Exception {
+        doTest(context, null);
+    }
+
+    @Test
+    public void testTaggedTemplates(Context context) throws Exception {
+        doTest(context, null);
+    }
+
+    @Test
     public void testVarDeclaration(Context context) throws Exception {
         doTest(context, null);
     }

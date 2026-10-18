@@ -23,4 +23,10 @@ public interface EcmaScript6ElementTypes {
 
     IElementType IMPORT_SPECIFIER =
         new ElementTypeAsPsiFactory("IMPORT_SPECIFIER", JavaScriptLanguage.INSTANCE, ES6ImportSpecifierImpl::new);
+
+    IElementType STRING_TEMPLATE_EXPRESSION =
+        new ElementTypeAsPsiFactory("STRING_TEMPLATE_EXPRESSION", JavaScriptLanguage.INSTANCE, ES6StringTemplateExpressionImpl::new);
+
+    IElementType TAGGED_TEMPLATE_EXPRESSION =
+        new ElementTypeAsPsiFactory("TAGGED_TEMPLATE_EXPRESSION", JavaScriptLanguage.INSTANCE, ES6TaggedTemplateExpressionImpl::new);
 }

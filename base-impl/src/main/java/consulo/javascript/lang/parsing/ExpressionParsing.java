@@ -48,7 +48,6 @@ public class ExpressionParsing<C extends JavaScriptParsingContext> extends Parsi
         JSTokenTypes.NUMERIC_LITERAL,
         JSTokenTypes.STRING_LITERAL,
         JSTokenTypes.SINGLE_QUOTE_STRING_LITERAL,
-        JSTokenTypes.INTERPOLATION_STRING_LITERAL,
         JSTokenTypes.NULL_KEYWORD,
         JSTokenTypes.UNDEFINED_KEYWORD,
         JSTokenTypes.FALSE_KEYWORD,
@@ -307,6 +306,10 @@ public class ExpressionParsing<C extends JavaScriptParsingContext> extends Parsi
         expr.done(JSElementTypes.PARENTHESIZED_EXPRESSION);
     }
 
+    protected @Nullable IElementType parseMemberExpressionTail(PsiBuilder builder) {
+        return null;
+    }
+
     protected boolean parseMemberExpression(PsiBuilder builder, boolean allowCallSyntax) {
         return parseMemberExpression(builder, allowCallSyntax, MEMBER_OPERATOR_SET);
     }
@@ -339,6 +342,7 @@ public class ExpressionParsing<C extends JavaScriptParsingContext> extends Parsi
         }
 
         boolean currentlyAllowCallSyntax = allowCallSyntax && (type != JSTokenTypes.LBRACE && type != JSTokenTypes.LBRACKET);
+        IElementType tailElementType;
 
         while (true) {
             IElementType tokenType = builder.getTokenType();
@@ -371,6 +375,10 @@ public class ExpressionParsing<C extends JavaScriptParsingContext> extends Parsi
                 parseExpression(builder);
                 Parsing.checkMatches(builder, JSTokenTypes.RBRACKET, JavaScriptLocalize.javascriptParserMessageExpectedRbracket());
                 expr.done(JSElementTypes.INDEXED_PROPERTY_ACCESS_EXPRESSION);
+                expr = expr.precede();
+            }
+            else if ((tailElementType = parseMemberExpressionTail(builder)) != null) {
+                expr.done(tailElementType);
                 expr = expr.precede();
             }
             else if (currentlyAllowCallSyntax && tokenType == JSTokenTypes.LPAR) {

@@ -24,6 +24,7 @@ import consulo.annotation.access.RequiredReadAction;
 import consulo.annotation.access.RequiredWriteAction;
 import consulo.content.scope.SearchScope;
 import consulo.language.ast.ASTNode;
+import consulo.language.ast.IElementType;
 import consulo.language.impl.psi.stub.StubBasedPsiElementBase;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiElementVisitor;
@@ -50,6 +51,13 @@ public abstract class JSStubElementImpl<T extends StubElement> extends StubBased
     }
 
     protected abstract void accept(JSElementVisitor visitor);
+
+    @Override
+    public String toString() {
+        T stub = getStub();
+        IElementType elementType = stub != null ? stub.getStubType() : getNode().getElementType();
+        return getClass().getSimpleName() + "(" + elementType + ")";
+    }
 
     @Override
     public final void accept(PsiElementVisitor visitor) {

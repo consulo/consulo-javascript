@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package consulo.javascript.impl.lang;
+package consulo.javascript.lang;
 
 import com.intellij.lang.javascript.JSElementTypes;
 import com.intellij.lang.javascript.JSTokenTypes;
