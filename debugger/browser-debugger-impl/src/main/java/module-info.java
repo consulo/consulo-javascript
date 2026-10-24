@@ -17,5 +17,5 @@ module consulo.javascript.browser.debugger.impl {
 
     requires consulo.web.browser.api;
 
-    opens consulo.javascript.debugger.browser to consulo.util.xml.serializer;
+    opens consulo.javascript.debugger.browser to consulo.util.xml.serializer, consulo.execution.api;
 }

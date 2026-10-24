@@ -6,7 +6,7 @@ import consulo.compiler.execution.CompileStepBeforeRun;
 import consulo.execution.DefaultExecutionResult;
 import consulo.execution.ExecutionResult;
 import consulo.execution.configuration.*;
-import consulo.execution.configuration.ui.SettingsEditor;
+import consulo.execution.configuration.fragment.RunConfigurationFragment;
 import consulo.execution.executor.Executor;
 import consulo.execution.runner.ExecutionEnvironment;
 import consulo.execution.runner.ProgramRunner;
@@ -17,25 +17,20 @@ import consulo.module.Module;
 import consulo.module.ModuleManager;
 import consulo.process.ExecutionException;
 import consulo.util.lang.StringUtil;
-import consulo.util.xml.serializer.InvalidDataException;
-import consulo.util.xml.serializer.WriteExternalException;
-import consulo.util.xml.serializer.XmlSerializer;
 import consulo.webBrowser.BrowserLauncher;
 import consulo.webBrowser.WebBrowser;
 import consulo.webBrowser.WebBrowserManager;
 import org.jspecify.annotations.Nullable;
-import org.jdom.Element;
 
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.List;
 
 /**
  * @author VISTALL
  * @since 2020-06-15
  */
 public class JavaScriptBrowserConfiguration extends ModuleBasedConfiguration<RunConfigurationModule> implements RunConfigurationWithSuppressedDefaultRunAction, CompileStepBeforeRun.Suppressor {
-    public String URL = "http://localhost";
-
     public JavaScriptBrowserConfiguration(String name, RunConfigurationModule configurationModule, ConfigurationFactory factory) {
         super(name, configurationModule, factory);
     }
@@ -45,15 +40,35 @@ public class JavaScriptBrowserConfiguration extends ModuleBasedConfiguration<Run
     }
 
     @Override
-    public void readExternal(Element element) throws InvalidDataException {
-        super.readExternal(element);
-        XmlSerializer.deserializeInto(this, element);
+    protected Class<JavaScriptBrowserConfigurationOptions> getOptionsClass() {
+        return JavaScriptBrowserConfigurationOptions.class;
     }
 
     @Override
-    public void writeExternal(Element element) throws WriteExternalException {
-        super.writeExternal(element);
-        XmlSerializer.serializeInto(this, element);
+    public JavaScriptBrowserConfigurationOptions getOptions() {
+        return (JavaScriptBrowserConfigurationOptions) super.getOptions();
+    }
+
+    @Override
+    protected void convertLegacyState(LegacyRunConfigurationConverter converter) {
+        super.convertLegacyState(converter);
+
+        JavaScriptBrowserConfigurationOptions options = new JavaScriptBrowserConfigurationOptions();
+        options.setUrl(converter.readXml(JavaScriptBrowserConfigurationLegacyState.class).URL);
+        converter.setOptions(options);
+    }
+
+    @Override
+    public List<RunConfigurationFragment<?>> createFragments() {
+        return List.of(new JavaScriptBrowserUrlFragment());
+    }
+
+    public @Nullable String getUrl() {
+        return getOptions().getUrl();
+    }
+
+    public void setUrl(@Nullable String url) {
+        getOptions().setUrl(url);
     }
 
     @Override
@@ -63,14 +78,10 @@ public class JavaScriptBrowserConfiguration extends ModuleBasedConfiguration<Run
         return Arrays.asList(manager.getModules());
     }
 
-    @Override
-    public SettingsEditor<? extends RunConfiguration> getConfigurationEditor() {
-        return new JavaScriptBrowserConfigurationEditor();
-    }
-
     @Nullable
     @Override
     public RunProfileState getState(Executor executor, ExecutionEnvironment environment) throws ExecutionException {
+        String url = getUrl();
         return new RunProfileState() {
             @Override
             public ExecutionResult execute(Executor executor, ProgramRunner programRunner) throws ExecutionException {
@@ -85,15 +96,15 @@ public class JavaScriptBrowserConfiguration extends ModuleBasedConfiguration<Run
                     throw new ExecutionException("Can't find Chrome browser");
                 }
 
-                if (StringUtil.isEmpty(URL)) {
+                if (url == null || StringUtil.isEmpty(url)) {
                     throw new ExecutionException("URL is empty");
                 }
 
-                BrowserLauncher.getInstance().browse(URL, webBrowser, environment.getProject());
+                BrowserLauncher.getInstance().browse(url, webBrowser, environment.getProject());
 
                 SessionHolder holder = Application.get().getInstance(SessionHolder.class);
 
-                SessionHolder.BrowserSession browserSession = holder.prepareSession(URL);
+                SessionHolder.BrowserSession browserSession = holder.prepareSession(url);
 
                 return new DefaultExecutionResult(console, new BrowserDebuggerProcess(browserSession));
             }
