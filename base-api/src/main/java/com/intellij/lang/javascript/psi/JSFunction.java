@@ -38,6 +38,29 @@ public interface JSFunction extends JSQualifiedNamedElement, JSSourceElement, JS
     @RequiredReadAction
     JSSourceElement[] getBody();
 
+    /**
+     * The parameters ({@code getParameterList().getParameters()}).
+     */
+    @RequiredReadAction
+    default JSParameter[] getParameterVariables() {
+        JSParameterList parameterList = getParameterList();
+        return parameterList != null ? parameterList.getParameters() : JSParameter.EMPTY_ARRAY;
+    }
+
+    /**
+     * The block body; null for an expression body ({@code x => x * 2}) or no body.
+     */
+    @Nullable
+    @RequiredReadAction
+    default JSBlockStatement getBlock() {
+        for (JSSourceElement element : getBody()) {
+            if (element instanceof JSBlockStatement block) {
+                return block;
+            }
+        }
+        return null;
+    }
+
     @RequiredReadAction
     default boolean isGetProperty() {
         return false;

@@ -20,10 +20,10 @@ public class TypeScriptElementImpl extends ASTWrapperPsiElement {
 
     /**
      * Default getType() implementation that satisfies JavaScriptTypeElement and JSExpression contracts.
-     * Override in specific mixins/implementations to provide actual type resolution.
+     * Override in specific mixins/implementations to provide actual type resolution (never null: UNKNOWN).
      */
     @RequiredReadAction
     public JavaScriptType getType() {
-        return null;
+        return JavaScriptType.UNKNOWN;
     }
 }

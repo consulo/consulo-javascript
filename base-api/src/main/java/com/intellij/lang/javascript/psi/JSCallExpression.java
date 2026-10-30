@@ -27,4 +27,13 @@ public interface JSCallExpression extends JSExpression {
 
     @RequiredReadAction
     JSArgumentList getArgumentList();
+
+    /**
+     * The arguments of the call ({@code getArgumentList().getArguments()}).
+     */
+    @RequiredReadAction
+    default JSExpression[] getArguments() {
+        JSArgumentList argumentList = getArgumentList();
+        return argumentList != null ? argumentList.getArguments() : JSExpression.EMPTY_ARRAY;
+    }
 }

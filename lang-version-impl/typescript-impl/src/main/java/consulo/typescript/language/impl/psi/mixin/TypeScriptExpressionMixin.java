@@ -36,6 +36,6 @@ public class TypeScriptExpressionMixin extends TypeScriptElementImpl implements 
     @RequiredReadAction
     @Override
     public JavaScriptType getType() {
-        return null;
+        return JavaScriptType.UNKNOWN;
     }
 }

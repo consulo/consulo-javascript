@@ -6,4 +6,11 @@ package com.intellij.lang.javascript.psi;
  */
 public interface JSSpreadExpression extends JSExpression {
     JSExpression getInnerExpression();
+
+    /**
+     * The expression after {@code ...} (IntelliJ's name of {@link #getInnerExpression()}).
+     */
+    default JSExpression getExpression() {
+        return getInnerExpression();
+    }
 }

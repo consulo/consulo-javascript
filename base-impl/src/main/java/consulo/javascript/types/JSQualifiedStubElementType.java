@@ -17,6 +17,7 @@
 
 package consulo.javascript.types;
 
+import consulo.language.Language;
 import com.intellij.lang.javascript.psi.JSQualifiedNamedElement;
 import consulo.javascript.impl.language.psi.JSStubElementType;
 import com.intellij.lang.javascript.psi.stubs.JSQualifiedStub;
@@ -31,6 +32,10 @@ public abstract class JSQualifiedStubElementType<StubT extends JSQualifiedStub<P
     extends JSStubElementType<StubT, PsiT> {
     public JSQualifiedStubElementType(String debugName) {
         super(debugName);
+    }
+
+    protected JSQualifiedStubElementType(String debugName, Language language) {
+        super(debugName, language);
     }
 
     @Override

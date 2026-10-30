@@ -1,5 +1,9 @@
 package consulo.typescript.language.impl.psi.mixin;
 
+import java.util.List;
+import java.util.ArrayList;
+import consulo.typescript.language.psi.TypeScriptTypes;
+import com.intellij.lang.javascript.psi.ecmal4.JSReferenceListMember;
 import com.intellij.lang.javascript.psi.*;
 import com.intellij.lang.javascript.psi.stubs.JSReferenceListStub;
 import consulo.annotation.access.RequiredReadAction;
@@ -64,6 +68,27 @@ public class TypeScriptReferenceListMixin extends StubBasedPsiElementBase<JSRefe
     @Override
     public JSClass[] getReferencedClasses() {
         return new JSClass[0];
+    }
+
+    /**
+     * The references of the list: expressions ({@code class A extends B}) and type names ({@code interface A extends B}).
+     */
+    @RequiredReadAction
+    @Override
+    public JSReferenceListMember[] getMembers() {
+        List<JSReferenceListMember> members = new ArrayList<>();
+        for (PsiElement child = getFirstChild(); child != null; child = child.getNextSibling()) {
+            if (child instanceof JSReferenceListMember member) {
+                members.add(member);
+            }
+            else if (child.getNode().getElementType() == TypeScriptTypes.TYPE_REFERENCE) {
+                ASTNode name = child.getNode().findChildByType(TypeScriptTypes.QUALIFIED_NAME);
+                if (name != null && name.getPsi() instanceof JSReferenceListMember member) {
+                    members.add(member);
+                }
+            }
+        }
+        return members.toArray(JSReferenceListMember.EMPTY_ARRAY);
     }
 
     @Override

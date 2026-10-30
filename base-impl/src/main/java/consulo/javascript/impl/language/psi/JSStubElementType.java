@@ -19,6 +19,7 @@
  */
 package consulo.javascript.impl.language.psi;
 
+import consulo.language.Language;
 import com.intellij.lang.javascript.psi.JSElement;
 import com.intellij.lang.javascript.psi.stubs.JSStubElement;
 import consulo.javascript.language.JavaScriptLanguage;
@@ -31,6 +32,20 @@ public abstract class JSStubElementType<StubT extends JSStubElement<PsiT>, PsiT 
     implements IElementTypeAsPsiFactory {
     public JSStubElementType(String debugName) {
         super(debugName, JavaScriptLanguage.INSTANCE);
+    }
+
+    /**
+     * For other languages reusing the JavaScript stubs (TypeScript).
+     */
+    protected JSStubElementType(String debugName, Language language) {
+        super(debugName, language);
+    }
+
+    /**
+     * The debug name without the "js." of {@link #toString()} (also during construction).
+     */
+    protected String getDebugName() {
+        return super.toString();
     }
 
     @Override

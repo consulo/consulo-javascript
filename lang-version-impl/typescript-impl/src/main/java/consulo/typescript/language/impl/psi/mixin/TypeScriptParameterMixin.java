@@ -1,5 +1,7 @@
 package consulo.typescript.language.impl.psi.mixin;
 
+import com.intellij.lang.javascript.psi.stubs.JSVariableStub;
+import consulo.language.psi.stub.IStubElementType;
 import com.intellij.lang.javascript.JSTokenTypes;
 import com.intellij.lang.javascript.psi.JSElementVisitor;
 import com.intellij.lang.javascript.psi.JSFunction;
@@ -19,9 +21,13 @@ import org.jspecify.annotations.Nullable;
  * @author VISTALL
  * @since 2026-03-17
  */
-public class TypeScriptParameterMixin extends TypeScriptVariableMixin implements JSParameter {
+public class TypeScriptParameterMixin<T extends JSVariableStub> extends TypeScriptVariableMixin<T> implements JSParameter {
     public TypeScriptParameterMixin(@Nonnull ASTNode node) {
         super(node);
+    }
+
+    public TypeScriptParameterMixin(@Nonnull T stub, @Nonnull IStubElementType type) {
+        super(stub, type);
     }
 
     @Override

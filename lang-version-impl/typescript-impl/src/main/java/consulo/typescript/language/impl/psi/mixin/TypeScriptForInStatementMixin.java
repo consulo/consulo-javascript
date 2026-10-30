@@ -5,7 +5,10 @@ import consulo.annotation.access.RequiredReadAction;
 import consulo.language.ast.ASTNode;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiElementVisitor;
+import consulo.language.psi.resolve.PsiScopeProcessor;
+import consulo.language.psi.resolve.ResolveState;
 import consulo.language.psi.util.PsiTreeUtil;
+import consulo.typescript.language.impl.psi.TypeScriptResolveUtil;
 import jakarta.annotation.Nonnull;
 import org.jspecify.annotations.Nullable;
 
@@ -83,5 +86,17 @@ public class TypeScriptForInStatementMixin extends TypeScriptStatementMixin impl
             }
         }
         return last;
+    }
+
+    // JavaScript's JSForStatementImpl / JSForInStatementImpl: the loop variables are seen from inside the loop
+    @Override
+    @RequiredReadAction
+    public boolean processDeclarations(
+        @Nonnull PsiScopeProcessor processor,
+        @Nonnull ResolveState state,
+        @Nullable PsiElement lastParent,
+        @Nonnull PsiElement place
+    ) {
+        return lastParent == null || TypeScriptResolveUtil.processChildVariables(this, processor, state, lastParent);
     }
 }

@@ -17,6 +17,7 @@
 
 package com.intellij.lang.javascript.types;
 
+import consulo.language.Language;
 import java.io.IOException;
 
 
@@ -43,6 +44,10 @@ import consulo.language.psi.stub.StubOutputStream;
 public class JSVarStatementElementType extends JSStubElementType<JSVarStatementStub, JSVarStatement> {
     public JSVarStatementElementType() {
         super("VAR_STATEMENT");
+    }
+
+    protected JSVarStatementElementType(String debugName, Language language) {
+        super(debugName, language);
     }
 
     @Override

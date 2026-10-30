@@ -8,6 +8,9 @@ import consulo.language.ast.ASTNode;
 import consulo.language.impl.psi.stub.StubBasedPsiElementBase;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiElementVisitor;
+import consulo.language.psi.resolve.PsiScopeProcessor;
+import consulo.language.psi.resolve.ResolveState;
+import consulo.typescript.language.impl.psi.TypeScriptResolveUtil;
 import consulo.language.psi.stub.IStubElementType;
 import jakarta.annotation.Nonnull;
 import org.jspecify.annotations.Nullable;
@@ -19,23 +22,20 @@ import org.jspecify.annotations.Nullable;
  * @author VISTALL
  * @since 2026-03-18
  */
-public class TypeScriptInterfaceMixin extends StubBasedPsiElementBase<JSClassStub> implements JSClass {
+// T only lets Grammar-Kit generate the stub constructor of the impl (it needs a generic super class)
+public class TypeScriptInterfaceMixin<T extends JSClassStub> extends StubBasedPsiElementBase<JSClassStub> implements JSClass {
     public TypeScriptInterfaceMixin(@Nonnull ASTNode node) {
         super(node);
     }
 
-    @Override
-    public IStubElementType getElementType() {
-        JSClassStub stub = getStub();
-        if (stub != null) {
-            return stub.getStubType();
-        }
-        return null;
+    public TypeScriptInterfaceMixin(@Nonnull JSClassStub stub, @Nonnull IStubElementType type) {
+        super(stub, type);
     }
+
 
     @Override
     public String toString() {
-        return getClass().getSimpleName() + ":" + getNode().getElementType();
+        return getClass().getSimpleName() + ":" + getElementType();
     }
 
     @Override
@@ -120,7 +120,8 @@ public class TypeScriptInterfaceMixin extends StubBasedPsiElementBase<JSClassStu
     @RequiredReadAction
     @Override
     public String getQualifiedName() {
-        return getName();
+        var stub = getGreenStub();
+        return stub != null ? stub.getQualifiedName() : getName();
     }
 
     // --- JSNamedElement / PsiNamedElement / PsiNameIdentifierOwner ---
@@ -128,6 +129,10 @@ public class TypeScriptInterfaceMixin extends StubBasedPsiElementBase<JSClassStu
     @RequiredReadAction
     @Override
     public String getName() {
+        var stub = getGreenStub();
+        if (stub != null) {
+            return stub.getName();
+        }
         PsiElement id = getNameIdentifier();
         return id != null ? id.getText() : null;
     }
@@ -151,5 +156,18 @@ public class TypeScriptInterfaceMixin extends StubBasedPsiElementBase<JSClassStu
     @Override
     public JSAttributeList getAttributeList() {
         return null;
+    }
+
+    @Override
+    public boolean processDeclarations(
+        @Nonnull PsiScopeProcessor processor,
+        @Nonnull ResolveState state,
+        @Nullable PsiElement lastParent,
+        @Nonnull PsiElement place
+    ) {
+        if (lastParent != null && !TypeScriptResolveUtil.processTypeParameters(this, processor, state)) {
+            return false;
+        }
+        return processor.execute(this, state);
     }
 }

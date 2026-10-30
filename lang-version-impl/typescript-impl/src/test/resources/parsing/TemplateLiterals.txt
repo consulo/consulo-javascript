@@ -49,7 +49,7 @@ JSFile:TemplateLiterals.ts
         PsiElement(DOLLAR)('$')
         PsiElement(LBRACE)('{')
         PsiWhiteSpace(' ')
-        TypeScriptExponentiationExpressionImpl(EXPONENTIATION_EXPRESSION)
+        TypeScriptReferenceExpressionImpl(REFERENCE_EXPRESSION)
           TypeScriptObjectLiteralExpressionImpl(OBJECT_LITERAL_EXPRESSION)
             PsiElement(LBRACE)('{')
             TypeScriptPropertyImpl(PROPERTY)

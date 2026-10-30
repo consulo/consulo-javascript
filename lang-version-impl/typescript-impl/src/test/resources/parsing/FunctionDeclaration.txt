@@ -76,7 +76,7 @@ JSFile:FunctionDeclaration.ts
         TypeScriptReturnStatementImpl(RETURN_STATEMENT)
           PsiElement(RETURN_KEYWORD)('return')
           PsiWhiteSpace(' ')
-          TypeScriptExponentiationExpressionImpl(EXPONENTIATION_EXPRESSION)
+          TypeScriptCallExpressionImpl(CALL_EXPRESSION)
             TypeScriptReferenceExpressionImpl(REFERENCE_EXPRESSION)
               PsiElement(IDENTIFIER)('fetch')
             TypeScriptArgumentListImpl(ARGUMENT_LIST)

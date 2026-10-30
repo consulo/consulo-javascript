@@ -9,6 +9,8 @@ open module consulo.javascript.base.api {
 
     exports com.intellij.lang.javascript.formatter;
     exports com.intellij.lang.javascript.psi;
+    exports com.intellij.lang.javascript.psi.ecmal4;
+    exports com.intellij.lang.javascript.patterns;
     exports com.intellij.lang.javascript.psi.stubs;
 
     exports consulo.javascript.icon;

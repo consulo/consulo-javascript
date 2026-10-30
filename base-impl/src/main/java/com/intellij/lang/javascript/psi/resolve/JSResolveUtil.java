@@ -772,7 +772,10 @@ public class JSResolveUtil {
             paramIndex++;
         }
 
-        JSExpression methodExpr = ((JSCallExpression)parent.getParent()).getMethodExpression();
+        if (!(parent.getParent() instanceof JSCallExpression call)) {
+            return null;
+        }
+        JSExpression methodExpr = call.getMethodExpression();
         if (methodExpr instanceof JSReferenceExpression refExpr) {
             ResolveResult[] results = refExpr.multiResolve(false);
 
@@ -783,6 +786,10 @@ public class JSResolveUtil {
 
                     if (paramIndex < params.length) {
                         return params[paramIndex];
+                    }
+                    // the arguments of a rest parameter
+                    if (params.length > 0 && params[params.length - 1].isRest()) {
+                        return params[params.length - 1];
                     }
                 }
             }
@@ -1327,7 +1334,8 @@ public class JSResolveUtil {
     @Nullable
     @RequiredReadAction
     public static JSExpression getRealRefExprQualifier(JSReferenceExpression expr) {
-        JSExpression qualifier = ((JSReferenceExpressionImpl)expr).getResolveQualifier();
+        // other dialects implement JSReferenceExpression with their own PSI (TypeScript)
+        JSExpression qualifier = expr instanceof JSReferenceExpressionImpl impl ? impl.getResolveQualifier() : expr.getQualifier();
         if (qualifier != null) {
             return qualifier;
         }

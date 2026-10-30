@@ -17,6 +17,7 @@
 package com.intellij.lang.javascript.psi;
 
 
+import com.intellij.lang.javascript.psi.ecmal4.JSReferenceListMember;
 import consulo.annotation.access.RequiredReadAction;
 import com.intellij.lang.javascript.psi.stubs.JSReferenceListStub;
 import consulo.language.psi.StubBasedPsiElement;
@@ -33,4 +34,16 @@ public interface JSReferenceList extends JSElement, StubBasedPsiElement<JSRefere
 
     @RequiredReadAction
     JSClass[] getReferencedClasses();
+
+    /**
+     * The references of the list ({@code extends A, B}).
+     */
+    @RequiredReadAction
+    default JSReferenceListMember[] getMembers() {
+        JSReferenceExpression[] expressions = getExpressions();
+        JSReferenceListMember[] members = new JSReferenceListMember[expressions.length];
+        // JSReferenceExpression is a JSReferenceListMember
+        System.arraycopy(expressions, 0, members, 0, expressions.length);
+        return members;
+    }
 }

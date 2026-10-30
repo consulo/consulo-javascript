@@ -71,7 +71,7 @@ public class TypeScriptPropertyMixin extends TypeScriptElementImpl implements JS
 
     @Override
     public JavaScriptType getType() {
-        return null;
+        return JavaScriptType.UNKNOWN;
     }
 
     // --- JSNamedElement / PsiNamedElement / PsiNameIdentifierOwner ---

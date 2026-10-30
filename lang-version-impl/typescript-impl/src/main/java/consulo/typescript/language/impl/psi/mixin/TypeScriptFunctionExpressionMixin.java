@@ -8,6 +8,9 @@ import consulo.javascript.language.psi.JavaScriptTypeElement;
 import consulo.language.ast.ASTNode;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiElementVisitor;
+import consulo.language.psi.resolve.PsiScopeProcessor;
+import consulo.language.psi.resolve.ResolveState;
+import consulo.typescript.language.impl.psi.TypeScriptResolveUtil;
 import jakarta.annotation.Nonnull;
 import org.jspecify.annotations.Nullable;
 
@@ -69,7 +72,7 @@ public class TypeScriptFunctionExpressionMixin extends TypeScriptExpressionMixin
 
     @Override
     public JavaScriptType getReturnType() {
-        return null;
+        return JavaScriptType.UNKNOWN;
     }
 
     @Override
@@ -124,5 +127,16 @@ public class TypeScriptFunctionExpressionMixin extends TypeScriptExpressionMixin
     @Override
     public JSAttributeList getAttributeList() {
         return null;
+    }
+
+    @Override
+    @RequiredReadAction
+    public boolean processDeclarations(
+        @Nonnull PsiScopeProcessor processor,
+        @Nonnull ResolveState state,
+        @Nullable PsiElement lastParent,
+        @Nonnull PsiElement place
+    ) {
+        return TypeScriptResolveUtil.processFunctionDeclarations(this, processor, state, lastParent);
     }
 }

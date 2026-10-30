@@ -8,6 +8,8 @@ import consulo.annotation.access.RequiredReadAction;
 import consulo.language.ast.ASTNode;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiElementVisitor;
+import consulo.language.psi.resolve.PsiScopeProcessor;
+import consulo.language.psi.resolve.ResolveState;
 import consulo.language.psi.util.PsiTreeUtil;
 import consulo.typescript.language.impl.psi.TypeScriptElementImpl;
 import jakarta.annotation.Nonnull;
@@ -48,5 +50,23 @@ public class TypeScriptCatchBlockMixin extends TypeScriptElementImpl implements 
             }
         }
         return null;
+    }
+
+    // JavaScript's JSCatchBlockImpl
+    @Override
+    @RequiredReadAction
+    public boolean processDeclarations(
+        @Nonnull PsiScopeProcessor processor,
+        @Nonnull ResolveState state,
+        @Nullable PsiElement lastParent,
+        @Nonnull PsiElement place
+    ) {
+        if (lastParent != null) {
+            JSParameter parameter = getParameter();
+            if (parameter != null) {
+                return parameter.processDeclarations(processor, state, null, place);
+            }
+        }
+        return true;
     }
 }

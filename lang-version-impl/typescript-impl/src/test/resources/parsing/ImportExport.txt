@@ -75,7 +75,7 @@ JSFile:ImportExport.ts
           PsiElement(RBRACE)('}')
   PsiWhiteSpace('\n')
   TypeScriptStatementImpl(STATEMENT)
-    TypeScriptExportDeclarationImpl(EXPORT_DECLARATION)
+    TypeScriptExportDefaultAssignmentImpl(EXPORT_DEFAULT_ASSIGNMENT)
       PsiElement(EXPORT_KEYWORD)('export')
       PsiWhiteSpace(' ')
       PsiElement(DEFAULT_KEYWORD)('default')

@@ -16,6 +16,8 @@
 
 package com.intellij.lang.javascript.psi;
 
+import com.intellij.lang.javascript.psi.ecmal4.JSReferenceListMember;
+import consulo.annotation.access.RequiredReadAction;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiPolyVariantReference;
 
@@ -25,7 +27,7 @@ import org.jspecify.annotations.Nullable;
  * @author max
  * @since 2005-01-30
  */
-public interface JSReferenceExpression extends JSExpression, PsiPolyVariantReference {
+public interface JSReferenceExpression extends JSExpression, PsiPolyVariantReference, JSReferenceListMember {
     @Nullable
     JSExpression getQualifier();
 
@@ -36,4 +38,15 @@ public interface JSReferenceExpression extends JSExpression, PsiPolyVariantRefer
     PsiElement getReferenceNameElement();
 
     boolean shouldCheckReferences();
+
+    @Override
+    @RequiredReadAction
+    default String getReferenceText() {
+        return getText();
+    }
+
+    @Override
+    default JSReferenceExpression getExpression() {
+        return this;
+    }
 }

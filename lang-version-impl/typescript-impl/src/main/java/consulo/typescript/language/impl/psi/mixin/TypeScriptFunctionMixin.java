@@ -1,5 +1,8 @@
 package consulo.typescript.language.impl.psi.mixin;
 
+import consulo.language.impl.psi.stub.StubBasedPsiElementBase;
+import com.intellij.lang.javascript.psi.stubs.JSFunctionStub;
+import consulo.language.psi.stub.IStubElementType;
 import com.intellij.lang.javascript.JSTokenTypes;
 import com.intellij.lang.javascript.psi.*;
 import consulo.annotation.access.RequiredReadAction;
@@ -8,7 +11,11 @@ import consulo.javascript.language.psi.JavaScriptTypeElement;
 import consulo.language.ast.ASTNode;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiElementVisitor;
+import consulo.language.psi.resolve.PsiScopeProcessor;
+import consulo.language.psi.resolve.ResolveState;
+import consulo.language.util.IncorrectOperationException;
 import consulo.typescript.language.impl.psi.TypeScriptElementImpl;
+import consulo.typescript.language.impl.psi.TypeScriptResolveUtil;
 import jakarta.annotation.Nonnull;
 import org.jspecify.annotations.Nullable;
 
@@ -19,9 +26,13 @@ import org.jspecify.annotations.Nullable;
  * @author VISTALL
  * @since 2026-03-17
  */
-public class TypeScriptFunctionMixin extends TypeScriptElementImpl implements JSFunction {
+public class TypeScriptFunctionMixin<T extends JSFunctionStub> extends StubBasedPsiElementBase<T> implements JSFunction {
     public TypeScriptFunctionMixin(@Nonnull ASTNode node) {
         super(node);
+    }
+
+    public TypeScriptFunctionMixin(@Nonnull T stub, @Nonnull IStubElementType type) {
+        super(stub, type);
     }
 
     @Override
@@ -61,7 +72,7 @@ public class TypeScriptFunctionMixin extends TypeScriptElementImpl implements JS
 
     @Override
     public JavaScriptType getReturnType() {
-        return null;
+        return JavaScriptType.UNKNOWN;
     }
 
     @Override
@@ -85,7 +96,8 @@ public class TypeScriptFunctionMixin extends TypeScriptElementImpl implements JS
     @RequiredReadAction
     @Override
     public String getQualifiedName() {
-        return getName();
+        var stub = getGreenStub();
+        return stub != null ? stub.getQualifiedName() : getName();
     }
 
     // --- JSNamedElement / PsiNamedElement / PsiNameIdentifierOwner ---
@@ -93,12 +105,18 @@ public class TypeScriptFunctionMixin extends TypeScriptElementImpl implements JS
     @RequiredReadAction
     @Override
     public String getName() {
+        var stub = getGreenStub();
+        if (stub != null) {
+            return stub.getName();
+        }
         PsiElement id = getNameIdentifier();
         return id != null ? id.getText() : null;
     }
 
     @Override
-    public PsiElement setName(@Nonnull String name) {
+    @RequiredReadAction
+    public PsiElement setName(@Nonnull String name) throws IncorrectOperationException {
+        TypeScriptResolveUtil.rename(getNameIdentifier(), name);
         return this;
     }
 
@@ -116,5 +134,21 @@ public class TypeScriptFunctionMixin extends TypeScriptElementImpl implements JS
     @Override
     public JSAttributeList getAttributeList() {
         return null;
+    }
+
+    @Override
+    @RequiredReadAction
+    public boolean processDeclarations(
+        @Nonnull PsiScopeProcessor processor,
+        @Nonnull ResolveState state,
+        @Nullable PsiElement lastParent,
+        @Nonnull PsiElement place
+    ) {
+        return TypeScriptResolveUtil.processFunctionDeclarations(this, processor, state, lastParent);
+    }
+
+    @Override
+    public String toString() {
+        return getClass().getSimpleName() + "(" + getElementType() + ")";
     }
 }

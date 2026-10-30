@@ -17,6 +17,7 @@
 
 package com.intellij.lang.javascript.types;
 
+import consulo.language.Language;
 import com.intellij.lang.javascript.psi.JSClass;
 import com.intellij.lang.javascript.psi.impl.JSClassImpl;
 import com.intellij.lang.javascript.psi.stubs.JSClassStub;
@@ -42,6 +43,10 @@ import java.io.IOException;
 public class JSClassElementType extends JSQualifiedStubElementType<JSClassStub, JSClass> {
     public JSClassElementType() {
         super("CLASS");
+    }
+
+    protected JSClassElementType(String debugName, Language language) {
+        super(debugName, language);
     }
 
     @Override

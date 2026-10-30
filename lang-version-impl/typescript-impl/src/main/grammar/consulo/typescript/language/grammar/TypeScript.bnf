@@ -14,6 +14,13 @@
   tokenTypeFactory       = "consulo.typescript.language.TypeScriptTokenTypeFactory.getTokenType"
   parserUtilClass        = "consulo.typescript.language.impl.syntax.TypeScriptParserUtil"
 
+  // === stubs: the JavaScript stubs and indexes (TypeScriptStubElementTypes) ===
+  stubClass("class_declaration|interface_declaration")   = "com.intellij.lang.javascript.psi.stubs.JSClassStub"
+  stubClass("function_declaration|method_declaration|constructor_declaration|accessor_declaration|method_signature_member") = "com.intellij.lang.javascript.psi.stubs.JSFunctionStub"
+  stubClass("var_statement")                             = "com.intellij.lang.javascript.psi.stubs.JSVarStatementStub"
+  stubClass("variable_declaration|property_declaration|parameter") = "com.intellij.lang.javascript.psi.stubs.JSVariableStub"
+  elementTypeFactory("class_declaration|interface_declaration|function_declaration|method_declaration|constructor_declaration|accessor_declaration|method_signature_member|var_statement|variable_declaration|property_declaration|parameter") = "consulo.typescript.language.impl.stub.TypeScriptStubElementTypes.factory"
+
   // === implements: JS base type hierarchy ===
   // TypeScriptExpression extends JSExpression, TypeScriptStatement extends JSStatement
   // This enables covariant return types in generated getter methods
@@ -29,6 +36,8 @@
   // Individual JS interface conformance — declarations
   implements("class_declaration|interface_declaration")    = "com.intellij.lang.javascript.psi.JSClass"
   implements("function_declaration")                     = "com.intellij.lang.javascript.psi.JSFunction"
+  implements("method_declaration|constructor_declaration|accessor_declaration|method_signature_member") = "com.intellij.lang.javascript.psi.JSFunction"
+  implements("property_declaration")                     = "com.intellij.lang.javascript.psi.JSVariable"
   implements("variable_declaration")                     = "com.intellij.lang.javascript.psi.JSVariable"
   implements("parameter")                                = "com.intellij.lang.javascript.psi.JSParameter"
   implements("var_statement")                            = "com.intellij.lang.javascript.psi.JSVarStatement"
@@ -37,14 +46,15 @@
   implements("parameter_list")                           = "com.intellij.lang.javascript.psi.JSParameterList"
   implements("property|property_signature_member")        = "com.intellij.lang.javascript.psi.JSProperty"
   implements("argument_list")                            = "com.intellij.lang.javascript.psi.JSArgumentList"
-  implements("extends_list|implements_list")             = "com.intellij.lang.javascript.psi.JSReferenceList"
+  implements("extends_list|implements_list|extends_clause|implements_clause") = "com.intellij.lang.javascript.psi.JSReferenceList"
   implements("type_parameter_list")                      = "com.intellij.lang.javascript.psi.JSGenericSignature"
-  implements("import_declaration")                       = "consulo.javascript.psi.JavaScriptImportStatementBase"
+  implements("import_declaration")                       = "consulo.javascript.ecmascript.psi.ES6ImportDeclaration"
+  implements("export_default_assignment")                = "consulo.javascript.ecmascript.psi.ES6ExportDefaultAssignment"
 
   // Individual JS interface conformance — statements
   implements("if_statement")                             = "com.intellij.lang.javascript.psi.JSIfStatement"
   implements("for_statement")                            = "com.intellij.lang.javascript.psi.JSForStatement"
-  implements("for_in_statement")                         = "com.intellij.lang.javascript.psi.JSForInStatement"
+  implements("for_in_statement|for_of_statement")        = "com.intellij.lang.javascript.psi.JSForInStatement"
   implements("while_statement")                          = "com.intellij.lang.javascript.psi.JSWhileStatement"
   implements("do_while_statement")                       = "com.intellij.lang.javascript.psi.JSDoWhileStatement"
   implements("switch_statement")                         = "com.intellij.lang.javascript.psi.JSSwitchStatement"
@@ -87,12 +97,15 @@
   mixin("statement")                                    = "consulo.typescript.language.impl.psi.mixin.TypeScriptStatementMixin"
 
   // Declaration mixins
-  mixin("class_declaration")                            = "consulo.typescript.language.impl.psi.mixin.TypeScriptClassMixin"
-  mixin("interface_declaration")                        = "consulo.typescript.language.impl.psi.mixin.TypeScriptInterfaceMixin"
-  mixin("function_declaration")                         = "consulo.typescript.language.impl.psi.mixin.TypeScriptFunctionMixin"
-  mixin("variable_declaration")                         = "consulo.typescript.language.impl.psi.mixin.TypeScriptVariableMixin"
-  mixin("parameter")                                    = "consulo.typescript.language.impl.psi.mixin.TypeScriptParameterMixin"
-  mixin("var_statement")                                = "consulo.typescript.language.impl.psi.mixin.TypeScriptVarStatementMixin"
+  mixin("class_declaration")                            = "consulo.typescript.language.impl.psi.mixin.TypeScriptClassMixin<com.intellij.lang.javascript.psi.stubs.JSClassStub>"
+  mixin("interface_declaration")                        = "consulo.typescript.language.impl.psi.mixin.TypeScriptInterfaceMixin<com.intellij.lang.javascript.psi.stubs.JSClassStub>"
+  mixin("function_declaration")                         = "consulo.typescript.language.impl.psi.mixin.TypeScriptFunctionMixin<com.intellij.lang.javascript.psi.stubs.JSFunctionStub>"
+  mixin("method_declaration|constructor_declaration|accessor_declaration|method_signature_member") = "consulo.typescript.language.impl.psi.mixin.TypeScriptMethodMixin<com.intellij.lang.javascript.psi.stubs.JSFunctionStub>"
+  mixin("property_declaration")                         = "consulo.typescript.language.impl.psi.mixin.TypeScriptVariableMixin<com.intellij.lang.javascript.psi.stubs.JSVariableStub>"
+  mixin("for_of_statement")                             = "consulo.typescript.language.impl.psi.mixin.TypeScriptForInStatementMixin"
+  mixin("variable_declaration")                         = "consulo.typescript.language.impl.psi.mixin.TypeScriptVariableMixin<com.intellij.lang.javascript.psi.stubs.JSVariableStub>"
+  mixin("parameter")                                    = "consulo.typescript.language.impl.psi.mixin.TypeScriptParameterMixin<com.intellij.lang.javascript.psi.stubs.JSVariableStub>"
+  mixin("var_statement")                                = "consulo.typescript.language.impl.psi.mixin.TypeScriptVarStatementMixin<com.intellij.lang.javascript.psi.stubs.JSVarStatementStub>"
   mixin("block_statement")                              = "consulo.typescript.language.impl.psi.mixin.TypeScriptBlockStatementMixin"
   mixin("reference_expression")                         = "consulo.typescript.language.impl.psi.mixin.TypeScriptReferenceExpressionMixin"
   mixin("binary_expression|assignment_expression|comma_expression") = "consulo.typescript.language.impl.psi.mixin.TypeScriptBinaryExpressionMixin"
@@ -100,7 +113,8 @@
   mixin("parameter_list")                               = "consulo.typescript.language.impl.psi.mixin.TypeScriptParameterListMixin"
   mixin("property|property_signature_member")             = "consulo.typescript.language.impl.psi.mixin.TypeScriptPropertyMixin"
   mixin("argument_list")                                = "consulo.typescript.language.impl.psi.mixin.TypeScriptArgumentListMixin"
-  mixin("extends_list|implements_list")                  = "consulo.typescript.language.impl.psi.mixin.TypeScriptReferenceListMixin"
+  mixin("extends_list|implements_list|extends_clause|implements_clause") = "consulo.typescript.language.impl.psi.mixin.TypeScriptReferenceListMixin"
+  mixin("export_default_assignment")                    = "consulo.typescript.language.impl.psi.mixin.TypeScriptExportDefaultAssignmentMixin"
 
   // Statement mixins
   mixin("if_statement")                                 = "consulo.typescript.language.impl.psi.mixin.TypeScriptIfStatementMixin"
@@ -120,7 +134,13 @@
   mixin("expression_statement")                         = "consulo.typescript.language.impl.psi.mixin.TypeScriptExpressionStatementMixin"
 
   // Statements that stay on generic TypeScriptStatementMixin (no specific JS interface methods)
-  mixin("for_of_statement|empty_statement|debugger_statement|with_statement|import_declaration") = "consulo.typescript.language.impl.psi.mixin.TypeScriptStatementMixin"
+  mixin("empty_statement|debugger_statement|with_statement") = "consulo.typescript.language.impl.psi.mixin.TypeScriptStatementMixin"
+  mixin("enum_declaration|enum_member|namespace_declaration|type_alias_declaration|type_parameter") = "consulo.typescript.language.impl.psi.mixin.TypeScriptNamedDeclarationMixin"
+  mixin("binding_pattern")                              = "consulo.typescript.language.impl.psi.mixin.TypeScriptBindingPatternMixin"
+  mixin("qualified_name")                               = "consulo.typescript.language.impl.psi.mixin.TypeScriptQualifiedNameMixin"
+  mixin("import_declaration")                           = "consulo.typescript.language.impl.psi.mixin.TypeScriptImportDeclarationMixin"
+  mixin("export_declaration|ambient_declaration")       = "consulo.typescript.language.impl.psi.mixin.TypeScriptExportDeclarationMixin"
+  mixin("import_specifier|namespace_import|default_import_binding") = "consulo.typescript.language.impl.psi.mixin.TypeScriptImportBindingMixin"
 
   // Expression mixins
   mixin("call_expression|new_expression")               = "consulo.typescript.language.impl.psi.mixin.TypeScriptCallExpressionMixin"
@@ -324,6 +344,7 @@ statement ::=
   | type_alias_declaration
   | namespace_declaration
   | import_declaration
+  | export_default_assignment
   | export_declaration
   | ambient_declaration
   | expression_statement
@@ -370,7 +391,9 @@ for_in_statement ::= 'for' '(' for_in_target 'in' expression ')' statement {pin=
 
 for_of_statement ::= 'for' 'await'? '(' for_in_target OF_KEYWORD expression ')' statement {pin=1}
 
-private for_in_target ::= var_keyword binding_pattern type_annotation? | expression
+private for_in_target ::= var_keyword for_in_variable | expression
+
+for_in_variable ::= binding_pattern type_annotation? { elementType = variable_declaration }
 
 while_statement ::= 'while' '(' expression ')' statement {pin=1}
 
@@ -413,9 +436,9 @@ class_declaration ::= decorator_list? attribute_list? ABSTRACT_KEYWORD? 'class' 
 
 class_expression ::= ABSTRACT_KEYWORD? 'class' IDENTIFIER? type_parameter_list? extends_clause? class_body
 
-private extends_clause ::= 'extends' expression_list
+extends_clause ::= 'extends' expression_list
 
-private implements_clause ::= IMPLEMENTS_KEYWORD expression_list
+implements_clause ::= IMPLEMENTS_KEYWORD expression_list
 
 extends_list ::= 'extends' type_reference_list
 
@@ -450,7 +473,11 @@ function_declaration ::= attribute_list? ASYNC_KEYWORD? 'function' '*'? IDENTIFI
 function_expression ::= ASYNC_KEYWORD? 'function' '*'? IDENTIFIER? type_parameter_list? parameter_list type_annotation? block_statement
 
 // --- Arrow function ---
-arrow_function ::= ASYNC_KEYWORD? type_parameter_list? (IDENTIFIER | parameter_list) type_annotation? '=>' (expression | block_statement)
+arrow_function ::= ASYNC_KEYWORD? type_parameter_list? (arrow_parameter | parameter_list) type_annotation? '=>' (block_statement | expression)
+
+// x => ...: a parameter like the ones of a parameter list
+arrow_parameter ::= arrow_parameter_binding { elementType = parameter }
+arrow_parameter_binding ::= IDENTIFIER { elementType = binding_pattern }
 
 // --- Interface ---
 interface_declaration ::= INTERFACE_KEYWORD IDENTIFIER type_parameter_list? extends_list? interface_body {pin=1}
@@ -489,9 +516,12 @@ import_declaration ::= 'import' !('.' | '(') (TYPE_KEYWORD? import_clause from_c
   | IDENTIFIER '=' (IDENTIFIER '(' module_specifier ')' | qualified_name) semicolon)
   {pin=2}
 
-private import_clause ::= IDENTIFIER (',' (namespace_import | named_imports))?
+private import_clause ::= default_import_binding (',' (namespace_import | named_imports))?
   | namespace_import
   | named_imports
+
+// import X from '...'
+default_import_binding ::= IDENTIFIER
 
 namespace_import ::= '*' AS_KEYWORD IDENTIFIER
 
@@ -508,9 +538,11 @@ import_attributes ::= (IDENTIFIER | AS_KEYWORD) '{' (import_attribute (',' impor
 import_attribute ::= (IDENTIFIER | STRING_LITERAL | SINGLE_QUOTE_STRING_LITERAL) ':' (STRING_LITERAL | SINGLE_QUOTE_STRING_LITERAL | IDENTIFIER)
 
 // --- Export ---
+// export default <declaration | expression>
+export_default_assignment ::= 'export' 'default' (function_declaration | class_declaration | expression semicolon) {pin=2}
+
 export_declaration ::= 'export' (
-    'default' (function_declaration | class_declaration | expression semicolon)
-  | ambient_declaration
+    ambient_declaration
   | function_declaration
   | class_declaration
   | interface_declaration
@@ -567,35 +599,49 @@ private unary_expression ::= prefix_expression | postfix_or_higher
 
 prefix_expression ::= ('+' | '-' | '~' | '!' | 'typeof' | 'void' | 'delete' | '++' | '--') unary_expression
 
-private postfix_or_higher ::= call_or_member_expression postfix_operator?
+private postfix_or_higher ::= call_or_member_expression postfix_expression?
 
-postfix_expression ::= call_or_member_expression ('++' | '--')
+// a++ / a-- : wraps the operand (left rule)
+left postfix_expression ::= ('++' | '--')
 
-private postfix_operator ::= '++' | '--'
-
+// member access, calls, indexing, non-null assertions, `as` / `satisfies` are left-associative: each tail wraps the
+// expression before it, so a.b.c() is CALL(REF(REF(a).b).c) like the JavaScript PSI
 private call_or_member_expression ::= primary_expression member_or_call_tail*
 
 private member_or_call_tail ::=
-    '.' IDENTIFIER
-  | '?.' IDENTIFIER
-  | '[' expression ']'
-  | type_arguments? argument_list
+    qualified_reference_expression
+  | indexed_property_access_expression
+  | call_expression
   | tagged_template_expression
-  | '!'
-  | AS_KEYWORD type_expression
-  | SATISFIES_KEYWORD type_expression
+  | non_null_expression
+  | as_expression
+  | satisfies_expression
 
-call_expression ::= primary_expression member_or_call_tail* type_arguments? argument_list
+left qualified_reference_expression ::= ('.' | '?.') member_name { elementType = reference_expression }
 
-new_expression ::= 'new' primary_expression type_arguments? argument_list?
+// reserved words are valid property names: promise.catch(...), obj.default, map.delete(key)
+private member_name ::= IDENTIFIER
+  | BREAK_KEYWORD | CASE_KEYWORD | CATCH_KEYWORD | CONST_KEYWORD | CONTINUE_KEYWORD | DEBUGGER_KEYWORD | DEFAULT_KEYWORD
+  | DELETE_KEYWORD | DO_KEYWORD | ELSE_KEYWORD | EXPORT_KEYWORD | EXTENDS_KEYWORD | FALSE_KEYWORD | FINALLY_KEYWORD
+  | FOR_KEYWORD | FUNCTION_KEYWORD | IF_KEYWORD | IMPORT_KEYWORD | IN_KEYWORD | INSTANCEOF_KEYWORD | LET_KEYWORD
+  | NEW_KEYWORD | NULL_KEYWORD | RETURN_KEYWORD | SUPER_KEYWORD | SWITCH_KEYWORD | THIS_KEYWORD | THROW_KEYWORD
+  | TRUE_KEYWORD | TRY_KEYWORD | TYPEOF_KEYWORD | VAR_KEYWORD | VOID_KEYWORD | WHILE_KEYWORD | WITH_KEYWORD
+  | YIELD_KEYWORD | CLASS_KEYWORD | ENUM_KEYWORD | AWAIT_KEYWORD
 
-indexed_property_access_expression ::= primary_expression member_or_call_tail* '[' expression ']'
+left indexed_property_access_expression ::= '?.'? '[' expression ']'
 
-as_expression ::= expression AS_KEYWORD type_expression
+left call_expression ::= '?.'? type_arguments? argument_list
 
-satisfies_expression ::= expression SATISFIES_KEYWORD type_expression
+left non_null_expression ::= '!'
 
-non_null_expression ::= expression '!'
+left as_expression ::= AS_KEYWORD type_expression
+
+left satisfies_expression ::= SATISFIES_KEYWORD type_expression
+
+new_expression ::= 'new' new_callee type_arguments? argument_list?
+
+// new a.b.C(): the callee is a (qualified) reference without calls
+private new_callee ::= primary_expression qualified_reference_expression*
 
 type_assertion_expression ::= '<' type_expression '>' unary_expression
 
@@ -629,7 +675,10 @@ await_expression ::= 'await' unary_expression
 
 array_literal_expression ::= '[' expression_list_opt ']'
 
-private expression_list_opt ::= (expression (',' expression)* ','?)?
+private expression_list_opt ::= (expression_or_spread (',' expression_or_spread)* ','?)?
+
+// f(...args), [...items]
+private expression_or_spread ::= spread_expression | expression
 
 object_literal_expression ::= '{' (property (',' property)* ','?)? '}'
 
@@ -668,7 +717,7 @@ parameter_list ::= '(' (parameter (',' parameter)*)? ')' {pin=1}
 
 parameter ::= decorator_list? attribute_list? '...'? binding_pattern '?'? type_annotation? initializer?
 
-argument_list ::= '(' (expression (',' expression)*)? ')' {pin=1}
+argument_list ::= '(' (expression_or_spread (',' expression_or_spread)* ','?)? ')' {pin=1}
 
 private expression_list ::= expression (',' expression)*
 

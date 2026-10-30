@@ -6,7 +6,10 @@ import consulo.annotation.access.RequiredReadAction;
 import consulo.annotation.access.RequiredWriteAction;
 import consulo.language.ast.ASTNode;
 import consulo.language.impl.psi.stub.StubBasedPsiElementBase;
+import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiElementVisitor;
+import consulo.language.psi.resolve.PsiScopeProcessor;
+import consulo.language.psi.resolve.ResolveState;
 import consulo.language.psi.stub.IStubElementType;
 import consulo.language.psi.util.PsiTreeUtil;
 import consulo.language.util.IncorrectOperationException;
@@ -22,23 +25,20 @@ import org.jspecify.annotations.Nullable;
  * @author VISTALL
  * @since 2026-03-17
  */
-public class TypeScriptVarStatementMixin extends StubBasedPsiElementBase<JSVarStatementStub> implements JSVarStatement {
+// T only lets Grammar-Kit generate the stub constructor of the impl (it needs a generic super class)
+public class TypeScriptVarStatementMixin<T extends JSVarStatementStub> extends StubBasedPsiElementBase<JSVarStatementStub> implements JSVarStatement {
     public TypeScriptVarStatementMixin(@Nonnull ASTNode node) {
         super(node);
     }
 
-    @Override
-    public IStubElementType getElementType() {
-        JSVarStatementStub stub = getStub();
-        if (stub != null) {
-            return stub.getStubType();
-        }
-        return null;
+    public TypeScriptVarStatementMixin(@Nonnull JSVarStatementStub stub, @Nonnull IStubElementType type) {
+        super(stub, type);
     }
+
 
     @Override
     public String toString() {
-        return getClass().getSimpleName() + ":" + getNode().getElementType();
+        return getClass().getSimpleName() + ":" + getElementType();
     }
 
     @Override
@@ -116,6 +116,11 @@ public class TypeScriptVarStatementMixin extends StubBasedPsiElementBase<JSVarSt
     }
 
     @Nullable
+    public TypeScriptExportDefaultAssignment getExportDefaultAssignment() {
+        return null;
+    }
+
+    @Nullable
     public TypeScriptFunctionDeclaration getFunctionDeclaration() {
         return null;
     }
@@ -138,5 +143,25 @@ public class TypeScriptVarStatementMixin extends StubBasedPsiElementBase<JSVarSt
     @Nullable
     public TypeScriptTypeAliasDeclaration getTypeAliasDeclaration() {
         return null;
+    }
+
+    // JavaScript's JSVarStatementImpl
+    @Override
+    @RequiredReadAction
+    public boolean processDeclarations(
+        @Nonnull PsiScopeProcessor processor,
+        @Nonnull ResolveState state,
+        @Nullable PsiElement lastParent,
+        @Nonnull PsiElement place
+    ) {
+        for (JSVariable variable : getVariables()) {
+            if (lastParent != null && lastParent.getParent() == variable) {
+                break;
+            }
+            if (!variable.processDeclarations(processor, state, null, place)) {
+                return false;
+            }
+        }
+        return true;
     }
 }

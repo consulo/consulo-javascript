@@ -17,6 +17,7 @@
 
 package com.intellij.lang.javascript.types;
 
+import consulo.language.Language;
 import java.io.IOException;
 
 
@@ -39,6 +40,10 @@ import consulo.javascript.types.JSQualifiedStubElementType;
 public abstract class JSFunctionElementType extends JSQualifiedStubElementType<JSFunctionStub, JSFunction> {
     public JSFunctionElementType(String name) {
         super(name);
+    }
+
+    protected JSFunctionElementType(String name, Language language) {
+        super(name, language);
     }
 
     @Override

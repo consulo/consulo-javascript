@@ -1,8 +1,12 @@
 package consulo.typescript.language.impl.psi.mixin;
 
+import com.intellij.lang.javascript.psi.JSElement;
 import com.intellij.lang.javascript.psi.JSStatement;
 import consulo.annotation.access.RequiredWriteAction;
 import consulo.language.ast.ASTNode;
+import consulo.language.psi.PsiElement;
+import consulo.language.psi.resolve.PsiScopeProcessor;
+import consulo.language.psi.resolve.ResolveState;
 import consulo.language.util.IncorrectOperationException;
 import consulo.typescript.language.impl.psi.TypeScriptElementImpl;
 import consulo.typescript.language.psi.*;
@@ -57,6 +61,11 @@ public class TypeScriptStatementMixin extends TypeScriptElementImpl implements J
     }
 
     @Nullable
+    public TypeScriptExportDefaultAssignment getExportDefaultAssignment() {
+        return null;
+    }
+
+    @Nullable
     public TypeScriptExportDeclaration getExportDeclaration() {
         return null;
     }
@@ -84,5 +93,29 @@ public class TypeScriptStatementMixin extends TypeScriptElementImpl implements J
     @Nullable
     public TypeScriptTypeAliasDeclaration getTypeAliasDeclaration() {
         return null;
+    }
+
+    /**
+     * The generic statement wraps declarations ({@code class}, {@code interface}, {@code function} with decorators or
+     * modifiers): seen from outside, it declares what they declare.
+     */
+    @Override
+    public boolean processDeclarations(
+        @Nonnull PsiScopeProcessor processor,
+        @Nonnull ResolveState state,
+        @Nullable PsiElement lastParent,
+        @Nonnull PsiElement place
+    ) {
+        if (lastParent != null || getNode().getElementType() != TypeScriptTypes.STATEMENT) {
+            return true;
+        }
+        for (PsiElement child = getFirstChild(); child != null; child = child.getNextSibling()) {
+            if (child instanceof TypeScriptElementImpl || child instanceof JSElement) {
+                if (!child.processDeclarations(processor, state, null, place)) {
+                    return false;
+                }
+            }
+        }
+        return true;
     }
 }
