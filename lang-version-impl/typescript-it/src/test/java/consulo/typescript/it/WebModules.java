@@ -39,12 +39,7 @@ final class WebModules {
     static void setDeclarations(Module module, String name, List<String> urls) throws Exception {
         WriteAction.run(() -> {
             ModifiableRootModel model = ModuleRootManager.getInstance(module).getModifiableModel();
-            if (urls.isEmpty()) {
-                JavaScriptDeclarations.remove(model, name);
-            }
-            else {
-                JavaScriptDeclarations.set(model, name, urls);
-            }
+            JavaScriptDeclarations.set(model, name, urls);
             model.commit();
         });
         HeadlessProjects.awaitIdle(module.getProject());

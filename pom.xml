@@ -45,8 +45,7 @@
         <module>base-api</module>
         <module>base-impl</module>
         <module>inspections</module>
-        <module>intentions
-        </module>
+        <module>intentions</module>
         <module>web-browser-impl</module>
         <module>debugger/debugger-impl</module>
         <module>debugger/browser-debugger-impl</module>
@@ -55,6 +54,7 @@
         <module>lang-version-impl/javascript17-impl</module>
         <module>lang-version-impl/javascript18-impl</module>
         <module>lang-version-impl/typescript-impl</module>
+        <module>lang-version-impl/typescript-it</module>
         <module>lang-version-impl/actionscript-impl</module>
         <module>lang-version-impl/ecmascript4-impl</module>
         <module>lang-version-impl/ecmascript-impl</module>
