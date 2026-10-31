@@ -5,11 +5,16 @@ import com.intellij.lang.javascript.psi.resolve.JSImportedElementResolveResult;
 import com.intellij.lang.javascript.psi.resolve.ResolveProcessor;
 import consulo.annotation.access.RequiredReadAction;
 import consulo.language.psi.PsiElement;
+import consulo.language.psi.ResolveResult;
+import consulo.javascript.module.resolve.JSModuleExport;
+import com.intellij.lang.javascript.psi.JSFile;
 import consulo.language.psi.PsiNamedElement;
 import consulo.language.psi.resolve.ResolveState;
 import consulo.language.version.LanguageVersion;
 
 import org.jspecify.annotations.Nullable;
+
+import java.util.List;
 
 /**
  * @author VISTALL
@@ -38,5 +43,22 @@ public abstract class ResolveHelper {
     @RequiredReadAction
     public boolean isResolveTo(JSReferenceExpressionImpl expression, PsiElement element) {
         return false;
+    }
+
+    /**
+     * The results of a reference with the imported bindings followed to the declarations they import (the export of
+     * another module); a binding whose declaration isn't found stays.
+     */
+    @RequiredReadAction
+    public ResolveResult[] followImports(ResolveResult[] results) {
+        return results;
+    }
+
+    /**
+     * The exports of an ES module for the stub of its file; none for a language without modules
+     */
+    @RequiredReadAction
+    public List<JSModuleExport> buildExports(JSFile file) {
+        return List.of();
     }
 }

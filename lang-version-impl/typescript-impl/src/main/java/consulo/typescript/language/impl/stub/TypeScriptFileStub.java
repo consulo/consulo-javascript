@@ -1,11 +1,14 @@
 package consulo.typescript.language.impl.stub;
 
+import consulo.javascript.module.resolve.JSModuleExport;
+
 import com.intellij.lang.javascript.psi.JSFile;
 import consulo.index.io.StringRef;
 import consulo.javascript.impl.language.psi.stub.JSFileStubImpl;
 import consulo.language.psi.stub.IStubFileElementType;
 import org.jspecify.annotations.Nullable;
 
+import java.util.List;
 import java.util.Set;
 
 /**
@@ -20,8 +23,15 @@ public class TypeScriptFileStub extends JSFileStubImpl {
     private final boolean myModule;
     private final Set<String> myGlobalNames;
 
-    public TypeScriptFileStub(@Nullable JSFile file, StringRef name, IStubFileElementType type, boolean module, Set<String> globalNames) {
-        super(file, name);
+    public TypeScriptFileStub(
+        @Nullable JSFile file,
+        StringRef name,
+        IStubFileElementType type,
+        boolean module,
+        Set<String> globalNames,
+        List<JSModuleExport> exports
+    ) {
+        super(file, name, exports);
         myType = type;
         myModule = module;
         myGlobalNames = globalNames;
@@ -37,6 +47,7 @@ public class TypeScriptFileStub extends JSFileStubImpl {
     public Set<String> getGlobalNames() {
         return myGlobalNames;
     }
+
 
     @Override
     public IStubFileElementType getType() {

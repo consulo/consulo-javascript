@@ -107,6 +107,50 @@ public class TypeScriptModuleResolveTest {
         assertNamed(target, JSClass.class, "Impl", "impl.ts");
     }
 
+    /**
+     * An imported name exported again ({@code index.d.ts} of packages) is a re-export of the other module.
+     */
+    @Test
+    public void testExportOfImportedName(CodeInsightTestFixture fixture) throws Exception {
+        fixture.addFileToProject(SRC + "parts/impl.ts", "export class Impl {\n}\nexport default class Main {\n}\n");
+        fixture.addFileToProject(SRC + "parts/index.ts",
+            "import { Impl as Inner } from './impl';\nimport Main from './impl';\nexport { Inner as Impl };\nexport default Main;\n");
+        assertNamed(resolve(fixture, "app.ts", "import { Impl } from './parts';\nnew Im<caret>pl();\n"), JSClass.class, "Impl", "impl.ts");
+        assertNamed(resolve(fixture, "app2.ts", "import Main from './parts';\nnew Ma<caret>in();\n"), JSClass.class, "Main", "impl.ts");
+    }
+
+    /**
+     * One module re-exported both by {@code export *} and under another name: looked up once per name.
+     */
+    @Test
+    public void testStarAndRenamedReExportOfOneModule(CodeInsightTestFixture fixture) throws Exception {
+        fixture.addFileToProject(SRC + "both/util.ts", "export function make() {\n}\n");
+        fixture.addFileToProject(SRC + "both/index.ts", "export * from './util';\nexport { make as build } from './util';\n");
+        assertNamed(resolve(fixture, "app.ts", "import { build } from './both';\nbui<caret>ld();\n"), JSFunction.class, "make", "util.ts");
+    }
+
+    @Test
+    public void testExportStarAsNamespace(CodeInsightTestFixture fixture) throws Exception {
+        fixture.addFileToProject(SRC + "ns/impl.ts", "export class Impl {\n}\n");
+        fixture.addFileToProject(SRC + "ns/index.ts", "export * as impl from './impl';\n");
+        assertFileTarget(resolve(fixture, "app.ts", "import { impl } from './ns';\nim<caret>pl;\n"), "impl.ts");
+    }
+
+    /**
+     * {@code export = express} of CommonJS declaration files: the entity is the default export, the members of its
+     * namespace the named ones.
+     */
+    @Test
+    public void testExportEquals(CodeInsightTestFixture fixture) throws Exception {
+        fixture.addFileToProject("node_modules/express/package.json", "{ \"name\": \"express\", \"types\": \"index.d.ts\" }");
+        fixture.addFileToProject("node_modules/express/index.d.ts",
+            "declare function express(): void;\ndeclare namespace express {\n  function json(): void;\n}\nexport = express;\n");
+        PsiElement json = resolve(fixture, "app.ts", "import { json } from 'express';\njs<caret>on();\n");
+        assertNamed(json, JSFunction.class, "json", "index.d.ts");
+        PsiElement entity = resolve(fixture, "app2.ts", "import express from 'express';\nexpr<caret>ess();\n");
+        assertEquals("express", ReadAction.compute(() -> ((PsiNamedElement) entity).getName()));
+    }
+
     @Test
     public void testNodeModulesPackage(CodeInsightTestFixture fixture) throws Exception {
         fixture.addFileToProject("node_modules/tiny/package.json", "{ \"name\": \"tiny\", \"types\": \"dist/tiny.d.ts\" }");

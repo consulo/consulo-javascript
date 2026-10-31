@@ -6,6 +6,7 @@ module consulo.javascript.ecmascript.impl {
     requires transitive consulo.javascript.base.impl;
 
     requires consulo.file.template.api;
+    requires consulo.language.impl;
 
     exports consulo.javascript.ecmascript.codeInsight;
     exports consulo.javascript.ecmascript.codeInsight.quickFixes;

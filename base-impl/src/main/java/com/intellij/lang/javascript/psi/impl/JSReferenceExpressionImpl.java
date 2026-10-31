@@ -450,7 +450,7 @@ public class JSReferenceExpressionImpl extends JSExpressionImpl implements JSRef
                 PsiElement jsElement = localProcessor.getResult();
 
                 if (jsElement != null || (qualifier != null && classFeature && localProcessor.foundAllValidResults())) {
-                    return localProcessor.getResultsAsResolveResults();
+                    return ResolveHelper.find(this).followImports(localProcessor.getResultsAsResolveResults());
                 }
             }
             return doOldResolve(

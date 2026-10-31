@@ -8,15 +8,22 @@ import consulo.annotation.access.RequiredReadAction;
 import consulo.javascript.ecmascript.psi.ES6ImportDeclaration;
 import consulo.javascript.ecmascript.psi.ES6ImportedBinding;
 import consulo.javascript.lang.psi.impl.resolve.ResolveHelper;
+import consulo.javascript.ecmascript.psi.impl.ES6ImportedBindingImpl;
+import consulo.javascript.module.resolve.JSModuleExport;
 import consulo.language.psi.PsiElement;
+import consulo.language.psi.PsiElementResolveResult;
 import consulo.language.psi.PsiFile;
 import consulo.language.psi.PsiNamedElement;
+import consulo.language.psi.ResolveResult;
 import consulo.language.psi.resolve.BaseScopeProcessor;
 import consulo.language.psi.resolve.ResolveState;
 import consulo.language.psi.util.PsiTreeUtil;
 import consulo.util.lang.Comparing;
 
 import org.jspecify.annotations.Nullable;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @author VISTALL
@@ -86,5 +93,36 @@ public class EcmaScript6ResolveHelper extends ResolveHelper {
             return true;
         }
         return super.isResolveTo(expression, element);
+    }
+
+    @RequiredReadAction
+    @Override
+    public ResolveResult[] followImports(ResolveResult[] results) {
+        List<ResolveResult> followed = null;
+        for (int i = 0; i < results.length; i++) {
+            // the bindings of plain JavaScript; TypeScript follows its own bindings
+            if (results[i].getElement() instanceof ES6ImportedBindingImpl binding) {
+                List<PsiElement> targets = binding.resolveTargets();
+                if (!targets.isEmpty()) {
+                    if (followed == null) {
+                        followed = new ArrayList<>(List.of(results).subList(0, i));
+                    }
+                    for (PsiElement target : targets) {
+                        followed.add(new PsiElementResolveResult(target));
+                    }
+                    continue;
+                }
+            }
+            if (followed != null) {
+                followed.add(results[i]);
+            }
+        }
+        return followed == null ? results : followed.toArray(ResolveResult.EMPTY_ARRAY);
+    }
+
+    @RequiredReadAction
+    @Override
+    public List<JSModuleExport> buildExports(JSFile file) {
+        return EcmaScriptModuleExports.buildExports(file);
     }
 }

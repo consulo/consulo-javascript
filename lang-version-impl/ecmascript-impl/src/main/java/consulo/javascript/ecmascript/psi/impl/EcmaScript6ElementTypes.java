@@ -12,6 +12,10 @@ public interface EcmaScript6ElementTypes {
     IElementType EXPORT_DEFAULT_ASSIGMENT =
         new ElementTypeAsPsiFactory("EXPORT_DEFAULT_ASSIGMENT", JavaScriptLanguage.INSTANCE, ES6ExportDefaultAssignmentImpl::new);
 
+    IElementType EXPORT_DECLARATION =
+        new ElementTypeAsPsiFactory("EXPORT_DECLARATION", JavaScriptLanguage.INSTANCE, ES6ExportDeclarationImpl::new);
+    IElementType EXPORT_SPECIFIER =
+        new ElementTypeAsPsiFactory("EXPORT_SPECIFIER", JavaScriptLanguage.INSTANCE, ES6ExportSpecifierImpl::new);
     IElementType IMPORT_DECLARATION =
         new ElementTypeAsPsiFactory("IMPORT_DECLARATION", JavaScriptLanguage.INSTANCE, ES6ImportDeclarationImpl::new);
 

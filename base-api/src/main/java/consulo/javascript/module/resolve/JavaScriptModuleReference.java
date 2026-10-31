@@ -18,24 +18,18 @@ package consulo.javascript.module.resolve;
 import consulo.annotation.access.RequiredReadAction;
 import consulo.document.util.TextRange;
 import consulo.language.psi.PsiElement;
-import consulo.language.psi.PsiFile;
-import consulo.language.psi.PsiManager;
 import consulo.language.psi.PsiReferenceBase;
 import consulo.language.util.IncorrectOperationException;
-import consulo.virtualFileSystem.VirtualFile;
 import org.jspecify.annotations.Nullable;
 
-import java.util.List;
 
 /**
  * The module of a specifier: {@code 'vue'} of {@code import ... from 'vue'}, {@code './util'} of
- * {@code require('./util')}. Resolved by the {@link JavaScriptModuleResolver}s, else as a path relative to the file.
+ * {@code require('./util')}. Resolved by the {@link JavaScriptModuleResolver}s.
  *
  * @since 2026-10-31
  */
 public class JavaScriptModuleReference extends PsiReferenceBase<PsiElement> {
-    private static final List<String> EXTENSIONS = List.of(".js", ".mjs", ".cjs", ".jsx", ".ts", ".tsx", ".d.ts", ".json");
-
     private final String mySpecifier;
     private final JavaScriptModuleRequest.Kind myKind;
 
@@ -62,16 +56,7 @@ public class JavaScriptModuleReference extends PsiReferenceBase<PsiElement> {
     @RequiredReadAction
     @Override
     public @Nullable PsiElement resolve() {
-        PsiElement element = getElement();
-        PsiFile module = JavaScriptModuleResolution.resolve(element, mySpecifier, myKind);
-        if (module != null || !(mySpecifier.startsWith(".") || mySpecifier.startsWith("/"))) {
-            return module;
-        }
-        PsiFile file = element.getContainingFile();
-        VirtualFile virtualFile = file == null ? null : file.getOriginalFile().getVirtualFile();
-        VirtualFile directory = virtualFile == null ? null : virtualFile.getParent();
-        VirtualFile resolved = directory == null ? null : findRelative(directory, mySpecifier);
-        return resolved == null ? null : PsiManager.getInstance(element.getProject()).findFile(resolved);
+        return JavaScriptModuleResolution.resolve(getElement(), mySpecifier, myKind);
     }
 
     @Override
@@ -85,31 +70,6 @@ public class JavaScriptModuleReference extends PsiReferenceBase<PsiElement> {
     @Override
     public PsiElement handleElementRename(String newElementName) throws IncorrectOperationException {
         return getElement();
-    }
-
-    /**
-     * A file relative to the directory: as written, with an extension, else the index of a directory
-     */
-    private static @Nullable VirtualFile findRelative(VirtualFile directory, String path) {
-        VirtualFile exact = path.startsWith("/") ? null : directory.findFileByRelativePath(path);
-        if (exact != null && !exact.isDirectory()) {
-            return exact;
-        }
-        for (String extension : EXTENSIONS) {
-            VirtualFile file = directory.findFileByRelativePath(path + extension);
-            if (file != null && !file.isDirectory()) {
-                return file;
-            }
-        }
-        if (exact != null) {
-            for (String extension : EXTENSIONS) {
-                VirtualFile index = exact.findChild("index" + extension);
-                if (index != null && !index.isDirectory()) {
-                    return index;
-                }
-            }
-        }
-        return null;
     }
 
     private static TextRange unquoted(TextRange stringRange) {

@@ -2,6 +2,11 @@ package consulo.typescript.language.impl.psi;
 
 import com.intellij.lang.javascript.JSTokenTypes;
 import com.intellij.lang.javascript.psi.JSElement;
+import com.intellij.lang.javascript.psi.JSClass;
+import consulo.javascript.module.resolve.JSModuleExport;
+import consulo.javascript.module.resolve.JavaScriptModuleExports;
+import java.util.HashMap;
+import java.util.Map;
 import com.intellij.lang.javascript.psi.JSVarStatement;
 import com.intellij.lang.javascript.psi.JSVariable;
 import com.intellij.lang.javascript.psi.resolve.ResolveProcessor;
@@ -40,7 +45,12 @@ import java.util.regex.Pattern;
  * @since 2026-10-30
  */
 public final class TypeScriptModuleUtil {
-    public static final String DEFAULT_EXPORT = "default";
+    public static final String DEFAULT_EXPORT = JavaScriptModuleExports.DEFAULT_EXPORT;
+
+    /**
+     * The name in another module of {@code import * as ns} / {@code export * as ns}: the module itself.
+     */
+    public static final String NAMESPACE_EXPORT = JSModuleExport.NAMESPACE_EXPORT;
 
     private static final String[] EXTENSIONS = {".ts", ".tsx", ".d.ts", ".js", ".jsx", ".mjs", ".cjs"};
     private static final Pattern TYPES_FIELD = Pattern.compile("\"(?:types|typings)\"\\s*:\\s*\"([^\"]+)\"");
@@ -190,14 +200,14 @@ public final class TypeScriptModuleUtil {
     }
 
     /**
-     * Resolves a module specifier: a path relative to the importing file ({@code './x'}, with the TypeScript and
-     * JavaScript extensions and {@code index} files), or a package in {@code node_modules} ({@code types} of its
-     * package.json, {@code index.d.ts}, {@code @types/pkg}).
+     * Resolves a module specifier by the module resolvers (relative paths: the relative resolver of base-impl; npm
+     * packages), else a package in {@code node_modules} ({@code types} of its package.json, {@code index.d.ts},
+     * {@code @types/pkg}) - without the Node.js plugin.
      */
     @Nullable
     @RequiredReadAction
     public static PsiFile resolveModule(PsiElement context, String specifier) {
-        // the module resolvers (npm packages: exports conditions, @types, workspace packages), then the paths and
+        // the module resolvers (relative paths; npm packages: exports conditions, @types, workspace packages), then the
         // node_modules packages of TypeScript itself
         PsiFile byResolver = JavaScriptModuleResolution.resolve(context, specifier, JavaScriptModuleRequest.Kind.TYPES);
         if (byResolver != null) {
@@ -206,12 +216,10 @@ public final class TypeScriptModuleUtil {
         PsiFile containingFile = context.getContainingFile().getOriginalFile();
         VirtualFile file = containingFile.getVirtualFile();
         VirtualFile directory = file != null ? file.getParent() : null;
-        if (directory == null) {
+        if (directory == null || specifier.startsWith(".") || specifier.startsWith("/")) {
             return null;
         }
-        VirtualFile resolved = specifier.startsWith(".") || specifier.startsWith("/")
-            ? findModuleFile(directory, specifier)
-            : findPackage(directory, specifier);
+        VirtualFile resolved = findPackage(directory, specifier);
         return resolved != null ? PsiManager.getInstance(context.getProject()).findFile(resolved) : null;
     }
 
@@ -302,103 +310,263 @@ public final class TypeScriptModuleUtil {
     }
 
     /**
-     * The declarations a module exports under a name ({@link #DEFAULT_EXPORT} for {@code export default}).
+     * The declarations a module exports under a name ({@link #DEFAULT_EXPORT} for {@code export default}), following
+     * re-exports into modules of any language.
      */
     @RequiredReadAction
     public static List<PsiElement> findExports(PsiFile module, String name) {
-        List<PsiElement> result = new ArrayList<>();
-        collectExports(module, name, result, new HashSet<>());
-        return result;
+        return JavaScriptModuleExports.findExports(module, name);
     }
 
-    private static void collectExports(PsiFile module, String name, List<PsiElement> result, Set<PsiFile> visited) {
-        if (!visited.add(module)) {
-            return;
-        }
-        for (PsiElement statement : getTopLevelStatements(module)) {
-            if (isDecoratedExport(statement)) {
-                boolean isDefault = statement.getNode().findChildByType(JSTokenTypes.DEFAULT_KEYWORD) != null;
-                if (isDefault ? DEFAULT_EXPORT.equals(name) : statement instanceof PsiNamedElement named && name.equals(named.getName())) {
-                    result.add(statement);
-                }
-                continue;
-            }
-            if (statement.getNode().getElementType() == TypeScriptTypes.EXPORT_DEFAULT_ASSIGNMENT) {
-                if (DEFAULT_EXPORT.equals(name)) {
-                    for (PsiElement child = statement.getFirstChild(); child != null; child = child.getNextSibling()) {
-                        if (child instanceof JSElement || child instanceof TypeScriptElementImpl) {
-                            result.add(child);
-                            break;
-                        }
-                    }
-                }
-                continue;
-            }
-            if (statement.getNode().getElementType() != TypeScriptTypes.EXPORT_DECLARATION) {
-                continue;
-            }
-            ASTNode node = statement.getNode();
-            boolean isDefault = node.findChildByType(JSTokenTypes.DEFAULT_KEYWORD) != null;
-            ASTNode namedExports = node.findChildByType(TypeScriptTypes.NAMED_EXPORTS);
-            String specifier = getModuleSpecifier(statement);
+    /**
+     * The exports of a module: by its stub (the module file isn't parsed when an import resolves), by the AST when it's
+     * loaded.
+     */
+    @RequiredReadAction
+    public static List<JSModuleExport> getExports(PsiFile module) {
+        TypeScriptFileStub stub = getFileStub(module);
+        return stub != null ? stub.getExports() : getExportsByTree(module);
+    }
 
-            if (namedExports != null) {
-                for (ASTNode exportSpecifier : namedExports.getChildren(null)) {
-                    if (exportSpecifier.getElementType() != TypeScriptTypes.EXPORT_SPECIFIER) {
-                        continue;
-                    }
-                    ASTNode[] identifiers = exportSpecifier.getChildren(TokenSet.create(JSTokenTypes.IDENTIFIER));
-                    if (identifiers.length == 0 || !name.equals(identifiers[identifiers.length - 1].getText())) {
-                        continue;
-                    }
-                    String localName = identifiers[0].getText();
-                    if (specifier != null) {
-                        PsiFile target = resolveModule(statement, specifier);
-                        if (target != null) {
-                            collectExports(target, localName, result, visited);
+    /**
+     * Adds the declarations a TypeScript module exports under a name ({@link TypeScriptModuleExports}).
+     */
+    @RequiredReadAction
+    public static void collectExports(PsiFile module, String name, List<PsiElement> result, Set<JavaScriptModuleExports.Visit> visited) {
+        for (JSModuleExport export : getExports(module)) {
+            switch (export.kind()) {
+                case LOCAL -> {
+                    if (name.equals(export.name())) {
+                        String localName = export.localName();
+                        if (localName != null) {
+                            result.addAll(findTopLevelDeclarations(module, localName));
                         }
+                        else {
+                            addDefaultExpression(module, result);
+                        }
+                    }
+                }
+                case REEXPORT -> {
+                    String localName = export.localName();
+                    PsiFile target = name.equals(export.name()) && localName != null ? resolveModule(module, export.specifier()) : null;
+                    if (target != null) {
+                        if (NAMESPACE_EXPORT.equals(localName)) {
+                            result.add(target);
+                        }
+                        else {
+                            JavaScriptModuleExports.collect(target, localName, result, visited);
+                        }
+                    }
+                }
+                case STAR -> {
+                    // export * from './x' re-exports the named exports, not the default one
+                    PsiFile target = DEFAULT_EXPORT.equals(name) ? null : resolveModule(module, export.specifier());
+                    if (target != null) {
+                        JavaScriptModuleExports.collect(target, name, result, visited);
+                    }
+                }
+                case EQUALS -> {
+                    String localName = export.localName();
+                    List<PsiElement> entities = localName == null ? List.of() : findTopLevelDeclarations(module, localName);
+                    if (DEFAULT_EXPORT.equals(name)) {
+                        result.addAll(entities);
                     }
                     else {
-                        result.addAll(findTopLevelDeclarations(module, localName));
-                    }
-                }
-            }
-            else if (specifier != null) {
-                // export * from './x' (not the default export)
-                if (!DEFAULT_EXPORT.equals(name) && node.findChildByType(TypeScriptTypes.MULT) != null) {
-                    PsiFile target = resolveModule(statement, specifier);
-                    if (target != null) {
-                        collectExports(target, name, result, visited);
-                    }
-                }
-            }
-            else if (isDefault) {
-                if (DEFAULT_EXPORT.equals(name)) {
-                    for (PsiElement child = statement.getFirstChild(); child != null; child = child.getNextSibling()) {
-                        if (child instanceof JSElement || child instanceof TypeScriptElementImpl) {
-                            result.add(child);
-                            break;
+                        // export = express: the members of namespace express are the named exports
+                        for (PsiElement entity : entities) {
+                            if (entity instanceof JSClass namespace && TypeScriptResolveUtil.isNamespace(namespace)) {
+                                result.addAll(TypeScriptResolveUtil.findMembers(namespace, name));
+                            }
                         }
                     }
                 }
             }
-            else {
-                ResolveProcessor processor = new ResolveProcessor(name, module);
-                statement.processDeclarations(processor, ResolveState.initial(), null, module);
-                PsiElement found = processor.getResult();
-                if (found != null) {
-                    result.add(found);
+        }
+    }
+
+    @Nullable
+    private static PsiFile resolveModule(PsiFile module, @Nullable String specifier) {
+        return specifier == null ? null : resolveModule((PsiElement) module, specifier);
+    }
+
+    /**
+     * An anonymous {@code export default <expression>}: the expression, from the AST (rare in declaration files).
+     */
+    @RequiredReadAction
+    private static void addDefaultExpression(PsiFile module, List<PsiElement> result) {
+        for (PsiElement statement : getTopLevelStatements(module)) {
+            if (statement.getNode().getElementType() == TypeScriptTypes.EXPORT_DEFAULT_ASSIGNMENT) {
+                PsiElement value = getDefaultValue(statement);
+                if (value != null) {
+                    result.add(value);
+                }
+            }
+        }
+    }
+
+    @Nullable
+    private static PsiElement getDefaultValue(PsiElement exportDefault) {
+        for (PsiElement child = exportDefault.getFirstChild(); child != null; child = child.getNextSibling()) {
+            if (child instanceof JSElement || child instanceof TypeScriptElementImpl) {
+                return child;
+            }
+        }
+        return null;
+    }
+
+    /**
+     * The exports of a module from its AST (building the stub). An imported name exported again is a re-export of the
+     * other module, so the stub resolves it without the import.
+     */
+    @RequiredReadAction
+    public static List<JSModuleExport> getExportsByTree(PsiFile file) {
+        List<PsiElement> statements = getTopLevelStatements(file);
+        // local name -> [the name in the other module, its specifier]
+        Map<String, String[]> imports = new HashMap<>();
+        for (PsiElement statement : statements) {
+            if (statement.getNode().getElementType() == TypeScriptTypes.IMPORT_DECLARATION) {
+                collectImports(statement, imports);
+            }
+        }
+
+        List<JSModuleExport> result = new ArrayList<>();
+        for (PsiElement statement : statements) {
+            ASTNode node = statement.getNode();
+            IElementType type = node.getElementType();
+            boolean isDefault = node.findChildByType(JSTokenTypes.DEFAULT_KEYWORD) != null;
+            if (isDecoratedExport(statement)) {
+                String name = statement instanceof PsiNamedElement named ? named.getName() : null;
+                if (isDefault) {
+                    result.add(JSModuleExport.local(DEFAULT_EXPORT, name));
+                }
+                else if (name != null) {
+                    result.add(JSModuleExport.local(name, name));
+                }
+            }
+            else if (type == TypeScriptTypes.EXPORT_DEFAULT_ASSIGNMENT) {
+                PsiElement value = getDefaultValue(statement);
+                String name = value instanceof PsiNamedElement named ? named.getName() : getReferencedName(value);
+                result.add(exportOf(DEFAULT_EXPORT, name, imports));
+            }
+            else if (type == TypeScriptTypes.EXPORT_DECLARATION) {
+                collectExportDeclaration(statement, imports, result);
+            }
+        }
+        return List.copyOf(result);
+    }
+
+    private static void collectExportDeclaration(PsiElement statement, Map<String, String[]> imports, List<JSModuleExport> result) {
+        ASTNode node = statement.getNode();
+        String specifier = getModuleSpecifier(statement);
+        ASTNode namedExports = node.findChildByType(TypeScriptTypes.NAMED_EXPORTS);
+        if (namedExports != null) {
+            for (ASTNode exportSpecifier : namedExports.getChildren(TokenSet.create(TypeScriptTypes.EXPORT_SPECIFIER))) {
+                ASTNode[] identifiers = exportSpecifier.getChildren(TokenSet.create(JSTokenTypes.IDENTIFIER));
+                if (identifiers.length == 0) {
+                    continue;
+                }
+                String localName = identifiers[0].getText();
+                String name = identifiers[identifiers.length - 1].getText();
+                result.add(specifier != null ? JSModuleExport.reexport(name, localName, specifier) : exportOf(name, localName, imports));
+            }
+        }
+        else if (node.findChildByType(TypeScriptTypes.MULT) != null) {
+            if (specifier == null) {
+                return;
+            }
+            // export * as ns from './x'
+            ASTNode as = node.findChildByType(TypeScriptTypes.AS_KEYWORD);
+            ASTNode alias = as == null ? null : as.getTreeNext();
+            while (alias != null && alias.getElementType() != JSTokenTypes.IDENTIFIER) {
+                alias = alias.getTreeNext();
+            }
+            result.add(alias != null ? JSModuleExport.reexport(alias.getText(), NAMESPACE_EXPORT, specifier) : JSModuleExport.star(specifier));
+        }
+        else if (node.findChildByType(TypeScriptTypes.EQ) != null) {
+            ASTNode entity = node.findChildByType(JSTokenTypes.IDENTIFIER);
+            if (entity != null) {
+                result.add(JSModuleExport.equals(entity.getText()));
+            }
+        }
+        else {
+            Set<String> names = new LinkedHashSet<>();
+            collectDeclaredNames(statement, names);
+            for (String name : names) {
+                result.add(JSModuleExport.local(name, name));
+            }
+        }
+    }
+
+    /**
+     * An export of a local name: a re-export when the name is imported.
+     */
+    private static JSModuleExport exportOf(String name, @Nullable String localName, Map<String, String[]> imports) {
+        String[] imported = localName == null ? null : imports.get(localName);
+        return imported != null ? JSModuleExport.reexport(name, imported[0], imported[1]) : JSModuleExport.local(name, localName);
+    }
+
+    private static void collectImports(PsiElement importDeclaration, Map<String, String[]> imports) {
+        String specifier = getModuleSpecifier(importDeclaration);
+        if (specifier == null) {
+            return;
+        }
+        TokenSet identifiers = TokenSet.create(JSTokenTypes.IDENTIFIER);
+        for (ASTNode child = importDeclaration.getNode().getFirstChildNode(); child != null; child = child.getTreeNext()) {
+            IElementType type = child.getElementType();
+            if (type == TypeScriptTypes.DEFAULT_IMPORT_BINDING || type == TypeScriptTypes.NAMESPACE_IMPORT) {
+                ASTNode[] names = child.getChildren(identifiers);
+                if (names.length > 0) {
+                    String importedName = type == TypeScriptTypes.DEFAULT_IMPORT_BINDING ? DEFAULT_EXPORT : NAMESPACE_EXPORT;
+                    imports.put(names[names.length - 1].getText(), new String[]{importedName, specifier});
+                }
+            }
+            else if (type == TypeScriptTypes.NAMED_IMPORTS) {
+                for (ASTNode importSpecifier : child.getChildren(TokenSet.create(TypeScriptTypes.IMPORT_SPECIFIER))) {
+                    ASTNode[] names = importSpecifier.getChildren(identifiers);
+                    if (names.length > 0) {
+                        imports.put(names[names.length - 1].getText(), new String[]{names[0].getText(), specifier});
+                    }
                 }
             }
         }
     }
 
     /**
-     * The top-level declarations of a file with a name (exported or not).
+     * The name of {@code export default foo}: a plain reference.
+     */
+    @Nullable
+    private static String getReferencedName(@Nullable PsiElement value) {
+        if (value == null || value.getNode().getElementType() != TypeScriptTypes.REFERENCE_EXPRESSION) {
+            return null;
+        }
+        ASTNode[] children = value.getNode().getChildren(null);
+        return children.length == 1 && children[0].getElementType() == JSTokenTypes.IDENTIFIER ? children[0].getText() : null;
+    }
+
+    /**
+     * The top-level declarations of a file with a name (exported or not): by the stub of the file, by the AST when it's
+     * loaded.
      */
     @RequiredReadAction
     public static List<PsiElement> findTopLevelDeclarations(PsiFile file, String name) {
         List<PsiElement> result = new ArrayList<>();
+        StubElement<?> stub = getStub(file);
+        if (stub != null) {
+            for (StubElement<?> child : stub.getChildrenStubs()) {
+                PsiElement element = child.getPsi();
+                if (element instanceof JSVarStatement) {
+                    for (StubElement<?> variable : child.getChildrenStubs()) {
+                        if (variable.getPsi() instanceof JSVariable jsVariable && name.equals(jsVariable.getName())) {
+                            result.add(jsVariable);
+                        }
+                    }
+                }
+                else if (element instanceof PsiNamedElement named && name.equals(named.getName())) {
+                    result.add(element);
+                }
+            }
+            return result;
+        }
         ResolveProcessor processor = new ResolveProcessor(name, file);
         for (PsiElement statement : getTopLevelStatements(file)) {
             statement.processDeclarations(processor, ResolveState.initial(), null, file);
@@ -412,19 +580,34 @@ public final class TypeScriptModuleUtil {
     }
 
     /**
-     * Everything a module exports under a name (completion of {@code ns.}); re-exports are not followed.
+     * Everything a module declares as its own named exports (completion of {@code ns.}); re-exports are not followed.
      */
     @RequiredReadAction
     public static List<PsiElement> findAllExports(PsiFile module) {
         List<PsiElement> result = new ArrayList<>();
-        ResolveProcessor processor = new ResolveProcessor(null, module);
-        for (PsiElement statement : getTopLevelStatements(module)) {
-            if ((statement.getNode().getElementType() == TypeScriptTypes.EXPORT_DECLARATION || isDecoratedExport(statement))
-                && statement.getNode().findChildByType(JSTokenTypes.DEFAULT_KEYWORD) == null) {
-                statement.processDeclarations(processor, ResolveState.initial(), null, module);
+        for (JSModuleExport export : getExports(module)) {
+            String localName = export.localName();
+            if (export.kind() == JSModuleExport.Kind.LOCAL && !DEFAULT_EXPORT.equals(export.name()) && localName != null) {
+                result.addAll(findTopLevelDeclarations(module, localName));
             }
         }
-        result.addAll(processor.getResults());
         return result;
+    }
+
+    @Nullable
+    private static TypeScriptFileStub getFileStub(PsiFile file) {
+        return getStub(file) instanceof TypeScriptFileStub stub ? stub : null;
+    }
+
+    /**
+     * The stub of a file whose AST isn't loaded (the green stub, else the stub from the index).
+     */
+    @Nullable
+    private static StubElement<?> getStub(PsiFile file) {
+        if (!(file instanceof PsiFileImpl fileImpl)) {
+            return null;
+        }
+        StubElement<?> stub = fileImpl.getGreenStub();
+        return stub != null ? stub : fileImpl.getStub();
     }
 }

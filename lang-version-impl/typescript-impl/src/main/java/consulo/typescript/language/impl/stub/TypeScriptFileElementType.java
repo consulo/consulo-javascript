@@ -1,5 +1,7 @@
 package consulo.typescript.language.impl.stub;
 
+import consulo.javascript.module.resolve.JSModuleExport;
+
 import com.intellij.lang.javascript.psi.JSFile;
 import com.intellij.lang.javascript.types.JSFileElementType;
 import consulo.annotation.access.RequiredReadAction;
@@ -15,7 +17,9 @@ import consulo.typescript.language.TypeScriptLanguage;
 import consulo.typescript.language.impl.psi.TypeScriptModuleUtil;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.LinkedHashSet;
+import java.util.List;
 import java.util.Set;
 
 /**
@@ -33,8 +37,10 @@ public class TypeScriptFileElementType extends JSFileElementType {
      * 4: {@code declare global} of a module: its names in the file stub, its variables stubbed
      * 5: namespaces stubbed like classes with their members (not global names)
      * 6: type aliases stubbed
+     * 7: the exports of a module in the file stub
+     * 8: the exports written by the JavaScript file stub (JSModuleExport), before the TypeScript data
      */
-    private static final int STUB_VERSION = 6;
+    private static final int STUB_VERSION = 8;
 
     public TypeScriptFileElementType() {
         super(TypeScriptLanguage.INSTANCE);
@@ -48,7 +54,8 @@ public class TypeScriptFileElementType extends JSFileElementType {
             protected StubElement createStubForFile(PsiFile file) {
                 return file instanceof JSFile jsFile
                     ? new TypeScriptFileStub(jsFile, StringRef.fromString(file.getName()), TypeScriptFileElementType.this,
-                    TypeScriptModuleUtil.isModuleByTree(file), TypeScriptModuleUtil.getGlobalNamesByTree(file))
+                    TypeScriptModuleUtil.isModuleByTree(file), TypeScriptModuleUtil.getGlobalNamesByTree(file),
+                    TypeScriptModuleUtil.getExportsByTree(file))
                     : super.createStubForFile(file);
             }
         };
@@ -69,13 +76,14 @@ public class TypeScriptFileElementType extends JSFileElementType {
     @Override
     public JSFileStub deserialize(StubInputStream dataStream, StubElement parentStub) throws IOException {
         StringRef name = dataStream.readName();
+        List<JSModuleExport> exports = readExports(dataStream);
         boolean module = dataStream.readBoolean();
         int count = dataStream.readVarInt();
         Set<String> globalNames = new LinkedHashSet<>();
         for (int i = 0; i < count; i++) {
             globalNames.add(StringRef.toString(dataStream.readName()));
         }
-        return new TypeScriptFileStub(null, name, this, module, Set.copyOf(globalNames));
+        return new TypeScriptFileStub(null, name, this, module, Set.copyOf(globalNames), exports);
     }
 
     @Override

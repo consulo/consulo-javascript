@@ -21,6 +21,8 @@ import consulo.annotation.access.RequiredReadAction;
 import consulo.index.io.StringRef;
 import consulo.language.psi.stub.*;
 import consulo.javascript.index.JavaScriptIndexer;
+import consulo.javascript.lang.psi.impl.resolve.ResolveHelper;
+import consulo.javascript.module.resolve.JSModuleExport;
 import consulo.javascript.psi.stubs.JSFileStub;
 import consulo.javascript.impl.language.psi.stub.JSFileStubImpl;
 import consulo.language.Language;
@@ -28,6 +30,8 @@ import consulo.language.psi.PsiFile;
 
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @author peter
@@ -49,21 +53,49 @@ public class JSFileElementType extends IStubFileElementType<JSFileStub> {
             @RequiredReadAction
             protected StubElement createStubForFile(PsiFile file) {
                 return file instanceof JSFile jsFile
-                    ? new JSFileStubImpl(jsFile, file.getName())
+                    ? new JSFileStubImpl(jsFile, StringRef.fromString(file.getName()), buildExports(jsFile))
                     : super.createStubForFile(file);
             }
         };
     }
 
+    /**
+     * The exports of an ES module, kept in the stub of the file: an import resolves without the tree of the module
+     */
+    @RequiredReadAction
+    protected List<JSModuleExport> buildExports(JSFile file) {
+        return ResolveHelper.find(file).buildExports(file);
+    }
+
+    /**
+     * The name and the exports of the file: a subclass writes its own data after them
+     */
     @Override
     public void serialize(JSFileStub stub, StubOutputStream dataStream) throws IOException {
         dataStream.writeName(stub.getName());
+        List<JSModuleExport> exports = stub.getExports();
+        dataStream.writeVarInt(exports.size());
+        for (JSModuleExport export : exports) {
+            export.serialize(dataStream);
+        }
     }
 
     @Override
     public JSFileStub deserialize(StubInputStream dataStream, StubElement parentStub) throws IOException {
         StringRef name = dataStream.readName();
-        return new JSFileStubImpl(null, name);
+        return new JSFileStubImpl(null, name, readExports(dataStream));
+    }
+
+    /**
+     * Reads the exports written by {@link #serialize}, after the name
+     */
+    protected static List<JSModuleExport> readExports(StubInputStream dataStream) throws IOException {
+        int count = dataStream.readVarInt();
+        List<JSModuleExport> exports = new ArrayList<>(count);
+        for (int i = 0; i < count; i++) {
+            exports.add(JSModuleExport.deserialize(dataStream));
+        }
+        return List.copyOf(exports);
     }
 
     @Override
@@ -71,9 +103,12 @@ public class JSFileElementType extends IStubFileElementType<JSFileStub> {
         return getLanguage() + ":" + toString();
     }
 
+    /**
+     * 49: the exports of an ES module in the file stub
+     */
     @Override
     public int getStubVersion() {
-        int[] version = new int[]{48};
+        int[] version = new int[]{49};
         JavaScriptIndexer.EP_NAME.forEachExtensionSafe(javaScriptIndexer -> version[0]++);
         return version[0];
     }

@@ -66,6 +66,10 @@ public class EcmaScriptStatementParsing extends StatementParsing {
 
             mark.done(EcmaScript6ElementTypes.EXPORT_DEFAULT_ASSIGMENT);
         }
+        else if (tokenType == JSTokenTypes.EXPORT_KEYWORD
+            && (builder.lookAhead(1) == JSTokenTypes.LBRACE || builder.lookAhead(1) == JSTokenTypes.ASTERISK)) {
+            parseExportDeclaration(builder);
+        }
         else if (tokenType == JSTokenTypes.EXPORT_KEYWORD) {
             PsiBuilder.Marker mark = builder.mark();
             PsiBuilder.Marker attributeMark = builder.mark();
@@ -94,6 +98,82 @@ public class EcmaScriptStatementParsing extends StatementParsing {
         else {
             doParseStatement(builder, true);
         }
+    }
+
+    /**
+     * {@code export { a, b as c } [from 'x'];}, {@code export * [as ns] from 'x';}
+     */
+    private void parseExportDeclaration(PsiBuilder builder) {
+        PsiBuilder.Marker mark = builder.mark();
+        builder.advanceLexer();
+
+        boolean needsFrom = false;
+        if (builder.getTokenType() == JSTokenTypes.ASTERISK) {
+            needsFrom = true;
+            builder.advanceLexer();
+            if (isContextKeyword(builder, JSTokenTypes.AS_KEYWORD)) {
+                advanceContextKeyword(builder, JSTokenTypes.AS_KEYWORD);
+                if (builder.getTokenType() == JSTokenTypes.IDENTIFIER) {
+                    builder.advanceLexer();
+                }
+                else {
+                    builder.error(JavaScriptLocalize.javascriptParserMessageExpectedIdentifier());
+                }
+            }
+        }
+        else {
+            builder.advanceLexer();
+            while (builder.getTokenType() != JSTokenTypes.RBRACE && !builder.eof()) {
+                if (!isExportName(builder.getTokenType())) {
+                    builder.error(JavaScriptLocalize.javascriptParserMessageExpectedIdentifier());
+                    break;
+                }
+                PsiBuilder.Marker specifierMark = builder.mark();
+                builder.advanceLexer();
+                if (isContextKeyword(builder, JSTokenTypes.AS_KEYWORD)) {
+                    advanceContextKeyword(builder, JSTokenTypes.AS_KEYWORD);
+                    if (isExportName(builder.getTokenType())) {
+                        builder.advanceLexer();
+                    }
+                    else {
+                        builder.error(JavaScriptLocalize.javascriptParserMessageExpectedIdentifier());
+                    }
+                }
+                specifierMark.done(EcmaScript6ElementTypes.EXPORT_SPECIFIER);
+
+                if (builder.getTokenType() == JSTokenTypes.COMMA) {
+                    builder.advanceLexer();
+                }
+                else if (builder.getTokenType() != JSTokenTypes.RBRACE) {
+                    builder.error(JavaScriptLocalize.javascriptParserMessageExpectedComma());
+                    break;
+                }
+            }
+            Parsing.checkMatches(builder, JSTokenTypes.RBRACE, JavaScriptLocalize.javascriptParserMessageExpectedRbrace());
+        }
+
+        if (isContextKeyword(builder, JSTokenTypes.FROM_KEYWORD)) {
+            advanceContextKeyword(builder, JSTokenTypes.FROM_KEYWORD);
+            if (JavaScriptTokenSets.STRING_LITERALS.contains(builder.getTokenType())) {
+                builder.advanceLexer();
+            }
+            else {
+                builder.error("Expected 'from' target");
+            }
+        }
+        else if (needsFrom) {
+            builder.error("Expected 'from'");
+        }
+
+        checkForSemicolon(builder);
+        mark.done(EcmaScript6ElementTypes.EXPORT_DECLARATION);
+    }
+
+    /**
+     * A name of an export list: an identifier, {@code default} ({@code export { default } from}, {@code a as default})
+     */
+    private static boolean isExportName(IElementType tokenType) {
+        return tokenType == JSTokenTypes.IDENTIFIER || tokenType == JSTokenTypes.DEFAULT_KEYWORD;
     }
 
     @Override
