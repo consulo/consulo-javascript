@@ -472,14 +472,13 @@ public class JSReferenceExpressionImpl extends JSExpressionImpl implements JSRef
                 return new ResolveResult[]{new JSResolveUtil.MyResolveResult(this)};
             }
 
-            if (processor.resolved == MyTypeProcessor.TypeResolveState.Resolved ||
-                processor.resolved == MyTypeProcessor.TypeResolveState.Undefined ||
-                processor.getResult() != null) {
-                return processor.getResultsAsResolveResults();
+            ResolveResult[] results = processor.getResultsAsResolveResults();
+            if (results.length == 0 && !processor.myHasType) {
+                // the qualifier has no type (an untyped parameter): the members of that name of the classes and
+                // interfaces in scope - element.innerHTML is Element.innerHTML
+                return JSResolveUtil.findMembersByName(this, referencedName);
             }
-            else {
-                return processor.getResultsAsResolveResults();
-            }
+            return results;
         }
     }
 
@@ -580,6 +579,11 @@ public class JSReferenceExpressionImpl extends JSExpressionImpl implements JSRef
 
         TypeResolveState resolved = TypeResolveState.Unknown;
 
+        /**
+         * Whether the qualifier has a type (not {@code *} or {@code Object}).
+         */
+        boolean myHasType;
+
         @Override
         public Set<JavaScriptFeature> getFeatures() {
             return myFeatures;
@@ -596,6 +600,7 @@ public class JSReferenceExpressionImpl extends JSExpressionImpl implements JSRef
             if ("*".equals(type) || "Object".equals(type)) {
                 return;
             }
+            myHasType = true;
 
             if (JSTypeEvaluateManager.isArrayType(type)) {
                 int index = type.indexOf('[');

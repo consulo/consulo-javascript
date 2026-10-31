@@ -67,6 +67,12 @@ public class PredefinedLibraryStubOnlyTest {
                     assertFalse(((PsiFileImpl) file).isContentsLoaded(), extension + ": " + text.trim() + " loaded the AST of " + file.getName());
                 }
             }
+            // the members of a value of unknown type come from the member index
+            for (PsiElement target : PredefinedLibraryResolveTest.multiResolve(fixture, "js",
+                "function f(element) {\n  element.innerHT<caret>ML = 'a';\n}\n")) {
+                PsiFile file = ReadAction.compute(target::getContainingFile);
+                assertFalse(((PsiFileImpl) file).isContentsLoaded(), "untyped member loaded the AST of " + file.getName());
+            }
         }
         finally {
             Disposer.dispose(disposable);

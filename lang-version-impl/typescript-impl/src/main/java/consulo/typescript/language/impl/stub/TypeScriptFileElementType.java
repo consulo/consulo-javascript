@@ -40,8 +40,9 @@ public class TypeScriptFileElementType extends JSFileElementType {
      * 7: the exports of a module in the file stub
      * 8: the exports written by the JavaScript file stub (JSModuleExport), before the TypeScript data
      * 9: the return types of generic functions without their type parameters (default, else constraint)
+     * 10: the members of classes and interfaces in the member name index
      */
-    private static final int STUB_VERSION = 9;
+    private static final int STUB_VERSION = 10;
 
     public TypeScriptFileElementType() {
         super(TypeScriptLanguage.INSTANCE);

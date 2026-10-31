@@ -29,6 +29,11 @@ public interface JavaScriptIndexKeys {
     StubIndexKey<String, JSClass> CLASSES_BY_NAME = StubIndexKey.createIndexKey("js.class.shortName");
     StubIndexKey<String, JSQualifiedNamedElement> ELEMENTS_BY_NAME = StubIndexKey.createIndexKey("js.qualified.shortName");
     StubIndexKey<String, JSQualifiedNamedElement> ELEMENTS_BY_QNAME = StubIndexKey.createIndexKey("js.element.qualifiedName");
+    /**
+     * The members of classes and interfaces by name ({@code innerHTML} of {@code interface Element}): the member of a
+     * value of unknown type ({@code function f(element) { element.innerHTML }}).
+     */
+    StubIndexKey<String, JSQualifiedNamedElement> MEMBERS_BY_NAME = StubIndexKey.createIndexKey("js.member.name");
 
     StubIndexKey<String, JSReferenceList> EXTENDS_INDEX = StubIndexKey.createIndexKey("JS.class.super");
     StubIndexKey<String, JSReferenceList> IMPLEMENTED_INDEX = StubIndexKey.createIndexKey("JS.class.implements");

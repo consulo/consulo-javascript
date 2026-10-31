@@ -50,6 +50,18 @@ public abstract class JSQualifiedStubElementType<StubT extends JSQualifiedStub<P
         if (fqn != null && doIndexQualifiedName(stub, name, fqn)) {
             sink.occurrence(JavaScriptIndexKeys.ELEMENTS_BY_QNAME, fqn);
         }
+
+        if (name != null && doIndexMemberName(stub, name)) {
+            sink.occurrence(JavaScriptIndexKeys.MEMBERS_BY_NAME, name);
+        }
+    }
+
+    /**
+     * Whether the element is a member of a class or interface found by name for a value of unknown type
+     * ({@link JavaScriptIndexKeys#MEMBERS_BY_NAME}).
+     */
+    protected boolean doIndexMemberName(StubT stub, String name) {
+        return false;
     }
 
     protected boolean doIndexQualifiedName(StubT stub, String name, String fqn) {

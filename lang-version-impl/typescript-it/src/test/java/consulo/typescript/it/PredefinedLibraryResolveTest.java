@@ -214,6 +214,50 @@ public class PredefinedLibraryResolveTest {
         assertInstanceOf(JSClass.class, target);
     }
 
+    /**
+     * The JSDoc types of JavaScript: {@code @param {HTMLElement} element}, {@code @type}.
+     */
+    @Test
+    public void testJsDocTypes(CodeInsightTestFixture fixture) throws Exception {
+        assertDeclared(resolve(fixture, "js",
+            "/** @param {HTMLElement} element */\nexport function setupCounter(element) {\n  element.innerHT<caret>ML = 'a';\n}\n"),
+            "innerHTML", "lib.dom.d.ts");
+        assertDeclared(resolve(fixture, "js",
+            "/**\n * @param {Element} element the target\n */\nfunction f(element) {\n  element.getAttri<caret>bute('a');\n}\n"),
+            "getAttribute", "lib.dom.d.ts");
+        assertDeclared(resolve(fixture, "js", "/** @type {HTMLElement} */\nconst el = document.body;\nel.innerHT<caret>ML = 'a';\n"),
+            "innerHTML", "lib.dom.d.ts");
+    }
+
+    /**
+     * A member of a value of unknown type (an untyped parameter) is each member of that name of the classes and
+     * interfaces; of a known type only its own members.
+     */
+    @Test
+    public void testMemberOfUntypedValue(CodeInsightTestFixture fixture) throws Exception {
+        List<PsiElement> targets = multiResolve(fixture, "js", "export function setupCounter(element) {\n  element.innerHT<caret>ML = 'a';\n}\n");
+        assertTrue(!targets.isEmpty(), "unresolved");
+        for (PsiElement target : targets) {
+            assertDeclared(target, "innerHTML", "lib.dom.d.ts");
+        }
+        assertEquals(List.of(), multiResolve(fixture, "js", "function f(element) {\n  element.noSuchMem<caret>ber = 'a';\n}\n"));
+        assertEquals(List.of(), multiResolve(fixture, "js", "document.body.noSuchMem<caret>ber = 'a';\n"));
+    }
+
+    static List<PsiElement> multiResolve(CodeInsightTestFixture fixture, String extension, String text) throws Exception {
+        fixture.configureByText("app" + Integer.toHexString(text.hashCode()) + "." + extension, text);
+        PsiReference reference = fixture.getReferenceAtCaretPositionWithAssertion();
+        return ReadAction.compute(() -> {
+            List<PsiElement> targets = new java.util.ArrayList<>();
+            for (ResolveResult result : ((PsiPolyVariantReference) reference).multiResolve(false)) {
+                if (result.isValidResult() && result.getElement() != null) {
+                    targets.add(result.getElement());
+                }
+            }
+            return targets;
+        });
+    }
+
     static PsiElement resolve(CodeInsightTestFixture fixture, String extension, String text) throws Exception {
         // a file per text: a test configures several
         fixture.configureByText("app" + Integer.toHexString(text.hashCode()) + "." + extension, text);

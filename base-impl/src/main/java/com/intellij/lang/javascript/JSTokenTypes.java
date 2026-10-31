@@ -72,6 +72,15 @@ public interface JSTokenTypes {
             JSDocParsing.parseJSDoc(builder);
             return builder.getTreeBuilt();
         }
+
+        /**
+         * A comment ({@link com.intellij.lang.javascript.psi.JSDocComment}), not a generic lazy element: found as the
+         * documentation of the next declaration.
+         */
+        @Override
+        public ASTNode createNode(CharSequence text) {
+            return new com.intellij.lang.javascript.psi.impl.JSDocCommentElement(this, text);
+        }
     };
 
     // Keywords:

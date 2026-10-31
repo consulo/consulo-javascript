@@ -2378,6 +2378,32 @@ public class JSResolveUtil {
     }
 
     /**
+     * At most this many members of a value of unknown type ({@code length} is a member of hundreds of interfaces).
+     */
+    private static final int MAX_MEMBERS_BY_NAME = 32;
+
+    /**
+     * The members of classes and interfaces with a name, for a member of a value of unknown type
+     * ({@code function f(element) { element.innerHTML }}: {@code Element.innerHTML}, {@code ShadowRoot.innerHTML}), by the
+     * index - the declaring files aren't parsed. In the resolve scope without the standard libraries the module doesn't
+     * see; nothing while indexing.
+     */
+    @RequiredReadAction
+    public static ResolveResult[] findMembersByName(PsiElement place, String name) {
+        Project project = place.getProject();
+        if (DumbService.isDumb(project)) {
+            return ResolveResult.EMPTY_ARRAY;
+        }
+        GlobalSearchScope scope = JavaScriptLibraries.restrictResolveScope(place, place.getResolveScope());
+        List<ResolveResult> results = new ArrayList<>();
+        StubIndex.getInstance().processElements(JavaScriptIndexKeys.MEMBERS_BY_NAME, name, project, scope, JSQualifiedNamedElement.class, member -> {
+            results.add(new MyResolveResult(member));
+            return results.size() < MAX_MEMBERS_BY_NAME;
+        });
+        return results.toArray(ResolveResult.EMPTY_ARRAY);
+    }
+
+    /**
      * @param name the name to resolve; null for all names (only the completion of a reference lists them)
      */
     @RequiredReadAction

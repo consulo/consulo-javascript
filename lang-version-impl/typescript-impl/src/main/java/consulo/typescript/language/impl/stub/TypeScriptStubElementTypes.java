@@ -452,6 +452,16 @@ public interface TypeScriptStubElementTypes {
     /**
      * A stub of a namespace's body.
      */
+    /**
+     * A member of a class or interface ({@code innerHTML} of {@code interface Element}), not of a namespace: found by
+     * name for a value of unknown type.
+     */
+    static boolean isClassOrInterfaceMember(StubElement<?> stub) {
+        StubElement<?> parent = stub.getParentStub();
+        IStubElementType<?, ?> type = parent == null ? null : parent.getStubType();
+        return type == INTERFACE_DECLARATION || type == CLASS_DECLARATION;
+    }
+
     static boolean isNamespaceMember(StubElement<?> stub) {
         StubElement<?> parent = stub.getParentStub();
         return parent != null && parent.getStubType() == NAMESPACE_DECLARATION;
@@ -539,6 +549,11 @@ public interface TypeScriptStubElementTypes {
         }
 
         @Override
+        protected boolean doIndexMemberName(JSFunctionStub stub, String name) {
+            return isClassOrInterfaceMember(stub);
+        }
+
+        @Override
         public String getExternalId() {
             return TypeScriptStubElementHolder.PREFIX + this;
         }
@@ -552,6 +567,11 @@ public interface TypeScriptStubElementTypes {
     abstract class TypeScriptVariableElementType extends JSVariableElementType {
         TypeScriptVariableElementType(String debugName) {
             super(debugName, TypeScriptLanguage.INSTANCE);
+        }
+
+        @Override
+        protected boolean doIndexMemberName(JSVariableStub stub, String name) {
+            return isClassOrInterfaceMember(stub);
         }
 
         @Override
