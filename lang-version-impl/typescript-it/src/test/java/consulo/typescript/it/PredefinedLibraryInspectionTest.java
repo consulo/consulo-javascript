@@ -19,12 +19,14 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
  * signature ({@code declare var Date: DateConstructor}) is callable, a call fits one of the overloads.
  */
 @ExtendWith(HeadlessProjectExtension.class)
-// the highlighting passes of the XML plugin and the RegExp language of the JavaScript plugin aren't on the classpath
-@AllowLogError("consulo.component.internal.NewExtensionPointImpl")
+// the highlighting passes of the XML plugin and the RegExp language of the JavaScript plugin aren't on the classpath, nor
+// Jaxen for the language injection configuration (loaded on a roots change)
+@AllowLogError({"consulo.component.internal.NewExtensionPointImpl", "consulo.language.inject.advanced.Configuration"})
 public class PredefinedLibraryInspectionTest {
     // headless, the problem descriptions are the localize keys
     private static final String NOT_FUNCTION = "term.does.not.evaluate.to.function";
     private static final String PARAMETERS = "invalid.number.of.parameters";
+    private static final String ARGUMENT_TYPE = "argument.type.mismatch";
 
     @BeforeEach
     public void enableWeb(CodeInsightTestFixture fixture) throws Exception {
@@ -42,6 +44,27 @@ public class PredefinedLibraryInspectionTest {
         fixture.configureByText("calls.js", text);
         assertEquals(List.of(), problems(fixture, NOT_FUNCTION));
         assertEquals(List.of(), problems(fixture, PARAMETERS));
+        assertEquals(List.of(), problems(fixture, ARGUMENT_TYPE));
+    }
+
+    /**
+     * The argument types against TypeScript parameter types: the primitives are the JavaScript classes (a string literal
+     * is a {@code string}), unions and other types the check can't evaluate are skipped (issue #22: XMLHttpRequest.open).
+     */
+    @Test
+    public void testTypeScriptParameterTypes(CodeInsightTestFixture fixture) throws Exception {
+        String declarations = fixture.addFileToProject("decl.d.ts",
+            "declare function takesString(a: string): void;\n"
+                + "declare function takesFlag(a: boolean): void;\n"
+                + "declare function takesUnion(a: string | URL): void;\n").getVirtualFile().getUrl();
+        WebModules.setDeclarations(fixture.getModule(), "Test", List.of(declarations));
+        try {
+            fixture.configureByText("args.js", "takesString('a');\ntakesFlag(true);\ntakesUnion(1);\n");
+            assertEquals(List.of(), problems(fixture, ARGUMENT_TYPE));
+        }
+        finally {
+            WebModules.setDeclarations(fixture.getModule(), "Test", List.of());
+        }
     }
 
     /**

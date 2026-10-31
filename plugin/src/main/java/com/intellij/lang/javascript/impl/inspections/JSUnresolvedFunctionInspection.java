@@ -623,6 +623,7 @@ public class JSUnresolvedFunctionInspection extends JSInspection {
         PsiFile containingFile,
         BiFunction<Object, Object, LocalizeValue> messageGenerator
     ) {
+        type = toCheckedTypeName(type);
         if ("*".equals(type) || type == null) {
             return; // optimization
         }
@@ -635,6 +636,46 @@ public class JSUnresolvedFunctionInspection extends JSInspection {
                 .withFix(new JSInsertCastFix(type))
                 .create();
         }
+    }
+
+    /**
+     * The type name the assignability check understands: TypeScript primitives ({@code string}, {@code boolean}) are
+     * the JavaScript classes of the expression types ({@code String}, {@code Boolean}); types this check can't evaluate
+     * (unions, generics, literal and function types, {@code any}) aren't checked (null).
+     */
+    @Nullable
+    private static String toCheckedTypeName(@Nullable String type) {
+        if (type == null) {
+            return null;
+        }
+        String trimmed = type.trim();
+        switch (trimmed) {
+            case "string":
+                return "String";
+            case "number":
+                return "Number";
+            case "boolean":
+                return "Boolean";
+            case "object":
+                return "Object";
+            case "any":
+            case "unknown":
+            case "never":
+            case "void":
+            case "undefined":
+            case "null":
+            case "bigint":
+            case "symbol":
+                return null;
+            default:
+                break;
+        }
+        for (int i = 0; i < trimmed.length(); i++) {
+            if ("|&<>[](){}'\"`=?:,".indexOf(trimmed.charAt(i)) >= 0) {
+                return null;
+            }
+        }
+        return trimmed;
     }
 
     @RequiredReadAction

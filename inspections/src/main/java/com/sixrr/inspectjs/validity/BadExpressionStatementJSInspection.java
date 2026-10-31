@@ -86,7 +86,8 @@ public class BadExpressionStatementJSInspection extends JavaScriptInspection {
                 PsiElement signElement = expression.getFirstChild();
                 if (signElement != null) {
                     String text = signElement.getText();
-                    if ("delete".equals(text)) {
+                    // await f(); waits for the promise
+                    if ("delete".equals(text) || "await".equals(text)) {
                         return true;
                     }
 

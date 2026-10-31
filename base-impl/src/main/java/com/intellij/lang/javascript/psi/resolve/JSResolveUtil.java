@@ -1869,14 +1869,34 @@ public class JSResolveUtil {
     ) {
         if (o instanceof JSElement[] jsElements) {
             for (JSElement s : jsElements) {
-                result &= s.processDeclarations(processor, state, null, place);
+                if (isVisibleAt(s, place)) {
+                    result &= s.processDeclarations(processor, state, null, place);
+                }
             }
         }
         else {
             JSElement s = (JSElement)o;
-            result &= s.processDeclarations(processor, state, null, place);
+            if (isVisibleAt(s, place)) {
+                result &= s.processDeclarations(processor, state, null, place);
+            }
         }
         return result;
+    }
+
+    /**
+     * The declarations of a function are collected with its nested blocks (var is function scoped); a const is block
+     * scoped: visible inside the statement that declares it (a block, a for statement), from anywhere in it.
+     */
+    private static boolean isVisibleAt(JSElement declaration, PsiElement place) {
+        if (!(declaration instanceof JSVariable variable) || !variable.isConst()) {
+            return true;
+        }
+        PsiElement statement = variable.getParent();
+        PsiElement scope = statement instanceof JSVarStatement ? statement.getParent() : null;
+        if (scope == null || scope instanceof PsiFile || place.getContainingFile() != declaration.getContainingFile()) {
+            return true;
+        }
+        return PsiTreeUtil.isAncestor(scope, place, false);
     }
 
     @RequiredReadAction

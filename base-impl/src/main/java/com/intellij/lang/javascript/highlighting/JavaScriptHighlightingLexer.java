@@ -46,8 +46,10 @@ public class JavaScriptHighlightingLexer extends LayeredLexer {
                 IElementType.EMPTY_ARRAY
             );
 
+            // the code of a JSX {...} is highlighted with the same lexer, its JSX {...} again (issue #20): created when the
+            // text nests, not here, where it would recurse without end
             registerSelfStoppingLayer(
-                new JavaScriptHighlightingLexer(baseLexerFactory, false),
+                new LazyLexer(() -> new JavaScriptHighlightingLexer(baseLexerFactory, true)),
                 new IElementType[]{JSTokenTypes.XML_JS_SCRIPT},
                 IElementType.EMPTY_ARRAY
             );
@@ -127,5 +129,74 @@ public class JavaScriptHighlightingLexer extends LayeredLexer {
 
     private static Lexer getHtmlHighlightingLexer() {
         return SyntaxHighlighterFactory.getSyntaxHighlighter(HTMLLanguage.INSTANCE, null, null).getHighlightingLexer();
+    }
+
+    /**
+     * A lexer created on its first start.
+     */
+    private static final class LazyLexer extends LexerBase {
+        private final Supplier<Lexer> myFactory;
+        private Lexer myDelegate;
+
+        private LazyLexer(Supplier<Lexer> factory) {
+            myFactory = factory;
+        }
+
+        private Lexer delegate() {
+            if (myDelegate == null) {
+                myDelegate = myFactory.get();
+            }
+            return myDelegate;
+        }
+
+        @Override
+        public void start(CharSequence buffer, int startOffset, int endOffset, int initialState) {
+            delegate().start(buffer, startOffset, endOffset, initialState);
+        }
+
+        @Override
+        public int getState() {
+            return delegate().getState();
+        }
+
+        @Override
+        public IElementType getTokenType() {
+            return delegate().getTokenType();
+        }
+
+        @Override
+        public int getTokenStart() {
+            return delegate().getTokenStart();
+        }
+
+        @Override
+        public int getTokenEnd() {
+            return delegate().getTokenEnd();
+        }
+
+        @Override
+        public void advance() {
+            delegate().advance();
+        }
+
+        @Override
+        public LexerPosition getCurrentPosition() {
+            return delegate().getCurrentPosition();
+        }
+
+        @Override
+        public void restore(LexerPosition position) {
+            delegate().restore(position);
+        }
+
+        @Override
+        public CharSequence getBufferSequence() {
+            return delegate().getBufferSequence();
+        }
+
+        @Override
+        public int getBufferEnd() {
+            return delegate().getBufferEnd();
+        }
     }
 }

@@ -245,6 +245,12 @@ public class SubBlockVisitor extends JSNodeVisitor {
             return Indent.getNormalIndent();
         }
 
+        // the closing parenthesis of a multiline call or parameter list goes back to the line of the call
+        if ((nodeElementType == JSElementTypes.ARGUMENT_LIST || nodeElementType == JSElementTypes.PARAMETER_LIST)
+            && (childElementType == JSTokenTypes.LPAR || childElementType == JSTokenTypes.RPAR)) {
+            return Indent.getNoneIndent();
+        }
+
         if (nodeElementType == JSElementTypes.EMBEDDED_EXPRESSION) {
             if (childElementType == JSTokenTypes.LBRACE || childElementType == JSTokenTypes.RBRACE) {
                 return Indent.getNoneIndent();
