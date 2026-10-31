@@ -16,11 +16,11 @@ import java.util.Set;
  * The Web module extension (JavaScript in a browser) of the test module, with the standard library SDK (created here:
  * the predefined bundles aren't loaded headless).
  */
-final class WebModules {
+public final class WebModules {
     private WebModules() {
     }
 
-    static void enableWeb(Module module) throws Exception {
+    public static void enableWeb(Module module) throws Exception {
         enableWeb(module, ClientJavaScriptModuleExtension.DEFAULT_LIBRARIES);
     }
 
@@ -45,7 +45,7 @@ final class WebModules {
         HeadlessProjects.awaitIdle(module.getProject());
     }
 
-    static void disableWeb(Module module) throws Exception {
+    public static void disableWeb(Module module) throws Exception {
         ClientJavaScriptSdks.disableWeb(module);
         HeadlessProjects.awaitIdle(module.getProject());
     }

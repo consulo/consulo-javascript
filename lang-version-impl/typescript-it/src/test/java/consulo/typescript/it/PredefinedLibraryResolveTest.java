@@ -147,6 +147,19 @@ public class PredefinedLibraryResolveTest {
     }
 
     /**
+     * A call of overloaded generic methods: {@code querySelector<E extends Element = Element>(selectors: string): E | null}
+     * returns an Element (the default of its type parameter); the overloads of tag names are skipped.
+     */
+    @Test
+    public void testGenericOverloadedCall(CodeInsightTestFixture fixture) throws Exception {
+        for (String extension : List.of("js", "ts")) {
+            assertDeclared(resolve(fixture, extension, "document.querySelector('#app').innerHT<caret>ML = 'a';\n"), "innerHTML", "lib.dom.d.ts");
+            assertDeclared(resolve(fixture, extension, "document.querySelector('div').getAttri<caret>bute('a');\n"), "getAttribute", "lib.dom.d.ts");
+            assertDeclared(resolve(fixture, extension, "var app = document.querySelector('#app');\napp.innerHT<caret>ML = 'a';\n"), "innerHTML", "lib.dom.d.ts");
+        }
+    }
+
+    /**
      * The members of the namespaces of the library (Reflect, CSS, Intl - merged from several files), the type a construct
      * signature of a namespace returns ({@code new Intl.DateTimeFormat()}); a member of a namespace isn't global.
      */

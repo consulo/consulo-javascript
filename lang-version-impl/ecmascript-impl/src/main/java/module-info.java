@@ -7,6 +7,7 @@ module consulo.javascript.ecmascript.impl {
 
     requires consulo.file.template.api;
     requires consulo.language.impl;
+    requires consulo.language.inject.advanced.api;
 
     exports consulo.javascript.ecmascript.codeInsight;
     exports consulo.javascript.ecmascript.codeInsight.quickFixes;

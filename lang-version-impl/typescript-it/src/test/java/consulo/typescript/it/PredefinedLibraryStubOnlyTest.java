@@ -57,6 +57,7 @@ public class PredefinedLibraryStubOnlyTest {
                     "document.body.foc<caret>us();\n",
                     "console.lo<caret>g('a');\n",
                     "document.getElementById('a').foc<caret>us();\n",
+                    "document.querySelector('#app').innerHT<caret>ML = 'a';\n",
                     "'a'.toUpperCa<caret>se();\n",
                     "Reflect.ownK<caret>eys({});\n",
                     "new Intl.DateTimeFormat().form<caret>at(new Date());\n"

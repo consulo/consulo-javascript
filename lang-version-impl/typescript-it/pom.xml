@@ -110,6 +110,25 @@
         </dependency>
         <dependency>
             <groupId>${project.groupId}</groupId>
+            <artifactId>consulo.javascript</artifactId>
+            <version>${project.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <!-- the language injections of the JavaScript strings (jsInjections.xml) -->
+        <dependency>
+            <groupId>consulo</groupId>
+            <artifactId>consulo-language-inject-advanced-api</artifactId>
+            <version>${project.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>consulo</groupId>
+            <artifactId>consulo-language-inject-advanced-impl</artifactId>
+            <version>${project.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>${project.groupId}</groupId>
             <artifactId>com.intellij.xml.api</artifactId>
             <version>${project.version}</version>
             <scope>test</scope>

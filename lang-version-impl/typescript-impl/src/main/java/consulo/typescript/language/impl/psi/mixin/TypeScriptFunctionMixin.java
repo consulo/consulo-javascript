@@ -77,20 +77,34 @@ public class TypeScriptFunctionMixin<T extends JSFunctionStub> extends StubBased
     }
 
     /**
-     * The class name of the declared type (the return type): {@code HTMLElement | null} is {@code HTMLElement}.
+     * The class name of the declared type (the return type): {@code HTMLElement | null} is {@code HTMLElement}. When the
+     * return type names no class, the one of the first overload that does: the JavaScript resolve gives one overload of
+     * {@code querySelector}, the one of a tag name ({@code HTMLElementTagNameMap[K]}), and the one of a selector returns
+     * an Element.
      */
     @Nullable
     @Override
     @RequiredReadAction
     public String getDeclaredTypeName() {
-        return TypeScriptResolveUtil.getTypeName(getReturnTypeString());
+        String own = TypeScriptResolveUtil.getTypeName(getReturnTypeString());
+        if (own != null) {
+            return own;
+        }
+        for (JSFunction overload : TypeScriptResolveUtil.getOverloads(this)) {
+            String name = overload == this ? null : TypeScriptResolveUtil.getTypeName(overload.getReturnTypeString());
+            if (name != null) {
+                return name;
+            }
+        }
+        return null;
     }
 
     @Override
     @RequiredReadAction
     public String getReturnTypeString() {
         JSFunctionStub stub = getGreenStub();
-        return stub != null ? stub.getReturnTypeString() : TypeScriptResolveUtil.getTypeAnnotationText(this);
+        // without the type parameters of the function: its stub keeps the erased text
+        return stub != null ? stub.getReturnTypeString() : TypeScriptResolveUtil.eraseTypeParameters(this, TypeScriptResolveUtil.getTypeAnnotationText(this));
     }
 
     @Nullable

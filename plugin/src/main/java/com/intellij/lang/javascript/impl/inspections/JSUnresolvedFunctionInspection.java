@@ -32,6 +32,7 @@ import consulo.codeEditor.Editor;
 import consulo.javascript.ide.codeInsight.JavaScriptQuickFixFactory;
 import consulo.javascript.language.JavaScriptFeature;
 import consulo.javascript.language.JavaScriptVersionUtil;
+import consulo.javascript.psi.JSDeclaredTypeNameProvider;
 import consulo.javascript.localize.JavaScriptLocalize;
 import consulo.language.ast.IElementType;
 import consulo.language.editor.inspection.LocalQuickFix;
@@ -44,6 +45,8 @@ import consulo.language.editor.template.TemplateManager;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
 import consulo.language.psi.ResolveResult;
+import consulo.language.psi.StubBasedPsiElement;
+import consulo.language.psi.stub.StubElement;
 import consulo.language.psi.util.PsiTreeUtil;
 import consulo.localize.LocalizeValue;
 import consulo.project.Project;
@@ -95,7 +98,9 @@ public class JSUnresolvedFunctionInspection extends JSInspection {
 
                             PsiElement element = r.getElement();
 
-                            if (element instanceof JSVariable variable) {
+                            // a TypeScript declaration knows its call and construct signatures (declare var Date:
+                            // DateConstructor): not the Function / Class types of ActionScript
+                            if (element instanceof JSVariable variable && !(variable instanceof JSDeclaredTypeNameProvider)) {
                                 String typeText = variable.getTypeString();
 
                                 if (typeText != null && !"*".equals(typeText) && !allowMemberReference(inNewExpression, typeText)) {
@@ -440,13 +445,18 @@ public class JSUnresolvedFunctionInspection extends JSInspection {
     @RequiredReadAction
     private static void checkFunction(JSCallExpression node, PsiElement element, ProblemsHolder holder) {
         if (element instanceof JSFunction function) {
-            if (!function.isGetProperty() || !"Function".equals(function.getReturnTypeString())) {
-                JSParameterList parameterList = function.getParameterList();
-
-                if (parameterList != null) {
-                    checkCallParameters(node, parameterList.getParameters(), function.isReferencesArguments(), holder);
+            // the overloads of a declaration file (XMLHttpRequest.open with 2 or 5 parameters): the one the arguments fit
+            List<JSFunction> overloads = getOverloads(function);
+            if (overloads.size() > 1) {
+                for (JSFunction overload : overloads) {
+                    JSParameterList parameterList = overload.getParameterList();
+                    if (parameterList != null && acceptsArgumentCount(node, parameterList.getParameters())) {
+                        checkFunctionSignature(node, overload, holder);
+                        return;
+                    }
                 }
             }
+            checkFunctionSignature(node, function, holder);
         }
         else if (element instanceof JSClass) {
             if (node instanceof JSNewExpression || node.getMethodExpression() instanceof JSSuperExpression) {
@@ -462,6 +472,64 @@ public class JSUnresolvedFunctionInspection extends JSInspection {
                 }
             }
         }
+    }
+
+    @RequiredReadAction
+    private static void checkFunctionSignature(JSCallExpression node, JSFunction function, ProblemsHolder holder) {
+        if (!function.isGetProperty() || !"Function".equals(function.getReturnTypeString())) {
+            JSParameterList parameterList = function.getParameterList();
+
+            if (parameterList != null) {
+                checkCallParameters(node, parameterList.getParameters(), function.isReferencesArguments(), holder);
+            }
+        }
+    }
+
+    /**
+     * The functions of the same name in the container of a function (its overloads, with itself): by the stubs of a
+     * declaration file.
+     */
+    @RequiredReadAction
+    private static List<JSFunction> getOverloads(JSFunction function) {
+        String name = function.getName();
+        StubElement<?> stub = name != null && function instanceof StubBasedPsiElement<?> stubBased ? stubBased.getStub() : null;
+        StubElement<?> parentStub = stub == null ? null : stub.getParentStub();
+        List<JSFunction> result = new ArrayList<>();
+        if (parentStub != null) {
+            for (StubElement<?> child : parentStub.getChildrenStubs()) {
+                if (child.getPsi() instanceof JSFunction sibling && name.equals(sibling.getName())) {
+                    result.add(sibling);
+                }
+            }
+        }
+        else if (name != null && function.getParent() != null) {
+            // the AST is loaded
+            for (PsiElement child : function.getParent().getChildren()) {
+                if (child instanceof JSFunction sibling && name.equals(sibling.getName())) {
+                    result.add(sibling);
+                }
+            }
+        }
+        return result.isEmpty() ? List.of(function) : result;
+    }
+
+    /**
+     * Whether the number of arguments of a call fits the parameters (optional and rest parameters).
+     */
+    @RequiredReadAction
+    private static boolean acceptsArgumentCount(JSCallExpression node, JSParameter[] parameters) {
+        JSArgumentList argumentList = node.getArgumentList();
+        int count = argumentList != null ? argumentList.getArguments().length : 0;
+        int required = 0;
+        for (JSParameter parameter : parameters) {
+            if (parameter.isRest()) {
+                return count >= required;
+            }
+            if (!parameter.isOptional()) {
+                required++;
+            }
+        }
+        return count >= required && count <= parameters.length;
     }
 
     @RequiredReadAction

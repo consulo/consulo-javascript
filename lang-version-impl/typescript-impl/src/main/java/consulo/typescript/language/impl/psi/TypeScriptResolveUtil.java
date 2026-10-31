@@ -439,9 +439,21 @@ public final class TypeScriptResolveUtil {
         }
         if (element instanceof JSCallExpression call) {
             // a call: the class of the return type of the function ({@code document.getElementById('a').focus()})
+            // of the overloads the first that returns a class: querySelector('#app') - the one of a selector, not of a
+            // tag name (HTMLElementTagNameMap[K])
             JSExpression method = call.getMethodExpression();
-            PsiElement function = method instanceof JSReferenceExpression reference ? reference.resolve() : null;
-            return function instanceof JSFunction jsFunction && visited.add(jsFunction) ? resolveReturnTypeClass(jsFunction) : null;
+            if (!(method instanceof JSReferenceExpression reference)) {
+                return null;
+            }
+            for (ResolveResult result : reference.multiResolve(false)) {
+                if (result.getElement() instanceof JSFunction jsFunction && visited.add(jsFunction)) {
+                    JSClass returned = resolveReturnTypeClass(jsFunction);
+                    if (returned != null) {
+                        return returned;
+                    }
+                }
+            }
+            return null;
         }
         if (element instanceof JSReferenceExpression reference) {
             PsiElement resolved = reference.resolve();
@@ -685,6 +697,93 @@ public final class TypeScriptResolveUtil {
         String text = colon == null ? annotation.getText() : annotation.getText().substring(colon.getStartOffsetInParent() + 1);
         String type = text.trim().replaceAll("\\s+", " ");
         return type.isEmpty() ? null : type;
+    }
+
+    /**
+     * The declarations of a function with the same name in its container (the overloads of a declaration file, with
+     * itself): by the stubs.
+     */
+    @RequiredReadAction
+    public static List<JSFunction> getOverloads(JSFunction function) {
+        String name = function.getName();
+        if (name == null) {
+            return List.of(function);
+        }
+        List<JSFunction> result = new ArrayList<>();
+        StubElement<?> stub = getGreenStub(function);
+        StubElement<?> parentStub = stub == null ? null : stub.getParentStub();
+        if (parentStub != null) {
+            for (StubElement<?> child : parentStub.getChildrenStubs()) {
+                if (child.getPsi() instanceof JSFunction sibling && name.equals(sibling.getName())) {
+                    result.add(sibling);
+                }
+            }
+        }
+        else if (function.getParent() != null) {
+            for (PsiElement child : function.getParent().getChildren()) {
+                if (child instanceof JSFunction sibling && name.equals(sibling.getName())) {
+                    result.add(sibling);
+                }
+            }
+        }
+        return result.isEmpty() ? List.of(function) : result;
+    }
+
+    /**
+     * The type text of a generic declaration without its type parameters: each one by its default, else by its
+     * constraint ({@code querySelector<E extends Element = Element>(s: string): E | null} returns {@code Element | null}).
+     * Built into the stub, so the type of a call evaluates without the AST of the declaration file.
+     */
+    @Nullable
+    @RequiredReadAction
+    public static String eraseTypeParameters(PsiElement owner, @Nullable String typeText) {
+        ASTNode list = typeText == null ? null : owner.getNode().findChildByType(TypeScriptTypes.TYPE_PARAMETER_LIST);
+        if (list == null) {
+            return typeText;
+        }
+        String result = typeText;
+        for (ASTNode parameter : list.getChildren(TokenSet.create(TypeScriptTypes.TYPE_PARAMETER))) {
+            ASTNode name = parameter.findChildByType(JSTokenTypes.IDENTIFIER);
+            String replacement = getTypeParameterBound(parameter);
+            if (name != null && replacement != null) {
+                String pattern = "(?<![\\p{L}\\p{N}_$.])" + java.util.regex.Pattern.quote(name.getText()) + "(?![\\p{L}\\p{N}_$])";
+                String bound = replacement.indexOf('|') >= 0 || replacement.indexOf('&') >= 0 ? "(" + replacement + ")" : replacement;
+                result = result.replaceAll(pattern, java.util.regex.Matcher.quoteReplacement(bound));
+            }
+        }
+        return result;
+    }
+
+    /**
+     * The default of a type parameter ({@code = Element}), else its constraint ({@code extends Element}).
+     */
+    @Nullable
+    private static String getTypeParameterBound(ASTNode parameter) {
+        String defaultType = null;
+        String constraint = null;
+        boolean afterExtends = false;
+        boolean afterEq = false;
+        for (ASTNode child = parameter.getFirstChildNode(); child != null; child = child.getTreeNext()) {
+            String text = child.getText();
+            if (child.getElementType() == JSTokenTypes.EQ || "=".equals(text)) {
+                afterEq = true;
+                afterExtends = false;
+            }
+            else if ("extends".equals(text)) {
+                afterExtends = true;
+            }
+            else if (child.getPsi() instanceof consulo.language.psi.PsiWhiteSpace || child.getPsi() instanceof consulo.language.psi.PsiComment) {
+                continue;
+            }
+            else if (afterEq && defaultType == null) {
+                defaultType = text;
+            }
+            else if (afterExtends && constraint == null) {
+                constraint = text;
+            }
+        }
+        String bound = defaultType != null ? defaultType : constraint;
+        return bound == null ? null : bound.trim().replaceAll("\\s+", " ");
     }
 
     /**

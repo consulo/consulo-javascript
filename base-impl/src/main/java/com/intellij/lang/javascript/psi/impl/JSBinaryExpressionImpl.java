@@ -58,9 +58,16 @@ public class JSBinaryExpressionImpl extends JSExpressionImpl implements JSBinary
     @Override
     @RequiredReadAction
     public JSExpression getROperand() {
+        // the expression after the operator, of any type: the expressions of the language versions aren't all in
+        // JSElementTypes.EXPRESSIONS (`a = \`x\`` - the template literal of ECMAScript 6)
         ASTNode myNode = getNode();
-        ASTNode secondExpression = myNode.findChildByType(JSElementTypes.EXPRESSIONS, myNode.findChildByType(BINARY_OPERATIONS));
-        return secondExpression != null ? (JSExpression)secondExpression.getPsi() : null;
+        ASTNode operation = myNode.findChildByType(BINARY_OPERATIONS);
+        for (ASTNode child = operation != null ? operation.getTreeNext() : myNode.getFirstChildNode(); child != null; child = child.getTreeNext()) {
+            if (child.getPsi() instanceof JSExpression expression) {
+                return expression;
+            }
+        }
+        return null;
     }
 
     @Nullable

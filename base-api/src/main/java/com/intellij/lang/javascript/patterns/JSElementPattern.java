@@ -49,6 +49,27 @@ public class JSElementPattern<T extends JSElement, Self extends JSElementPattern
         });
     }
 
+    /**
+     * A reference expression whose last name is one of these ({@code el.innerHTML} - {@code innerHTML}).
+     */
+    public Self withReferencedName(String... names) {
+        return with(new PatternCondition<T>("withReferencedName") {
+            @Override
+            public boolean accepts(T element, ProcessingContext context) {
+                if (!(element instanceof JSReferenceExpression reference)) {
+                    return false;
+                }
+                String referencedName = reference.getReferencedName();
+                for (String name : names) {
+                    if (name.equals(referencedName)) {
+                        return true;
+                    }
+                }
+                return false;
+            }
+        });
+    }
+
     @Nullable
     private static String getQualifiedName(JSElement element) {
         if (element instanceof JSReferenceExpression reference) {

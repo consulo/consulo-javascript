@@ -169,9 +169,10 @@
 
   // Expressions that stay on generic TypeScriptExpressionMixin (no specific JS interface methods or marker interfaces)
   mixin("template_literal_expression")                  = "consulo.typescript.language.impl.psi.mixin.TypeScriptTemplateLiteralExpressionMixin"
+  mixin("literal_expression")                           = "consulo.typescript.language.impl.psi.mixin.TypeScriptLiteralExpressionMixin"
   mixin("tagged_template_expression")                   = "consulo.typescript.language.impl.psi.mixin.TypeScriptTaggedTemplateExpressionMixin"
 
-  mixin("literal_expression|this_expression|as_expression|satisfies_expression|non_null_expression|type_assertion_expression|super_expression|class_expression|yield_expression|await_expression|nullish_coalescing_expression|logical_or_expression|logical_and_expression|bitwise_or_expression|bitwise_xor_expression|bitwise_and_expression|equality_expression|relational_expression|shift_expression|additive_expression|multiplicative_expression|exponentiation_expression") = "consulo.typescript.language.impl.psi.mixin.TypeScriptExpressionMixin"
+  mixin("this_expression|as_expression|satisfies_expression|non_null_expression|type_assertion_expression|super_expression|class_expression|yield_expression|await_expression|nullish_coalescing_expression|logical_or_expression|logical_and_expression|bitwise_or_expression|bitwise_xor_expression|bitwise_and_expression|equality_expression|relational_expression|shift_expression|additive_expression|multiplicative_expression|exponentiation_expression") = "consulo.typescript.language.impl.psi.mixin.TypeScriptExpressionMixin"
 
   // === rule hierarchy ===
   extends(".*_expression|arrow_function|template_literal_expression") = expression

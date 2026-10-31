@@ -65,6 +65,12 @@
             <version>${project.version}</version>
             <scope>provided</scope>
         </dependency>
+        <dependency>
+            <groupId>consulo</groupId>
+            <artifactId>consulo-language-inject-advanced-api</artifactId>
+            <version>${project.version}</version>
+            <scope>provided</scope>
+        </dependency>
         
         <dependency>
             <groupId>${project.groupId}</groupId>

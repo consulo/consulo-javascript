@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<component name="LanguageInjectionConfiguration">
+  <!-- the strings the DOM parses as markup -->
+  <injection language="HTML" injector-id="js">
+    <display-name>DOM markup (innerHTML, insertAdjacentHTML, document.write)</display-name>
+    <place><![CDATA[jsString().and(jsAssignedTo("innerHTML", "outerHTML"))]]></place>
+    <place><![CDATA[jsString().and(jsArgumentOfMethod("insertAdjacentHTML", 1))]]></place>
+    <place><![CDATA[jsString().and(jsArgumentOfMethod("setHTMLUnsafe", 0))]]></place>
+    <place><![CDATA[jsString().and(jsArgument("document.write", 0))]]></place>
+    <place><![CDATA[jsString().and(jsArgument("document.writeln", 0))]]></place>
+    <place><![CDATA[jsString().and(jsArgumentOfMethod("parseFromString", 0)).and(jsArgumentWith(1, "text/html"))]]></place>
+  </injection>
+</component>

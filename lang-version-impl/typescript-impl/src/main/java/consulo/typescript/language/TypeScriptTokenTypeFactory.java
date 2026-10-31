@@ -161,6 +161,12 @@ public final class TypeScriptTokenTypeFactory {
         // so JavaScriptHighlightVisitor highlights them as keywords
         if (name.endsWith("_KEYWORD")) {
             String keyword = name.substring(0, name.length() - "_KEYWORD".length()).toLowerCase(Locale.ROOT);
+            // reuse the JavaScript context keyword (async, await, of, ...): the keyword map is shared by text, a new
+            // element type would replace the JavaScript one and the JavaScript parser would stop recognizing it
+            IElementType javaScriptKeyword = JavaScriptContextKeywordElementType.getKeywordByText(keyword);
+            if (javaScriptKeyword != null) {
+                return javaScriptKeyword;
+            }
             return new JavaScriptContextKeywordElementType(name, keyword);
         }
         return new TypeScriptTokenType(name);
