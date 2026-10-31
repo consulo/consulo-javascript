@@ -5,19 +5,10 @@
   "singleton": true,
   "options": {
     "goals": [
-      "consulo:run-desktop-awt",
+      "consulo:run-desktop-awt-fork",
       "-pl",
       ":consulo.javascript"
     ],
-    "runnerSettings": {
-      "vmOptions": "--add-opens=java.desktop/sun.awt=ALL-UNNAMED --add-opens=java.desktop/sun.swing=ALL-UNNAMED --add-opens=java.desktop/sun.awt.image=ALL-UNNAMED --add-opens=java.desktop/sun.java2d=ALL-UNNAMED --add-opens=java.desktop/sun.font=ALL-UNNAMED --add-opens=java.desktop/java.awt=ALL-UNNAMED --add-opens=java.desktop/javax.swing=ALL-UNNAMED --add-opens=java.desktop/javax.swing.plaf.basic=ALL-UNNAMED --add-opens=java.base/java.lang=ALL-UNNAMED --add-opens=java.desktop/javax.swing.text.html=ALL-UNNAMED --add-opens=java.desktop/java.awt.peer=ALL-UNNAMED --add-opens=java.desktop/java.awt.event=ALL-UNNAMED -ea",
-      "mavenProperties": {},
-      "skipTests": false,
-      "jreName": "21",
-      "passParentEnv": true,
-      "environmentProperties": {},
-      "runMavenInBackground": true
-    },
     "workingDirectory": "$PROJECT_DIR$",
     "resolveToWorkspace": true
   },
