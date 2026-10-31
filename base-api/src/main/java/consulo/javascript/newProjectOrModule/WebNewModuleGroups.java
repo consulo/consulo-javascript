@@ -1,6 +1,5 @@
 package consulo.javascript.newProjectOrModule;
 
-import consulo.javascript.icon.JavaScriptIconGroup;
 import consulo.localize.LocalizeValue;
 import consulo.module.creation.scratch.NewModuleContext;
 import consulo.module.creation.scratch.NewModuleContextGroup;
@@ -19,6 +18,6 @@ public final class WebNewModuleGroups {
     }
 
     public static NewModuleContextGroup getWebGroup(NewModuleContext context) {
-        return context.addGroup(WEB_GROUP_ID, LocalizeValue.localizeTODO("Web (JavaScript)"), JavaScriptIconGroup.javascript());
+        return context.addGroup(WEB_GROUP_ID, LocalizeValue.localizeTODO("Web (JavaScript)"));
     }
 }
