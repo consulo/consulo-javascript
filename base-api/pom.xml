@@ -76,5 +76,11 @@
             <artifactId>consulo-language-code-style-api</artifactId>
             <version>${project.version}</version>
         </dependency>
+        <dependency>
+            <groupId>consulo</groupId>
+            <artifactId>consulo-module-creation-api</artifactId>
+            <version>${project.version}</version>
+            <scope>provided</scope>
+        </dependency>
     </dependencies>
 </project>

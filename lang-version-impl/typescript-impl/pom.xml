@@ -82,6 +82,13 @@
         </dependency>
 
         <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>com.intellij.xml.html.api</artifactId>
+            <version>${project.version}</version>
+            <scope>provided</scope>
+        </dependency>
+
+        <dependency>
             <groupId>consulo</groupId>
             <artifactId>consulo-test-junit-impl</artifactId>
             <version>${project.version}</version>

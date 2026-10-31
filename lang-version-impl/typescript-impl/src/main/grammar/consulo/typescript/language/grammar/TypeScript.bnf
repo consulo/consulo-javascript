@@ -15,11 +15,15 @@
   parserUtilClass        = "consulo.typescript.language.impl.syntax.TypeScriptParserUtil"
 
   // === stubs: the JavaScript stubs and indexes (TypeScriptStubElementTypes) ===
-  stubClass("class_declaration|interface_declaration")   = "com.intellij.lang.javascript.psi.stubs.JSClassStub"
-  stubClass("function_declaration|method_declaration|constructor_declaration|accessor_declaration|method_signature_member") = "com.intellij.lang.javascript.psi.stubs.JSFunctionStub"
+  // a namespace is stubbed like a class: a global name (Intl, Reflect) with members
+  stubClass("class_declaration|interface_declaration|namespace_declaration") = "com.intellij.lang.javascript.psi.stubs.JSClassStub"
+  stubClass("function_declaration|method_declaration|constructor_declaration|accessor_declaration|method_signature_member|construct_signature_member") = "com.intellij.lang.javascript.psi.stubs.JSFunctionStub"
   stubClass("var_statement")                             = "com.intellij.lang.javascript.psi.stubs.JSVarStatementStub"
-  stubClass("variable_declaration|property_declaration|parameter") = "com.intellij.lang.javascript.psi.stubs.JSVariableStub"
-  elementTypeFactory("class_declaration|interface_declaration|function_declaration|method_declaration|constructor_declaration|accessor_declaration|method_signature_member|var_statement|variable_declaration|property_declaration|parameter") = "consulo.typescript.language.impl.stub.TypeScriptStubElementTypes.factory"
+  stubClass("variable_declaration|property_declaration|property_signature_member|parameter") = "com.intellij.lang.javascript.psi.stubs.JSVariableStub"
+  // all four share the mixin: only the extends_list of an interface has a stub element type
+  stubClass("extends_list|implements_list|extends_clause|implements_clause") = "com.intellij.lang.javascript.psi.stubs.JSReferenceListStub"
+  stubClass("type_alias_declaration")                    = "consulo.typescript.language.impl.stub.TypeScriptTypeAliasStub"
+  elementTypeFactory("class_declaration|interface_declaration|namespace_declaration|type_alias_declaration|function_declaration|method_declaration|constructor_declaration|accessor_declaration|method_signature_member|construct_signature_member|var_statement|variable_declaration|property_declaration|property_signature_member|parameter|extends_list") = "consulo.typescript.language.impl.stub.TypeScriptStubElementTypes.factory"
 
   // === implements: JS base type hierarchy ===
   // TypeScriptExpression extends JSExpression, TypeScriptStatement extends JSStatement
@@ -31,20 +35,21 @@
   implements("interface_declaration|enum_declaration|type_alias_declaration|namespace_declaration") = "consulo.typescript.language.psi.TypeScriptElement"
 
   // Type elements
-  implements("type_annotation|type_reference|union_type|intersection_type|array_type|tuple_type|function_type|object_type|conditional_type|mapped_type|indexed_access_type|literal_type|typeof_type|keyof_type|infer_type|template_literal_type|parenthesized_type|predefined_type") = "consulo.javascript.language.psi.JavaScriptTypeElement"
+  implements("type_annotation|type_reference|union_type|intersection_type|array_type|tuple_type|function_type|object_type|conditional_type|mapped_type|indexed_access_type|literal_type|typeof_type|keyof_type|infer_type|template_literal_type|parenthesized_type|predefined_type|type_operator|type_predicate") = "consulo.javascript.language.psi.JavaScriptTypeElement"
 
   // Individual JS interface conformance — declarations
-  implements("class_declaration|interface_declaration")    = "com.intellij.lang.javascript.psi.JSClass"
+  implements("class_declaration|interface_declaration|namespace_declaration") = "com.intellij.lang.javascript.psi.JSClass"
   implements("function_declaration")                     = "com.intellij.lang.javascript.psi.JSFunction"
-  implements("method_declaration|constructor_declaration|accessor_declaration|method_signature_member") = "com.intellij.lang.javascript.psi.JSFunction"
-  implements("property_declaration")                     = "com.intellij.lang.javascript.psi.JSVariable"
+  implements("method_declaration|constructor_declaration|accessor_declaration|method_signature_member|construct_signature_member") = "com.intellij.lang.javascript.psi.JSFunction"
+  // property signatures are the fields of interfaces (stubbed in an interface, AST only in an inline object type)
+  implements("property_declaration|property_signature_member") = "com.intellij.lang.javascript.psi.JSVariable"
   implements("variable_declaration")                     = "com.intellij.lang.javascript.psi.JSVariable"
   implements("parameter")                                = "com.intellij.lang.javascript.psi.JSParameter"
   implements("var_statement")                            = "com.intellij.lang.javascript.psi.JSVarStatement"
   implements("block_statement")                          = "com.intellij.lang.javascript.psi.JSBlockStatement"
   implements("attribute_list")                           = "com.intellij.lang.javascript.psi.JSAttributeList"
   implements("parameter_list")                           = "com.intellij.lang.javascript.psi.JSParameterList"
-  implements("property|property_signature_member")        = "com.intellij.lang.javascript.psi.JSProperty"
+  implements("property")                                 = "com.intellij.lang.javascript.psi.JSProperty"
   implements("argument_list")                            = "com.intellij.lang.javascript.psi.JSArgumentList"
   implements("extends_list|implements_list|extends_clause|implements_clause") = "com.intellij.lang.javascript.psi.JSReferenceList"
   implements("type_parameter_list")                      = "com.intellij.lang.javascript.psi.JSGenericSignature"
@@ -100,8 +105,8 @@
   mixin("class_declaration")                            = "consulo.typescript.language.impl.psi.mixin.TypeScriptClassMixin<com.intellij.lang.javascript.psi.stubs.JSClassStub>"
   mixin("interface_declaration")                        = "consulo.typescript.language.impl.psi.mixin.TypeScriptInterfaceMixin<com.intellij.lang.javascript.psi.stubs.JSClassStub>"
   mixin("function_declaration")                         = "consulo.typescript.language.impl.psi.mixin.TypeScriptFunctionMixin<com.intellij.lang.javascript.psi.stubs.JSFunctionStub>"
-  mixin("method_declaration|constructor_declaration|accessor_declaration|method_signature_member") = "consulo.typescript.language.impl.psi.mixin.TypeScriptMethodMixin<com.intellij.lang.javascript.psi.stubs.JSFunctionStub>"
-  mixin("property_declaration")                         = "consulo.typescript.language.impl.psi.mixin.TypeScriptVariableMixin<com.intellij.lang.javascript.psi.stubs.JSVariableStub>"
+  mixin("method_declaration|constructor_declaration|accessor_declaration|method_signature_member|construct_signature_member") = "consulo.typescript.language.impl.psi.mixin.TypeScriptMethodMixin<com.intellij.lang.javascript.psi.stubs.JSFunctionStub>"
+  mixin("property_declaration|property_signature_member") = "consulo.typescript.language.impl.psi.mixin.TypeScriptVariableMixin<com.intellij.lang.javascript.psi.stubs.JSVariableStub>"
   mixin("for_of_statement")                             = "consulo.typescript.language.impl.psi.mixin.TypeScriptForInStatementMixin"
   mixin("variable_declaration")                         = "consulo.typescript.language.impl.psi.mixin.TypeScriptVariableMixin<com.intellij.lang.javascript.psi.stubs.JSVariableStub>"
   mixin("parameter")                                    = "consulo.typescript.language.impl.psi.mixin.TypeScriptParameterMixin<com.intellij.lang.javascript.psi.stubs.JSVariableStub>"
@@ -111,7 +116,7 @@
   mixin("binary_expression|assignment_expression|comma_expression") = "consulo.typescript.language.impl.psi.mixin.TypeScriptBinaryExpressionMixin"
   mixin("attribute_list")                               = "consulo.typescript.language.impl.psi.mixin.TypeScriptAttributeListMixin"
   mixin("parameter_list")                               = "consulo.typescript.language.impl.psi.mixin.TypeScriptParameterListMixin"
-  mixin("property|property_signature_member")             = "consulo.typescript.language.impl.psi.mixin.TypeScriptPropertyMixin"
+  mixin("property")                                     = "consulo.typescript.language.impl.psi.mixin.TypeScriptPropertyMixin"
   mixin("argument_list")                                = "consulo.typescript.language.impl.psi.mixin.TypeScriptArgumentListMixin"
   mixin("extends_list|implements_list|extends_clause|implements_clause") = "consulo.typescript.language.impl.psi.mixin.TypeScriptReferenceListMixin"
   mixin("export_default_assignment")                    = "consulo.typescript.language.impl.psi.mixin.TypeScriptExportDefaultAssignmentMixin"
@@ -135,7 +140,15 @@
 
   // Statements that stay on generic TypeScriptStatementMixin (no specific JS interface methods)
   mixin("empty_statement|debugger_statement|with_statement") = "consulo.typescript.language.impl.psi.mixin.TypeScriptStatementMixin"
-  mixin("enum_declaration|enum_member|namespace_declaration|type_alias_declaration|type_parameter") = "consulo.typescript.language.impl.psi.mixin.TypeScriptNamedDeclarationMixin"
+  mixin("enum_declaration|enum_member|type_parameter") = "consulo.typescript.language.impl.psi.mixin.TypeScriptNamedDeclarationMixin"
+  mixin("type_alias_declaration")                       = "consulo.typescript.language.impl.psi.mixin.TypeScriptTypeAliasMixin<consulo.typescript.language.impl.stub.TypeScriptTypeAliasStub>"
+  mixin("namespace_declaration")                        = "consulo.typescript.language.impl.psi.mixin.TypeScriptNamespaceMixin<com.intellij.lang.javascript.psi.stubs.JSClassStub>"
+  // the accessor of the name child: getQualifiedName() is the one of JSQualifiedNamedElement
+  methods("namespace_declaration")                      = [namespaceName="qualified_name"]
+  // the generated accessors of the attribute_list child would override the stub-safe getAttributeList() of the mixins
+  // (JSAttributeListOwner): the JavaScript resolve asks it of every member, it must not load the AST of lib.*.d.ts
+  methods("function_declaration")                       = [modifierList="attribute_list"]
+  methods("class_declaration")                          = [modifierList="attribute_list"]
   mixin("binding_pattern")                              = "consulo.typescript.language.impl.psi.mixin.TypeScriptBindingPatternMixin"
   mixin("qualified_name")                               = "consulo.typescript.language.impl.psi.mixin.TypeScriptQualifiedNameMixin"
   mixin("import_declaration")                           = "consulo.typescript.language.impl.psi.mixin.TypeScriptImportDeclarationMixin"
@@ -236,6 +249,9 @@
     PROTECTED_KEYWORD
     STATIC_KEYWORD
     IMPLEMENTS_KEYWORD
+    IS_KEYWORD
+    ASSERTS_KEYWORD
+    UNIQUE_KEYWORD
 
     // Literals
     NUMERIC_LITERAL
@@ -432,7 +448,9 @@ private semicolon ::= ';'?
 // ==================== Declarations ====================
 
 // --- Class ---
-class_declaration ::= decorator_list? attribute_list? ABSTRACT_KEYWORD? 'class' IDENTIFIER type_parameter_list? extends_clause? implements_clause? class_body {pin="CLASS_KEYWORD"}
+// @Component({...}) export class A {}: the decorators come before `export`, which then belongs to the class (like the
+// modifiers of IntelliJ's ES6Class) so the decorators stay inside the class; `export @Dec class A` is an export_declaration
+class_declaration ::= (decorator_list ('export' 'default'?)?)? attribute_list? ABSTRACT_KEYWORD? 'class' IDENTIFIER type_parameter_list? extends_clause? implements_clause? class_body {pin="CLASS_KEYWORD"}
 
 class_expression ::= ABSTRACT_KEYWORD? 'class' IDENTIFIER? type_parameter_list? extends_clause? class_body
 
@@ -465,7 +483,7 @@ accessor_declaration ::= (GET_KEYWORD | SET_KEYWORD) property_name parameter_lis
 
 property_declaration ::= property_name '?'? '!'? type_annotation? initializer? semicolon
 
-index_signature_declaration ::= '[' parameter ':' type_expression ']' type_annotation semicolon
+index_signature_declaration ::= READONLY_KEYWORD? '[' IDENTIFIER ':' type_expression ']' type_annotation semicolon
 
 // --- Function ---
 function_declaration ::= attribute_list? ASYNC_KEYWORD? 'function' '*'? IDENTIFIER type_parameter_list? parameter_list type_annotation? block_statement? {pin="FUNCTION_KEYWORD"}
@@ -482,17 +500,30 @@ arrow_parameter_binding ::= IDENTIFIER { elementType = binding_pattern }
 // --- Interface ---
 interface_declaration ::= INTERFACE_KEYWORD IDENTIFIER type_parameter_list? extends_list? interface_body {pin=1}
 
-private interface_body ::= '{' interface_member* '}'
+private interface_body ::= '{' (interface_member (';' | ',')?)* '}' {pin=1}
 
-private interface_member ::= (call_signature_member | construct_signature_member | method_signature_member | property_signature_member | index_signature_declaration) semicolon?
+// a member that doesn't parse loses only itself: the parser skips to the next ';', line or the end of the body
+private interface_member ::= !'}' type_member {pin=1 recoverWhile=interface_member_recover}
+
+private interface_member_recover ::= <<memberRecover>>
+
+// construct signatures first: a member name can be a keyword, so 'new' would be taken as a method name
+private type_member ::=
+    construct_signature_member
+  | call_signature_member
+  | index_signature_member
+  | method_signature_member
+  | property_signature_member
 
 call_signature_member ::= type_parameter_list? parameter_list type_annotation?
 
 construct_signature_member ::= 'new' type_parameter_list? parameter_list type_annotation?
 
-method_signature_member ::= property_name '?'? type_parameter_list? parameter_list type_annotation
+// get size(): number - the plain form first, so `get(key)` keeps `get` as its name
+method_signature_member ::= property_name '?'? type_parameter_list? parameter_list type_annotation?
+  | (GET_KEYWORD | SET_KEYWORD) property_name parameter_list type_annotation?
 
-property_signature_member ::= READONLY_KEYWORD? property_name '?'? type_annotation
+property_signature_member ::= READONLY_KEYWORD? property_name '?'? type_annotation?
 
 // --- Enum ---
 enum_declaration ::= 'const'? 'enum' IDENTIFIER enum_body {pin="ENUM_KEYWORD"}
@@ -567,7 +598,7 @@ expression ::= assignment_expression
 assignment_expression ::= conditional_expression (assignment_operator assignment_expression)?
 
 private assignment_operator ::= '=' | '+=' | '-=' | '*=' | '**=' | '/=' | '%='
-  | '<<=' | '>>=' | '>>>=' | '&=' | '|=' | '^=' | '||=' | '&&=' | '??='
+  | '<<=' | <<shiftRightUnsignedAssign>> | <<shiftRightAssign>> | '&=' | '|=' | '^=' | '||=' | '&&=' | '??='
 
 conditional_expression ::= nullish_coalescing_expression ('?' assignment_expression ':' assignment_expression)?
 
@@ -585,9 +616,10 @@ bitwise_and_expression ::= equality_expression ('&' equality_expression)*
 
 equality_expression ::= relational_expression (('==' | '!=' | '===' | '!==') relational_expression)*
 
-relational_expression ::= shift_expression (('<' | '>' | '<=' | '>=' | 'instanceof' | 'in') shift_expression)*
+relational_expression ::= shift_expression (('<' | <<greaterOrEqual>> | '>' | '<=' | 'instanceof' | 'in') shift_expression)*
 
-shift_expression ::= additive_expression (('<<' | '>>' | '>>>') additive_expression)*
+// the lexer emits single '>' (and '='): '>>', '>>>' and '>=' are joined by TypeScriptParserUtil
+shift_expression ::= additive_expression (('<<' | <<shiftRightUnsigned>> | <<shiftRight>>) additive_expression)*
 
 additive_expression ::= multiplicative_expression (('+' | '-') multiplicative_expression)*
 
@@ -707,15 +739,16 @@ binary_expression ::= expression binary_operator expression
 
 private binary_operator ::= '+' | '-' | '*' | '/' | '%' | '**'
   | '==' | '!=' | '===' | '!=='
-  | '<' | '>' | '<=' | '>='
-  | '<<' | '>>' | '>>>'
+  | '<' | <<greaterOrEqual>> | '>' | '<='
+  | '<<' | <<shiftRightUnsigned>> | <<shiftRight>>
   | '&' | '|' | '^'
   | '&&' | '||' | '??'
   | 'instanceof' | 'in'
 
-parameter_list ::= '(' (parameter (',' parameter)*)? ')' {pin=1}
+parameter_list ::= '(' (parameter (',' parameter)* ','?)? ')' {pin=1}
 
-parameter ::= decorator_list? attribute_list? '...'? binding_pattern '?'? type_annotation? initializer?
+// function f(this: Window): the type of `this`, not a parameter
+parameter ::= decorator_list? attribute_list? '...'? (binding_pattern | THIS_KEYWORD) '?'? type_annotation? initializer?
 
 argument_list ::= '(' (expression_or_spread (',' expression_or_spread)* ','?)? ')' {pin=1}
 
@@ -723,11 +756,16 @@ private expression_list ::= expression (',' expression)*
 
 // ==================== Type Expressions ====================
 
-private type_expression ::= conditional_type | union_or_intersection_type
+// T extends U ? X : Y wraps the checked type (left rule): the union isn't parsed twice
+private type_expression ::= union_or_intersection_type conditional_type?
 
-type_annotation ::= ':' type_expression
+left conditional_type ::= 'extends' union_or_intersection_type '?' type_expression ':' type_expression
 
-conditional_type ::= union_or_intersection_type 'extends' union_or_intersection_type '?' type_expression ':' type_expression
+type_annotation ::= ':' (type_predicate | type_expression)
+
+// x is string, this is Foo, asserts x is string, asserts x
+type_predicate ::= ASSERTS_KEYWORD? (IDENTIFIER | THIS_KEYWORD) IS_KEYWORD type_expression
+  | ASSERTS_KEYWORD (IDENTIFIER | THIS_KEYWORD)
 
 private union_or_intersection_type ::= union_type | intersection_type | primary_type_or_array
 
@@ -735,23 +773,26 @@ union_type ::= '|'? primary_type_or_array ('|' primary_type_or_array)+
 
 intersection_type ::= '&'? primary_type_or_array ('&' primary_type_or_array)+
 
-private primary_type_or_array ::= primary_type array_type_suffix*
+// T[], T[K]
+private primary_type_or_array ::= primary_type type_suffix*
 
-private array_type_suffix ::= '[' ']'
+private type_suffix ::= '[' type_expression? ']'
 
 array_type ::= primary_type '[' ']'
 
+// a function type before a parenthesized type: (x) => void
 private primary_type ::=
-    parenthesized_type
+    function_type
+  | parenthesized_type
+  | type_operator
+  | keyof_type
+  | typeof_type
+  | infer_type
   | type_reference
   | tuple_type
-  | function_type
   | object_type
   | mapped_type
   | literal_type
-  | typeof_type
-  | keyof_type
-  | infer_type
   | template_literal_type
   | predefined_type
 
@@ -763,20 +804,17 @@ tuple_type ::= '[' (tuple_element (',' tuple_element)* ','?)? ']'
 
 tuple_element ::= '...'? (IDENTIFIER ':')? type_expression '?'?
 
-function_type ::= type_parameter_list? '(' parameter_type_list? ')' '=>' type_expression
+// (x: T) => U, new () => T, abstract new () => T
+function_type ::= ABSTRACT_KEYWORD? 'new'? type_parameter_list? '(' parameter_type_list? ')' '=>' (type_predicate | type_expression)
 
-private parameter_type_list ::= parameter_type (',' parameter_type)*
+private parameter_type_list ::= parameter_type (',' parameter_type)* ','?
 
-parameter_type ::= '...'? IDENTIFIER '?'? ':' type_expression
+parameter_type ::= '...'? (IDENTIFIER | THIS_KEYWORD | array_binding_pattern | object_binding_pattern) '?'? (':' type_expression)?
 
-object_type ::= '{' (object_type_member (';' | ',')?)*  '}'
+// readonly T[], unique symbol
+type_operator ::= (READONLY_KEYWORD | UNIQUE_KEYWORD) primary_type_or_array
 
-private object_type_member ::=
-    property_signature_member
-  | call_signature_member
-  | construct_signature_member
-  | index_signature_member
-  | method_signature_member
+object_type ::= '{' (type_member (';' | ',')?)*  '}'
 
 index_signature_member ::= READONLY_KEYWORD? '[' IDENTIFIER ':' type_expression ']' type_annotation
 
@@ -784,21 +822,23 @@ mapped_type ::= '{' ('+' | '-')? READONLY_KEYWORD? '[' IDENTIFIER 'in' type_expr
 
 indexed_access_type ::= primary_type '[' type_expression ']'
 
-literal_type ::= NUMERIC_LITERAL | STRING_LITERAL | SINGLE_QUOTE_STRING_LITERAL | TRUE_KEYWORD | FALSE_KEYWORD | NULL_KEYWORD
+literal_type ::= '-'? NUMERIC_LITERAL | STRING_LITERAL | SINGLE_QUOTE_STRING_LITERAL | TRUE_KEYWORD | FALSE_KEYWORD | NULL_KEYWORD
 
-typeof_type ::= 'typeof' reference_expression
+// typeof FileReader.DONE
+typeof_type ::= 'typeof' reference_expression qualified_reference_expression*
 
-keyof_type ::= KEYOF_KEYWORD type_expression
+// keyof T | U is (keyof T) | U
+keyof_type ::= KEYOF_KEYWORD primary_type_or_array
 
 infer_type ::= INFER_KEYWORD IDENTIFIER ('extends' type_expression)?
 
 template_literal_type ::= BACKQUOTE (STRING_TEMPLATE_PART | DOLLAR '{' type_expression '}')* BACKQUOTE
 
-predefined_type ::= IDENTIFIER | VOID_KEYWORD
+predefined_type ::= IDENTIFIER | VOID_KEYWORD | THIS_KEYWORD
 
-type_parameter_list ::= '<' type_parameter (',' type_parameter)* '>' {pin=1}
+type_parameter_list ::= '<' type_parameter (',' type_parameter)* ','? '>' {pin=1}
 
-type_parameter ::= IDENTIFIER ('extends' type_expression)? ('=' type_expression)?
+type_parameter ::= CONST_KEYWORD? IDENTIFIER ('extends' type_expression)? ('=' type_expression)?
 
 type_arguments ::= '<' type_expression (',' type_expression)* '>'
 
@@ -808,13 +848,18 @@ private decorator_list ::= decorator+
 
 decorator ::= '@' expression
 
-attribute_list ::= (access_modifier | STATIC_KEYWORD | ABSTRACT_KEYWORD | READONLY_KEYWORD | OVERRIDE_KEYWORD | ASYNC_KEYWORD)*
+attribute_list ::= attribute_modifier*
+
+// a modifier word followed by ':', '?', ... is a name: function f(async: boolean), class A { static() {} }
+private attribute_modifier ::= (access_modifier | STATIC_KEYWORD | ABSTRACT_KEYWORD | READONLY_KEYWORD | OVERRIDE_KEYWORD | ASYNC_KEYWORD)
+  !(':' | '?' | ',' | ')' | '=' | '(' | ';' | '<' | '!' | '}')
 
 private access_modifier ::= PUBLIC_KEYWORD | PRIVATE_KEYWORD | PROTECTED_KEYWORD
 
 // ==================== Utility Rules ====================
 
-private property_name ::= IDENTIFIER | STRING_LITERAL | SINGLE_QUOTE_STRING_LITERAL | NUMERIC_LITERAL | computed_property_name
+// reserved words name members too (map.delete, iterator.return): the parser remaps them to IDENTIFIER
+private property_name ::= IDENTIFIER | STRING_LITERAL | SINGLE_QUOTE_STRING_LITERAL | NUMERIC_LITERAL | computed_property_name | <<keywordAsName>>
 
 qualified_name ::= IDENTIFIER ('.' IDENTIFIER)*
 

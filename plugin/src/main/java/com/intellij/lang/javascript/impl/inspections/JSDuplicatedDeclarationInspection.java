@@ -19,6 +19,7 @@ package com.intellij.lang.javascript.impl.inspections;
 import com.intellij.lang.javascript.JSElementType;
 import com.intellij.lang.javascript.JavaScriptSupportLoader;
 import com.intellij.lang.javascript.psi.*;
+import org.jspecify.annotations.Nullable;
 import com.intellij.lang.javascript.psi.impl.JSEmbeddedContentImpl;
 import com.intellij.lang.javascript.psi.resolve.JSResolveUtil;
 import com.intellij.lang.javascript.psi.resolve.ResolveProcessor;
@@ -67,7 +68,8 @@ public class JSDuplicatedDeclarationInspection extends JSInspection {
             @RequiredReadAction
             public void visitJSClass(JSClass node) {
                 String name = node.getName();
-                if (name == null) {
+                // the name of a class expression (const A = class A {}) is visible inside the class only
+                if (name == null || isClassExpression(node)) {
                     return;
                 }
                 PsiElement nameIdentifier = node.getNameIdentifier();
@@ -111,7 +113,11 @@ public class JSDuplicatedDeclarationInspection extends JSInspection {
                     @Override
                     @RequiredReadAction
                     public boolean execute(PsiElement element, ResolveState state) {
-                        if (element == decl) {
+                        if (element == decl || isClassExpression(element)) {
+                            return true;
+                        }
+                        // let / const are block scoped: same-named ones in other blocks don't clash
+                        if ((isBlockScoped(decl) || isBlockScoped(element)) && getBlockScope(decl) != getBlockScope(element)) {
                             return true;
                         }
                         //if (!decl.getClass().isInstance(element)) return true;
@@ -209,6 +215,31 @@ public class JSDuplicatedDeclarationInspection extends JSInspection {
                 }
             }
         };
+    }
+
+    private static boolean isClassExpression(PsiElement element) {
+        return element instanceof JSClass && element.getParent() instanceof JSClassExpression;
+    }
+
+    @RequiredReadAction
+    private static boolean isBlockScoped(PsiElement element) {
+        return element instanceof JSVariable variable && !(element instanceof JSParameter) && (variable.isConst() || variable.isLocal());
+    }
+
+    /**
+     * The block a let / const belongs to: the nearest block, loop, function or file.
+     */
+    @Nullable
+    private static PsiElement getBlockScope(PsiElement element) {
+        return PsiTreeUtil.getParentOfType(
+            element,
+            JSBlockStatement.class,
+            JSForStatement.class,
+            JSForInStatement.class,
+            JSFunction.class,
+            JSFile.class,
+            JSEmbeddedContentImpl.class
+        );
     }
 
     @Override

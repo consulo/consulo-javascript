@@ -136,7 +136,7 @@ public class TypeScriptClassMixin<T extends JSClassStub> extends StubBasedPsiEle
     @Override
     public String getQualifiedName() {
         var stub = getGreenStub();
-        return stub != null ? stub.getQualifiedName() : getName();
+        return stub != null ? stub.getQualifiedName() : TypeScriptResolveUtil.qualifyByNamespaces(this, getName());
     }
 
     // --- JSNamedElement / PsiNamedElement / PsiNameIdentifierOwner ---
@@ -189,6 +189,9 @@ public class TypeScriptClassMixin<T extends JSClassStub> extends StubBasedPsiEle
         @Nullable PsiElement lastParent,
         @Nonnull PsiElement place
     ) {
+        if (TypeScriptResolveUtil.isMemberLookup(this, lastParent)) {
+            return TypeScriptResolveUtil.processMembers(this, processor, state);
+        }
         // seen from inside: its type parameters too
         if (lastParent != null && !TypeScriptResolveUtil.processTypeParameters(this, processor, state)) {
             return false;

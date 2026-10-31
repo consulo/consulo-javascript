@@ -17,14 +17,20 @@
 package com.intellij.lang.javascript.psi.impl;
 
 import com.intellij.lang.javascript.JSTokenTypes;
+import com.intellij.lang.javascript.psi.JSArgumentList;
+import com.intellij.lang.javascript.psi.JSCallExpression;
 import com.intellij.lang.javascript.psi.JSElementVisitor;
 import com.intellij.lang.javascript.psi.JSExpression;
+import com.intellij.lang.javascript.psi.JSReferenceExpression;
 import consulo.annotation.access.RequiredReadAction;
 import consulo.annotation.access.RequiredWriteAction;
 import consulo.javascript.lang.JavaScriptTokenSets;
 import consulo.javascript.language.psi.JavaScriptPrimitiveType;
 import consulo.javascript.language.psi.JavaScriptType;
+import consulo.javascript.module.resolve.JavaScriptModuleReference;
+import consulo.javascript.module.resolve.JavaScriptModuleRequest;
 import consulo.javascript.psi.JSSimpleLiteralExpression;
+import consulo.document.util.TextRange;
 import consulo.language.ast.ASTNode;
 import consulo.language.ast.IElementType;
 import consulo.language.psi.LiteralTextEscaper;
@@ -77,6 +83,12 @@ public class JSLiteralExpressionImpl extends JSExpressionImpl implements JSSimpl
     @Override
     @RequiredReadAction
     public PsiReference[] getReferences() {
+        if (isRequireArgument()) {
+            JavaScriptModuleReference reference =
+                JavaScriptModuleReference.create(this, new TextRange(0, getTextLength()), JavaScriptModuleRequest.Kind.REQUIRE);
+            return reference == null ? PsiReference.EMPTY_ARRAY : new PsiReference[]{reference};
+        }
+
         JSReferenceSet referenceSet = myReferenceSet;
 
         if (referenceSet == null) {
@@ -103,6 +115,21 @@ public class JSLiteralExpressionImpl extends JSExpressionImpl implements JSSimpl
         }
 
         return myReferenceSet.getReferences();
+    }
+
+    /**
+     * {@code 'x'} of {@code require('x')}: a module, not a name
+     */
+    @RequiredReadAction
+    private boolean isRequireArgument() {
+        if (!JavaScriptTokenSets.STRING_LITERALS.contains(getNode().getFirstChildNode().getElementType())
+            || !(getParent() instanceof JSArgumentList argumentList)
+            || !(argumentList.getParent() instanceof JSCallExpression call)
+            || !(call.getMethodExpression() instanceof JSReferenceExpression method)) {
+            return false;
+        }
+        JSExpression[] arguments = argumentList.getArguments();
+        return method.getQualifier() == null && "require".equals(method.getReferencedName()) && arguments.length > 0 && arguments[0] == this;
     }
 
     @Override

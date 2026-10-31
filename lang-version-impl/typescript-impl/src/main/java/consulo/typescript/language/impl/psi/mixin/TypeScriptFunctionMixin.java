@@ -7,6 +7,7 @@ import com.intellij.lang.javascript.JSTokenTypes;
 import com.intellij.lang.javascript.psi.*;
 import consulo.annotation.access.RequiredReadAction;
 import consulo.javascript.language.psi.JavaScriptType;
+import consulo.javascript.psi.JSDeclaredTypeNameProvider;
 import consulo.javascript.language.psi.JavaScriptTypeElement;
 import consulo.language.ast.ASTNode;
 import consulo.language.psi.PsiElement;
@@ -26,7 +27,7 @@ import org.jspecify.annotations.Nullable;
  * @author VISTALL
  * @since 2026-03-17
  */
-public class TypeScriptFunctionMixin<T extends JSFunctionStub> extends StubBasedPsiElementBase<T> implements JSFunction {
+public class TypeScriptFunctionMixin<T extends JSFunctionStub> extends StubBasedPsiElementBase<T> implements JSFunction, JSDeclaredTypeNameProvider {
     public TypeScriptFunctionMixin(@Nonnull ASTNode node) {
         super(node);
     }
@@ -75,9 +76,21 @@ public class TypeScriptFunctionMixin<T extends JSFunctionStub> extends StubBased
         return JavaScriptType.UNKNOWN;
     }
 
+    /**
+     * The class name of the declared type (the return type): {@code HTMLElement | null} is {@code HTMLElement}.
+     */
+    @Nullable
     @Override
+    @RequiredReadAction
+    public String getDeclaredTypeName() {
+        return TypeScriptResolveUtil.getTypeName(getReturnTypeString());
+    }
+
+    @Override
+    @RequiredReadAction
     public String getReturnTypeString() {
-        return null;
+        JSFunctionStub stub = getGreenStub();
+        return stub != null ? stub.getReturnTypeString() : TypeScriptResolveUtil.getTypeAnnotationText(this);
     }
 
     @Nullable
@@ -97,7 +110,7 @@ public class TypeScriptFunctionMixin<T extends JSFunctionStub> extends StubBased
     @Override
     public String getQualifiedName() {
         var stub = getGreenStub();
-        return stub != null ? stub.getQualifiedName() : getName();
+        return stub != null ? stub.getQualifiedName() : TypeScriptResolveUtil.qualifyByNamespaces(this, getName());
     }
 
     // --- JSNamedElement / PsiNamedElement / PsiNameIdentifierOwner ---

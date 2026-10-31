@@ -11,7 +11,7 @@ import jakarta.inject.Inject;
  * @since 06/12/2021
  */
 @ExtensionImpl
-public class EcmaScript12JavaScriptVersion extends EcmaScript6JavaScriptVersion implements DefaultJavaScriptVersion {
+public class EcmaScript12JavaScriptVersion extends EcmaScript11JavaScriptVersion implements DefaultJavaScriptVersion {
     public static EcmaScript12JavaScriptVersion getInstance() {
         return JavaScriptLanguage.INSTANCE.findVersionByClass(EcmaScript12JavaScriptVersion.class);
     }

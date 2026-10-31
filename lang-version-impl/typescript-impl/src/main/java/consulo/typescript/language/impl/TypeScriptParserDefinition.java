@@ -3,7 +3,6 @@ package consulo.typescript.language.impl;
 import com.intellij.lang.javascript.JSTokenTypes;
 import com.intellij.lang.javascript.psi.impl.JSDocCommentImpl;
 import com.intellij.lang.javascript.psi.impl.JSFileImpl;
-import com.intellij.lang.javascript.types.JSFileElementType;
 import consulo.annotation.component.ExtensionImpl;
 import consulo.language.Language;
 import consulo.language.ast.ASTNode;
@@ -16,6 +15,7 @@ import consulo.language.psi.PsiFile;
 import consulo.language.util.LanguageUtil;
 import consulo.language.version.LanguageVersionableParserDefinition;
 import consulo.typescript.language.TypeScriptLanguage;
+import consulo.typescript.language.impl.stub.TypeScriptFileElementType;
 import consulo.typescript.language.impl.psi.TypeScriptTypesFactory;
 
 /**
@@ -27,7 +27,7 @@ import consulo.typescript.language.impl.psi.TypeScriptTypesFactory;
  */
 @ExtensionImpl
 public class TypeScriptParserDefinition extends LanguageVersionableParserDefinition {
-    private static final IFileElementType FILE = new JSFileElementType(TypeScriptLanguage.INSTANCE);
+    private static final IFileElementType FILE = new TypeScriptFileElementType();
 
     @Override
     public Language getLanguage() {

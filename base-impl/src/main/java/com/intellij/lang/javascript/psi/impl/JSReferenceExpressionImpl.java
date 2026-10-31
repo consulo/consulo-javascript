@@ -551,7 +551,7 @@ public class JSReferenceExpressionImpl extends JSExpressionImpl implements JSRef
             processor.addLocalResults(localProcessor.getResultsAsResolveResults());
         }
 
-        JSResolveUtil.processGlobalSymbols(this, processor);
+        JSResolveUtil.processGlobalSymbols(this, referencedName, processor);
         return processor.getResults();
     }
 

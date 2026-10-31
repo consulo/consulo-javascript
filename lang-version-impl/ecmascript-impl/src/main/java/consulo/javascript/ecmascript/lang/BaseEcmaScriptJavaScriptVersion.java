@@ -45,6 +45,13 @@ public abstract class BaseEcmaScriptJavaScriptVersion extends BaseJavaScriptLang
     }
 
     private Lexer createLexer(boolean hightlight) {
+        return createEcmaScriptLexer(hightlight);
+    }
+
+    /**
+     * The lexer of ECMAScript 6+, for dialects that aren't ECMAScript versions.
+     */
+    public static Lexer createEcmaScriptLexer(boolean hightlight) {
         return new MergingLexerAdapter(
             new JavaScriptFlexAdapter(new _EcmaScript6Lexer(hightlight)),
             TokenSet.create(JSTokenTypes.XML_JS_SCRIPT, JSTokenTypes.STRING_TEMPLATE_PART)

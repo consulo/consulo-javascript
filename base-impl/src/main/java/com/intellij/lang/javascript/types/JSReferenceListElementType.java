@@ -20,6 +20,7 @@ package com.intellij.lang.javascript.types;
 import java.io.IOException;
 
 
+import consulo.language.Language;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.stub.*;
 import consulo.language.ast.ASTNode;
@@ -43,6 +44,13 @@ import consulo.javascript.language.psi.stub.JavaScriptIndexKeys;
 public class JSReferenceListElementType extends JSStubElementType<JSReferenceListStub, JSReferenceList> {
     public JSReferenceListElementType(String name) {
         super(name);
+    }
+
+    /**
+     * For other languages reusing the JavaScript stubs (TypeScript).
+     */
+    protected JSReferenceListElementType(String name, Language language) {
+        super(name, language);
     }
 
     @Override

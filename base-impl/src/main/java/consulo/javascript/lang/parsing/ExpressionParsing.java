@@ -497,7 +497,7 @@ public class ExpressionParsing<C extends JavaScriptParsingContext> extends Parsi
         return parseAssignmentExpression(builder, true);
     }
 
-    private boolean parseAssignmentExpression(PsiBuilder builder, boolean allowIn) {
+    protected boolean parseAssignmentExpression(PsiBuilder builder, boolean allowIn) {
         PsiBuilder.Marker expr = builder.mark();
 
         if (JSTokenTypes.ASSIGNMENT_OPERATIONS.contains(builder.getTokenType()) && builder.getUserData(WITHIN_OBJECT_LITERAL_EXPRESSION) == null) {
@@ -569,7 +569,8 @@ public class ExpressionParsing<C extends JavaScriptParsingContext> extends Parsi
             return false;
         }
 
-        while (builder.getTokenType() == JSTokenTypes.OROR) {
+        // ?? (ES2020) has the precedence of ||; mixing them without parentheses is an error JavaScript reports, not the parser
+        while (builder.getTokenType() == JSTokenTypes.OROR || builder.getTokenType() == JSTokenTypes.QUEST_QUEST) {
             builder.advanceLexer();
             if (!parseANDExpression(builder, allowIn)) {
                 builder.error(JavaScriptLocalize.javascriptParserMessageExpectedExpression());
@@ -602,6 +603,13 @@ public class ExpressionParsing<C extends JavaScriptParsingContext> extends Parsi
         return true;
     }
 
+    /**
+     * {@code |} of a bitwise OR; a dialect without bitwise operators ({@code |} of Angular pipes) returns false.
+     */
+    protected boolean isBitwiseOrOperator(PsiBuilder builder) {
+        return builder.getTokenType() == JSTokenTypes.OR;
+    }
+
     private boolean parseBitwiseORExpression(PsiBuilder builder, boolean allowIn) {
         PsiBuilder.Marker expr = builder.mark();
         if (!parseBitwiseXORExpression(builder, allowIn)) {
@@ -609,7 +617,7 @@ public class ExpressionParsing<C extends JavaScriptParsingContext> extends Parsi
             return false;
         }
 
-        while (builder.getTokenType() == JSTokenTypes.OR) {
+        while (isBitwiseOrOperator(builder)) {
             builder.advanceLexer();
             if (!parseBitwiseXORExpression(builder, allowIn)) {
                 builder.error(JavaScriptLocalize.javascriptParserMessageExpectedExpression());
@@ -784,7 +792,7 @@ public class ExpressionParsing<C extends JavaScriptParsingContext> extends Parsi
         return true;
     }
 
-    private boolean parseUnaryExpression(PsiBuilder builder) {
+    protected boolean parseUnaryExpression(PsiBuilder builder) {
         IElementType tokenType = builder.getTokenType();
         if (JSTokenTypes.UNARY_OPERATIONS.contains(tokenType)) {
             PsiBuilder.Marker expr = builder.mark();

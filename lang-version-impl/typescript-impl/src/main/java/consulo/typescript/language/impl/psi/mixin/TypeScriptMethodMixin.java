@@ -27,19 +27,23 @@ public class TypeScriptMethodMixin<T extends JSFunctionStub> extends TypeScriptF
         super(stub, type);
     }
 
+    // the stub first: the JavaScript resolve asks every member it meets, the declaring file (lib.dom.d.ts) isn't parsed
+
     @Override
     public boolean isGetProperty() {
-        return getNode().findChildByType(JSTokenTypes.GET_KEYWORD) != null;
+        JSFunctionStub stub = getGreenStub();
+        return stub != null ? stub.isGetProperty() : getNode().findChildByType(JSTokenTypes.GET_KEYWORD) != null;
     }
 
     @Override
     public boolean isSetProperty() {
-        return getNode().findChildByType(JSTokenTypes.SET_KEYWORD) != null;
+        JSFunctionStub stub = getGreenStub();
+        return stub != null ? stub.isSetProperty() : getNode().findChildByType(JSTokenTypes.SET_KEYWORD) != null;
     }
 
     @Override
     public boolean isConstructor() {
-        return getNode().getElementType() == TypeScriptTypes.CONSTRUCTOR_DECLARATION;
+        return getElementType() == TypeScriptTypes.CONSTRUCTOR_DECLARATION;
     }
 
     /**

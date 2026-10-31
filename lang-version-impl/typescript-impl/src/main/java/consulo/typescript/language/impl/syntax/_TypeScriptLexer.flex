@@ -158,9 +158,6 @@ REGEXP_LITERAL="/"([^\*\\/\r\n]|{ESCAPE_SEQUENCE}|{GROUP})([^\\/\r\n]|{ESCAPE_SE
 <YYINITIAL,DIV_OR_GT> "..."   { yybegin(YYINITIAL); return JSTokenTypes.DOT_DOT_DOT; }
 <YYINITIAL,DIV_OR_GT> "==="   { yybegin(YYINITIAL); return JSTokenTypes.EQEQEQ; }
 <YYINITIAL,DIV_OR_GT> "!=="   { yybegin(YYINITIAL); return JSTokenTypes.NEQEQ; }
-<YYINITIAL,DIV_OR_GT> ">>>"   { yybegin(YYINITIAL); return JSTokenTypes.GTGTGT; }
-<YYINITIAL,DIV_OR_GT> ">>>="  { yybegin(YYINITIAL); return JSTokenTypes.GTGTGTEQ; }
-<YYINITIAL,DIV_OR_GT> ">>="   { yybegin(YYINITIAL); return JSTokenTypes.GTGTEQ; }
 <YYINITIAL,DIV_OR_GT> "<<="   { yybegin(YYINITIAL); return JSTokenTypes.LTLTEQ; }
 <YYINITIAL,DIV_OR_GT> "**="   { yybegin(YYINITIAL); return JSTokenTypes.MULT_MULT_EQ; }
 <YYINITIAL,DIV_OR_GT> "||="   { yybegin(YYINITIAL); return JSTokenTypes.OR_OR_EQ; }
@@ -173,7 +170,6 @@ REGEXP_LITERAL="/"([^\*\\/\r\n]|{ESCAPE_SEQUENCE}|{GROUP})([^\\/\r\n]|{ESCAPE_SE
 <YYINITIAL,DIV_OR_GT> "--"    { return JSTokenTypes.MINUSMINUS; }
 <YYINITIAL,DIV_OR_GT> "**"    { yybegin(YYINITIAL); return JSTokenTypes.MULTMULT; }
 <YYINITIAL,DIV_OR_GT> "<<"    { yybegin(YYINITIAL); return JSTokenTypes.LTLT; }
-<YYINITIAL,DIV_OR_GT> ">>"    { yybegin(YYINITIAL); return JSTokenTypes.GTGT; }
 <YYINITIAL,DIV_OR_GT> "&&"    { yybegin(YYINITIAL); return JSTokenTypes.ANDAND; }
 <YYINITIAL,DIV_OR_GT> "||"    { yybegin(YYINITIAL); return JSTokenTypes.OROR; }
 <YYINITIAL,DIV_OR_GT> "??"    { yybegin(YYINITIAL); return TypeScriptTokens.QUEST_QUEST; }
@@ -187,7 +183,6 @@ REGEXP_LITERAL="/"([^\*\\/\r\n]|{ESCAPE_SEQUENCE}|{GROUP})([^\\/\r\n]|{ESCAPE_SE
 <YYINITIAL,DIV_OR_GT> "|="    { yybegin(YYINITIAL); return JSTokenTypes.OREQ; }
 <YYINITIAL,DIV_OR_GT> "^="    { yybegin(YYINITIAL); return JSTokenTypes.XOREQ; }
 <YYINITIAL,DIV_OR_GT> "<="    { yybegin(YYINITIAL); return JSTokenTypes.LE; }
-<YYINITIAL,DIV_OR_GT> ">="    { yybegin(YYINITIAL); return JSTokenTypes.GE; }
 
 // === Single-char operators ===
 <YYINITIAL,DIV_OR_GT> "("     { yybegin(YYINITIAL); return JSTokenTypes.LPAR; }
@@ -217,6 +212,8 @@ REGEXP_LITERAL="/"([^\*\\/\r\n]|{ESCAPE_SEQUENCE}|{GROUP})([^\\/\r\n]|{ESCAPE_SE
 <YYINITIAL,DIV_OR_GT> ","     { yybegin(YYINITIAL); return JSTokenTypes.COMMA; }
 <YYINITIAL,DIV_OR_GT> "."     { return JSTokenTypes.DOT; }
 <YYINITIAL,DIV_OR_GT> "<"     { yybegin(YYINITIAL); return JSTokenTypes.LT; }
+// ">>", ">>>", ">=", ">>=" and ">>>=" are joined by the parser (TypeScriptParserUtil), like the Java and C# parsers do:
+// Promise<Array<T>> closes two type argument lists, Array<T>= [] ends a type before an initializer
 <YYINITIAL,DIV_OR_GT> ">"     { yybegin(YYINITIAL); return JSTokenTypes.GT; }
 <YYINITIAL,DIV_OR_GT> "="     { yybegin(YYINITIAL); return JSTokenTypes.EQ; }
 <YYINITIAL,DIV_OR_GT> "!"     { yybegin(YYINITIAL); return JSTokenTypes.EXCL; }

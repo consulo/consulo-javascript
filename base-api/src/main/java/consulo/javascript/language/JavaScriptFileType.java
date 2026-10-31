@@ -16,12 +16,11 @@
 
 package consulo.javascript.language;
 
+import consulo.javascript.module.extension.JavaScriptModuleExtensions;
 import consulo.annotation.access.RequiredReadAction;
 import consulo.javascript.icon.JavaScriptIconGroup;
 import consulo.javascript.localize.JavaScriptLocalize;
-import consulo.javascript.module.extension.JavaScriptModuleExtension;
 import consulo.language.file.LanguageFileType;
-import consulo.language.util.ModuleUtilCore;
 import consulo.language.version.LanguageVersion;
 import consulo.localize.LocalizeValue;
 import consulo.module.Module;
@@ -68,10 +67,7 @@ public class JavaScriptFileType extends LanguageFileType implements JavaScriptFi
             return StandardJavaScriptVersions.getInstance().getDefaultVersion();
         }
 
-        JavaScriptModuleExtension<?> extension = ModuleUtilCore.getExtension(module, JavaScriptModuleExtension.class);
-        if (extension != null) {
-            return extension.getLanguageVersion();
-        }
-        return StandardJavaScriptVersions.getInstance().getDefaultVersion();
+        LanguageVersion version = JavaScriptModuleExtensions.getLanguageVersion(module);
+        return version != null ? version : StandardJavaScriptVersions.getInstance().getDefaultVersion();
     }
 }

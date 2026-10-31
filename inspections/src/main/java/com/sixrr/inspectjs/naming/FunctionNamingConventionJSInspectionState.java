@@ -9,6 +9,6 @@ import consulo.language.editor.inspection.InspectionToolState;
 public class FunctionNamingConventionJSInspectionState extends ConventionInspectionState<FunctionNamingConventionJSInspectionState>
     implements InspectionToolState<FunctionNamingConventionJSInspectionState> {
     public FunctionNamingConventionJSInspectionState() {
-        super("[a-z][A-Za-z]*", 4, 32);
+        super("[a-z][A-Za-z\\d]*", 4, 32);
     }
 }

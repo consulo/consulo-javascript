@@ -16,14 +16,13 @@
 
 package consulo.javascript.ecmascript.lang;
 
+import consulo.javascript.module.extension.JavaScriptModuleExtensions;
 import consulo.javascript.language.JavaScriptFileTypeWithVersion;
 import consulo.javascript.language.JavaScriptLanguage;
-import consulo.language.util.ModuleUtilCore;
 import consulo.language.version.LanguageVersion;
 import consulo.module.Module;
 import consulo.annotation.access.RequiredReadAction;
 import consulo.javascript.icon.JavaScriptIconGroup;
-import consulo.javascript.module.extension.JavaScriptModuleExtension;
 import consulo.language.file.LanguageFileType;
 import consulo.localize.LocalizeValue;
 import consulo.ui.image.Image;
@@ -70,10 +69,7 @@ public class EcmaScriptFileType extends LanguageFileType implements JavaScriptFi
             return EcmaScript12JavaScriptVersion.getInstance();
         }
 
-        JavaScriptModuleExtension<?> extension = ModuleUtilCore.getExtension(module, JavaScriptModuleExtension.class);
-        if (extension != null) {
-            return extension.getLanguageVersion();
-        }
-        return EcmaScript12JavaScriptVersion.getInstance();
+        LanguageVersion version = JavaScriptModuleExtensions.getLanguageVersion(module);
+        return version != null ? version : EcmaScript12JavaScriptVersion.getInstance();
     }
 }

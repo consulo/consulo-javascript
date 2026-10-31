@@ -34,6 +34,51 @@ public class TypeScriptModuleResolveTest {
     }
 
     @Test
+    public void testDecoratedExportImport(CodeInsightTestFixture fixture) throws Exception {
+        fixture.addFileToProject(SRC + "app.component.ts",
+            "@Component({ selector: 'app-root', templateUrl: './app.component.html' })\nexport class AppComponent {\n  title = 'x';\n}\n");
+        fixture.addFileToProject(SRC + "service.ts", "@Injectable()\nexport default class Service {\n}\n");
+        PsiElement component = resolve(fixture, "main.ts", "import { AppComponent } from './app.component';\nnew AppComp<caret>onent();\n");
+        assertNamed(component, JSClass.class, "AppComponent", "app.component.ts");
+        PsiElement service = resolve(fixture, "main2.ts", "import Service from './service';\nnew Serv<caret>ice();\n");
+        assertNamed(service, JSClass.class, "Service", "service.ts");
+    }
+
+    /**
+     * {@code declare global} of a module (Nuxt's generated auto-imports): global, while the module's own declarations
+     * aren't.
+     */
+    @Test
+    public void testDeclareGlobalInModule(CodeInsightTestFixture fixture) throws Exception {
+        fixture.addFileToProject(SRC + "types/imports.d.ts",
+            "export {}\ndeclare global {\n  const useCounter: () => number\n  interface NuxtApp {\n  }\n}\nexport const notGlobal = 1;\n");
+        PsiElement counter = resolve(fixture, "use.ts", "const n = useCoun<caret>ter();\n");
+        assertNamed(counter, JSVariable.class, "useCounter", "imports.d.ts");
+        PsiElement app = resolve(fixture, "app.ts", "let a: NuxtA<caret>pp;\n");
+        assertNamed(app, JSClass.class, "NuxtApp", "imports.d.ts");
+        fixture.configureByText("other.ts", "notGlo<caret>bal;\n");
+        assertNull(ReadAction.compute(fixture.getReferenceAtCaretPositionWithAssertion()::resolve), "a module's own declaration needs an import");
+    }
+
+    /**
+     * The module specifier of an import / export ... from is a reference to the module file.
+     */
+    @Test
+    public void testModuleSpecifierReference(CodeInsightTestFixture fixture) throws Exception {
+        fixture.addFileToProject(SRC + "greeter.ts", "export class Greeter {\n}\n");
+        fixture.addFileToProject("node_modules/tiny/package.json", "{ \"name\": \"tiny\", \"types\": \"dist/tiny.d.ts\" }");
+        fixture.addFileToProject("node_modules/tiny/dist/tiny.d.ts", "export declare function tiny(): void;\n");
+        assertFileTarget(resolve(fixture, "spec1.ts", "import { Greeter } from './gre<caret>eter';\n"), "greeter.ts");
+        assertFileTarget(resolve(fixture, "spec2.ts", "import { tiny } from 'ti<caret>ny';\n"), "tiny.d.ts");
+        assertFileTarget(resolve(fixture, "spec3.ts", "export { Greeter } from './gre<caret>eter';\n"), "greeter.ts");
+    }
+
+    private static void assertFileTarget(PsiElement target, String fileName) {
+        assertInstanceOf(PsiFile.class, target);
+        assertEquals(fileName, ReadAction.compute(() -> ((PsiFile) target).getName()));
+    }
+
+    @Test
     public void testAliasedImport(CodeInsightTestFixture fixture) throws Exception {
         fixture.addFileToProject(SRC + "util.ts", "export function format(x: string) {\n  return x;\n}\n");
         PsiElement target = resolve(fixture, "app.ts", "import { format as fmt } from './util';\nfm<caret>t('a');\n");

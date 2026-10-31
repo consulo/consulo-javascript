@@ -1,11 +1,11 @@
 package consulo.javascript.impl.lang;
 
+import consulo.javascript.module.extension.JavaScriptModuleExtensions;
 import consulo.annotation.access.RequiredReadAction;
 import consulo.annotation.component.ExtensionImpl;
 import consulo.javascript.language.JavaScriptFileType;
 import consulo.javascript.language.JavaScriptLanguage;
 import consulo.javascript.language.StandardJavaScriptVersions;
-import consulo.javascript.module.extension.JavaScriptModuleExtension;
 import consulo.language.util.ModuleUtilCore;
 import consulo.language.version.LanguageVersion;
 import consulo.module.Module;
@@ -61,11 +61,8 @@ public class JavaScriptLanguageVersionPusher implements FilePropertyPusher<Langu
     @Override
     @RequiredReadAction
     public LanguageVersion getImmediateValue(Module module) {
-        JavaScriptModuleExtension<?> extension = ModuleUtilCore.getExtension(module, JavaScriptModuleExtension.class);
-        if (extension != null) {
-            return extension.getLanguageVersion();
-        }
-        return getDefaultValue();
+        LanguageVersion version = JavaScriptModuleExtensions.getLanguageVersion(module);
+        return version != null ? version : getDefaultValue();
     }
 
     @Override

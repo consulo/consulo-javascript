@@ -132,6 +132,8 @@ public interface JSTokenTypes {
     IElementType GET_KEYWORD = new JavaScriptContextKeywordElementType("GET_KEYWORD", "get"); // GET
     IElementType SET_KEYWORD = new JavaScriptContextKeywordElementType("SET_KEYWORD", "set"); // SET
     IElementType OF_KEYWORD = new JavaScriptContextKeywordElementType("OF_KEYWORD", "of"); // of
+    IElementType ASYNC_KEYWORD = new JavaScriptContextKeywordElementType("ASYNC_KEYWORD", "async"); // async (ES2017)
+    IElementType AWAIT_KEYWORD = new JavaScriptContextKeywordElementType("AWAIT_KEYWORD", "await"); // await (ES2017)
     IElementType EACH_KEYWORD = new JSElementType("EACH_KEYWORD");
     IElementType INT_KEYWORD = new JSElementType("INT_KEYWORD");
     IElementType UINT_KEYWORD = new JSElementType("UINT_KEYWORD");
@@ -339,6 +341,7 @@ public interface JSTokenTypes {
     IElementType OROR = new JSElementType("OROR");// ||
     IElementType QUEST = new JSElementType("QUEST");// ?
     IElementType QUEST_DOT = new JSElementType("QUEST_DOT");// ?
+    IElementType QUEST_QUEST = new JSElementType("QUEST_QUEST");// ?? (ES2020)
     IElementType COLON = new JSElementType("COLON");// :
     IElementType EQ = new JSElementType("EQ");// =
     IElementType PLUSEQ = new JSElementType("PLUSEQ");// +=
@@ -375,7 +378,7 @@ public interface JSTokenTypes {
         PLUS, MINUS, MULT, PERC,
         PLUSPLUS, MINUSMINUS, LTLT,
         GTGT, GTGTGT, AND, OR, XOR,
-        EXCL, TILDE, ANDAND, OROR,
+        EXCL, TILDE, ANDAND, OROR, QUEST_QUEST,
         QUEST, COLON, EQ, PLUSEQ,
         MINUSEQ, MULTEQ, PERCEQ, LTLTEQ,
         GTGTEQ, GTGTGTEQ, ANDEQ, OREQ,

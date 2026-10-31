@@ -10,6 +10,14 @@ choose.class.title:
     text: Choose Class
 client.module.extension.default.version.label:
     text: 'Default Version:'
+client.module.extension.libraries.label:
+    text: 'Environment Libraries:'
+client.module.extension.library.dom:
+    text: DOM
+client.module.extension.library.scripthost:
+    text: Windows Script Host
+client.module.extension.name:
+    text: Web
 create.class.dialog.title:
     text: Create Class
 create.interface.dialog.title:

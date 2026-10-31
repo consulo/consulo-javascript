@@ -1,5 +1,6 @@
 package consulo.javascript.impl.ide.actions;
 
+import consulo.javascript.module.extension.JavaScriptModuleExtensions;
 import consulo.annotation.access.RequiredReadAction;
 import consulo.application.ReadAction;
 import consulo.dataContext.DataContext;
@@ -7,10 +8,8 @@ import consulo.ide.action.CreateFileFromTemplateAction;
 import consulo.ide.action.CreateFileFromTemplateDialog;
 import consulo.javascript.language.JavaScriptFileType;
 import consulo.javascript.localize.JavaScriptLocalize;
-import consulo.javascript.module.extension.JavaScriptModuleExtension;
 import consulo.language.editor.util.IdeView;
 import consulo.language.psi.PsiDirectory;
-import consulo.language.util.ModuleUtilCore;
 import consulo.localize.LocalizeValue;
 import consulo.module.Module;
 import consulo.module.content.NewFileModuleResolver;
@@ -37,7 +36,7 @@ public class JavaScriptCreateFileAction extends CreateFileFromTemplateAction {
             return false;
         }
         Module module = ReadAction.compute(() -> findModule(dataContext));
-        return module != null && ModuleUtilCore.getExtension(module, JavaScriptModuleExtension.class) != null;
+        return module != null && !JavaScriptModuleExtensions.getExtensions(module).isEmpty();
     }
 
     @Nullable

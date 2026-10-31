@@ -32,6 +32,7 @@ import consulo.component.extension.Extensions;
 import consulo.javascript.lang.psi.impl.resolve.JavaScriptVersionWithHelper;
 import consulo.javascript.lang.psi.impl.resolve.ResolveHelper;
 import consulo.language.psi.PsiElement;
+import consulo.language.psi.StubBasedPsiElement;
 import consulo.language.psi.PsiFile;
 import consulo.language.psi.PsiModificationTracker;
 import consulo.language.psi.PsiNamedElement;
@@ -467,6 +468,11 @@ public class JSImportHandlingUtil {
             }
             else if (owner instanceof JSFile || owner instanceof JSStubElementImpl) {
                 children = JSResolveUtil.getSourceElements(owner);
+            }
+            else if (owner instanceof StubBasedPsiElement<?> stubBased && stubBased.getStub() != null) {
+                // a declaration of another language read from its stub (TypeScript reuses the JavaScript stubs): no import
+                // statements among its children, the AST of its file (lib.dom.d.ts) isn't loaded for them
+                children = PsiElement.EMPTY_ARRAY;
             }
             else {
                 children = owner.getChildren();

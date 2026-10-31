@@ -75,6 +75,11 @@ public class TypeScriptParserTest extends SimpleParsingTest<Object> {
     }
 
     @Test
+    public void testDecoratedExport(Context context) throws Exception {
+        doTest(context, null);
+    }
+
+    @Test
     public void testAmbientDeclaration(Context context) throws Exception {
         doTest(context, null);
     }

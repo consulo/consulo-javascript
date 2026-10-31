@@ -1,5 +1,6 @@
 package consulo.typescript.language.impl.psi.mixin;
 
+import consulo.typescript.language.impl.stub.TypeScriptStubElementTypes;
 import com.intellij.lang.javascript.JSTokenTypes;
 import com.intellij.lang.javascript.psi.*;
 import com.intellij.lang.javascript.psi.stubs.JSClassStub;
@@ -52,8 +53,10 @@ public class TypeScriptInterfaceMixin<T extends JSClassStub> extends StubBasedPs
 
     @Nullable
     @Override
+    @RequiredReadAction
     public JSReferenceList getExtendsList() {
-        return null;
+        // the stub of the list when the interface has one: inherited members resolve without the AST
+        return getStubOrPsiChild(TypeScriptStubElementTypes.EXTENDS_LIST);
     }
 
     @Nullable
@@ -121,7 +124,7 @@ public class TypeScriptInterfaceMixin<T extends JSClassStub> extends StubBasedPs
     @Override
     public String getQualifiedName() {
         var stub = getGreenStub();
-        return stub != null ? stub.getQualifiedName() : getName();
+        return stub != null ? stub.getQualifiedName() : TypeScriptResolveUtil.qualifyByNamespaces(this, getName());
     }
 
     // --- JSNamedElement / PsiNamedElement / PsiNameIdentifierOwner ---
@@ -165,6 +168,9 @@ public class TypeScriptInterfaceMixin<T extends JSClassStub> extends StubBasedPs
         @Nullable PsiElement lastParent,
         @Nonnull PsiElement place
     ) {
+        if (TypeScriptResolveUtil.isMemberLookup(this, lastParent)) {
+            return TypeScriptResolveUtil.processMembers(this, processor, state);
+        }
         if (lastParent != null && !TypeScriptResolveUtil.processTypeParameters(this, processor, state)) {
             return false;
         }

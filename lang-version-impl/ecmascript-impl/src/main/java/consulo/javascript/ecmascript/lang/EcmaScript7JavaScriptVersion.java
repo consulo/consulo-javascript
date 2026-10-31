@@ -13,8 +13,14 @@ import jakarta.inject.Inject;
 public class EcmaScript7JavaScriptVersion extends EcmaScript6JavaScriptVersion {
     @Inject
     public EcmaScript7JavaScriptVersion() {
-        super("ECMASCRIPT_7");
+        this("ECMASCRIPT_7");
+    }
 
+    /**
+     * For the next versions: each version has the features of the previous ones.
+     */
+    protected EcmaScript7JavaScriptVersion(String id) {
+        super(id);
         addFeature(JavaScriptFeature.EXPONENTIATION_OPERATOR);
     }
 

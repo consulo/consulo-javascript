@@ -2,6 +2,7 @@ package consulo.javascript.client.module.extension;
 
 import consulo.annotation.component.ExtensionImpl;
 import consulo.javascript.icon.JavaScriptIconGroup;
+import consulo.javascript.localize.JavaScriptLocalize;
 import consulo.localize.LocalizeValue;
 import consulo.module.content.layer.ModuleExtensionProvider;
 import consulo.module.content.layer.ModuleRootLayer;
@@ -28,7 +29,7 @@ public class ClientJavaScriptModuleExtensionProvider implements ModuleExtensionP
 
     @Override
     public LocalizeValue getName() {
-        return LocalizeValue.localizeTODO("JavaScript (Client)");
+        return JavaScriptLocalize.clientModuleExtensionName();
     }
 
     @Override

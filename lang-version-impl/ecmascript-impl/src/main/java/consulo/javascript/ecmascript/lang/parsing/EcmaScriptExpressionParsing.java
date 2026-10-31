@@ -65,6 +65,16 @@ public class EcmaScriptExpressionParsing extends ExpressionParsing<EcmaScriptPar
             parseStringTemplate(builder);
             return true;
         }
+        else if (getStatementParsing().isAsyncFunction(builder)) {
+            getStatementParsing().parseAsyncFunction(builder, builder.mark(), true);
+            return true;
+        }
+        else if (isContextKeyword(builder, JSTokenTypes.ASYNC_KEYWORD) && canParseAsyncLambdaExpression(builder)) {
+            // async x => ..., async (a, b) => ...
+            PsiBuilder.Marker mark = builder.mark();
+            advanceContextKeyword(builder, JSTokenTypes.ASYNC_KEYWORD);
+            return parseLambdaExpression(builder, mark);
+        }
 
         if (canParseLambdaExpression(builder)) {
             return parseLambdaExpression(builder);
@@ -121,8 +131,10 @@ public class EcmaScriptExpressionParsing extends ExpressionParsing<EcmaScriptPar
     }
 
     private boolean parseLambdaExpression(PsiBuilder builder) {
-        PsiBuilder.Marker mark = builder.mark();
+        return parseLambdaExpression(builder, builder.mark());
+    }
 
+    private boolean parseLambdaExpression(PsiBuilder builder, PsiBuilder.Marker mark) {
         IElementType tokenType = builder.getTokenType();
         if (tokenType == JSTokenTypes.IDENTIFIER) {
             PsiBuilder.Marker parameterList = builder.mark();
@@ -150,6 +162,43 @@ public class EcmaScriptExpressionParsing extends ExpressionParsing<EcmaScriptPar
 
         mark.done(JSElementTypes.LAMBDA_EXPRESSION);
         return true;
+    }
+
+    private boolean canParseAsyncLambdaExpression(PsiBuilder builder) {
+        PsiBuilder.Marker marker = builder.mark();
+        try {
+            builder.advanceLexer();
+            return canParseLambdaExpression(builder);
+        }
+        finally {
+            marker.rollbackTo();
+        }
+    }
+
+    /**
+     * {@code await expr} is a unary expression (await foo.bar() awaits the call); await stays an identifier where an
+     * operand can't follow (await = 1, f(await)).
+     */
+    @Override
+    protected boolean parseUnaryExpression(PsiBuilder builder) {
+        if (isContextKeyword(builder, JSTokenTypes.AWAIT_KEYWORD) && isOperandStart(builder.lookAhead(1))) {
+            PsiBuilder.Marker expr = builder.mark();
+            advanceContextKeyword(builder, JSTokenTypes.AWAIT_KEYWORD);
+            if (!parseUnaryExpression(builder)) {
+                builder.error(JavaScriptLocalize.javascriptParserMessageExpectedExpression());
+            }
+            expr.done(JSElementTypes.PREFIX_EXPRESSION);
+            return true;
+        }
+        return super.parseUnaryExpression(builder);
+    }
+
+    private static boolean isOperandStart(@Nullable IElementType next) {
+        return next != null
+            && !JSTokenTypes.ASSIGNMENT_OPERATIONS.contains(next)
+            && next != JSTokenTypes.SEMICOLON && next != JSTokenTypes.COMMA && next != JSTokenTypes.COLON
+            && next != JSTokenTypes.RPAR && next != JSTokenTypes.RBRACKET && next != JSTokenTypes.RBRACE
+            && next != JSTokenTypes.DOT && next != JSTokenTypes.DARROW && next != JSTokenTypes.QUEST;
     }
 
     private boolean canParseLambdaExpression(PsiBuilder builder) {
@@ -193,6 +242,17 @@ public class EcmaScriptExpressionParsing extends ExpressionParsing<EcmaScriptPar
         else {
             if (isNotPropertyStart(builder, nameTokenType)) {
                 builder.error(JavaScriptLocalize.javascriptParserMessageExpectedIdentifierStringLiteralOrNumericLiteral());
+            }
+
+            // async m() {} / async *m() {}
+            if (isContextKeyword(builder, JSTokenTypes.ASYNC_KEYWORD)
+                && (builder.lookAhead(1) == JSTokenTypes.MULT || builder.lookAhead(1) == JSTokenTypes.IDENTIFIER)
+                && (builder.lookAhead(2) == JSTokenTypes.LPAR || builder.lookAhead(1) == JSTokenTypes.MULT)) {
+                advanceContextKeyword(builder, JSTokenTypes.ASYNC_KEYWORD);
+                if (builder.getTokenType() == JSTokenTypes.MULT) {
+                    builder.advanceLexer();
+                }
+                nameTokenType = builder.getTokenType();
             }
 
             IElementType setOrGetToken = isContextKeyword(builder, JSTokenTypes.GET_SET_TOKEN_SET);

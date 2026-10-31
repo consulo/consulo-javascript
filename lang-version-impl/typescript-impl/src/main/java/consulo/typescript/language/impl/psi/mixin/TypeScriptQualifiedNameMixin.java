@@ -13,6 +13,9 @@ import consulo.language.ast.ASTNode;
 import consulo.language.ast.TokenSet;
 import consulo.language.psi.*;
 import consulo.language.psi.resolve.ResolveCache;
+import consulo.javascript.psi.JSTypeOnlyDeclaration;
+import com.intellij.lang.javascript.psi.JSQualifiedNamedElement;
+import consulo.javascript.impl.library.JavaScriptLibraries;
 import consulo.language.psi.stub.StubIndex;
 import consulo.language.util.IncorrectOperationException;
 import consulo.typescript.language.impl.psi.TypeScriptElementImpl;
@@ -119,9 +122,21 @@ public class TypeScriptQualifiedNameMixin extends TypeScriptElementImpl implemen
         if (result.isEmpty()) {
             PsiFile containingFile = getContainingFile();
             for (JSClass element : StubIndex.getElements(
-                JavaScriptIndexKeys.CLASSES_BY_NAME, name, getProject(), getResolveScope(), JSClass.class)) {
+                JavaScriptIndexKeys.CLASSES_BY_NAME, name, getProject(), JavaScriptLibraries.restrictResolveScope(this, getResolveScope()), JSClass.class)) {
                 PsiFile file = element.getContainingFile();
-                if (file != null && !file.equals(containingFile) && !TypeScriptModuleUtil.isModule(file)) {
+                if (file != null && !file.equals(containingFile) && TypeScriptModuleUtil.isGlobalDeclaration(element)) {
+                    result.add(element);
+                }
+            }
+        }
+        if (result.isEmpty()) {
+            // the global type aliases (Record, Partial, PropertyKey of lib.es5.d.ts)
+            PsiFile containingFile = getContainingFile();
+            for (JSQualifiedNamedElement element : StubIndex.getElements(
+                JavaScriptIndexKeys.ELEMENTS_BY_NAME, name, getProject(), JavaScriptLibraries.restrictResolveScope(this, getResolveScope()), JSQualifiedNamedElement.class)) {
+                PsiFile file = element.getContainingFile();
+                if (element instanceof JSTypeOnlyDeclaration && file != null && !file.equals(containingFile)
+                    && TypeScriptModuleUtil.isGlobalDeclaration(element)) {
                     result.add(element);
                 }
             }

@@ -1,0 +1,3 @@
+const a = b ?? c;
+const d = e?.f ?? (g || h);
+x ??= 1;

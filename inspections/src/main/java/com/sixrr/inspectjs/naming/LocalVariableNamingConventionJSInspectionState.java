@@ -10,6 +10,6 @@ public class LocalVariableNamingConventionJSInspectionState
     extends ConventionInspectionState<LocalVariableNamingConventionJSInspectionState>
     implements InspectionToolState<LocalVariableNamingConventionJSInspectionState> {
     public LocalVariableNamingConventionJSInspectionState() {
-        super("[a-z][A-Za-z]*", 1, 32);
+        super("[a-z][A-Za-z\\d]*", 1, 32);
     }
 }

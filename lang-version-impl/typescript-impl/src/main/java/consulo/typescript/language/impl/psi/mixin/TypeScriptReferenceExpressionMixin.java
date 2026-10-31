@@ -4,6 +4,7 @@ import com.intellij.lang.javascript.JSTokenTypes;
 import com.intellij.lang.javascript.psi.util.JSLookupUtil;
 import com.intellij.lang.javascript.psi.resolve.VariantsProcessor;
 import consulo.typescript.language.impl.psi.TypeScriptModuleUtil;
+import consulo.javascript.impl.library.JavaScriptLibraries;
 import consulo.language.psi.stub.StubIndex;
 import consulo.javascript.language.psi.stub.JavaScriptIndexKeys;
 import com.intellij.lang.javascript.psi.JSQualifiedNamedElement;
@@ -29,6 +30,7 @@ import jakarta.annotation.Nonnull;
 import org.jspecify.annotations.Nullable;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -134,18 +136,26 @@ public class TypeScriptReferenceExpressionMixin extends TypeScriptExpressionMixi
             List<PsiElement> globals = new ArrayList<>();
             PsiFile containingFile = getContainingFile();
             for (JSQualifiedNamedElement element : StubIndex.getElements(
-                JavaScriptIndexKeys.ELEMENTS_BY_NAME, name, getProject(), getResolveScope(), JSQualifiedNamedElement.class)) {
+                JavaScriptIndexKeys.ELEMENTS_BY_NAME, name, getProject(), JavaScriptLibraries.restrictResolveScope(this, getResolveScope()), JSQualifiedNamedElement.class)) {
                 PsiFile file = element.getContainingFile();
-                if (file != null && !file.equals(containingFile) && !TypeScriptModuleUtil.isModule(file)) {
+                if (file != null && !file.equals(containingFile) && TypeScriptModuleUtil.isGlobalDeclaration(element)) {
                     globals.add(element);
                 }
             }
             if (!globals.isEmpty()) {
-                return PsiElementResolveResult.createResults(globals);
+                // a value: `declare var Date: DateConstructor`, not the `interface Date` it merges with
+                List<PsiElement> values = new ArrayList<>();
+                for (PsiElement global : globals) {
+                    if (!TypeScriptResolveUtil.isTypeOnly(global)) {
+                        values.add(global);
+                    }
+                }
+                return PsiElementResolveResult.createResults(values.isEmpty() ? globals : values);
             }
 
+            // the JavaScript SDK, the predefined declarations (also seen from a script embedded in another file)
             WalkUpResolveProcessor globalProcessor = new WalkUpResolveProcessor(name, null, containingFile, false, this);
-            JSResolveUtil.processGlobalSymbols(this, globalProcessor);
+            JSResolveUtil.processGlobalSymbols(this, name, globalProcessor);
             return globalProcessor.getResults();
         }
 
@@ -153,8 +163,7 @@ public class TypeScriptReferenceExpressionMixin extends TypeScriptExpressionMixi
         if (qualifier instanceof JSReferenceExpression containerReference) {
             PsiElement container = containerReference.resolve();
             if (container instanceof PsiFile
-                || (container != null && (container.getNode().getElementType() == TypeScriptTypes.ENUM_DECLARATION
-                || container.getNode().getElementType() == TypeScriptTypes.NAMESPACE_DECLARATION))) {
+                || (container != null && TypeScriptResolveUtil.isEnumOrNamespace(container))) {
                 return PsiElementResolveResult.createResults(TypeScriptResolveUtil.findQualifiedMembers(container, name));
             }
         }
@@ -239,13 +248,15 @@ public class TypeScriptReferenceExpressionMixin extends TypeScriptExpressionMixi
             JSResolveUtil.treeWalkUp(localProcessor, this, this, this);
             List<Object> variants = new ArrayList<>();
             Set<String> names = new HashSet<>();
-            for (PsiElement element : localProcessor.getResults()) {
+            // null when nothing is declared in scope
+            Collection<PsiElement> locals = localProcessor.getResults();
+            for (PsiElement element : locals == null ? List.<PsiElement>of() : locals) {
                 if (!TypeScriptResolveUtil.isTypeOnly(element) && element instanceof PsiNamedElement named
                     && named.getName() != null && names.add(named.getName())) {
                     variants.add(JSLookupUtil.createLookupItem(element, named.getName(), JSLookupUtil.LookupPriority.HIGHEST));
                 }
             }
-            // the global symbols of the JavaScript SDK
+            // the global symbols of the JavaScript SDK and the predefined declarations
             VariantsProcessor processor = new VariantsProcessor(null, getContainingFile(), false, this);
             JSResolveUtil.processGlobalSymbols(this, processor);
             variants.addAll(List.of(processor.getResult()));
@@ -257,8 +268,7 @@ public class TypeScriptReferenceExpressionMixin extends TypeScriptExpressionMixi
         if (container instanceof PsiFile module) {
             members.addAll(TypeScriptModuleUtil.findAllExports(module));
         }
-        else if (container != null && (container.getNode().getElementType() == TypeScriptTypes.ENUM_DECLARATION
-            || container.getNode().getElementType() == TypeScriptTypes.NAMESPACE_DECLARATION)) {
+        else if (container != null && TypeScriptResolveUtil.isEnumOrNamespace(container)) {
             members.addAll(TypeScriptResolveUtil.findQualifiedMembers(container, null));
         }
         else {

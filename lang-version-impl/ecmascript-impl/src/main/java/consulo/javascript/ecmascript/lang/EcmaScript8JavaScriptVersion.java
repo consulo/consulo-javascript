@@ -8,10 +8,17 @@ import jakarta.inject.Inject;
  * @since 06/12/2021
  */
 @ExtensionImpl
-public class EcmaScript8JavaScriptVersion extends EcmaScript6JavaScriptVersion {
+public class EcmaScript8JavaScriptVersion extends EcmaScript7JavaScriptVersion {
     @Inject
     public EcmaScript8JavaScriptVersion() {
-        super("ECMASCRIPT_8");
+        this("ECMASCRIPT_8");
+    }
+
+    /**
+     * For the next versions: each version has the features of the previous ones.
+     */
+    protected EcmaScript8JavaScriptVersion(String id) {
+        super(id);
     }
 
     @Override

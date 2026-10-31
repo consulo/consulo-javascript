@@ -16,16 +16,42 @@ import consulo.module.content.layer.extension.SdkModuleInheritableNamedPointerIm
 import consulo.module.extension.ModuleInheritableNamedPointer;
 import org.jdom.Element;
 
+import java.util.Collections;
+import java.util.LinkedHashSet;
+import java.util.Set;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
+
 import org.jspecify.annotations.Nullable;
 
 /**
  * @author VISTALL
  * @since 2014-06-29
  */
+/**
+ * Web: JavaScript running in a browser. It sees the standard library of its language level and of the browser
+ * environment ({@link #getStandardLibraries()}).
+ */
 public class ClientJavaScriptModuleExtension extends ModuleExtensionBase<ClientJavaScriptModuleExtension> implements JavaScriptModuleExtension<ClientJavaScriptModuleExtension> {
+    /**
+     * The DOM: the libraries of tsc for a browser (lib.esXXXX.full.d.ts), without the ECMAScript level.
+     */
+    public static final Set<String> DOM_LIBRARIES = Set.of("dom", "dom.iterable", "dom.asynciterable", "webworker.importscripts");
+
+    public static final String SCRIPT_HOST_LIBRARY = "scripthost";
+
+    public static final Set<String> DEFAULT_LIBRARIES = Stream.concat(DOM_LIBRARIES.stream(), Stream.of(SCRIPT_HOST_LIBRARY))
+        .collect(Collectors.toUnmodifiableSet());
+
+    private static final String LIBRARY_ELEMENT = "library";
+    private static final String NAME_ATTRIBUTE = "name";
+    private static final String LIBRARIES_ELEMENT = "libraries";
+
     private SdkModuleInheritableNamedPointerImpl myPointer;
 
     protected LanguageVersion myLanguageVersion = StandardJavaScriptVersions.getInstance().getDefaultVersion();
+
+    protected Set<String> myStandardLibraries = new LinkedHashSet<>(DEFAULT_LIBRARIES);
 
     public ClientJavaScriptModuleExtension(String id, ModuleRootLayer rootLayer) {
         super(id, rootLayer);
@@ -60,6 +86,24 @@ public class ClientJavaScriptModuleExtension extends ModuleExtensionBase<ClientJ
     protected void loadStateImpl(Element element) {
         super.loadStateImpl(element);
         myLanguageVersion = StandardJavaScriptVersions.getInstance().findVersionById(element.getAttributeValue("language-version"));
+
+        // the SDK of the module, else the predefined standard library
+        myPointer.fromXml(element);
+        if (myPointer.getName() == null) {
+            myPointer.set(null, SdkTable.getInstance().findPredefinedSdkByType(ClientJavaScriptSdkType.getInstance()));
+        }
+
+        myStandardLibraries = new LinkedHashSet<>(DEFAULT_LIBRARIES);
+        Element libraries = element.getChild(LIBRARIES_ELEMENT);
+        if (libraries != null) {
+            myStandardLibraries.clear();
+            for (Element library : libraries.getChildren(LIBRARY_ELEMENT)) {
+                String name = library.getAttributeValue(NAME_ATTRIBUTE);
+                if (name != null) {
+                    myStandardLibraries.add(name);
+                }
+            }
+        }
     }
 
     @Override
@@ -67,6 +111,14 @@ public class ClientJavaScriptModuleExtension extends ModuleExtensionBase<ClientJ
         super.getStateImpl(element);
         if (myLanguageVersion != StandardJavaScriptVersions.getInstance().getDefaultVersion()) {
             element.setAttribute("language-version", myLanguageVersion.getId());
+        }
+        myPointer.toXml(element);
+        if (!myStandardLibraries.equals(DEFAULT_LIBRARIES)) {
+            Element libraries = new Element(LIBRARIES_ELEMENT);
+            for (String name : myStandardLibraries) {
+                libraries.addContent(new Element(LIBRARY_ELEMENT).setAttribute(NAME_ATTRIBUTE, name));
+            }
+            element.addContent(libraries);
         }
     }
 
@@ -89,7 +141,7 @@ public class ClientJavaScriptModuleExtension extends ModuleExtensionBase<ClientJ
 
     @Override
     public Class<? extends SdkType> getSdkTypeClass() {
-        throw new IllegalArgumentException();
+        return ClientJavaScriptSdkType.class;
     }
 
     @Override
@@ -97,10 +149,21 @@ public class ClientJavaScriptModuleExtension extends ModuleExtensionBase<ClientJ
         return myLanguageVersion;
     }
 
+    /**
+     * The browser libraries of the TypeScript standard library: the DOM ({@link #DOM_LIBRARIES}) and the Windows Script
+     * Host by default, like tsc.
+     */
+    @Override
+    public Set<String> getStandardLibraries() {
+        return Collections.unmodifiableSet(myStandardLibraries);
+    }
+
     @RequiredReadAction
     @Override
     public void commit(ClientJavaScriptModuleExtension mutableModuleExtension) {
         super.commit(mutableModuleExtension);
+        myPointer.set(mutableModuleExtension.getInheritableSdk());
         myLanguageVersion = mutableModuleExtension.getLanguageVersion();
+        myStandardLibraries = new LinkedHashSet<>(mutableModuleExtension.getStandardLibraries());
     }
 }

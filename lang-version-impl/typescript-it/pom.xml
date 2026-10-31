@@ -33,9 +33,40 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-plugin</artifactId>
+                <!-- 3.1.0 reuses the test classpath of the first execution in the second one (classpathDependencyExcludes) -->
+                <version>3.5.2</version>
                 <configuration>
                     <useModulePath>false</useModulePath>
                 </configuration>
+                <executions>
+                    <!-- the XML plugin can't load completely headless and logs errors in every test: only the tests in
+                         the html package run with it -->
+                    <execution>
+                        <id>default-test</id>
+                        <configuration>
+                            <excludes>
+                                <exclude>**/html/**</exclude>
+                            </excludes>
+                            <classpathDependencyExcludes>
+                                <classpathDependencyExclude>consulo.plugin:com.intellij.xml</classpathDependencyExclude>
+                                <classpathDependencyExclude>consulo.plugin:com.intellij.xml.dom.api</classpathDependencyExclude>
+                                <classpathDependencyExclude>consulo.plugin:com.intellij.xml.rngom</classpathDependencyExclude>
+                                <classpathDependencyExclude>consulo.plugin:com.intellij.xml.jingtrang</classpathDependencyExclude>
+                            </classpathDependencyExcludes>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>html-test</id>
+                        <goals>
+                            <goal>test</goal>
+                        </goals>
+                        <configuration>
+                            <includes>
+                                <include>**/html/**</include>
+                            </includes>
+                        </configuration>
+                    </execution>
+                </executions>
             </plugin>
         </plugins>
     </build>
@@ -73,6 +104,12 @@
         </dependency>
         <dependency>
             <groupId>${project.groupId}</groupId>
+            <artifactId>consulo.javascript-web.browser.impl</artifactId>
+            <version>${project.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>${project.groupId}</groupId>
             <artifactId>com.intellij.xml.api</artifactId>
             <version>${project.version}</version>
             <scope>test</scope>
@@ -86,6 +123,18 @@
         <dependency>
             <groupId>${project.groupId}</groupId>
             <artifactId>com.intellij.xml.html.api</artifactId>
+            <version>${project.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>com.intellij.xml</artifactId>
+            <version>${project.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>consulo</groupId>
+            <artifactId>consulo-util-xml-fast-reader</artifactId>
             <version>${project.version}</version>
             <scope>test</scope>
         </dependency>

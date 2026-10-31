@@ -9,10 +9,17 @@ import jakarta.inject.Inject;
  * @since 06/12/2021
  */
 @ExtensionImpl
-public class EcmaScript10JavaScriptVersion extends EcmaScript6JavaScriptVersion {
+public class EcmaScript10JavaScriptVersion extends EcmaScript9JavaScriptVersion {
     @Inject
     public EcmaScript10JavaScriptVersion() {
-        super("ECMASCRIPT_10");
+        this("ECMASCRIPT_10");
+    }
+
+    /**
+     * For the next versions: each version has the features of the previous ones.
+     */
+    protected EcmaScript10JavaScriptVersion(String id) {
+        super(id);
     }
 
     @Override

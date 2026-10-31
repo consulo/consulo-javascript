@@ -46,12 +46,23 @@ public class EcmaScriptStatementParsing extends StatementParsing {
         if (tokenType == JSTokenTypes.FUNCTION_KEYWORD) {
             getFunctionParsing().parseFunctionDeclaration(builder);
         }
+        else if (isAsyncFunction(builder)) {
+            parseAsyncFunction(builder, builder.mark(), false);
+        }
         else if (tokenType == JSTokenTypes.EXPORT_KEYWORD && builder.lookAhead(1) == JSTokenTypes.DEFAULT_KEYWORD) {
             PsiBuilder.Marker mark = builder.mark();
             builder.advanceLexer();
             builder.advanceLexer();
 
-            parseSourceElement(builder);
+            IElementType declarationType = builder.getTokenType();
+            if (declarationType == JSTokenTypes.FUNCTION_KEYWORD || declarationType == JSTokenTypes.CLASS_KEYWORD || isAsyncFunction(builder)) {
+                parseSourceElement(builder);
+            }
+            else {
+                // export default <assignment expression>: export default { name: 'App' } is an object, not a block
+                getExpressionParsing().parseAssignmentExpression(builder);
+                checkForSemicolon(builder);
+            }
 
             mark.done(EcmaScript6ElementTypes.EXPORT_DEFAULT_ASSIGMENT);
         }
@@ -64,6 +75,9 @@ public class EcmaScriptStatementParsing extends StatementParsing {
             IElementType nextType = builder.getTokenType();
             if (nextType == JSTokenTypes.FUNCTION_KEYWORD) {
                 getFunctionParsing().parseFunctionNoMarker(builder, false, mark);
+            }
+            else if (isAsyncFunction(builder)) {
+                parseAsyncFunction(builder, mark, false);
             }
             else if (nextType == JSTokenTypes.CLASS_KEYWORD) {
                 parseClassWithMarker(builder, mark, false);
@@ -85,6 +99,11 @@ public class EcmaScriptStatementParsing extends StatementParsing {
     @Override
     protected boolean parseForLoopHeader(PsiBuilder builder) {
         builder.advanceLexer();
+
+        // for await (const x of asyncIterable)
+        if (isContextKeyword(builder, JSTokenTypes.AWAIT_KEYWORD)) {
+            advanceContextKeyword(builder, JSTokenTypes.AWAIT_KEYWORD);
+        }
 
         Parsing.checkMatches(builder, JSTokenTypes.LPAR, JavaScriptLocalize.javascriptParserMessageExpectedLparen());
         boolean empty;
@@ -363,6 +382,12 @@ public class EcmaScriptStatementParsing extends StatementParsing {
                     temp.done(JSElementTypes.ATTRIBUTE_LIST);
                 }
 
+                // async m() {} / async *m() {}
+                if (isContextKeyword(builder, JSTokenTypes.ASYNC_KEYWORD)
+                    && (builder.lookAhead(1) == JSTokenTypes.MULT || JSTokenTypes.IDENTIFIER_TOKENS_SET.contains(builder.lookAhead(1)))) {
+                    advanceContextKeyword(builder, JSTokenTypes.ASYNC_KEYWORD);
+                }
+
                 if (builder.getTokenType() == JSTokenTypes.MULT) {
                     builder.advanceLexer();
                 }
@@ -392,6 +417,21 @@ public class EcmaScriptStatementParsing extends StatementParsing {
         }
 
         builder.advanceLexer();
+    }
+
+    /**
+     * {@code async function}: async is a contextual keyword (an identifier elsewhere).
+     */
+    public boolean isAsyncFunction(PsiBuilder builder) {
+        return isContextKeyword(builder, JSTokenTypes.ASYNC_KEYWORD) && builder.lookAhead(1) == JSTokenTypes.FUNCTION_KEYWORD;
+    }
+
+    /**
+     * {@code async function name() {}} with the async keyword in the function.
+     */
+    public void parseAsyncFunction(PsiBuilder builder, PsiBuilder.Marker functionMarker, boolean expressionContext) {
+        advanceContextKeyword(builder, JSTokenTypes.ASYNC_KEYWORD);
+        getFunctionParsing().parseFunctionNoMarker(builder, expressionContext, functionMarker);
     }
 
     private boolean expectStaticKeywordExpected(PsiBuilder builder) {

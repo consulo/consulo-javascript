@@ -36,14 +36,14 @@ import consulo.annotation.access.RequiredWriteAction;
 import consulo.application.util.*;
 import consulo.application.util.function.Processor;
 import consulo.component.extension.Extensions;
-import consulo.content.base.BinariesOrderRootType;
-import consulo.content.bundle.Sdk;
 import consulo.content.scope.SearchScope;
 import consulo.javascript.language.JavaScriptVersionUtil;
 import consulo.javascript.language.psi.JavaScriptType;
 import consulo.javascript.language.psi.JavaScriptTypeElement;
+import consulo.application.progress.ProgressManager;
+import consulo.javascript.psi.JSTypeOnlyDeclaration;
+import consulo.javascript.impl.library.JavaScriptLibraries;
 import consulo.javascript.language.psi.stub.JavaScriptIndexKeys;
-import consulo.javascript.module.extension.JavaScriptModuleExtension;
 import consulo.javascript.psi.JavaScriptImportStatementBase;
 import consulo.language.ast.ASTNode;
 import consulo.language.ast.TokenSet;
@@ -52,6 +52,7 @@ import consulo.language.file.inject.VirtualFileWindow;
 import consulo.language.file.light.LightVirtualFile;
 import consulo.language.impl.psi.LightElement;
 import consulo.language.inject.InjectedLanguageManager;
+import consulo.javascript.psi.resolve.JSContextDeclarationsProvider;
 import consulo.language.psi.*;
 import consulo.language.psi.resolve.PsiScopeProcessor;
 import consulo.language.psi.resolve.ResolveState;
@@ -63,7 +64,6 @@ import consulo.language.psi.stub.StubElement;
 import consulo.language.psi.stub.StubIndex;
 import consulo.language.psi.util.PsiTreeUtil;
 import consulo.language.util.IncorrectOperationException;
-import consulo.language.util.ModuleUtilCore;
 import consulo.module.Module;
 import consulo.module.content.ProjectFileIndex;
 import consulo.module.content.ProjectRootManager;
@@ -641,7 +641,7 @@ public class JSResolveUtil {
     }
 
     static boolean walkOverStructure(PsiElement context, Processor<PsiNamedElement> processor) {
-        PsiNamedElement parent = PsiTreeUtil.getNonStrictParentOfType(context, JSQualifiedNamedElement.class, PsiFile.class);
+        PsiNamedElement parent = getStructureParent(context, false);
 
         if (parent instanceof JSClass jsClass) {
             PsiElement forcedContext = jsClass.getUserData(contextKey);
@@ -671,11 +671,28 @@ public class JSResolveUtil {
                 }
             }
             else {
-                parent = PsiTreeUtil.getParentOfType(parent, JSQualifiedNamedElement.class, PsiFile.class);
+                parent = getStructureParent(parent, true);
             }
         }
 
         return true;
+    }
+
+    /**
+     * The enclosing class, function, package or file, by the stubs when the element has one: the declaration of another
+     * file (a predefined library like lib.dom.d.ts) isn't parsed for it. The stubbed ancestors of a stubbed element are
+     * the qualified named ones.
+     */
+    @Nullable
+    private static PsiNamedElement getStructureParent(PsiElement element, boolean strict) {
+        PsiElement current = strict ? PsiTreeUtil.getStubOrPsiParent(element) : element;
+        while (current != null) {
+            if (current instanceof JSQualifiedNamedElement || current instanceof PsiFile) {
+                return (PsiNamedElement) current;
+            }
+            current = PsiTreeUtil.getStubOrPsiParent(current);
+        }
+        return null;
     }
 
     private static final UserDataCache<ParameterizedCachedValue<Set<String>, JSElement>, JSElement, Object> CACHED_OPENED_NSES_CACHE =
@@ -930,6 +947,13 @@ public class JSResolveUtil {
 
         if (elt instanceof PsiFile) {
             if (elt instanceof XmlFile xmlFile) {
+                // scripts embedded into markup (<script> of HTML / Vue): the declarations the host file gives them
+                for (JSContextDeclarationsProvider provider : JSContextDeclarationsProvider.EP_NAME.getExtensionList()) {
+                    if (!provider.processDeclarations(processor, xmlFile, xmlFile, place) && processor instanceof ResolveProcessor) {
+                        return;
+                    }
+                }
+
                 XmlDocument document = xmlFile.getDocument();
                 XmlTag rootTag = document != null ? document.getRootTag() : null;
                 String rootNs = rootTag != null ? rootTag.getNamespace() : null;
@@ -943,6 +967,13 @@ public class JSResolveUtil {
             }
             else if (elt instanceof JSFile jsFile) {
                 if (parentElement != null) {
+                    for (JSContextDeclarationsProvider provider : JSContextDeclarationsProvider.EP_NAME.getExtensionList()) {
+                        if (!provider.processDeclarations(processor, jsFile, parentElement, place)
+                            && processor instanceof ResolveProcessor) {
+                            return;
+                        }
+                    }
+
                     XmlTag tag = PsiTreeUtil.getParentOfType(parentElement, XmlTag.class);
                     PsiFile containingFile = parentElement.getContainingFile();
 
@@ -2336,20 +2367,81 @@ public class JSResolveUtil {
         return element instanceof PsiFile file && file.getVirtualFile() instanceof LightVirtualFile;
     }
 
+    /**
+     * The global symbols: the global declarations of the libraries of the module ({@link JavaScriptLibraries}: the SDKs
+     * of its JavaScript extensions and the library contributors). The name to resolve is the one of a
+     * {@link ResolveProcessor}, or none.
+     */
     @RequiredReadAction
     public static void processGlobalSymbols(PsiElement target, PsiScopeProcessor processor) {
-        Sdk sdk = ModuleUtilCore.getSdk(target, JavaScriptModuleExtension.class);
-        if (sdk != null) {
-            VirtualFile[] files = sdk.getRootProvider().getFiles(BinariesOrderRootType.ID);
+        processGlobalSymbols(target, processor instanceof ResolveProcessor resolveProcessor ? resolveProcessor.getName() : null, processor);
+    }
 
-            for (VirtualFile file : files) {
-                PsiFile psiFile = PsiManager.getInstance(target.getProject()).findFile(file);
-                if (psiFile instanceof JSFile jsFile
-                    && !jsFile.processDeclarations(processor, ResolveState.initial(), null, target)) {
-                    return;
-                }
+    /**
+     * @param name the name to resolve; null for all names (only the completion of a reference lists them)
+     */
+    @RequiredReadAction
+    public static void processGlobalSymbols(PsiElement target, @Nullable String name, PsiScopeProcessor processor) {
+        processPredefinedSymbols(target, name, processor);
+    }
+
+    /**
+     * The declarations of the libraries come from the stub index: the files are large (lib.dom.d.ts), their PSI isn't walked.
+     * Nothing while indexing (dumb mode): the local and SDK symbols still resolve.
+     */
+    @RequiredReadAction
+    private static boolean processPredefinedSymbols(PsiElement target, @Nullable String name, PsiScopeProcessor processor) {
+        if (name == null && !(processor instanceof VariantsProcessor && target instanceof JSReferenceExpression)) {
+            return true;
+        }
+        Project project = target.getProject();
+        if (DumbService.isDumb(project)) {
+            return true;
+        }
+        GlobalSearchScope scope = JavaScriptLibraries.getScope(target);
+        if (scope == null) {
+            return true;
+        }
+        if (name != null) {
+            return processPredefinedSymbols(name, project, scope, processor);
+        }
+        List<String> names = new ArrayList<>();
+        StubIndex.getInstance().processAllKeys(JavaScriptIndexKeys.ELEMENTS_BY_NAME, project, key -> {
+            names.add(key);
+            return true;
+        });
+        // the keys of all files: a hint, verified by the query in the scope
+        for (String key : names) {
+            ProgressManager.checkCanceled();
+            if (!processPredefinedSymbols(key, project, scope, processor)) {
+                return false;
             }
         }
+        return true;
+    }
+
+    /**
+     * A name used as a value is the value of the declarations: {@code Date} is {@code declare var Date: DateConstructor},
+     * not the {@code interface Date} it merges with (the interfaces are the result when there's no value).
+     */
+    @RequiredReadAction
+    private static boolean processPredefinedSymbols(String name, Project project, GlobalSearchScope scope, PsiScopeProcessor processor) {
+        Collection<JSQualifiedNamedElement> elements =
+            StubIndex.getElements(JavaScriptIndexKeys.ELEMENTS_BY_NAME, name, project, scope, JSQualifiedNamedElement.class);
+        boolean hasValue = false;
+        for (JSQualifiedNamedElement element : elements) {
+            hasValue |= !(element instanceof JSClass jsClass && jsClass.isInterface()) && !(element instanceof JSTypeOnlyDeclaration);
+        }
+        for (JSQualifiedNamedElement element : elements) {
+            // a type alias is never a value
+            if (element instanceof JSTypeOnlyDeclaration || hasValue && element instanceof JSClass jsClass && jsClass.isInterface()) {
+                continue;
+            }
+            if (!processor.execute(element, ResolveState.initial())) {
+                return false;
+            }
+        }
+        return true;
     }
 
     public interface OverrideHandler {

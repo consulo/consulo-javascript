@@ -31,6 +31,10 @@ import consulo.language.ast.ASTNode;
 import consulo.language.ast.IElementType;
 import consulo.language.inject.InjectedLanguageManager;
 import consulo.language.psi.PsiElement;
+import consulo.javascript.psi.JSConstructedTypeProvider;
+import consulo.javascript.psi.JSDeclaredTypeNameProvider;
+import org.jspecify.annotations.Nullable;
+import consulo.language.psi.StubBasedPsiElement;
 import consulo.language.psi.PsiFile;
 import consulo.language.psi.PsiLanguageInjectionHost;
 import consulo.language.psi.ResolveResult;
@@ -242,6 +246,29 @@ abstract public class BaseJSSymbolProcessor implements PsiScopeProcessor {
         return rawQualifier;
     }
 
+    /**
+     * The declared type of a variable without a {@link JSConstructedTypeProvider} answer is the type of the constructor,
+     * not of the instances ({@code declare var Date: DateConstructor}): the instances are named like the variable. A
+     * {@code Class} variable of ActionScript is still evaluated: {@code new c()} is {@code *}.
+     */
+    @RequiredReadAction
+    private static boolean isTypedConstructorVariable(JSReferenceExpression methodReference) {
+        if (!(methodReference.resolve() instanceof JSVariable variable)) {
+            return false;
+        }
+        String type = variable.getTypeString();
+        return type != null && !"Class".equals(type);
+    }
+
+    /**
+     * A variable read from its stub declares a name of a file, class or package (the only stubbed variables), never the
+     * variable of a for-in: its parents aren't asked, they would load the AST of the declaring file (a predefined
+     * library like lib.dom.d.ts).
+     */
+    private static boolean isStubbedDeclaration(JSVariable variable) {
+        return variable instanceof StubBasedPsiElement<?> stubBased && stubBased.getStub() != null;
+    }
+
     @RequiredReadAction
     private static void doEvalForExpr(JSExpression rawQualifier, TypeProcessor typeProcessor, EvaluateContext context) {
         if (rawQualifier instanceof JSDefinitionExpression definition) {
@@ -252,7 +279,14 @@ abstract public class BaseJSSymbolProcessor implements PsiScopeProcessor {
             JSExpression methodExpr = newExpression.getMethodExpression();
             if (methodExpr != null) {
                 String text = methodExpr.getText();
-                if (methodExpr instanceof JSReferenceExpression && typeProcessor.ecma()) {
+                // new Image() with declare var Image: { new (): HTMLImageElement } (TypeScript): the constructed type
+                String constructedType = methodExpr instanceof JSReferenceExpression methodReference
+                    && methodReference.resolve() instanceof JSConstructedTypeProvider provider ? provider.getConstructedTypeName() : null;
+                if (constructedType != null) {
+                    text = constructedType;
+                }
+                else if (methodExpr instanceof JSReferenceExpression methodReference && typeProcessor.ecma()
+                    && !isTypedConstructorVariable(methodReference)) {
                     SimpleTypeProcessor processor = new SimpleTypeProcessor(typeProcessor.getFeatures());
                     doEvalForExpr(methodExpr, context.targetFile, processor);
 
@@ -308,7 +342,7 @@ abstract public class BaseJSSymbolProcessor implements PsiScopeProcessor {
 
                     if (type == null) {
                         if (psiElement instanceof JSVariable jsVariable) {
-                            String parameterType = jsVariable.getTypeString();
+                            String parameterType = getDeclaredType(jsVariable, jsVariable.getTypeString());
 
                             if (isSomeFunctionCall(rawQualifier, parameterType)) {
                                 parameterType = ANY_TYPE;
@@ -339,7 +373,7 @@ abstract public class BaseJSSymbolProcessor implements PsiScopeProcessor {
                                         hasSomeInfoAboutVar = findDef(typeProcessor, context, qualifier, processor);
                                     }
 
-                                    if (!hasSomeInfoAboutVar && parameterType == null
+                                    if (!hasSomeInfoAboutVar && parameterType == null && !isStubbedDeclaration(jsVariable)
                                         && jsVariable.getParent().getParent() instanceof JSForInStatement forInStatement
                                         && jsVariable.getParent() == forInStatement.getDeclarationStatement()) {
                                         parameterType = evalComponentTypeFromArrayExpression(
@@ -430,7 +464,7 @@ abstract public class BaseJSSymbolProcessor implements PsiScopeProcessor {
                                         }
 
                                         if (s == null) {
-                                            s = function.getReturnTypeString();
+                                            s = getDeclaredType(function, function.getReturnTypeString());
                                             if (isSomeFunctionCall(rawQualifier, s)) {
                                                 s = ANY_TYPE;
                                             }
@@ -665,6 +699,19 @@ abstract public class BaseJSSymbolProcessor implements PsiScopeProcessor {
             return type;
         }
         return null;
+    }
+
+    /**
+     * The class name of the declared type of a declaration that knows it ({@link JSDeclaredTypeNameProvider}: a TypeScript
+     * {@code HTMLElement | null} is {@code HTMLElement}), else its type text.
+     */
+    @Nullable
+    @RequiredReadAction
+    private static String getDeclaredType(PsiElement declaration, @Nullable String typeText) {
+        if (declaration instanceof JSDeclaredTypeNameProvider provider) {
+            return provider.getDeclaredTypeName();
+        }
+        return typeText;
     }
 
     private static boolean isValidType(String parameterType) {

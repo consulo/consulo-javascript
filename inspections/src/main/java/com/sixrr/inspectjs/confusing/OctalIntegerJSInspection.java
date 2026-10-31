@@ -39,8 +39,8 @@ public class OctalIntegerJSInspection extends JavaScriptInspection {
         public void visitJSLiteralExpression(JSSimpleLiteralExpression jsLiteralExpression) {
             super.visitJSLiteralExpression(jsLiteralExpression);
             String text = jsLiteralExpression.getText();
-            if (text.startsWith("0") && !"0".equals(text)
-                && !text.startsWith("0x") && !text.startsWith("0X")
+            // a legacy octal literal is 0 followed by a digit (017); not 0x/0b/0o (hex, binary, octal of ES6) or BigInt 0n
+            if (text.length() > 1 && text.charAt(0) == '0' && Character.isDigit(text.charAt(1))
                 && !text.contains(".") && !text.contains("e") && !text.contains("E"))
             {
                 registerError(jsLiteralExpression);

@@ -9,11 +9,17 @@ import jakarta.inject.Inject;
  * @since 06/12/2021
  */
 @ExtensionImpl
-public class EcmaScript11JavaScriptVersion extends EcmaScript6JavaScriptVersion {
+public class EcmaScript11JavaScriptVersion extends EcmaScript10JavaScriptVersion {
     @Inject
     public EcmaScript11JavaScriptVersion() {
-        super("ECMASCRIPT_11");
+        this("ECMASCRIPT_11");
+    }
 
+    /**
+     * For the next versions: each version has the features of the previous ones.
+     */
+    protected EcmaScript11JavaScriptVersion(String id) {
+        super(id);
         addFeature(JavaScriptFeature.OPTIONAL_CHAINING_OPERATOR);
     }
 

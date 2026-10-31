@@ -28,13 +28,20 @@ public class TypeScriptReferenceListMixin extends StubBasedPsiElementBase<JSRefe
         super(node);
     }
 
+    /**
+     * The extends list of an interface (stubbed).
+     */
+    public TypeScriptReferenceListMixin(@Nonnull JSReferenceListStub stub, @Nonnull IStubElementType type) {
+        super(stub, type);
+    }
+
     @Override
     public IStubElementType getElementType() {
         JSReferenceListStub stub = getStub();
         if (stub != null) {
             return stub.getStubType();
         }
-        return null;
+        return getNode().getElementType() instanceof IStubElementType stubType ? stubType : null;
     }
 
     @Override
@@ -57,6 +64,18 @@ public class TypeScriptReferenceListMixin extends StubBasedPsiElementBase<JSRefe
     @RequiredReadAction
     @Override
     public String[] getReferenceTexts() {
+        // the stub of an interface's list: the type names, the inherited members resolve without the AST
+        JSReferenceListStub stub = getGreenStub();
+        if (stub != null) {
+            return stub.getReferenceTexts();
+        }
+        if (getNode().getElementType() == TypeScriptTypes.EXTENDS_LIST) {
+            List<String> names = new ArrayList<>();
+            for (JSReferenceListMember member : getMembers()) {
+                names.add(member.getReferenceText());
+            }
+            return names.toArray(String[]::new);
+        }
         JSReferenceExpression[] exprs = getExpressions();
         String[] texts = new String[exprs.length];
         for (int i = 0; i < exprs.length; i++) {

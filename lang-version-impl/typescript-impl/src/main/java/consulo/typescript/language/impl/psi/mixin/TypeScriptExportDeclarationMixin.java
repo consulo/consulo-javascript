@@ -1,12 +1,15 @@
 package consulo.typescript.language.impl.psi.mixin;
 
 import com.intellij.lang.javascript.psi.JSElement;
+import consulo.annotation.access.RequiredReadAction;
 import consulo.language.ast.ASTNode;
 import consulo.language.psi.PsiElement;
+import consulo.language.psi.PsiReference;
 import consulo.language.psi.resolve.PsiScopeProcessor;
 import consulo.language.psi.resolve.ResolveState;
 import consulo.typescript.language.impl.psi.TypeScriptElementImpl;
 import consulo.typescript.language.psi.TypeScriptTypes;
+import consulo.typescript.language.impl.psi.TypeScriptModuleReference;
 import jakarta.annotation.Nonnull;
 import org.jspecify.annotations.Nullable;
 
@@ -18,6 +21,15 @@ import org.jspecify.annotations.Nullable;
 public class TypeScriptExportDeclarationMixin extends TypeScriptElementImpl {
     public TypeScriptExportDeclarationMixin(@Nonnull ASTNode node) {
         super(node);
+    }
+
+    /**
+     * The module specifier string ({@code from './x'}, {@code from 'pkg'}): Ctrl+click to the module file.
+     */
+    @Override
+    @RequiredReadAction
+    public PsiReference[] getReferences() {
+        return TypeScriptModuleReference.create(this);
     }
 
     @Override

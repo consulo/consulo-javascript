@@ -401,6 +401,7 @@ FIELD_OR_METHOD={IDENTIFIER} ("(" [^ \\)]* ")"? )?
 <YYINITIAL,DIV_OR_GT> "="                   { yybegin(YYINITIAL); return JSTokenTypes.EQ; }
 <YYINITIAL,DIV_OR_GT> "!"                   { yybegin(YYINITIAL); return JSTokenTypes.EXCL; }
 <YYINITIAL,DIV_OR_GT> "~"                   { yybegin(YYINITIAL); return JSTokenTypes.TILDE; }
+<YYINITIAL,DIV_OR_GT> "??"                  { yybegin(YYINITIAL); return JSTokenTypes.QUEST_QUEST; }
 <YYINITIAL,DIV_OR_GT> "?"                   { yybegin(YYINITIAL); return JSTokenTypes.QUEST; }
 <YYINITIAL,DIV_OR_GT> "?."                  { yybegin(YYINITIAL); return JSTokenTypes.QUEST_DOT; }
 <YYINITIAL,DIV_OR_GT> ":"                   { yybegin(YYINITIAL); return JSTokenTypes.COLON; }
