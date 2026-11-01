@@ -23,16 +23,19 @@ import com.intellij.lang.javascript.psi.impl.JSEmbeddedContentImpl;
 import com.intellij.lang.javascript.psi.impl.JSFileImpl;
 import consulo.annotation.component.ExtensionImpl;
 import consulo.javascript.language.JavaScriptLanguage;
+import consulo.javascript.language.StandardJavaScriptVersions;
 import consulo.language.Language;
 import consulo.language.ast.ASTNode;
 import consulo.language.ast.IElementType;
 import consulo.language.ast.IFileElementType;
+import consulo.language.ast.TokenSet;
 import consulo.language.file.FileViewProvider;
 import consulo.language.impl.psi.ASTWrapperPsiElement;
 import consulo.language.lexer.Lexer;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
 import consulo.language.util.LanguageUtil;
+import consulo.language.version.LanguageVersion;
 import consulo.language.version.LanguageVersionableParserDefinition;
 
 /**
@@ -71,6 +74,32 @@ public class JavaScriptParsingDefinition extends LanguageVersionableParserDefini
     @Override
     public PsiFile createFile(FileViewProvider fileViewProvider) {
         return new JSFileImpl(fileViewProvider);
+    }
+
+    /**
+     * The comment tokens for a version of another language: the JavaScript tokens of a file of that language (the
+     * expressions an HTML template embeds, lexed by its highlighter for the TODO search) are asked with the version of
+     * the file.
+     */
+    @Override
+    public TokenSet getCommentTokens(LanguageVersion languageVersion) {
+        return super.getCommentTokens(toJavaScriptVersion(languageVersion));
+    }
+
+    @Override
+    public TokenSet getWhitespaceTokens(LanguageVersion languageVersion) {
+        return super.getWhitespaceTokens(toJavaScriptVersion(languageVersion));
+    }
+
+    @Override
+    public TokenSet getStringLiteralElements(LanguageVersion languageVersion) {
+        return super.getStringLiteralElements(toJavaScriptVersion(languageVersion));
+    }
+
+    private static LanguageVersion toJavaScriptVersion(LanguageVersion languageVersion) {
+        return languageVersion.getLanguage() == JavaScriptLanguage.INSTANCE
+            ? languageVersion
+            : StandardJavaScriptVersions.getInstance().getDefaultVersion();
     }
 
     @Override

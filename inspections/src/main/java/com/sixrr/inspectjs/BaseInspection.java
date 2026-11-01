@@ -93,6 +93,7 @@ public abstract class BaseInspection extends LocalInspectionTool implements Cust
 
     @Override
     public boolean isSuppressedFor(PsiElement element) {
-        return SuppressionUtil.isSuppressedInStatement(element, getID(), JSSuppressionHolder.class);
+        // the suppressors of the languages (code embedded into templates), then the noinspection comments
+        return super.isSuppressedFor(element) || SuppressionUtil.isSuppressedInStatement(element, getID(), JSSuppressionHolder.class);
     }
 }

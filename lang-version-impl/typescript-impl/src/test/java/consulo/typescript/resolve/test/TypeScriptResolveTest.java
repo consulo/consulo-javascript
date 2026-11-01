@@ -13,6 +13,7 @@ import consulo.language.psi.PsiNamedElement;
 import consulo.language.psi.PsiReference;
 import consulo.test.junit.impl.language.SimpleParsingTest;
 import consulo.typescript.TypeScriptFileType;
+import consulo.typescript.language.impl.psi.TypeScriptResolveUtil;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -405,6 +406,48 @@ public class TypeScriptResolveTest extends SimpleParsingTest<Object> {
             }
             """);
         assertEquals("name", ((PsiNamedElement) target).getName());
+    }
+
+    /**
+     * The compiler binds a name in its whole scope: a class used before its declaration (in an initializer, in the
+     * metadata of a decorator) resolves.
+     */
+    @Test
+    public void testClassUsedBeforeDeclaration(Context context) throws Exception {
+        PsiElement target = resolve(context, """
+            const components = [Hero<caret>Component];
+            export class HeroComponent {}
+            """);
+        assertDeclaration(target, JSClass.class, "HeroComponent", "class HeroComponent");
+    }
+
+    @Test
+    public void testVariableOfABlockUsedBeforeDeclaration(Context context) throws Exception {
+        PsiElement target = resolve(context, """
+            function f() {
+                const first = sec<caret>ond;
+                const second = 2;
+            }
+            """);
+        assertDeclaration(target, JSVariable.class, "second", "second = 2");
+    }
+
+    /**
+     * Class members aren't in scope without {@code this.}, also when declared later.
+     */
+    @Test
+    public void testLaterMemberNotInScope(Context context) throws Exception {
+        PsiFile file = createFile(context, """
+            class A {
+                a = lat<caret>er;
+                later = 1;
+            }
+            """);
+        PsiReference reference = file.findReferenceAt(caretOffset);
+        assertNotNull(reference);
+        // the local part (an unresolved name goes on to the global symbols, which need indexes)
+        assertNull(resolveLocally(reference.getElement(), "later"));
+        assertTrue(TypeScriptResolveUtil.findLaterDeclarations(reference.getElement(), "later").isEmpty());
     }
 
     @Test

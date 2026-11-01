@@ -3,6 +3,7 @@ package consulo.typescript.language.impl.psi;
 import com.intellij.lang.javascript.psi.JSReferenceList;
 import com.intellij.lang.javascript.JSTokenTypes;
 import com.intellij.lang.javascript.psi.JSAttributeList;
+import com.intellij.lang.javascript.psi.JSBlockStatement;
 import com.intellij.lang.javascript.psi.JSClass;
 import com.intellij.lang.javascript.psi.JSParenthesizedExpression;
 import com.intellij.lang.javascript.psi.JSArrayLiteralExpression;
@@ -15,11 +16,14 @@ import com.intellij.lang.javascript.psi.JSParameter;
 import com.intellij.lang.javascript.psi.JSParameterList;
 import com.intellij.lang.javascript.psi.JSProperty;
 import com.intellij.lang.javascript.psi.JSReferenceExpression;
+import com.intellij.lang.javascript.psi.JSVarStatement;
 import com.intellij.lang.javascript.psi.JSVariable;
 import com.intellij.lang.javascript.psi.ecmal4.JSReferenceListMember;
 import com.intellij.lang.javascript.psi.stubs.JSFunctionStub;
 import com.intellij.lang.javascript.psi.resolve.JSResolveUtil;
 import com.intellij.lang.javascript.psi.resolve.ResolveProcessor;
+import consulo.application.util.CachedValue;
+import consulo.application.util.CachedValueProvider;
 import consulo.javascript.ecmascript.psi.ES6StringTemplateExpression;
 import consulo.annotation.access.RequiredReadAction;
 import consulo.language.ast.ASTNode;
@@ -29,9 +33,11 @@ import consulo.javascript.psi.JSTypeOnlyDeclaration;
 import consulo.language.ast.IElementType;
 import consulo.language.ast.TokenSet;
 import consulo.language.impl.ast.LeafElement;
+import consulo.language.impl.psi.PsiFileImpl;
 import consulo.language.impl.psi.stub.StubBasedPsiElementBase;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
+import consulo.language.psi.PsiModificationTracker;
 import consulo.language.psi.PsiNamedElement;
 import consulo.language.psi.PsiReference;
 import consulo.language.psi.StubBasedPsiElement;
@@ -42,14 +48,18 @@ import consulo.language.psi.stub.NamedStub;
 import consulo.language.psi.stub.PsiFileStub;
 import consulo.language.psi.stub.StubElement;
 import consulo.language.psi.stub.StubIndex;
+import consulo.language.psi.util.LanguageCachedValueUtil;
 import consulo.language.psi.util.PsiTreeUtil;
 import consulo.language.util.IncorrectOperationException;
 import consulo.project.DumbService;
 import consulo.typescript.language.impl.stub.TypeScriptStubElementTypes;
 import consulo.typescript.language.psi.TypeScriptTypes;
+import consulo.util.dataholder.Key;
 import org.jspecify.annotations.Nullable;
 
 import java.util.ArrayList;
+import java.util.Map;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -914,6 +924,91 @@ public final class TypeScriptResolveUtil {
             }
         }
         return true;
+    }
+
+    private static final Key<CachedValue<Map<String, List<PsiElement>>>> SCOPE_DECLARATIONS =
+        Key.create("TypeScriptResolveUtil.SCOPE_DECLARATIONS");
+
+    /**
+     * The declarations of a name after the place in its enclosing scopes, the innermost scope that has one first
+     * ({@code const list = [Item]; class Item {}}): the TypeScript compiler binds a name in its whole scope (and reports
+     * a use before the declaration), where the walk up the tree sees the declarations before the place only. Members
+     * of classes / interfaces / object types aren't in scope; type-only declarations are left out. The names of a
+     * scope are cached ({@link #getScopeDeclarations}); never for a file whose tree isn't loaded (a library resolved
+     * through its stubs).
+     */
+    @RequiredReadAction
+    public static List<PsiElement> findLaterDeclarations(PsiElement place, String name) {
+        PsiFile file = place.getContainingFile();
+        if (file == null || file instanceof PsiFileImpl fileImpl && !fileImpl.isContentsLoaded()) {
+            return List.of();
+        }
+        int offset = place.getTextRange().getStartOffset();
+        for (PsiElement scope = place.getParent(); scope != null; scope = scope.getParent()) {
+            if (isScope(scope)) {
+                List<PsiElement> found = new ArrayList<>();
+                for (PsiElement declaration : getScopeDeclarations(scope).getOrDefault(name, List.of())) {
+                    if (declaration.getTextRange().getStartOffset() > offset && !isTypeOnly(declaration)) {
+                        found.add(declaration);
+                    }
+                }
+                if (!found.isEmpty()) {
+                    return found;
+                }
+            }
+            if (scope instanceof PsiFile) {
+                break;
+            }
+        }
+        return List.of();
+    }
+
+    private static boolean isScope(PsiElement element) {
+        if (element instanceof PsiFile || element instanceof JSBlockStatement) {
+            return true;
+        }
+        IElementType type = element.getNode() != null ? element.getNode().getElementType() : null;
+        return type == TypeScriptTypes.CASE_CLAUSE || type == TypeScriptTypes.NAMESPACE_DECLARATION;
+    }
+
+    /**
+     * The names declared directly in a scope (classes, functions, variables; through statement / {@code export}
+     * wrappers), cached until a PSI change: the scope is in an open file, its tree is loaded anyway.
+     */
+    @RequiredReadAction
+    private static Map<String, List<PsiElement>> getScopeDeclarations(PsiElement scope) {
+        return LanguageCachedValueUtil.getCachedValue(scope, SCOPE_DECLARATIONS, () -> {
+            Map<String, List<PsiElement>> result = new HashMap<>();
+            for (PsiElement child = scope.getFirstChild(); child != null; child = child.getNextSibling()) {
+                collectDeclarations(child, result, 0);
+            }
+            return CachedValueProvider.Result.create(result, PsiModificationTracker.MODIFICATION_COUNT);
+        });
+    }
+
+    /**
+     * The declarations of an element: a class, a function, a variable of a statement, through the wrappers
+     * ({@code export}, statements) but not into nested scopes.
+     */
+    @RequiredReadAction
+    private static void collectDeclarations(PsiElement element, Map<String, List<PsiElement>> result, int depth) {
+        if (element instanceof JSClass || element instanceof JSFunction || element instanceof JSVariable) {
+            String name = ((PsiNamedElement) element).getName();
+            if (name != null) {
+                result.computeIfAbsent(name, k -> new ArrayList<>(1)).add(element);
+            }
+            return;
+        }
+        if (depth > 3 || element instanceof JSBlockStatement || element.getNode() == null) {
+            return;
+        }
+        IElementType type = element.getNode().getElementType();
+        if (element instanceof JSVarStatement || type == TypeScriptTypes.STATEMENT || type == TypeScriptTypes.EXPORT_DECLARATION
+            || type == TypeScriptTypes.EXPORT_DEFAULT_ASSIGNMENT) {
+            for (PsiElement child = element.getFirstChild(); child != null; child = child.getNextSibling()) {
+                collectDeclarations(child, result, depth + 1);
+            }
+        }
     }
 
     /**

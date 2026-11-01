@@ -47,6 +47,14 @@ public class JavaScriptLanguageVersionResolver implements LanguageVersionResolve
         if (containingFile == null) {
             return StandardJavaScriptVersions.getInstance().getDefaultVersion();
         }
+        // code embedded into a file of another language (the expressions of Angular templates): the version its
+        // embedding element names
+        for (PsiElement parent = element.getParent(); parent != null && !(parent instanceof PsiFile); parent = parent.getParent()) {
+            LanguageVersion embedded = parent.getUserData(LanguageVersion.KEY);
+            if (embedded != null && embedded.getLanguage() == language) {
+                return embedded;
+            }
+        }
         FileType fileType = containingFile.getFileType();
         if (fileType instanceof JavaScriptFileTypeWithVersion) {
             Module module = element.getModule();

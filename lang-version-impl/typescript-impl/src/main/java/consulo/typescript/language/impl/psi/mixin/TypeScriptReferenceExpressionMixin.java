@@ -132,6 +132,17 @@ public class TypeScriptReferenceExpressionMixin extends TypeScriptExpressionMixi
                 }
             }
 
+            // declarations after the place in its scopes (the compiler binds a name in its whole scope)
+            List<PsiElement> later = new ArrayList<>();
+            for (PsiElement declaration : TypeScriptResolveUtil.findLaterDeclarations(this, name)) {
+                if (!TypeScriptResolveUtil.isTypeOnly(declaration)) {
+                    later.add(declaration);
+                }
+            }
+            if (!later.isEmpty()) {
+                return followImports(PsiElementResolveResult.createResults(later));
+            }
+
             // global declarations of the other files that aren't modules (scripts, .d.ts without import/export)
             List<PsiElement> globals = new ArrayList<>();
             PsiFile containingFile = getContainingFile();
