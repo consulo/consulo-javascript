@@ -7,6 +7,7 @@ open module consulo.javascript.base.impl {
 
     requires consulo.language.impl;
     requires consulo.language.editor.refactoring.api;
+    requires consulo.language.spellchecker.api;
 
     requires com.google.common;
     requires com.intellij.xml.api;
