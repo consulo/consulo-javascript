@@ -16,6 +16,10 @@ public class CDTScriptHolder {
         myScripts.add(script);
     }
 
+    public List<CDTScript> getAll() {
+        return myScripts;
+    }
+
     public CDTScript find(String scriptId) {
         for (CDTScript script : myScripts) {
             if (Objects.equals(scriptId, script.getId())) {

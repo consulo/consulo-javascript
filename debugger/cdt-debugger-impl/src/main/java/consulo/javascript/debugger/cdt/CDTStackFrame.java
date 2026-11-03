@@ -42,11 +42,14 @@ public class CDTStackFrame extends XStackFrame {
             myScript = process.getScripts().find(myScriptId);
 
             if (myScript != null) {
-                mySourcePosition = Application.get().getInstance(XSourcePositionFactory.class).createPosition(
-                    myScript.toVirtualFile(),
-                    myLocation.getLineNumber(),
-                    myLocation.getColumnNumber()
-                );
+                mySourcePosition = SourceMappedPositions.original(myScript, myLocation.getLineNumber(), myLocation.getColumnNumber());
+                if (mySourcePosition == null) {
+                    mySourcePosition = Application.get().getInstance(XSourcePositionFactory.class).createPosition(
+                        myScript.toVirtualFile(),
+                        myLocation.getLineNumber(),
+                        myLocation.getColumnNumber()
+                    );
+                }
             }
         }
         else {

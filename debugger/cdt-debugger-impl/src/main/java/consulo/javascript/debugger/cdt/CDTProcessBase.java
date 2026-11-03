@@ -1,5 +1,12 @@
 package consulo.javascript.debugger.cdt;
 
+import java.util.concurrent.CopyOnWriteArrayList;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.Set;
+import java.util.ArrayList;
+import java.nio.file.Path;
+import consulo.javascript.debugger.cdt.sourcemap.SourceMap;
+import com.github.kklisura.cdt.protocol.types.debugger.SetBreakpoint;
 import com.github.kklisura.cdt.protocol.ChromeDevTools;
 import com.github.kklisura.cdt.protocol.commands.Debugger;
 import com.github.kklisura.cdt.protocol.events.debugger.Paused;
@@ -32,7 +39,6 @@ import org.jspecify.annotations.Nullable;
 
 import java.net.SocketException;
 import java.util.Collection;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ExecutorService;
@@ -55,7 +61,14 @@ public abstract class CDTProcessBase extends XDebugProcess {
 
     private ExecutorService myExecutor;
 
-    private Map<String, CDTBreakpointInfo> myBreakpoints = new HashMap<>();
+    private final Map<String, CDTBreakpointInfo> myBreakpoints = new ConcurrentHashMap<>();
+    // the protocol breakpoint ids of each line breakpoint, for unregistering
+    private final Map<XLineBreakpoint<?>, List<String>> myBreakpointIds = new ConcurrentHashMap<>();
+    // line breakpoints in original sources, bound through the source maps of loaded scripts
+    private final Set<XLineBreakpoint<?>> mySourceMappedBreakpoints = ConcurrentHashMap.newKeySet();
+
+    /** How many original lines below a breakpoint without code a source-mapped breakpoint may move to. */
+    private static final int SOURCE_MAP_LINE_LOOKAHEAD = 20;
 
     public CDTProcessBase(XDebugSession session, ExecutionResult result) throws ExecutionException {
         super(session);
@@ -79,6 +92,15 @@ public abstract class CDTProcessBase extends XDebugProcess {
             myScripts.add(cdtScript);
 
             getSession().getProject().getUIAccess().execute(() -> myScriptListPanel.add(cdtScript));
+
+            if (cdtScript.hasSourceMap() && !mySourceMappedBreakpoints.isEmpty()) {
+                // ordered before any resume the pause handlers queue, so breakpoints bind before the script runs on
+                invoke(tools -> {
+                    for (XLineBreakpoint<?> breakpoint : mySourceMappedBreakpoints) {
+                        bindSourceMapped(tools, cdtScript, breakpoint);
+                    }
+                });
+            }
         });
 
         debugger.onPaused(this::onPause);
@@ -165,42 +187,135 @@ public abstract class CDTProcessBase extends XDebugProcess {
         return false;
     }
 
+    /**
+     * Line breakpoint types of original sources (languages compiled to JavaScript) whose
+     * breakpoints bind through the source maps of the loaded scripts: by default the types
+     * the {@link SourceMappedBreakpointTypeProvider}s contribute.
+     */
+    protected List<Class<? extends XLineBreakpointType<?>>> getSourceMappedBreakpointTypes() {
+        List<Class<? extends XLineBreakpointType<?>>> types = new ArrayList<>();
+        for (SourceMappedBreakpointTypeProvider provider : Application.get().getExtensionPoint(SourceMappedBreakpointTypeProvider.class).getExtensionList()) {
+            types.add(provider.getBreakpointType());
+        }
+        return types;
+    }
+
     @Override
+    @SuppressWarnings("unchecked")
     public XBreakpointHandler<?>[] getBreakpointHandlers() {
-        return new XBreakpointHandler[]{
-            new XBreakpointHandler<>(JavaScriptLineBreakpointType.class) {
-                @Override
-                public void registerBreakpoint(final XLineBreakpoint lineBreakpoint) {
-                    int line = lineBreakpoint.getLine();
-                    XExpression conditionExpression = lineBreakpoint.getConditionExpression();
-                    String expression = conditionExpression == null ? null : conditionExpression.getExpression();
-
-                    invoke((devTools) -> {
-                        Url url = Urls.newFromIdea(lineBreakpoint.getFileUrl());
-
-                        String externalForm = url.toExternalForm();
-
-                        SetBreakpointByUrl setBreakpointByUrl = devTools.getDebugger().setBreakpointByUrl(line, externalForm, null, null, null, expression);
-
-                        List<Location> locations = setBreakpointByUrl.getLocations();
-
-                        myBreakpoints.put(setBreakpointByUrl.getBreakpointId(), new CDTBreakpointInfo(locations, lineBreakpoint));
-
-                        if (!locations.isEmpty()) {
-                            myXBreakpointManager.updateBreakpointPresentation(lineBreakpoint, ExecutionDebugIconGroup.breakpointBreakpointvalid(), null);
-                        }
-
-                        // TODO error handler
-                    });
-                }
-
-                @Override
-                public void unregisterBreakpoint(XLineBreakpoint breakpoint, boolean b) {
-                    String presentableFilePath = breakpoint.getPresentableFilePath();
-                    // myVm.setBreakpoint(new Breakpoint.Target.ScriptName(presentableFilePath), breakpoint.getLine(), Breakpoint.EMPTY_VALUE, false, null, null, null);
-                }
+        List<XBreakpointHandler<?>> handlers = new ArrayList<>();
+        handlers.add(new XBreakpointHandler<>(JavaScriptLineBreakpointType.class) {
+            @Override
+            public void registerBreakpoint(XLineBreakpoint lineBreakpoint) {
+                registerScriptBreakpoint(lineBreakpoint);
             }
-        };
+
+            @Override
+            public void unregisterBreakpoint(XLineBreakpoint breakpoint, boolean temporary) {
+                removeBreakpoint(breakpoint);
+            }
+        });
+        for (Class<? extends XLineBreakpointType<?>> type : getSourceMappedBreakpointTypes()) {
+            handlers.add(new XBreakpointHandler(type) {
+                @Override
+                public void registerBreakpoint(XBreakpoint breakpoint) {
+                    registerSourceMappedBreakpoint((XLineBreakpoint<?>) breakpoint);
+                }
+
+                @Override
+                public void unregisterBreakpoint(XBreakpoint breakpoint, boolean temporary) {
+                    removeBreakpoint((XLineBreakpoint<?>) breakpoint);
+                }
+            });
+        }
+        return handlers.toArray(XBreakpointHandler[]::new);
+    }
+
+    private void registerScriptBreakpoint(XLineBreakpoint<?> lineBreakpoint) {
+        int line = lineBreakpoint.getLine();
+        String expression = conditionOf(lineBreakpoint);
+
+        invoke((devTools) -> {
+            Url url = Urls.newFromIdea(lineBreakpoint.getFileUrl());
+
+            String externalForm = url.toExternalForm();
+
+            SetBreakpointByUrl setBreakpointByUrl = devTools.getDebugger().setBreakpointByUrl(line, externalForm, null, null, null, expression);
+
+            List<Location> locations = setBreakpointByUrl.getLocations();
+
+            rememberBreakpoint(setBreakpointByUrl.getBreakpointId(), new CDTBreakpointInfo(locations, lineBreakpoint), lineBreakpoint);
+
+            if (!locations.isEmpty()) {
+                myXBreakpointManager.updateBreakpointPresentation(lineBreakpoint, ExecutionDebugIconGroup.breakpointBreakpointvalid(), null);
+            }
+
+            // TODO error handler
+        });
+    }
+
+    private void registerSourceMappedBreakpoint(XLineBreakpoint<?> lineBreakpoint) {
+        mySourceMappedBreakpoints.add(lineBreakpoint);
+        invoke(devTools -> {
+            for (CDTScript script : myScripts.getAll()) {
+                bindSourceMapped(devTools, script, lineBreakpoint);
+            }
+        });
+    }
+
+    /** Binds a breakpoint of an original source in {@code script} when the script's source map covers that source. */
+    private void bindSourceMapped(ChromeDevTools devTools, CDTScript script, XLineBreakpoint<?> lineBreakpoint) {
+        if (!script.hasSourceMap() || !mySourceMappedBreakpoints.contains(lineBreakpoint)) {
+            return;
+        }
+        SourceMap sourceMap = script.getSourceMap();
+        Path file = SourceMappedPositions.toLocalPath(lineBreakpoint.getFileUrl());
+        if (sourceMap == null || file == null) {
+            return;
+        }
+        int sourceIndex = SourceMappedPositions.sourceIndex(sourceMap, file);
+        if (sourceIndex < 0) {
+            return;
+        }
+        SourceMap.Mapping mapping = sourceMap.findGenerated(sourceIndex, lineBreakpoint.getLine(), SOURCE_MAP_LINE_LOOKAHEAD);
+        if (mapping == null) {
+            return;
+        }
+
+        Location location = new Location();
+        location.setScriptId(script.getId());
+        location.setLineNumber(mapping.generatedLine());
+        location.setColumnNumber(mapping.generatedColumn());
+        SetBreakpoint result = devTools.getDebugger().setBreakpoint(location, conditionOf(lineBreakpoint));
+        Location actual = result.getActualLocation();
+        rememberBreakpoint(result.getBreakpointId(),
+            new CDTBreakpointInfo(actual == null ? List.of() : List.of(actual), lineBreakpoint),
+            lineBreakpoint);
+        myXBreakpointManager.updateBreakpointPresentation(lineBreakpoint, ExecutionDebugIconGroup.breakpointBreakpointvalid(), null);
+    }
+
+    private void rememberBreakpoint(String breakpointId, CDTBreakpointInfo info, XLineBreakpoint<?> lineBreakpoint) {
+        myBreakpoints.put(breakpointId, info);
+        myBreakpointIds.computeIfAbsent(lineBreakpoint, key -> new CopyOnWriteArrayList<>()).add(breakpointId);
+    }
+
+    private void removeBreakpoint(XLineBreakpoint<?> lineBreakpoint) {
+        mySourceMappedBreakpoints.remove(lineBreakpoint);
+        List<String> ids = myBreakpointIds.remove(lineBreakpoint);
+        if (ids == null || ids.isEmpty()) {
+            return;
+        }
+        invoke(devTools -> {
+            for (String id : ids) {
+                myBreakpoints.remove(id);
+                devTools.getDebugger().removeBreakpoint(id);
+            }
+        });
+    }
+
+    private static @Nullable String conditionOf(XLineBreakpoint<?> lineBreakpoint) {
+        XExpression conditionExpression = lineBreakpoint.getConditionExpression();
+        return conditionExpression == null ? null : conditionExpression.getExpression();
     }
 
     @Override
@@ -239,7 +354,13 @@ public abstract class CDTProcessBase extends XDebugProcess {
 
         myExecutor.shutdown();
 
+        // every breakpoint this session bound, source-mapped ones included, loses its "verified" mark
+        List<XLineBreakpoint<?>> bound = new ArrayList<>(myBreakpointIds.keySet());
+        bound.addAll(mySourceMappedBreakpoints);
+
         myBreakpoints.clear();
+        myBreakpointIds.clear();
+        mySourceMappedBreakpoints.clear();
 
         Application.get().runReadAction(new Runnable() {
             @Override
@@ -247,6 +368,9 @@ public abstract class CDTProcessBase extends XDebugProcess {
                 Collection<? extends XLineBreakpoint<XBreakpointProperties>> breakpoints = myXBreakpointManager.getBreakpoints(JavaScriptLineBreakpointType
                     .class);
                 for (XLineBreakpoint<XBreakpointProperties> breakpoint : breakpoints) {
+                    myXBreakpointManager.updateBreakpointPresentation(breakpoint, null, null);
+                }
+                for (XLineBreakpoint<?> breakpoint : bound) {
                     myXBreakpointManager.updateBreakpointPresentation(breakpoint, null, null);
                 }
             }

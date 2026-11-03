@@ -10,4 +10,5 @@ module consulo.javascript.cdt.debugger.impl {
     requires cdt.java.client;
 
     exports consulo.javascript.debugger.cdt;
+    exports consulo.javascript.debugger.cdt.sourcemap;
 }
