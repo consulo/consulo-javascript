@@ -423,7 +423,7 @@ public class JSDocumentationProvider implements CodeDocumentationProvider, Langu
 
         if (element != null) {
             PsiElement docComment =
-                JSDocumentationUtils.findDocComment(element, _element instanceof JSAttributeNameValuePair ? originalElement : null);
+                JSDocumentationUtils.findDocComment(getDocCommentAnchor(element), _element instanceof JSAttributeNameValuePair ? originalElement : null);
 
             if (docComment != null) {
                 docComment = findFirstDocComment(docComment);
@@ -464,6 +464,15 @@ public class JSDocumentationProvider implements CodeDocumentationProvider, Langu
         }
 
         return null;
+    }
+
+    /**
+     * @return The element the documentation comment precedes - a language which wraps its declarations by other nodes returns the
+     * outermost wrapper
+     */
+    @RequiredReadAction
+    protected PsiElement getDocCommentAnchor(PsiElement element) {
+        return element;
     }
 
     @RequiredReadAction

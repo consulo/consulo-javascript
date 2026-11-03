@@ -4,6 +4,7 @@
  */
 open module consulo.javascript {
     requires transitive consulo.javascript.base.api;
+    requires consulo.markdown.documentation.api;
     requires transitive consulo.javascript.base.impl;
 
     requires consulo.language.editor.impl;

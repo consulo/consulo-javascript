@@ -28,14 +28,14 @@ import consulo.annotation.access.RequiredReadAction;
 import consulo.language.editor.localize.CodeInsightLocalize;
 import consulo.language.psi.PsiElement;
 import consulo.localize.LocalizeValue;
+import consulo.markdown.documentation.MarkdownDocumentationRenderer;
 import consulo.util.io.URLUtil;
 import consulo.util.lang.StringUtil;
+import org.intellij.markdown.parser.MarkdownParserManager;
 import org.jspecify.annotations.Nullable;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 class JSDocumentationBuilder implements JSDocumentationProcessor {
     private static class SymbolInfo {
@@ -72,9 +72,12 @@ class JSDocumentationBuilder implements JSDocumentationProcessor {
     private PsiElement contextElement;
 
     private int myNewLinesPendingCount;
-    private boolean seenPre;
     private boolean seenSeeAlso;
-    private static final String BR_DELIMITER = "<BR>\n";
+
+    /**
+     * Descriptions are Markdown (as in TSDoc and in the JSDoc of most projects) - HTML in them passes through
+     */
+    private static final MarkdownDocumentationRenderer MARKDOWN_RENDERER = new MarkdownDocumentationRenderer(MarkdownParserManager.FLAVOUR);
 
     @RequiredReadAction
     JSDocumentationBuilder(PsiElement element, PsiElement _contextElement) {
@@ -120,14 +123,13 @@ class JSDocumentationBuilder implements JSDocumentationProcessor {
 
     private void doAppend(String str) {
         while (myNewLinesPendingCount > 0) {
-            result.append(seenPre ? "\n" : BR_DELIMITER);
+            result.append("\n");
             --myNewLinesPendingCount;
         }
 
         result.append(str);
     }
 
-    private static final Pattern ourTagStartPattern = Pattern.compile("<(/)?(\\w+)");
 
     @Override
     public boolean needsPlainCommentData() {
@@ -163,39 +165,10 @@ class JSDocumentationBuilder implements JSDocumentationProcessor {
             return true;
         }
 
-        if (line.contains("<pre>")) {
-            seenPre = true;
-        }
-
-        if (!seenPre && line.indexOf('<') != -1) {
-            Matcher matcher = ourTagStartPattern.matcher(line);
-            int offset = 0;
-
-            while (matcher.find()) {
-                boolean isTagEnd = matcher.start(1) != matcher.end(1);
-                String s = matcher.group(2);
-                // tags that do not need escaping
-                if (tagNameThatDoNotNeedEscaping(s)) {
-                    continue;
-                }
-                line = line.substring(0, offset + matcher.start(0)) + "&lt;" + (isTagEnd ? "/" : "") + s +
-                    line.substring(offset + matcher.end(0));
-                offset += 3;
-            }
-        }
-
         doAppend(line);
         myNewLinesPendingCount = parametersStarted && !parametersEnded ? 0 : 1;
 
-        if (line.contains("</pre>")) {
-            seenPre = false;
-        }
         return true;
-    }
-
-    private static boolean tagNameThatDoNotNeedEscaping(String s) {
-        return s.equalsIgnoreCase("p") || s.equalsIgnoreCase("i") || s.equalsIgnoreCase("code")
-            || s.equalsIgnoreCase("ul") || s.equalsIgnoreCase("li") || s.equalsIgnoreCase("b");
     }
 
     private void setResult(StringBuilder builder) {
@@ -434,7 +407,7 @@ class JSDocumentationBuilder implements JSDocumentationProcessor {
 
         if (function != null) {
             startFunction(function);
-            result.append(generationInfo.description.toString());
+            result.append(renderMarkdown(generationInfo.description));
 
             result.append("\n<DL>");
             MethodInfo methodInfo = ((MethodInfo)generationInfo);
@@ -452,7 +425,7 @@ class JSDocumentationBuilder implements JSDocumentationProcessor {
 
                 if (parameterInfo.getValue().description.length() > 0) {
                     result.append(" - ");
-                    result.append(parameterInfo.getValue().description.toString());
+                    result.append(renderMarkdown(parameterInfo.getValue().description));
                 }
                 result.append("</DD>\n");
             }
@@ -463,7 +436,7 @@ class JSDocumentationBuilder implements JSDocumentationProcessor {
                 result.append("</b></DT>");
 
                 result.append("<DD>");
-                result.append(methodInfo.returnInfo.description.toString());
+                result.append(renderMarkdown(methodInfo.returnInfo.description));
                 result.append("</DD>");
             }
 
@@ -475,7 +448,7 @@ class JSDocumentationBuilder implements JSDocumentationProcessor {
                 endNamedItem();
             }
 
-            result.append(generationInfo.description.toString());
+            result.append(renderMarkdown(generationInfo.description));
         }
 
         if (contextElement != null) {
@@ -488,6 +461,7 @@ class JSDocumentationBuilder implements JSDocumentationProcessor {
         return result.toString();
     }
 
+    @RequiredReadAction
     public String getParameterDoc(String name) {
         if (function != null) {
             MethodInfo methodInfo = ((MethodInfo)generationInfo);
@@ -497,12 +471,17 @@ class JSDocumentationBuilder implements JSDocumentationProcessor {
                 result = new StringBuilder();
                 startNamedItem(name, parameterInfo);
                 endNamedItem();
-                result.append(parameterInfo.description.toString());
+                result.append(renderMarkdown(parameterInfo.description));
                 return result.toString();
             }
         }
 
         return null;
+    }
+
+    @RequiredReadAction
+    private String renderMarkdown(CharSequence description) {
+        return MARKDOWN_RENDERER.toHtml(description.toString(), myElement.getProject());
     }
 
     @RequiredReadAction
