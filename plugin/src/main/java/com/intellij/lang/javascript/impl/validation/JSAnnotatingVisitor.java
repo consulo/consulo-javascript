@@ -1075,9 +1075,11 @@ public class JSAnnotatingVisitor extends JSElementVisitor implements Annotator {
     @RequiredReadAction
     @SuppressWarnings("unchecked")
     public void visitJSReturnStatement(JSReturnStatement node) {
+        // a method of a TypeScript object literal is a property
         PsiElement element = PsiTreeUtil.getParentOfType(
             node,
             JSFunction.class,
+            JSProperty.class,
             XmlTagChild.class,
             XmlAttributeValue.class,
             JSFile.class,
