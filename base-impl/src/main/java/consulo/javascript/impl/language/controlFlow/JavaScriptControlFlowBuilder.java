@@ -399,7 +399,28 @@ public class JavaScriptControlFlowBuilder {
             return null;
         }
         PsiElement target = expression.resolve();
+        if (target == null) {
+            // let x = x + 1 - not resolved in its own initializer
+            target = selfReference(expression, name);
+        }
         return JavaScriptFlowVariables.isVariableOf(target, myOwner) ? target : null;
+    }
+
+    /**
+     * The name declared by the variable whose initializer the reference is in
+     */
+    @RequiredReadAction
+    private @Nullable PsiElement selfReference(PsiElement reference, String name) {
+        for (PsiElement parent = reference.getParent(); parent != null && parent != myOwner && !JavaScriptControlFlow.isOwner(parent); parent = parent.getParent()) {
+            if (parent instanceof JSVariable variable && variable.getInitializer() != null && PsiTreeUtil.isAncestor(variable.getInitializer(), reference, false)) {
+                for (PsiElement target : JavaScriptFlowVariables.targets(variable)) {
+                    if (name.equals(JavaScriptFlowVariables.name(target))) {
+                        return target;
+                    }
+                }
+            }
+        }
+        return null;
     }
 
     /**
@@ -934,7 +955,7 @@ public class JavaScriptControlFlowBuilder {
         expressions(element);
     }
 
-    private static boolean isIncrement(@Nullable IElementType operator) {
+    static boolean isIncrement(@Nullable IElementType operator) {
         return operator == JSTokenTypes.PLUSPLUS || operator == JSTokenTypes.MINUSMINUS;
     }
 
@@ -1013,7 +1034,7 @@ public class JavaScriptControlFlowBuilder {
      * one (logical expressions are not JSBinaryExpression there)
      */
     @RequiredReadAction
-    private static @Nullable IElementType operator(@Nullable PsiElement expression) {
+    static @Nullable IElementType operator(@Nullable PsiElement expression) {
         if (!(expression instanceof JSExpression)) {
             return null;
         }

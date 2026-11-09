@@ -508,6 +508,8 @@ trivial.if.error.string:
     text: '#ref statement can be simplified #loc'
 typescript.function.return.display.name:
     text: Function does not return a value (TypeScript)
+typescript.used.before.assigned.display.name:
+    text: Variable used before being assigned (TypeScript)
 unnecessary.block.statement.display.name:
     text: "Unnecessary 'block' statement"
 unnecessary.block.statement.error.string:
@@ -558,6 +560,8 @@ variable.name.is.too.long.error.string:
     text: "Variable name '#ref' is too long #loc"
 variable.name.is.too.short.error.string:
     text: "Variable name '#ref' is too short #loc"
+variable.used.before.assigned.error.string:
+    text: "Variable ''{0}'' is used before being assigned."
 void.expression.display.name:
     text: "'void' expression"
 void.expression.error.string:

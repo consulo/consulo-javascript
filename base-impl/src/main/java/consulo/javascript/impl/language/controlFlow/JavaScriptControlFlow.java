@@ -57,6 +57,7 @@ public final class JavaScriptControlFlow implements ControlFlow {
     private final BitSet myReachable = new BitSet();
 
     private volatile @Nullable List<UnreachableRun> myUnreachableRuns;
+    private volatile @Nullable JavaScriptDefiniteAssignment myDefiniteAssignment;
 
     JavaScriptControlFlow(PsiElement owner, Instruction[] instructions, Instruction end) {
         myOwner = owner;
@@ -234,6 +235,15 @@ public final class JavaScriptControlFlow implements ControlFlow {
      */
     public Instruction getEnd() {
         return myEnd;
+    }
+
+    @RequiredReadAction
+    public JavaScriptDefiniteAssignment getDefiniteAssignment() {
+        JavaScriptDefiniteAssignment result = myDefiniteAssignment;
+        if (result == null) {
+            myDefiniteAssignment = result = JavaScriptDefiniteAssignment.compute(this);
+        }
+        return result;
     }
 
     /**

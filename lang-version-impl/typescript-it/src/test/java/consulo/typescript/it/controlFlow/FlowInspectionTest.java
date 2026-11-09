@@ -18,6 +18,7 @@ package consulo.typescript.it.controlFlow;
 
 import com.sixrr.inspectjs.validity.FunctionWithInconsistentReturnsJSInspection;
 import com.sixrr.inspectjs.validity.TypeScriptFunctionReturnInspection;
+import com.sixrr.inspectjs.validity.TypeScriptUsedBeforeAssignedInspection;
 import com.sixrr.inspectjs.validity.UnreachableCodeJSInspection;
 import com.sixrr.inspectjs.validity.UsedBeforeDeclarationJSInspection;
 import consulo.it.AllowLogError;
@@ -68,6 +69,16 @@ public class FlowInspectionTest {
     @Test
     public void testUsedBeforeDeclarationJavaScript(CodeInsightTestFixture fixture) throws Exception {
         check(fixture, "UsedBeforeDeclaration.js", UsedBeforeDeclarationJSInspection.class);
+    }
+
+    @Test
+    public void testUsedBeforeAssigned(CodeInsightTestFixture fixture) throws Exception {
+        check(fixture, "UsedBeforeAssigned.ts", TypeScriptUsedBeforeAssignedInspection.class);
+    }
+
+    @Test
+    public void testUsedBeforeAssignedFlow(CodeInsightTestFixture fixture) throws Exception {
+        check(fixture, "UsedBeforeAssignedFlow.ts", TypeScriptUsedBeforeAssignedInspection.class);
     }
 
     @SafeVarargs
