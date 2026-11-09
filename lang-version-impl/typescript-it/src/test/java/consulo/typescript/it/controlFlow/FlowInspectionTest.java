@@ -16,6 +16,7 @@
 
 package consulo.typescript.it.controlFlow;
 
+import com.sixrr.inspectjs.dataflow.UnusedAssignmentJSInspection;
 import com.sixrr.inspectjs.validity.FunctionWithInconsistentReturnsJSInspection;
 import com.sixrr.inspectjs.validity.TypeScriptFunctionReturnInspection;
 import com.sixrr.inspectjs.validity.TypeScriptUsedBeforeAssignedInspection;
@@ -79,6 +80,16 @@ public class FlowInspectionTest {
     @Test
     public void testUsedBeforeAssignedFlow(CodeInsightTestFixture fixture) throws Exception {
         check(fixture, "UsedBeforeAssignedFlow.ts", TypeScriptUsedBeforeAssignedInspection.class);
+    }
+
+    @Test
+    public void testUnusedAssignment(CodeInsightTestFixture fixture) throws Exception {
+        check(fixture, "UnusedAssignment.ts", UnusedAssignmentJSInspection.class);
+    }
+
+    @Test
+    public void testUnusedAssignmentModule(CodeInsightTestFixture fixture) throws Exception {
+        check(fixture, "UnusedAssignmentModule.ts", UnusedAssignmentJSInspection.class);
     }
 
     @SafeVarargs

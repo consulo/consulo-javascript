@@ -58,6 +58,7 @@ public final class JavaScriptControlFlow implements ControlFlow {
 
     private volatile @Nullable List<UnreachableRun> myUnreachableRuns;
     private volatile @Nullable JavaScriptDefiniteAssignment myDefiniteAssignment;
+    private volatile @Nullable List<JavaScriptUnusedValues.Write> myUnusedValues;
 
     JavaScriptControlFlow(PsiElement owner, Instruction[] instructions, Instruction end) {
         myOwner = owner;
@@ -242,6 +243,18 @@ public final class JavaScriptControlFlow implements ControlFlow {
         JavaScriptDefiniteAssignment result = myDefiniteAssignment;
         if (result == null) {
             myDefiniteAssignment = result = JavaScriptDefiniteAssignment.compute(this);
+        }
+        return result;
+    }
+
+    /**
+     * The assignments of variables of the owner whose value is never read
+     */
+    @RequiredReadAction
+    public List<JavaScriptUnusedValues.Write> getUnusedValues() {
+        List<JavaScriptUnusedValues.Write> result = myUnusedValues;
+        if (result == null) {
+            myUnusedValues = result = JavaScriptUnusedValues.compute(this);
         }
         return result;
     }

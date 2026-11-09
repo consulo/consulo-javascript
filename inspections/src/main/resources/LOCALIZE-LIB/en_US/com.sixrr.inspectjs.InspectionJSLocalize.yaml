@@ -544,6 +544,10 @@ unterminated.statement.display.name:
     text: Unterminated statement
 unterminated.statement.error.string:
     text: 'Unterminated statement #loc'
+unused.assignment.display.name:
+    text: Unused assignment
+unused.assignment.error.string:
+    text: "The value assigned to ''{0}'' is never read"
 unused.catch.parameter.display.name:
     text: "Unused 'catch' parameter"
 unused.catch.parameter.ignore.catch.option:
