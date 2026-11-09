@@ -1,21 +1,29 @@
 # Script.js
   0(1) entry
   1(2) js.VAR_STATEMENT var a = f();
-  2(3,5) IF_STATEMENT if (a) { a = 2; } else { a = f() && 3; }
-  3(4) BLOCK_STATEMENT { a = 2; }. Condition: a:true
-  4(7) EXPRESSION_STATEMENT a = 2;
-  5(6) BLOCK_STATEMENT { a = f() && 3; }. Condition: a:false
-  6(7) EXPRESSION_STATEMENT a = f() && 3;
-  7(8) WITH_STATEMENT with (a) { f(); }
-  8(9) EXPRESSION_STATEMENT f();
-  9(10) js.CLASS class D { static { f(); } m() { return a?.b; } }
-  10(11) js.VAR_STATEMENT const g = (x) => x;
-  11(12) LAMBDA_EXPRESSION (x) => x
-  12(13) FOR_IN_STATEMENT for (const v of a) { f(); }
-  13(14,15) next FOR_IN_STATEMENT for (const v of a) { f(); }
-  14(13) EXPRESSION_STATEMENT f();
-  15(16) end
-  16() exit
+  2(3) WRITE a
+  3(4) IF_STATEMENT if (a) { a = 2; } else { a = f() && 3; }
+  4(5,8) READ a
+  5(6) BLOCK_STATEMENT { a = 2; }. Condition: a:true
+  6(7) EXPRESSION_STATEMENT a = 2;
+  7(11) WRITE a
+  8(9) BLOCK_STATEMENT { a = f() && 3; }. Condition: a:false
+  9(10) EXPRESSION_STATEMENT a = f() && 3;
+  10(11) WRITE a
+  11(12) WITH_STATEMENT with (a) { f(); }
+  12(13) READ a
+  13(14) EXPRESSION_STATEMENT f();
+  14(15) js.CLASS class D { static { f(); } m() { return a?.b; } }
+  15(16) js.VAR_STATEMENT const g = (x) => x;
+  16(17) LAMBDA_EXPRESSION (x) => x
+  17(18) WRITE g
+  18(19) FOR_IN_STATEMENT for (const v of a) { f(); }
+  19(20) READ a
+  20(21,23) next FOR_IN_STATEMENT for (const v of a) { f(); }
+  21(22) WRITE v
+  22(20) EXPRESSION_STATEMENT f();
+  23(24) end
+  24() exit
 
 # js.FUNCTION_DECLARATION function f()
   0(1) entry
@@ -36,7 +44,9 @@
   3() exit
 
 # LAMBDA_EXPRESSION (x) => x
-  0(2) entry
-! 1(2) end
-  2() exit
+  0(1) entry
+  1(2) WRITE x
+  2(4) READ x
+! 3(4) end
+  4() exit
 

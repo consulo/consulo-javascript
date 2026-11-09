@@ -1,0 +1,38 @@
+# ScriptVariables.js
+  0(1) entry
+  1(2) end
+  2() exit
+
+# js.FUNCTION_DECLARATION function declarations(p,
+  0(1) entry
+  1(2) WRITE p
+  2(3) WRITE q
+  3(4) js.VAR_STATEMENT var x = p;
+  4(5) READ p
+  5(6) WRITE x
+  6(7) js.VAR_STATEMENT let y;
+  7(8) DECLARE y
+  8(9) js.VAR_STATEMENT const { e1, e3 } = q;
+  9(10) READ q
+  10(11) WRITE e1
+  11(12) WRITE e3
+  12(13) EXPRESSION_STATEMENT x = y = e1;
+  13(14) READ e1
+  14(15) WRITE y
+  15(16) WRITE x
+  16(17) EXPRESSION_STATEMENT x += e3;
+  17(18) READ x
+  18(19) READ e3
+  19(20) WRITE x
+  20(21) FOR_IN_STATEMENT for (var k in q) { y = k; }
+  21(22) READ q
+  22(23,27) next FOR_IN_STATEMENT for (var k in q) { y = k; }
+  23(24) WRITE k
+  24(25) EXPRESSION_STATEMENT y = k;
+  25(26) READ k
+  26(22) WRITE y
+  27(28) RETURN_STATEMENT return x;
+  28(30) READ x
+! 29(30) end
+  30() exit
+

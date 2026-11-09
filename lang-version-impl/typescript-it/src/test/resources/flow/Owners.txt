@@ -2,28 +2,35 @@
   0(1) entry
   1(2) VAR_STATEMENT const arrow = (x: number) => x + 1;
   2(3) ARROW_FUNCTION (x: number) => x + 1
-  3(4) VAR_STATEMENT const block = async (x: number) => { await f(); };
-  4(5) ARROW_FUNCTION async (x: number) => { await f(); }
-  5(6) VAR_STATEMENT const expression = function named() { return 1; };
-  6(7) FUNCTION_EXPRESSION function named() { return 1; }
-  7(8) CLASS_DECLARATION class C { static s = 1; static { f(); } constructo...
-  8(9) VAR_STATEMENT const o = { m() { f(); }, p: () => 1 };
-  9(10) PROPERTY m() { f(); }
-  10(11) ARROW_FUNCTION () => 1
-  11(12) EXPRESSION_STATEMENT f();
-  12(13) end
-  13() exit
+  3(4) WRITE arrow
+  4(5) VAR_STATEMENT const block = async (x: number) => { await f(); };
+  5(6) ARROW_FUNCTION async (x: number) => { await f(); }
+  6(7) WRITE block
+  7(8) VAR_STATEMENT const expression = function named() { return 1; };
+  8(9) FUNCTION_EXPRESSION function named() { return 1; }
+  9(10) WRITE expression
+  10(11) CLASS_DECLARATION class C { static s = 1; static { f(); } constructo...
+  11(12) VAR_STATEMENT const o = { m() { f(); }, p: () => 1 };
+  12(13) PROPERTY m() { f(); }
+  13(14) ARROW_FUNCTION () => 1
+  14(15) WRITE o
+  15(16) EXPRESSION_STATEMENT f();
+  16(17) end
+  17() exit
 
 # ARROW_FUNCTION (x: number) => x + 1
-  0(2) entry
-! 1(2) end
-  2() exit
+  0(1) entry
+  1(2) WRITE x
+  2(4) READ x
+! 3(4) end
+  4() exit
 
 # ARROW_FUNCTION async (x: number) =>
   0(1) entry
-  1(2) EXPRESSION_STATEMENT await f();
-  2(3) end
-  3() exit
+  1(2) WRITE x
+  2(3) EXPRESSION_STATEMENT await f();
+  3(4) end
+  4() exit
 
 # FUNCTION_EXPRESSION function named()
   0(1) entry
@@ -39,8 +46,9 @@
 
 # CONSTRUCTOR_DECLARATION constructor(private p: number = 1)
   0(1) entry
-  1(2) end
-  2() exit
+  1(2) WRITE p
+  2(3) end
+  3() exit
 
 # ACCESSOR_DECLARATION get g(): number
   0(1) entry

@@ -75,13 +75,22 @@ public class JavaScriptControlFlowBuilder {
     }
 
     private final ControlFlowBuilder myBuilder = new ControlFlowBuilder();
+    private final PsiElement myOwner;
+    // the variables of the owner by their names
+    private final Map<String, List<PsiElement>> myVariables;
     private final Deque<JumpTarget> myTargets = new ArrayDeque<>();
     // the short-circuit exits of the optional chains being visited - of the outermost element of each
     private final Deque<List<Instruction>> myChains = new ArrayDeque<>();
 
     @RequiredReadAction
+    private JavaScriptControlFlowBuilder(PsiElement owner) {
+        myOwner = owner;
+        myVariables = JavaScriptFlowVariables.byName(owner);
+    }
+
+    @RequiredReadAction
     static JavaScriptControlFlow build(PsiElement owner, PsiElement body) {
-        return new JavaScriptControlFlowBuilder().buildImpl(owner, body);
+        return new JavaScriptControlFlowBuilder(owner).buildImpl(owner, body);
     }
 
     @RequiredReadAction
@@ -92,7 +101,7 @@ public class JavaScriptControlFlowBuilder {
         if (parameterList != null) {
             for (PsiElement child = parameterList.getFirstChild(); child != null; child = child.getNextSibling()) {
                 if (child instanceof JSVariable parameter) {
-                    variable(parameter);
+                    variable(parameter, true);
                 }
             }
         }
@@ -269,10 +278,18 @@ public class JavaScriptControlFlowBuilder {
             node(statement);
             for (PsiElement child = statement.getFirstChild(); child != null; child = child.getNextSibling()) {
                 if (child instanceof JSVariable variable) {
-                    variable(variable);
+                    variable(variable, false);
+                }
+                else if (child instanceof JSDestructuringElement destructuring) {
+                    // const { a, b } = c of the JavaScript tree
+                    expressions(destructuring);
+                    for (JSVariable variable : destructuring.getVariables()) {
+                        for (PsiElement target : JavaScriptFlowVariables.targets(variable)) {
+                            readWrite(target, target, JavaScriptReadWriteInstruction.Access.WRITE);
+                        }
+                    }
                 }
                 else if (isComposite(child)) {
-                    // a destructuring of the JavaScript tree
                     expression(child);
                 }
             }
@@ -336,15 +353,108 @@ public class JavaScriptControlFlowBuilder {
         return false;
     }
 
+    /**
+     * The value, the defaults of a destructuring, then the names written - assigned: a parameter, a catch or a for-in/of
+     * variable has a value without an initializer; a let or a const without one is unassigned, a var is left as it is
+     */
     @RequiredReadAction
-    private void variable(JSVariable variable) {
+    private void variable(JSVariable variable, boolean assigned) {
         JSExpression initializer = variable.getInitializer();
         expression(initializer);
-        // the defaults of a destructuring
         for (PsiElement child = variable.getFirstChild(); child != null; child = child.getNextSibling()) {
             if (child != initializer && isComposite(child)) {
                 expression(child);
             }
+        }
+
+        JavaScriptReadWriteInstruction.Access access;
+        if (assigned || initializer != null) {
+            access = JavaScriptReadWriteInstruction.Access.WRITE;
+        }
+        else if (JavaScriptFlowVariables.kind(variable) != JavaScriptFlowVariables.Kind.VAR) {
+            access = JavaScriptReadWriteInstruction.Access.DECLARE;
+        }
+        else {
+            return;
+        }
+        for (PsiElement target : JavaScriptFlowVariables.targets(variable)) {
+            readWrite(target, target, access);
+        }
+    }
+
+    private void readWrite(PsiElement element, PsiElement variable, JavaScriptReadWriteInstruction.Access access) {
+        myBuilder.addNodeAndCheckPending(new JavaScriptReadWriteInstruction(myBuilder, element, variable, access));
+    }
+
+    /**
+     * The variable of the owner the reference is to - only a reference by one of their names is resolved
+     */
+    @RequiredReadAction
+    private @Nullable PsiElement variableOf(@Nullable PsiElement reference) {
+        if (!(reference instanceof JSReferenceExpression expression) || expression.getQualifier() != null) {
+            return null;
+        }
+        String name = expression.getReferencedName();
+        if (name == null || !myVariables.containsKey(name)) {
+            return null;
+        }
+        PsiElement target = expression.resolve();
+        return JavaScriptFlowVariables.isVariableOf(target, myOwner) ? target : null;
+    }
+
+    /**
+     * The writes of the target of an assignment - or, before the value (prepare), the reads of a target which is not a
+     * variable ({@code a.b = c} reads a); a destructuring writes its names
+     */
+    @RequiredReadAction
+    private void assign(@Nullable PsiElement target, boolean prepare) {
+        while (target instanceof JSParenthesizedExpression || target instanceof JSDefinitionExpression) {
+            target = target instanceof JSParenthesizedExpression parenthesized ? parenthesized.getInnerExpression() : ((JSDefinitionExpression) target).getExpression();
+        }
+        if (target == null) {
+            return;
+        }
+        PsiElement variable = variableOf(target);
+        if (variable != null) {
+            if (!prepare) {
+                readWrite(target, variable, JavaScriptReadWriteInstruction.Access.WRITE);
+            }
+            return;
+        }
+        if (target instanceof JSArrayLiteralExpression || target instanceof JSObjectLiteralExpression) {
+            // [a, b = 1, ...c] = d; ({ a, b: c } = d)
+            for (PsiElement child = target.getFirstChild(); child != null; child = child.getNextSibling()) {
+                if (child instanceof JSProperty property) {
+                    JSExpression value = property.getValue();
+                    if (value != null) {
+                        assign(value, prepare);
+                    }
+                    else if (!prepare) {
+                        List<PsiElement> variables = myVariables.get(property.getName());
+                        if (variables != null && variables.size() == 1) {
+                            readWrite(property, variables.get(0), JavaScriptReadWriteInstruction.Access.WRITE);
+                        }
+                    }
+                }
+                else if (child instanceof JSSpreadExpression) {
+                    assign(qualifier(child), prepare);
+                }
+                else if (operator(child) == JSTokenTypes.EQ) {
+                    // a default
+                    PsiElement[] operands = operands(child);
+                    if (!prepare) {
+                        expression(operands[1]);
+                    }
+                    assign(operands[0], prepare);
+                }
+                else if (child instanceof JSExpression) {
+                    assign(child, prepare);
+                }
+            }
+            return;
+        }
+        if (prepare) {
+            expression(target);
         }
     }
 
@@ -420,7 +530,7 @@ public class JavaScriptControlFlowBuilder {
             }
             else if (part == 0) {
                 if (child instanceof JSVariable variable) {
-                    variable(variable);
+                    variable(variable, false);
                 }
                 else {
                     statement(child);
@@ -472,17 +582,18 @@ public class JavaScriptControlFlowBuilder {
         JSExpression target = statement.getVariableExpression();
         if (declaration != null) {
             for (JSVariable variable : declaration.getVariables()) {
-                variable(variable);
+                variable(variable, true);
             }
         }
         else if (target != null) {
-            expression(target);
+            assign(target, true);
+            assign(target, false);
         }
         else {
             // for (const x of a) of the TypeScript tree - the variable is a child
             for (PsiElement child = statement.getFirstChild(); child != null; child = child.getNextSibling()) {
                 if (child instanceof JSVariable variable) {
-                    variable(variable);
+                    variable(variable, true);
                 }
             }
         }
@@ -674,7 +785,7 @@ public class JavaScriptControlFlowBuilder {
             edges(throwing, node(catchBlock));
             for (PsiElement child = catchBlock.getFirstChild(); child != null; child = child.getNextSibling()) {
                 if (child instanceof JSVariable parameter) {
-                    variable(parameter);
+                    variable(parameter, true);
                 }
                 else if (child instanceof JSBlockStatement block) {
                     statements(block);
@@ -779,7 +890,41 @@ public class JavaScriptControlFlowBuilder {
             expression(operands[0]);
             List<Instruction> shortCircuit = current();
             expression(operands[1]);
+            assign(operands[0], false);
             join(concat(shortCircuit, current()), element);
+            return;
+        }
+        if (operator == JSTokenTypes.EQ) {
+            // the target is assigned after the value
+            PsiElement[] operands = operands(element);
+            assign(operands[0], true);
+            expression(operands[1]);
+            assign(operands[0], false);
+            return;
+        }
+        if (operator != null && JSTokenTypes.ASSIGNMENT_OPERATIONS.contains(operator)) {
+            // x += 1 - read, then written
+            PsiElement[] operands = operands(element);
+            expression(operands[0]);
+            expression(operands[1]);
+            assign(operands[0], false);
+            return;
+        }
+        if (element instanceof JSPostfixExpression postfix && isIncrement(postfix.getOperationSign())
+            || element instanceof JSPrefixExpression prefix && isIncrement(prefix.getOperationSign())) {
+            // x++ - read and written
+            PsiElement operand = element instanceof JSPostfixExpression postfix ? postfix.getExpression() : ((JSPrefixExpression) element).getExpression();
+            expression(operand);
+            assign(operand, false);
+            return;
+        }
+        PsiElement variable = variableOf(element);
+        if (variable != null) {
+            readWrite(element, variable, JavaScriptReadWriteInstruction.Access.READ);
+            return;
+        }
+        if (element instanceof JSDefinitionExpression definition) {
+            expression(definition.getExpression());
             return;
         }
         if (isChainElement(element)) {
@@ -787,6 +932,10 @@ public class JavaScriptControlFlowBuilder {
             return;
         }
         expressions(element);
+    }
+
+    private static boolean isIncrement(@Nullable IElementType operator) {
+        return operator == JSTokenTypes.PLUSPLUS || operator == JSTokenTypes.MINUSMINUS;
     }
 
     private static List<Instruction> allExits(Exits exits) {

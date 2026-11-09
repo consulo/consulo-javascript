@@ -6,12 +6,13 @@
 # FUNCTION_DECLARATION function catchIt(): void
   0(1) entry
   1(2,3) TRY_STATEMENT try { f(); } catch (e) { return; }
-  2(3,5) EXPRESSION_STATEMENT f();
+  2(3,6) EXPRESSION_STATEMENT f();
   3(4) CATCH_CLAUSE catch (e) { return; }
-  4(7) RETURN_STATEMENT return;
-  5(6) EXPRESSION_STATEMENT f();
-  6(7) end
-  7() exit
+  4(5) WRITE e
+  5(8) RETURN_STATEMENT return;
+  6(7) EXPRESSION_STATEMENT f();
+  7(8) end
+  8() exit
 
 # FUNCTION_DECLARATION function returnThroughFinally(): void
   0(1) entry

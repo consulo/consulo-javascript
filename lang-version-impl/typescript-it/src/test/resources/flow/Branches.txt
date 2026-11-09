@@ -61,14 +61,16 @@
 # FUNCTION_DECLARATION function values(): void
   0(1) entry
   1(2) VAR_STATEMENT const x = a ? b : c;
-  2(3,4) VAR_STATEMENT const y = a?.b.c(() => b);
-  3(4) ARROW_FUNCTION () => b
-  4(5) join CALL_EXPRESSION a?.b.c(() => b)
-  5(6,7) EXPRESSION_STATEMENT a ||= () => c;
-  6(7) ARROW_FUNCTION () => c
-  7(8) join ASSIGNMENT_EXPRESSION a ||= () => c
-  8(9) end
-  9() exit
+  2(3) WRITE x
+  3(4,5) VAR_STATEMENT const y = a?.b.c(() => b);
+  4(5) ARROW_FUNCTION () => b
+  5(6) join CALL_EXPRESSION a?.b.c(() => b)
+  6(7) WRITE y
+  7(8,9) EXPRESSION_STATEMENT a ||= () => c;
+  8(9) ARROW_FUNCTION () => c
+  9(10) join ASSIGNMENT_EXPRESSION a ||= () => c
+  10(11) end
+  11() exit
 
 # ARROW_FUNCTION () => b
   0(2) entry
