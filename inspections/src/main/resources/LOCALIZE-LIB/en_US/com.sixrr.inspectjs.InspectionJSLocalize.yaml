@@ -34,6 +34,8 @@ assignment.to.function.parameter.error.string:
     text: "Assignment to function parameter '#ref' #loc"
 bitwise.issues.javascript.group.name:
     text: Bitwise operation issues
+block.scoped.variable.used.before.declaration.error.string:
+    text: "Block-scoped variable ''{0}'' used before its declaration."
 break.statement.display.name:
     text: "'break' statement"
 break.statement.error.string:
@@ -56,6 +58,8 @@ chained.function.call.display.name:
     text: Chained function call
 chained.function.call.problem.descriptor:
     text: "Chained call to function '#ref' #loc"
+class.used.before.declaration.error.string:
+    text: "Class ''{0}'' used before its declaration."
 code.maturity.javascript.group.name:
     text: Code Maturity
 code.style.issues.javascript.group.name:
@@ -162,6 +166,8 @@ empty.try.block.display.name:
     text: "Empty 'try' block"
 empty.try.block.error.string:
     text: "Empty '#ref' block #loc"
+enum.used.before.declaration.error.string:
+    text: "Enum ''{0}'' used before its declaration."
 equality.comparison.with.coercion.display.name:
     text: Equality comparison which may cause unexpected coercion
 equality.comparison.with.coercion.error.string:
@@ -544,6 +550,8 @@ unused.catch.parameter.problem.descriptor:
     text: 'Unused catch parameter <code>#ref</code> #loc'
 use.of.innerhtml.property.display.name:
     text: "Use of 'innerHTML' property"
+used.before.declaration.display.name:
+    text: Variable, class or enum used before its declaration
 variable.name.doesnt.match.regex.error.string:
     text: "Variable name ''#ref'' doesn''t match regex ''{0}'' #loc"
 variable.name.is.too.long.error.string:

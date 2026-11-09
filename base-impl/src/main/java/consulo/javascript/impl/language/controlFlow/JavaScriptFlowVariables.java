@@ -98,7 +98,7 @@ public final class JavaScriptFlowVariables {
      * What a variable declares: itself, or the names of its destructuring - the elements a reference resolves to
      */
     @RequiredReadAction
-    static List<PsiElement> targets(JSVariable variable) {
+    public static List<PsiElement> targets(JSVariable variable) {
         List<PsiElement> targets = new ArrayList<>();
         JSExpression initializer = variable.getInitializer();
         Deque<PsiElement> stack = new ArrayDeque<>();
