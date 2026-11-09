@@ -73,6 +73,7 @@
   implements("labeled_statement")                        = "com.intellij.lang.javascript.psi.JSLabeledStatement"
   implements("empty_statement")                          = "com.intellij.lang.javascript.psi.JSEmptyStatement"
   implements("expression_statement")                     = "com.intellij.lang.javascript.psi.JSExpressionStatement"
+  implements("class_static_block")                       = "consulo.javascript.psi.JSClassStaticBlock"
 
   // Individual JS interface conformance — expressions
   implements("reference_expression")                     = "com.intellij.lang.javascript.psi.JSReferenceExpression"
@@ -341,9 +342,9 @@ statement ::=
   | var_statement
   | empty_statement
   | if_statement
-  | for_statement
   | for_in_statement
   | for_of_statement
+  | for_statement
   | while_statement
   | do_while_statement
   | continue_statement
@@ -372,7 +373,7 @@ private statement_recover_ ::= !(
     VAR_KEYWORD | LET_KEYWORD | CONST_KEYWORD |
     FUNCTION_KEYWORD | CLASS_KEYWORD | IF_KEYWORD | ELSE_KEYWORD |
     FOR_KEYWORD | WHILE_KEYWORD | DO_KEYWORD |
-    SWITCH_KEYWORD | TRY_KEYWORD | RETURN_KEYWORD |
+    SWITCH_KEYWORD | CASE_KEYWORD | DEFAULT_KEYWORD | TRY_KEYWORD | RETURN_KEYWORD |
     THROW_KEYWORD | BREAK_KEYWORD | CONTINUE_KEYWORD |
     IMPORT_KEYWORD | EXPORT_KEYWORD | ENUM_KEYWORD | AT |
     NUMERIC_LITERAL | STRING_LITERAL | SINGLE_QUOTE_STRING_LITERAL |
@@ -394,7 +395,8 @@ private var_keyword ::= VAR_KEYWORD | LET_KEYWORD | CONST_KEYWORD
 
 private variable_declaration_list ::= variable_declaration (',' variable_declaration)*
 
-variable_declaration ::= binding_pattern type_annotation? initializer?
+// let x!: number - definitely assigned (an assertion, nothing is checked)
+variable_declaration ::= binding_pattern '!'? type_annotation? initializer?
 
 private initializer ::= '=' expression
 
@@ -404,11 +406,13 @@ for_statement ::= 'for' '(' for_init? ';' expression? ';' expression? ')' statem
 
 private for_init ::= var_keyword variable_declaration_list | expression
 
-for_in_statement ::= 'for' '(' for_in_target 'in' expression ')' statement {pin=1}
+// tried before for_statement: pinned at 'in' / 'of', so for (let i = 0; ...) falls through to it
+for_in_statement ::= 'for' '(' for_in_target 'in' expression ')' statement {pin=4}
 
-for_of_statement ::= 'for' 'await'? '(' for_in_target OF_KEYWORD expression ')' statement {pin=1}
+for_of_statement ::= 'for' 'await'? '(' for_in_target OF_KEYWORD expression ')' statement {pin=5}
 
-private for_in_target ::= var_keyword for_in_variable | expression
+// a left-hand side expression: `x in o` is not a relational expression here
+private for_in_target ::= var_keyword for_in_variable | call_or_member_expression
 
 for_in_variable ::= binding_pattern type_annotation? { elementType = variable_declaration }
 
@@ -467,7 +471,10 @@ private type_reference_list ::= type_reference (',' type_reference)*
 
 class_body ::= '{' class_member* '}'
 
-private class_member ::= decorator_list? attribute_list? class_member_declaration | ';'
+// static { ... } first: the attribute list would take `static` as a modifier
+private class_member ::= class_static_block | decorator_list? attribute_list? class_member_declaration | ';'
+
+class_static_block ::= STATIC_KEYWORD block_statement
 
 private class_member_declaration ::=
     index_signature_declaration

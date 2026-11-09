@@ -119,6 +119,21 @@ public class TypeScriptParserTest extends SimpleParsingTest<Object> {
         doTest(context, null);
     }
 
+    @Test
+    public void testForInOf(Context context) throws Exception {
+        doTest(context, null);
+    }
+
+    @Test
+    public void testSwitchFallThrough(Context context) throws Exception {
+        doTest(context, null);
+    }
+
+    @Test
+    public void testClassStaticBlock(Context context) throws Exception {
+        doTest(context, null);
+    }
+
     @Override
     protected LanguageFileType getFileType(Context context, Object o) {
         return TypeScriptFileType.INSTANCE;
