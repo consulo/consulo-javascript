@@ -1,0 +1,90 @@
+# Loops.ts
+  0(1) entry
+  1(2) end
+  2() exit
+
+# FUNCTION_DECLARATION function loops(): void
+  0(1) entry
+  1(2,4) WHILE_STATEMENT while (a) { f(); }
+  2(3) BLOCK_STATEMENT { f(); }. Condition: a:true
+  3(1) EXPRESSION_STATEMENT f();
+  4(5) WHILE_STATEMENT while (a) { f(); }. Condition: a:false
+  5(6) DO_WHILE_STATEMENT do { f(); } while (a);
+  6(7) EXPRESSION_STATEMENT f();
+  7(8,9) REFERENCE_EXPRESSION a
+  8(5) BLOCK_STATEMENT { f(); }. Condition: a:true
+  9(10) DO_WHILE_STATEMENT do { f(); } while (a);. Condition: a:false
+  10(11) FOR_STATEMENT for (let i = 0; i < 3; i++) { f(); }
+  11(12,15) RELATIONAL_EXPRESSION i < 3
+  12(13) BLOCK_STATEMENT { f(); }. Condition: i < 3:true
+  13(14) EXPRESSION_STATEMENT f();
+  14(11) POSTFIX_EXPRESSION i++
+  15(16) FOR_STATEMENT for (let i = 0; i < 3; i++) { f(); }. Condition: i < 3:false
+  16(17) FOR_IN_STATEMENT for (const k in a) { f(); }
+  17(18,19) next FOR_IN_STATEMENT for (const k in a) { f(); }
+  18(17) EXPRESSION_STATEMENT f();
+  19(20) FOR_OF_STATEMENT for (const v of a) { f(); }
+  20(21,22) next FOR_OF_STATEMENT for (const v of a) { f(); }
+  21(20) EXPRESSION_STATEMENT f();
+  22(23) EXPRESSION_STATEMENT f();
+  23(24) end
+  24() exit
+
+# FUNCTION_DECLARATION function infinite(): void
+  0(1) entry
+  1(2) WHILE_STATEMENT while (true) { f(); }
+  2(3) BLOCK_STATEMENT { f(); }. Condition: true:true
+  3(1) EXPRESSION_STATEMENT f();
+! 4(5) EXPRESSION_STATEMENT f();
+! 5(6) end
+! 6() exit
+
+# FUNCTION_DECLARATION function forever(): void
+  0(1) entry
+  1(2) FOR_STATEMENT for (;;) { if (a) break; }
+  2(3) loop FOR_STATEMENT for (;;) { if (a) break; }
+  3(4,6) IF_STATEMENT if (a) break;
+  4(5) BREAK_STATEMENT break;. Condition: a:true
+  5(7) BREAK_STATEMENT break;
+  6(2) IF_STATEMENT if (a) break;. Condition: a:false
+  7(8) EXPRESSION_STATEMENT f();
+  8(9) end
+  9() exit
+
+# FUNCTION_DECLARATION function labels(): void
+  0(1) entry
+  1(2) LABELED_STATEMENT outer: for (const x of a) { for (const y of b) { i...
+  2(3) FOR_OF_STATEMENT for (const x of a) { for (const y of b) { if (y) c...
+  3(4,16) next FOR_OF_STATEMENT for (const x of a) { for (const y of b) { if (y) c...
+  4(5) FOR_OF_STATEMENT for (const y of b) { if (y) continue outer; if (x)...
+  5(6,15) next FOR_OF_STATEMENT for (const y of b) { if (y) continue outer; if (x)...
+  6(7,9) IF_STATEMENT if (y) continue outer;
+  7(8) CONTINUE_STATEMENT continue outer;. Condition: y:true
+  8(3) CONTINUE_STATEMENT continue outer;
+  9(10) IF_STATEMENT if (y) continue outer;. Condition: y:false
+  10(11,13) IF_STATEMENT if (x) break outer;
+  11(12) BREAK_STATEMENT break outer;. Condition: x:true
+  12(16) BREAK_STATEMENT break outer;
+  13(14) IF_STATEMENT if (x) break outer;. Condition: x:false
+  14(5) CONTINUE_STATEMENT continue;
+  15(3) EXPRESSION_STATEMENT f();
+  16(17) LABELED_STATEMENT block: { if (a) break block; f(); }
+  17(18,20) IF_STATEMENT if (a) break block;
+  18(19) BREAK_STATEMENT break block;. Condition: a:true
+  19(22) BREAK_STATEMENT break block;
+  20(21) IF_STATEMENT if (a) break block;. Condition: a:false
+  21(22) EXPRESSION_STATEMENT f();
+  22(23) EXPRESSION_STATEMENT f();
+  23(24) end
+  24() exit
+
+# FUNCTION_DECLARATION function doFalse(): void
+  0(1) entry
+  1(2) DO_WHILE_STATEMENT do { f(); } while (false);
+  2(3) EXPRESSION_STATEMENT f();
+  3(4) LITERAL_EXPRESSION false
+  4(5) DO_WHILE_STATEMENT do { f(); } while (false);. Condition: false:false
+  5(6) EXPRESSION_STATEMENT f();
+  6(7) end
+  7() exit
+

@@ -1,0 +1,15 @@
+# Declarations.ts
+  0(1) entry
+  1(2) ENUM_DECLARATION enum E { A = 1 }
+  2(3) NAMESPACE_DECLARATION namespace N { f(); }
+  3(4) VAR_STATEMENT const x = 1;
+  4(5) CLASS_DECLARATION class K { }
+  5(6) EXPRESSION_STATEMENT f();
+  6(7) end
+  7() exit
+
+# FUNCTION_DECLARATION function g(): void
+  0(1) entry
+  1(2) end
+  2() exit
+

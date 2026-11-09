@@ -1,0 +1,57 @@
+# Try.ts
+  0(1) entry
+  1(2) end
+  2() exit
+
+# FUNCTION_DECLARATION function catchIt(): void
+  0(1) entry
+  1(2,3) TRY_STATEMENT try { f(); } catch (e) { return; }
+  2(3,5) EXPRESSION_STATEMENT f();
+  3(4) CATCH_CLAUSE catch (e) { return; }
+  4(7) RETURN_STATEMENT return;
+  5(6) EXPRESSION_STATEMENT f();
+  6(7) end
+  7() exit
+
+# FUNCTION_DECLARATION function returnThroughFinally(): void
+  0(1) entry
+  1(2,3) TRY_STATEMENT try { return; } finally { f(); }
+  2(3,5) RETURN_STATEMENT return;
+  3(4) finally BLOCK_STATEMENT { f(); }
+  4(9) EXPRESSION_STATEMENT f();
+  5(6) finally BLOCK_STATEMENT { f(); }
+  6(9) EXPRESSION_STATEMENT f();
+! 7(8) EXPRESSION_STATEMENT f();
+! 8(9) end
+  9() exit
+
+# FUNCTION_DECLARATION function jumpsThroughFinally(): void
+  0(1) entry
+  1(2,25) WHILE_STATEMENT while (a) { try { if (a) break; if (a) continue; f...
+  2(3) BLOCK_STATEMENT { try { if (a) break; if (a) continue; f(); } catc.... Condition: a:true
+  3(4,13,15) TRY_STATEMENT try { if (a) break; if (a) continue; f(); } catch ...
+  4(5,7,13,15) IF_STATEMENT if (a) break;
+  5(6,13,15) BREAK_STATEMENT break;. Condition: a:true
+  6(13,15,21) BREAK_STATEMENT break;
+  7(8,13,15) IF_STATEMENT if (a) break;. Condition: a:false
+  8(9,11,13,15) IF_STATEMENT if (a) continue;
+  9(10,13,15) CONTINUE_STATEMENT continue;. Condition: a:true
+  10(13,15,23) CONTINUE_STATEMENT continue;
+  11(12,13,15) IF_STATEMENT if (a) continue;. Condition: a:false
+  12(13,15,17) EXPRESSION_STATEMENT f();
+  13(14,15) CATCH_CLAUSE catch { throw a; }
+  14(15,19) THROW_STATEMENT throw a;
+  15(16) finally BLOCK_STATEMENT { f(); }
+  16(27) EXPRESSION_STATEMENT f();
+  17(18) finally BLOCK_STATEMENT { f(); }
+  18(1) EXPRESSION_STATEMENT f();
+  19(20) finally BLOCK_STATEMENT { f(); }
+  20(27) EXPRESSION_STATEMENT f();
+  21(22) finally BLOCK_STATEMENT { f(); }
+  22(26) EXPRESSION_STATEMENT f();
+  23(24) finally BLOCK_STATEMENT { f(); }
+  24(1) EXPRESSION_STATEMENT f();
+  25(26) WHILE_STATEMENT while (a) { try { if (a) break; if (a) continue; f.... Condition: a:false
+  26(27) end
+  27() exit
+

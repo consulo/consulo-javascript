@@ -36,6 +36,7 @@ open module consulo.javascript.base.impl {
     exports consulo.javascript.impl.language.psi;
     exports consulo.javascript.impl.language.psi.stub;
     exports consulo.javascript.impl.language;
+    exports consulo.javascript.impl.language.controlFlow;
     exports consulo.javascript.impl.library;
     exports consulo.javascript.inspections.qucikFixes;
     exports consulo.javascript.lang;
