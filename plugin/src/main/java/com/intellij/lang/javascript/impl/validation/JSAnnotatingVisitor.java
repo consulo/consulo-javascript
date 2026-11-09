@@ -1094,7 +1094,7 @@ public class JSAnnotatingVisitor extends JSElementVisitor implements Annotator {
 
         if (element instanceof JSFunction function) {
             String typeString = function.getReturnTypeString();
-            if (typeString != null && !"void".equals(typeString) && node.getExpression() == null) {
+            if (typeString != null && node.getExpression() == null && !acceptsNoValue(function, typeString)) {
                 myHolder.newAnnotation(
                         HighlightSeverity.ERROR,
                         JavaScriptLocalize.javascriptValidationMessageReturnValueOfTypeIsRequired(typeString)
@@ -1103,6 +1103,48 @@ public class JSAnnotatingVisitor extends JSElementVisitor implements Annotator {
                     .create();
             }
         }
+    }
+
+    /**
+     * void, or a type undefined is assignable to - undefined, any, unknown, a union with one of them; of an async function
+     * T of Promise&lt;T&gt;
+     */
+    @RequiredReadAction
+    private static boolean acceptsNoValue(JSFunction function, String type) {
+        String value = type.trim();
+        if (value.startsWith("Promise<") && value.endsWith(">") && isAsync(function)) {
+            value = value.substring("Promise<".length(), value.length() - 1);
+        }
+        int depth = 0;
+        int start = 0;
+        for (int i = 0; i <= value.length(); i++) {
+            char c = i < value.length() ? value.charAt(i) : '|';
+            if (c == '<' || c == '(' || c == '[' || c == '{') {
+                depth++;
+            }
+            else if (c == '>' || c == ')' || c == ']' || c == '}') {
+                depth--;
+            }
+            else if (c == '|' && depth == 0) {
+                String part = value.substring(start, i).trim();
+                if (part.equals("void") || part.equals("undefined") || part.equals("any") || part.equals("unknown")) {
+                    return true;
+                }
+                start = i + 1;
+            }
+        }
+        return false;
+    }
+
+    @RequiredReadAction
+    private static boolean isAsync(JSFunction function) {
+        for (PsiElement child = function.getFirstChild(); child != null; child = child.getNextSibling()) {
+            IElementType type = PsiUtilCore.getElementType(child);
+            if (type == JSTokenTypes.ASYNC_KEYWORD || child instanceof JSAttributeList && child.getNode().findChildByType(JSTokenTypes.ASYNC_KEYWORD) != null) {
+                return true;
+            }
+        }
+        return false;
     }
 
     @Override
