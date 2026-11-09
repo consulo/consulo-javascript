@@ -1,5 +1,6 @@
 package com.sixrr.inspectjs.validity;
 
+import com.intellij.lang.javascript.JSTokenTypes;
 import com.intellij.lang.javascript.JavaScriptSupportLoader;
 import com.intellij.lang.javascript.psi.*;
 import com.sixrr.inspectjs.BaseInspectionVisitor;
@@ -7,11 +8,13 @@ import com.sixrr.inspectjs.JSGroupNames;
 import com.sixrr.inspectjs.JSRecursiveElementVisitor;
 import com.sixrr.inspectjs.JavaScriptInspection;
 import com.sixrr.inspectjs.localize.InspectionJSLocalize;
-import com.sixrr.inspectjs.utils.ControlFlowUtils;
 import consulo.annotation.access.RequiredReadAction;
 import consulo.annotation.component.ExtensionImpl;
+import consulo.javascript.impl.language.controlFlow.JavaScriptControlFlow;
+import consulo.javascript.language.psi.JavaScriptTypeElement;
 import consulo.language.editor.inspection.ProblemHighlightType;
 import consulo.language.psi.PsiElement;
+import consulo.language.psi.PsiUtilCore;
 import consulo.language.psi.util.PsiTreeUtil;
 import consulo.localize.LocalizeValue;
 import org.jspecify.annotations.Nullable;
@@ -60,6 +63,9 @@ public class FunctionWithInconsistentReturnsJSInspection extends JavaScriptInspe
         @Override
         public void visitJSFunctionDeclaration(JSFunction function) {
             super.visitJSFunctionDeclaration(function);
+            if (isTypeScriptTyped(function)) {
+                return;
+            }
             String typeString = function.getReturnTypeString();
             if (typeString == null && !functionHasReturnValues(function)) {
                 return;
@@ -74,6 +80,9 @@ public class FunctionWithInconsistentReturnsJSInspection extends JavaScriptInspe
         public void visitJSFunctionExpression(JSFunctionExpression node) {
             super.visitJSFunctionExpression(node);
             JSFunction function = node.getFunction();
+            if (isTypeScriptTyped(function)) {
+                return;
+            }
             String typeString = function.getReturnTypeString();
 
             if (typeString != null && !"void".equals(typeString)) {
@@ -84,16 +93,33 @@ public class FunctionWithInconsistentReturnsJSInspection extends JavaScriptInspe
         }
     }
 
+    /**
+     * A TypeScript function with a return type - {@link TypeScriptFunctionReturnInspection} checks it as tsc
+     */
+    @RequiredReadAction
+    private static boolean isTypeScriptTyped(JSFunction function) {
+        if (!"TypeScript".equals(function.getLanguage().getID())) {
+            return false;
+        }
+        for (PsiElement child = function.getFirstChild(); child != null; child = child.getNextSibling()) {
+            if (child instanceof JavaScriptTypeElement && PsiUtilCore.getElementType(child.getFirstChild()) == JSTokenTypes.COLON) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     private static boolean functionHasReturnValues(JSFunction function) {
         ReturnValuesVisitor visitor = new ReturnValuesVisitor(function);
         function.accept(visitor);
         return visitor.hasReturnValues();
     }
 
+    @RequiredReadAction
     private static boolean functionHasValuelessReturns(JSFunction function) {
-        PsiElement lastChild = function.getLastChild();
-        if (lastChild instanceof JSBlockStatement) {
-            if (ControlFlowUtils.statementMayCompleteNormally((JSStatement)lastChild)) {
+        if (JavaScriptControlFlow.getBody(function) instanceof JSBlockStatement) {
+            JavaScriptControlFlow flow = JavaScriptControlFlow.of(function);
+            if (flow != null && flow.isEndReachable()) {
                 return true;
             }
         }

@@ -16,6 +16,8 @@
 
 package consulo.typescript.it.controlFlow;
 
+import com.sixrr.inspectjs.validity.FunctionWithInconsistentReturnsJSInspection;
+import com.sixrr.inspectjs.validity.TypeScriptFunctionReturnInspection;
 import com.sixrr.inspectjs.validity.UnreachableCodeJSInspection;
 import consulo.it.AllowLogError;
 import consulo.it.CodeInsightTestFixture;
@@ -45,6 +47,16 @@ public class FlowInspectionTest {
     @Test
     public void testUnreachableCodeJavaScript(CodeInsightTestFixture fixture) throws Exception {
         check(fixture, "UnreachableCode.js", UnreachableCodeJSInspection.class);
+    }
+
+    @Test
+    public void testFunctionReturn(CodeInsightTestFixture fixture) throws Exception {
+        check(fixture, "FunctionReturn.ts", TypeScriptFunctionReturnInspection.class);
+    }
+
+    @Test
+    public void testFunctionWithInconsistentReturns(CodeInsightTestFixture fixture) throws Exception {
+        check(fixture, "FunctionWithInconsistentReturns.js", FunctionWithInconsistentReturnsJSInspection.class);
     }
 
     @SafeVarargs

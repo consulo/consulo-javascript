@@ -216,6 +216,10 @@ function.is.overly.long.statement.error.string:
     text: "function ''#ref'' is overly long (statement count = {0}) #loc"
 function.is.overly.nested.error.string:
     text: "function ''#ref'' is overly nested (maximum nesting depth = {0}) #loc"
+function.lacks.ending.return.error.string:
+    text: "Function lacks ending return statement and return type does not include 'undefined'."
+function.must.return.value.error.string:
+    text: "A function whose declared type is neither 'undefined', 'void', nor 'any' must return a value."
 function.name.doesnt.match.regex.error.string:
     text: "Function name ''{0}'' doesn''t match regex ''{1}'' #loc"
 function.name.is.too.long.error.string:
@@ -230,6 +234,8 @@ function.parameter.naming.convention.display.name:
     text: Function parameter naming convention
 function.ref.is.overly.complex.cyclomatic.complexity.error.string:
     text: "function ''#ref'' is overly complex (cyclomatic complexity = {0}) #loc"
+function.returning.never.error.string:
+    text: "A function returning 'never' cannot have a reachable end point."
 function.with.inconsistent.returns.display.name:
     text: Function with inconsistent returns
 function.with.more.than.three.negations.display.name:
@@ -240,6 +246,8 @@ function.with.multiple.return.points.display.name:
     text: Function with multiple return points
 function.with.too.many.parameters.display.name:
     text: Function with too many parameters
+get.accessor.must.return.value.error.string:
+    text: "A 'get' accessor must return a value."
 if.statement.with.identical.branches.display.name:
     text: "'if' statement with identical branches"
 if.statement.with.too.many.branches.display.name:
@@ -492,6 +500,8 @@ trivial.conditional.error.string:
     text: "''{0}'' can be simplified to ''{1}'' #loc"
 trivial.if.error.string:
     text: '#ref statement can be simplified #loc'
+typescript.function.return.display.name:
+    text: Function does not return a value (TypeScript)
 unnecessary.block.statement.display.name:
     text: "Unnecessary 'block' statement"
 unnecessary.block.statement.error.string:

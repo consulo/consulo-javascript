@@ -137,7 +137,7 @@ public final class JavaScriptControlFlow implements ControlFlow {
      * {@code { m() { } }} of a TypeScript object literal - a property, not a function
      */
     @RequiredReadAction
-    static boolean isPropertyMethod(@Nullable PsiElement element) {
+    public static boolean isPropertyMethod(@Nullable PsiElement element) {
         return element instanceof JSProperty && !(element instanceof JSFunction)
             && PsiTreeUtil.getChildOfType(element, JSParameterList.class) != null
             && PsiTreeUtil.getChildOfType(element, JSBlockStatement.class) != null;
