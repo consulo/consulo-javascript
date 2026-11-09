@@ -33,4 +33,7 @@ public interface EcmaScript6ElementTypes {
 
     IElementType TAGGED_TEMPLATE_EXPRESSION =
         new ElementTypeAsPsiFactory("TAGGED_TEMPLATE_EXPRESSION", JavaScriptLanguage.INSTANCE, ES6TaggedTemplateExpressionImpl::new);
+
+    IElementType CLASS_STATIC_BLOCK =
+        new ElementTypeAsPsiFactory("CLASS_STATIC_BLOCK", JavaScriptLanguage.INSTANCE, ES6ClassStaticBlockImpl::new);
 }

@@ -423,6 +423,21 @@ public class EcmaScriptStatementParsing extends StatementParsing {
                 return;
             }
 
+            // static { ... } (ES2022)
+            boolean staticKeyword = builder.getTokenType() == JSTokenTypes.STATIC_KEYWORD;
+            if ((staticKeyword || isContextKeyword(builder, JSTokenTypes.STATIC_KEYWORD)) && builder.lookAhead(1) == JSTokenTypes.LBRACE) {
+                PsiBuilder.Marker staticBlock = builder.mark();
+                if (staticKeyword) {
+                    builder.advanceLexer();
+                }
+                else {
+                    advanceContextKeyword(builder, JSTokenTypes.STATIC_KEYWORD);
+                }
+                getStatementParsing().parseBlock(builder);
+                staticBlock.done(EcmaScript6ElementTypes.CLASS_STATIC_BLOCK);
+                continue;
+            }
+
             PsiBuilder.Marker attributeListMarker = builder.mark();
             if (expectStaticKeywordExpected(builder)) {
                 attributeListMarker.done(JSElementTypes.ATTRIBUTE_LIST);
