@@ -6,6 +6,7 @@ import consulo.language.editor.inspection.*;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiWhiteSpace;
 import consulo.language.psi.util.PsiTreeUtil;
+import consulo.localize.LocalizeValue;
 import org.jspecify.annotations.Nullable;
 
 import java.util.List;
@@ -100,6 +101,18 @@ public abstract class BaseInspectionVisitor<T> extends JSElementVisitor {
 
     protected PsiElement getEditorErrorLocation(PsiElement location) {
         return location;
+    }
+
+    /**
+     * A problem from the start of the first element to the end of the last one
+     */
+    @RequiredReadAction
+    protected void registerError(PsiElement startElement, PsiElement endElement, ProblemHighlightType highlightType, Object... args) {
+        String description = inspection.buildErrorString(myState, args);
+        problemsHolder.newProblem(LocalizeValue.of(description))
+            .range(startElement, endElement)
+            .highlightType(highlightType)
+            .create();
     }
 
     protected void registerError(PsiElement location, Object... args) {

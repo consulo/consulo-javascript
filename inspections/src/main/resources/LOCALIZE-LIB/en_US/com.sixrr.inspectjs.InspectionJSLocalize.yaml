@@ -521,7 +521,7 @@ unnecessary.return.statement.display.name:
 unreachable.code.display.name:
     text: Unreachable code
 unreachable.code.error.string:
-    text: 'Unreachable code #loc'
+    text: 'Unreachable code detected #loc'
 unterminated.statement.display.name:
     text: Unterminated statement
 unterminated.statement.error.string:

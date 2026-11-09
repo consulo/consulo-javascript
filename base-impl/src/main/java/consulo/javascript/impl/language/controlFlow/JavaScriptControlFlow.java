@@ -17,17 +17,13 @@
 package consulo.javascript.impl.language.controlFlow;
 
 import com.intellij.lang.javascript.JSTokenTypes;
-import com.intellij.lang.javascript.psi.JSBlockStatement;
-import com.intellij.lang.javascript.psi.JSExpression;
-import com.intellij.lang.javascript.psi.JSFile;
-import com.intellij.lang.javascript.psi.JSFunction;
-import com.intellij.lang.javascript.psi.JSParameterList;
-import com.intellij.lang.javascript.psi.JSProperty;
+import com.intellij.lang.javascript.psi.*;
 import com.intellij.lang.javascript.psi.impl.JSEmbeddedContentImpl;
 import consulo.annotation.access.RequiredReadAction;
 import consulo.application.util.CachedValueProvider;
 import consulo.javascript.psi.JSClassStaticBlock;
 import consulo.javascript.psi.JavaScriptLambdaExpression;
+import consulo.language.ast.IElementType;
 import consulo.language.controlFlow.ControlFlow;
 import consulo.language.controlFlow.Instruction;
 import consulo.language.psi.PsiElement;
@@ -48,11 +44,19 @@ import java.util.*;
  * @author VISTALL
  */
 public final class JavaScriptControlFlow implements ControlFlow {
+    /**
+     * Unreachable statements one after another in a statement list, from the first to the last - reported once
+     */
+    public record UnreachableRun(PsiElement first, PsiElement last) {
+    }
+
     private final PsiElement myOwner;
     private final Instruction[] myInstructions;
     private final Instruction myEnd;
     private final Map<PsiElement, List<Instruction>> myIndex = new HashMap<>();
     private final BitSet myReachable = new BitSet();
+
+    private volatile @Nullable List<UnreachableRun> myUnreachableRuns;
 
     JavaScriptControlFlow(PsiElement owner, Instruction[] instructions, Instruction end) {
         myOwner = owner;
@@ -237,5 +241,128 @@ public final class JavaScriptControlFlow implements ControlFlow {
      */
     public boolean isEndReachable() {
         return isReachable(myEnd);
+    }
+
+    /**
+     * The unreachable code to report, as tsc (TS7027): an unreachable statement that may execute - not a block, an
+     * empty statement, a function declaration, a type, a {@code var} without an initializer - with the unreachable
+     * ones after it in its statement list, up to a reachable one or one that does not execute; nothing in a reported
+     * statement is reported again. Nested owners have their own graph.
+     */
+    @RequiredReadAction
+    public List<UnreachableRun> getUnreachableRuns() {
+        List<UnreachableRun> result = myUnreachableRuns;
+        if (result == null) {
+            List<UnreachableRun> runs = new ArrayList<>();
+            PsiElement body = getBody(myOwner);
+            if (body != null && !(body instanceof JSExpression)) {
+                unreachableRuns(body, runs);
+            }
+            myUnreachableRuns = result = List.copyOf(runs);
+        }
+        return result;
+    }
+
+    @RequiredReadAction
+    private void unreachableRuns(PsiElement parent, List<UnreachableRun> runs) {
+        boolean statementList = isStatementList(parent);
+        for (PsiElement child = parent.getFirstChild(); child != null; child = child.getNextSibling()) {
+            if (!JavaScriptControlFlowBuilder.isComposite(child) || isOwner(child) || child instanceof JSClass) {
+                continue;
+            }
+            if (!isExecutable(child) || isReachableStatement(child)) {
+                unreachableRuns(child, runs);
+                continue;
+            }
+            PsiElement last = child;
+            if (statementList) {
+                for (PsiElement next = child.getNextSibling(); next != null; next = next.getNextSibling()) {
+                    if (!JavaScriptControlFlowBuilder.isComposite(next)) {
+                        continue;
+                    }
+                    if (!isExecutable(next) || isReachableStatement(next)) {
+                        break;
+                    }
+                    last = next;
+                }
+            }
+            runs.add(new UnreachableRun(child, last));
+            child = last;
+        }
+    }
+
+    private static boolean isStatementList(PsiElement element) {
+        return element instanceof JSBlockStatement || element instanceof JSFile || element instanceof JSEmbeddedContentImpl || element instanceof JSCaseClause;
+    }
+
+    /**
+     * Its node is reachable - of the declaration in it for a wrapper (a TypeScript statement, an export); true without one
+     */
+    private boolean isReachableStatement(PsiElement statement) {
+        Deque<PsiElement> stack = new ArrayDeque<>();
+        stack.push(statement);
+        while (!stack.isEmpty()) {
+            PsiElement element = stack.pop();
+            List<Instruction> instructions = myIndex.get(element);
+            if (instructions != null) {
+                return isReachable(element);
+            }
+            // in the order of the children
+            List<PsiElement> children = new ArrayList<>();
+            for (PsiElement child = element.getFirstChild(); child != null; child = child.getNextSibling()) {
+                if (JavaScriptControlFlowBuilder.isComposite(child) && !isOwner(child)) {
+                    children.add(child);
+                }
+            }
+            for (int i = children.size() - 1; i >= 0; i--) {
+                stack.push(children.get(i));
+            }
+        }
+        return true;
+    }
+
+    /**
+     * May execute - tsc's isPotentiallyExecutableNode: a statement but a block or an empty one, a let, a const, a var
+     * with an initializer, a class, an enum, a namespace
+     */
+    @RequiredReadAction
+    static boolean isExecutable(PsiElement element) {
+        if (element instanceof JSBlockStatement || element instanceof JSEmptyStatement || element instanceof JSExpression || element instanceof JSFunction
+            || JavaScriptControlFlowBuilder.isTypeOnly(element)) {
+            return false;
+        }
+        if (element instanceof JSVarStatement statement) {
+            IElementType keyword = PsiUtilCore.getElementType(PsiTreeUtil.getDeepestFirst(statement));
+            if (keyword == JSTokenTypes.LET_KEYWORD || keyword == JSTokenTypes.CONST_KEYWORD) {
+                return true;
+            }
+            for (PsiElement child = statement.getFirstChild(); child != null; child = child.getNextSibling()) {
+                if (child instanceof JSVariable variable ? variable.getInitializer() != null : child instanceof JSDestructuringElement) {
+                    return true;
+                }
+            }
+            return false;
+        }
+        if (element instanceof JSClass || JavaScriptControlFlowBuilder.hasChild(element, JSTokenTypes.ENUM_KEYWORD)) {
+            return true;
+        }
+        if (!JavaScriptControlFlowBuilder.isWrapper(element) || isStatementKind(element)) {
+            return element instanceof JSStatement;
+        }
+        // a TypeScript statement around a declaration, an export
+        for (PsiElement child = element.getFirstChild(); child != null; child = child.getNextSibling()) {
+            if (JavaScriptControlFlowBuilder.isComposite(child) && isExecutable(child)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /**
+     * A statement with statements in it - not a wrapper of a declaration
+     */
+    private static boolean isStatementKind(PsiElement element) {
+        return element instanceof JSIfStatement || element instanceof JSLoopStatement || element instanceof JSSwitchStatement || element instanceof JSTryStatement
+            || element instanceof JSLabeledStatement || element instanceof JSWithStatement;
     }
 }

@@ -314,7 +314,7 @@ public class JavaScriptControlFlowBuilder {
      * An interface, a type alias, a declare, an import - no code here
      */
     @RequiredReadAction
-    private static boolean isTypeOnly(PsiElement element) {
+    static boolean isTypeOnly(PsiElement element) {
         if (element instanceof JSTypeOnlyDeclaration || element instanceof JavaScriptImportStatementBase || element instanceof JSClass jsClass && jsClass.isInterface()) {
             return true;
         }
@@ -327,7 +327,7 @@ public class JavaScriptControlFlowBuilder {
     /**
      * An element around declarations or statements, not an expression statement
      */
-    private static boolean isWrapper(PsiElement element) {
+    static boolean isWrapper(PsiElement element) {
         for (PsiElement child = element.getFirstChild(); child != null; child = child.getNextSibling()) {
             if (isComposite(child) && !(child instanceof JSExpression) && !(child instanceof JSAttributeList) && !(child instanceof JavaScriptTypeElement)) {
                 return true;
@@ -933,7 +933,7 @@ public class JavaScriptControlFlowBuilder {
         return null;
     }
 
-    private static boolean hasChild(PsiElement element, IElementType type) {
+    static boolean hasChild(PsiElement element, IElementType type) {
         for (PsiElement child = element.getFirstChild(); child != null; child = child.getNextSibling()) {
             if (PsiUtilCore.getElementType(child) == type) {
                 return true;
@@ -984,7 +984,7 @@ public class JavaScriptControlFlowBuilder {
     /**
      * Not a token, a whitespace or a comment
      */
-    private static boolean isComposite(PsiElement element) {
+    static boolean isComposite(PsiElement element) {
         return element.getFirstChild() != null && !(element instanceof PsiComment);
     }
 }
