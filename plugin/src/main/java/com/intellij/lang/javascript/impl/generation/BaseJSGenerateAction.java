@@ -60,6 +60,9 @@ abstract class BaseJSGenerateAction extends AnAction implements AnActionWithAsyn
     @Override
     public Coroutine<?, ?> updateAsync(AnActionEvent e) {
         return ActionSafeReadLock.run(e, presentation -> {
+            // nothing to decide without the lock: the file can be derived from PSI, and an mxml file needs no editor
+            presentation.setEnabledAndVisible(true);
+        }, presentation -> {
             VirtualFile file = e.getData(PlatformDataKeys.VIRTUAL_FILE);
 
             boolean status = false;
