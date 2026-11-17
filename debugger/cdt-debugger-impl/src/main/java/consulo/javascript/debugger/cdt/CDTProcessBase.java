@@ -383,10 +383,6 @@ public abstract class CDTProcessBase extends XDebugProcess {
     }
 
     @Override
-    public void runToPosition(XSourcePosition position, @Nullable XSuspendContext context) {
-    }
-
-    @Override
     public XDebugTabLayouter createTabLayouter() {
         return new XDebugTabLayouter() {
             @Override
